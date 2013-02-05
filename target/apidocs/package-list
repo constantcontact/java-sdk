@@ -1,0 +1,9 @@
+com.constantcontact
+com.constantcontact.auth
+com.constantcontact.auth.util
+com.constantcontact.components
+com.constantcontact.components.campaigns
+com.constantcontact.components.contacts
+com.constantcontact.services
+com.constantcontact.util
+com.constantcontact.util.http
