@@ -7,14 +7,23 @@ In order to use the Constant Contact SDK you have to follow these steps:
 
 1) Add the constantcontact.jar library to classpath of your project.
 Also add this libraries to classpath of project:
+
 	jackson-annotations-2.1.1.jar
+	
 	jackson-core-2.1.1.jar
+	
 	jackson-databind-2.1.3.jar
+	
 	junit-4.8.1.jar
+	
 	easymock-3.1.jar
+	
 	httpcore-4.2.1.jar
+	
 	httpclient-4.2.1.jar
+	
 	commons-logging-1.1.1.jar
+	
 
 2) Place your credentials in app.config file.
 
