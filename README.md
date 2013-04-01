@@ -12,10 +12,6 @@ Also add this libraries to classpath of project:
 	jackson-core-2.1.1.jar
 	jackson-databind-2.1.3.jar
 	constant-contact-httpclient-4.2.3.jar
-	junit-4.8.1.jar
-	easymock-3.1.jar
-
-	commons-logging-1.1.1.jar
 
 2) Place your credentials in app.config file.
 
