@@ -1,10 +1,10 @@
 package com.constantcontact.util;
 
 /**
- * Interface for issuing HTTP requests.
+ * Interface for {@link RestClient} in Constant Contact.
  * 
  * @author ConstantContact
- *
+ * 
  */
 public interface IRestClient {
 	/**
@@ -15,18 +15,20 @@ public interface IRestClient {
 	 * @return The response body, http info, and error (if one exists).
 	 */
 	CUrlResponse get(String url, String accessToken);
-	
+
 	/**
-	 * Make an HTTP POST request. 
+	 * Make an HTTP POST request.
+	 * 
 	 * @param url Request URL.
 	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param data Data to send with request.
 	 * @return The response body, http info, and error (if one exists).
 	 */
 	CUrlResponse post(String url, String accessToken, String data);
-	
+
 	/**
-	 * Make an HTTP PUT request. 
+	 * Make an HTTP PUT request.
+	 * 
 	 * @param url Request URL.
 	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param data Data to send with request.

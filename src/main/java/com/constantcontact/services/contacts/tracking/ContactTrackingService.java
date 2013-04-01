@@ -1,0 +1,315 @@
+package com.constantcontact.services.contacts.tracking;
+
+import com.constantcontact.components.Component;
+import com.constantcontact.components.contacts.tracking.bounces.ContactTrackingBounce;
+import com.constantcontact.components.contacts.tracking.clicks.ContactTrackingClick;
+import com.constantcontact.components.contacts.tracking.forwards.ContactTrackingForward;
+import com.constantcontact.components.contacts.tracking.opens.ContactTrackingOpen;
+import com.constantcontact.components.contacts.tracking.reports.summary.ContactTrackingSummaryReport;
+import com.constantcontact.components.contacts.tracking.sends.ContactTrackingSend;
+import com.constantcontact.components.contacts.tracking.unsubscribes.ContactTrackingUnsubscribe;
+import com.constantcontact.components.generic.response.ResultSet;
+import com.constantcontact.exceptions.service.ConstantContactServiceException;
+import com.constantcontact.services.base.BaseService;
+import com.constantcontact.util.CUrlRequestError;
+import com.constantcontact.util.CUrlResponse;
+import com.constantcontact.util.Config;
+
+/**
+ * Service Layer Implementation for the Contact Tracking operations in Constant Contact.
+ * 
+ * @author ConstantContact
+ * 
+ */
+public class ContactTrackingService extends BaseService implements IContactTrackingService {
+
+	/**
+	 * Implements the get Summary operation of the Contact Tracking API by calling the ConstantContact server side.
+	 * 
+	 * @param accessToken Constant Contact OAuth2 access token.
+	 * @param contactId The id of the contact.
+	 * @return The {@link ContactTrackingSummaryReport} containing data returned by the server on success; <br/>
+	 *         An exception is thrown otherwise.
+	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
+	 */
+	@Override
+	public ContactTrackingSummaryReport getSummary(String accessToken, String contactId) throws ConstantContactServiceException {
+		ContactTrackingSummaryReport summary = null;
+		try {
+			String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, String.format(Config.Endpoints.CONTACTS_TRACKING_REPORTS_SUMMARY, contactId));
+			CUrlResponse response = getRestClient().get(url, accessToken);
+
+			if (response.hasData()) {
+				summary = Component.fromJSON(response.getBody(), ContactTrackingSummaryReport.class);
+			}
+			if (response.isError()) {
+				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
+						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
+				response.getInfo().add(new CUrlRequestError("url", url));
+				constantContactException.setErrorInfo(response.getInfo());
+				throw constantContactException;
+			}
+		} catch (ConstantContactServiceException e) {
+			throw new ConstantContactServiceException(e);
+		} catch (Exception e) {
+			throw new ConstantContactServiceException(e);
+		}
+		return summary;
+	}
+
+	/**
+	 * Implements the get Bounces operation of the Contact Tracking API by calling the ConstantContact server side.
+	 * 
+	 * @param accessToken Constant Contact OAuth2 access token.
+	 * @param contactId The id of the contact.
+	 * @param limit The limit.
+	 * @return The {@link ResultSet} of {@link ContactTrackingBounce} containing data returned by the server on success; <br/>
+	 *         An exception is thrown otherwise.
+	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
+	 */
+	@Override
+	public ResultSet<ContactTrackingBounce> getBounces(String accessToken, String contactId, Integer limit) throws ConstantContactServiceException {
+
+		ResultSet<ContactTrackingBounce> bounces = null;
+		try {
+			StringBuilder sb = new StringBuilder();
+			sb.append(Config.Endpoints.BASE_URL).append(String.format(Config.Endpoints.CONTACTS_TRACKING_BOUNCES, contactId));
+			
+			if (limit != null) {
+				sb.append("?limit=").append(limit);
+			}
+			
+			String url = sb.toString();
+
+			CUrlResponse response = getRestClient().get(url, accessToken);
+
+			if (response.hasData()) {
+				bounces = Component.resultSetFromJSON(response.getBody(), ContactTrackingBounce.class);
+			}
+			if (response.isError()) {
+				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
+						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
+				response.getInfo().add(new CUrlRequestError("url", url));
+				constantContactException.setErrorInfo(response.getInfo());
+				throw constantContactException;
+			}
+		} catch (ConstantContactServiceException e) {
+			throw new ConstantContactServiceException(e);
+		} catch (Exception e) {
+			throw new ConstantContactServiceException(e);
+		}
+		return bounces;
+	}
+
+	/**
+	 * Implements the get Clicks operation of the Contact Tracking API by calling the ConstantContact server side.
+	 * 
+	 * @param accessToken Constant Contact OAuth2 access token.
+	 * @param contactId The id of the contact.
+	 * @param limit The limit.
+	 * @return The {@link ResultSet} of {@link ContactTrackingClick} containing data returned by the server on success; <br/>
+	 *         An exception is thrown otherwise.
+	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
+	 */
+	@Override
+	public ResultSet<ContactTrackingClick> getClicks(String accessToken, String contactId, Integer limit) throws ConstantContactServiceException {
+		ResultSet<ContactTrackingClick> clicks = null;
+		try {
+			StringBuilder sb = new StringBuilder();
+			sb.append(Config.Endpoints.BASE_URL).append(String.format(Config.Endpoints.CONTACTS_TRACKING_CLICKS, contactId));
+			if (limit != null) {
+				sb.append("?limit=").append(limit);
+			}
+			String url = sb.toString();
+
+			CUrlResponse response = getRestClient().get(url, accessToken);
+
+			if (response.hasData()) {
+				clicks = Component.resultSetFromJSON(response.getBody(), ContactTrackingClick.class);
+			}
+			if (response.isError()) {
+				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
+						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
+				response.getInfo().add(new CUrlRequestError("url", url));
+				constantContactException.setErrorInfo(response.getInfo());
+				throw constantContactException;
+			}
+		} catch (ConstantContactServiceException e) {
+			throw new ConstantContactServiceException(e);
+		} catch (Exception e) {
+			throw new ConstantContactServiceException(e);
+		}
+		return clicks;
+	}
+
+	/**
+	 * Implements the get Forwards operation of the Contact Tracking API by calling the ConstantContact server side.
+	 * 
+	 * @param accessToken Constant Contact OAuth2 access token.
+	 * @param contactId The id of the contact.
+	 * @param limit The limit.
+	 * @return The {@link ResultSet} of {@link ContactTrackingForward} containing data returned by the server on success; <br/>
+	 *         An exception is thrown otherwise.
+	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
+	 */
+	@Override
+	public ResultSet<ContactTrackingForward> getForwards(String accessToken, String contactId, Integer limit) throws ConstantContactServiceException {
+		ResultSet<ContactTrackingForward> forwards = null;
+		try {
+			StringBuilder sb = new StringBuilder();
+			sb.append(Config.Endpoints.BASE_URL).append(String.format(Config.Endpoints.CONTACTS_TRACKING_FORWARDS, contactId));
+			if (limit != null) {
+				sb.append("?limit=").append(limit);
+			}
+			String url = sb.toString();
+
+			CUrlResponse response = getRestClient().get(url, accessToken);
+
+			if (response.hasData()) {
+				forwards = Component.resultSetFromJSON(response.getBody(), ContactTrackingForward.class);
+			}
+			if (response.isError()) {
+				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
+						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
+				response.getInfo().add(new CUrlRequestError("url", url));
+				constantContactException.setErrorInfo(response.getInfo());
+				throw constantContactException;
+			}
+		} catch (ConstantContactServiceException e) {
+			throw new ConstantContactServiceException(e);
+		} catch (Exception e) {
+			throw new ConstantContactServiceException(e);
+		}
+		return forwards;
+	}
+
+	/**
+	 * Implements the get Opens operation of the Contact Tracking API by calling the ConstantContact server side.
+	 * 
+	 * @param accessToken Constant Contact OAuth2 access token.
+	 * @param contactId The id of the contact.
+	 * @param limit The limit.
+	 * @return The {@link ResultSet} of {@link ContactTrackingOpen} containing data returned by the server on success; <br/>
+	 *         An exception is thrown otherwise.
+	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
+	 */
+	@Override
+	public ResultSet<ContactTrackingOpen> getOpens(String accessToken, String contactId, Integer limit) throws ConstantContactServiceException {
+		ResultSet<ContactTrackingOpen> opens = null;
+		try {
+			StringBuilder sb = new StringBuilder();
+			sb.append(Config.Endpoints.BASE_URL).append(String.format(Config.Endpoints.CONTACTS_TRACKING_OPENS, contactId));
+			if (limit != null) {
+				sb.append("?limit=").append(limit);
+			}
+			String url = sb.toString();
+
+			CUrlResponse response = getRestClient().get(url, accessToken);
+
+			if (response.hasData()) {
+				opens = Component.resultSetFromJSON(response.getBody(), ContactTrackingOpen.class);
+			}
+			if (response.isError()) {
+				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
+						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
+				response.getInfo().add(new CUrlRequestError("url", url));
+				constantContactException.setErrorInfo(response.getInfo());
+				throw constantContactException;
+			}
+		} catch (ConstantContactServiceException e) {
+			throw new ConstantContactServiceException(e);
+		} catch (Exception e) {
+			throw new ConstantContactServiceException(e);
+		}
+		return opens;
+	}
+
+	/**
+	 * Implements the get Sends operation of the Contact Tracking API by calling the ConstantContact server side.
+	 * 
+	 * @param accessToken Constant Contact OAuth2 access token.
+	 * @param contactId The id of the contact.
+	 * @param limit The limit.
+	 * @return The {@link ResultSet} of {@link ContactTrackingSend} containing data returned by the server on success; <br/>
+	 *         An exception is thrown otherwise.
+	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
+	 */
+	@Override
+	public ResultSet<ContactTrackingSend> getSends(String accessToken, String contactId, Integer limit) throws ConstantContactServiceException {
+		ResultSet<ContactTrackingSend> sends = null;
+		try {
+			StringBuilder sb = new StringBuilder();
+			sb.append(Config.Endpoints.BASE_URL).append(String.format(Config.Endpoints.CONTACTS_TRACKING_SENDS, contactId));
+			if (limit != null) {
+				sb.append("?limit=").append(limit);
+			}
+			String url = sb.toString();
+
+			CUrlResponse response = getRestClient().get(url, accessToken);
+
+			if (response.hasData()) {
+				sends = Component.resultSetFromJSON(response.getBody(), ContactTrackingSend.class);
+			}
+			if (response.isError()) {
+				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
+						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
+				response.getInfo().add(new CUrlRequestError("url", url));
+				constantContactException.setErrorInfo(response.getInfo());
+				throw constantContactException;
+			}
+		} catch (ConstantContactServiceException e) {
+			throw new ConstantContactServiceException(e);
+		} catch (Exception e) {
+			throw new ConstantContactServiceException(e);
+		}
+		return sends;
+	}
+
+	/**
+	 * Implements the get Unsubscribes operation of the Contact Tracking API by calling the ConstantContact server side.
+	 * 
+	 * @param accessToken Constant Contact OAuth2 access token.
+	 * @param contactId The id of the contact.
+	 * @param limit The limit.
+	 * @return The {@link ResultSet} of {@link ContactTrackingUnsubscribe} containing data returned by the server on success; <br/>
+	 *         An exception is thrown otherwise.
+	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
+	 */
+	@Override
+	public ResultSet<ContactTrackingUnsubscribe> getUnsubscribes(String accessToken, String contactId, Integer limit) throws ConstantContactServiceException {
+		ResultSet<ContactTrackingUnsubscribe> unsubscribes = null;
+		try {
+			StringBuilder sb = new StringBuilder();
+			sb.append(Config.Endpoints.BASE_URL).append(String.format(Config.Endpoints.CONTACTS_TRACKING_UNSUBSCRIBES, contactId));
+			if (limit != null) {
+				sb.append("?limit=").append(limit);
+			}
+			String url = sb.toString();
+
+			CUrlResponse response = getRestClient().get(url, accessToken);
+
+			if (response.hasData()) {
+				unsubscribes = Component.resultSetFromJSON(response.getBody(), ContactTrackingUnsubscribe.class);
+			}
+			if (response.isError()) {
+				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
+						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
+				response.getInfo().add(new CUrlRequestError("url", url));
+				constantContactException.setErrorInfo(response.getInfo());
+				throw constantContactException;
+			}
+		} catch (ConstantContactServiceException e) {
+			throw new ConstantContactServiceException(e);
+		} catch (Exception e) {
+			throw new ConstantContactServiceException(e);
+		}
+		return unsubscribes;
+	}
+
+	/**
+	 * Default constructor.
+	 */
+	public ContactTrackingService() {
+		super();
+	}
+}

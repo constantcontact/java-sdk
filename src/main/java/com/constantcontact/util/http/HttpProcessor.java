@@ -1,114 +1,183 @@
 package com.constantcontact.util.http;
 
-import java.net.URI;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.StatusLine;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
-
+import com.constantcontact.ConstantContact;
+import com.constantcontact.components.Component;
+import com.constantcontact.exceptions.component.ConstantContactComponentException;
+import com.constantcontact.httpclient.HttpResponse;
+import com.constantcontact.httpclient.client.methods.HttpDelete;
+import com.constantcontact.httpclient.client.methods.HttpGet;
+import com.constantcontact.httpclient.client.methods.HttpPost;
+import com.constantcontact.httpclient.client.methods.HttpPut;
+import com.constantcontact.httpclient.client.methods.HttpUriRequest;
+import com.constantcontact.httpclient.entity.StringEntity;
+import com.constantcontact.httpclient.impl.client.DefaultHttpClient;
 import com.constantcontact.util.CUrlRequestError;
 import com.constantcontact.util.CUrlResponse;
+import com.constantcontact.util.Config;
+import com.constantcontact.util.http.constants.ProcessorBase;
 
 /**
- * Class responsible for making http requests.
+ * Low-level Class responsible with HTTP requests in Constant Contact.<br/>
+ * Outside has access only to {@link HttpProcessor#makeHttpRequest(String, HttpMethod, String, String)}
  * 
  * @author ConstantContact
  */
-public class HttpProcessor {
-	public static final String USER_AGENT_HEADER = "User-Agent";
-	public static final String CONTENT_TYPE_HEADER = "Content-Type";
-	public static final String HOST_HEADER = "Host";
-	public static final String ACCEPT_HEADER = "Accept";
-	private final static String AUTHORIZATION_HEADER = "Authorization";
-	private final static String JSON_CONTENT_TYPE = "application/json";
-	
-	/**
-	 * Make an http request.
-	 * @param urlParam Request URL.
-	 * @param httpMethod HTTP method.
-	 * @param accessToken Constant Contact OAuth2 access token.
-	 * @param data >Data to send with request.
-	 */
-	public static CUrlResponse makeHttpRequest(String urlParam, HttpMethod httpMethod, String accessToken, String data) {
-			DefaultHttpClient client = new DefaultHttpClient();
-			HttpRequestBase request = null;
-			request = buildHttpMethod(httpMethod);
-			request.setURI(URI.create(urlParam));
-			request.setHeader(CONTENT_TYPE_HEADER, JSON_CONTENT_TYPE);
-			request.setHeader(ACCEPT_HEADER, JSON_CONTENT_TYPE);
-			request.setHeader(AUTHORIZATION_HEADER, "Bearer " + accessToken);
-			HttpResponse httpResp = null;
-			CUrlResponse urlResponse = new CUrlResponse();
-			String responseMessage = null;
-			String errorMessage = null;
-			try {
-				httpResp = client.execute(request);
-				urlResponse.setStatusCode(httpResp.getStatusLine().getStatusCode());
-				if (urlResponse.getStatusCode() == HttpStatus.SC_NO_CONTENT) {
-					return urlResponse;
-				}
-				responseMessage = EntityUtils.toString(httpResp.getEntity());
-				if (responseMessage == null || responseMessage.trim() == "") {
-					errorMessage = "Response was not returned or is null";
-				}
-				if (urlResponse.getStatusCode() != HttpStatus.SC_OK) {
-					StatusLine statusLine = httpResp.getStatusLine();
-					errorMessage = "Response with status: " + statusLine.getStatusCode() + " " + statusLine.getReasonPhrase();
-					urlResponse.setError(true);
-				}
-			} catch (Exception e) {
-				urlResponse.setError(true);
-				errorMessage = e.getMessage();
-			}
-			if (urlResponse.isError()) {
-				if (responseMessage != null && responseMessage.contains("error_message")) {
-					urlResponse.setInfo(CUrlRequestError.listFromJSON(responseMessage, CUrlRequestError.class));
-				} else {
-					urlResponse.setBody(errorMessage);
-				}
-			} else {
-				urlResponse.setBody(responseMessage);
-			}
-			return urlResponse;
-	}
+public class HttpProcessor implements ProcessorBase {
 
 	/**
-	 * Builds Htt request method based on <code>HttpMethod</code> enum value
-	 * @param httpMethod <code>HttpMethod</code> enum value
-	 * @return <code>HttpRequestBase</code> object.
+	 * Makes a HTTP request to the Endpoint specified in urlParam and using the HTTP method specified by httpMethod.
+	 * 
+	 * @param urlParam The URL of the resource, as a {@link String}
+	 * @param httpMethod The {@link HttpMethod}
+	 * @param accessToken Constant Contact OAuth2 access token.
+	 * @param data A {@link String} containing the data or NULL when there is no data to send (eg. in GET call).
+	 * @return A {@link CUrlResponse} containing either the response data, or the error info otherwise.
 	 */
-	private static HttpRequestBase buildHttpMethod(HttpMethod httpMethod) {
-		HttpRequestBase request = null;
-		switch (httpMethod) {
-			case DELETE:
-				request = new HttpDelete();
-				break;
-			case GET:
-				request = new HttpGet();
-				break;
-			case POST:
-				request = new HttpPost();
-				break;
-			case PUT:
-				request = new HttpPut();
-				break;
+	public static CUrlResponse makeHttpRequest(String urlParam, HttpMethod httpMethod, String accessToken, String data) {
+
+		DefaultHttpClient client = new DefaultHttpClient();
+		HttpUriRequest uriRequest = null;
+		BufferedReader reader = null;
+		StringBuilder buffer = null; // we'll use StringBuilder to reduce the amount of garbage collection
+		String line = "";
+
+		CUrlResponse urlResponse = new CUrlResponse();
+		String responseMessage = null;
+		String errorMessage = null;
+		try {
+			uriRequest = clientConnection(urlParam, httpMethod, accessToken, data);
+			HttpResponse httpResponse = client.execute(uriRequest);
+
+			int responseCode = httpResponse.getStatusLine().getStatusCode();
+			urlResponse.setStatusCode(responseCode); // first of all, set the status code.
+
+			if (responseCode == HttpURLConnection.HTTP_NO_CONTENT) { // nothing else to do since we came out empty...
+				return urlResponse;
+			}
+
+			if (responseCode != HttpURLConnection.HTTP_OK && responseCode != Config.HTTP_CODES.EMAIL_CAMPAIGN_SCHEDULE_CREATED) {
+				String statusLine = httpResponse.getStatusLine().toString();
+				errorMessage = "Response with status: " + statusLine;
+				urlResponse.setError(true);
+			}
+			
+			reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()));
+			buffer = new StringBuilder();
+			while ((line = reader.readLine()) != null) {
+				buffer.append(line).append('\n');
+			}
+			responseMessage = buffer.toString();
+
+			if (responseMessage == null || responseMessage.trim() == "") {
+				errorMessage = "Response was not returned or is null";
+			}
+
+		} catch (Exception e) {
+			urlResponse.setError(true);
+			errorMessage = e.getMessage();
+		} finally { // we must manually handle release
+
+			if (reader != null) {
+				try {
+					reader.close();
+				} catch (IOException e) {
+				}// silently ignore
+				reader = null;
+			}
+			buffer = null;
+			client = null;
 		}
-		return request;
+		if (urlResponse.isError()) {
+			
+			List<CUrlRequestError> cUrlRequestErrors = new ArrayList<CUrlRequestError>();
+			
+			//if there is an error and response message is not empty capture server errors
+			if(responseMessage != null) {				
+				try {					
+					List<CUrlRequestError> cUrlRequestErrors2 = Component.listFromJSON(responseMessage, CUrlRequestError.class);
+					cUrlRequestErrors.addAll(cUrlRequestErrors2);
+					
+				} catch (ConstantContactComponentException e) {
+					CUrlRequestError cUrlRequestError = new CUrlRequestError("error", errorMessage);
+					cUrlRequestErrors.add(cUrlRequestError);
+				}				
+			} else {
+				CUrlRequestError cUrlRequestError = new CUrlRequestError("error", errorMessage);
+				cUrlRequestErrors.add(cUrlRequestError);				
+			}
+			urlResponse.setInfo(cUrlRequestErrors);
+			
+		} else {
+			urlResponse.setBody(responseMessage);
+		}
+
+		return urlResponse;
 	}
-	
+
+
 	/**
-	 * Http methods.
-	 *  
-	 * @author ConstantContact
+	 * Create the UriRequest to the Constant Contact endpoint.
+	 * 
+	 * @param urlParam The exact URL to request.
+	 * @param httpMethod The {@link HttpMethod} specifying the HTTP Method to use (POST, GET, etc)
+	 * @param accessToken The Constant Contact OAuth2 access token.
+	 * @return A HttpUriRequest
+	 * @throws Exception When something went wrong.
 	 */
-	public static enum HttpMethod {
-		GET, POST, DELETE, PUT
+	
+	private static HttpUriRequest clientConnection(String urlParam, HttpMethod httpMethod, String accessToken, String data) throws Exception {
+		HttpUriRequest response;
+		StringEntity params = new StringEntity("");
+		String bindString = urlParam.contains("=") ?  "&" : "?";		
+		urlParam = String.format("%1$s%2$sapi_key=%3$s", urlParam, bindString, ConstantContact.getInstance().getApiKey());
+		
+		switch (httpMethod) {
+		case GET:
+			HttpGet get = new HttpGet(urlParam);
+			response = get;
+			break;
+		case POST:
+			HttpPost post = new HttpPost(urlParam);	
+			params = new StringEntity(data);
+			post.setEntity(params);
+		    response = post;
+			break;
+		case DELETE:
+			HttpDelete delete = new HttpDelete(urlParam);
+			response = delete;
+			break;
+		case PUT:
+			HttpPut put = new HttpPut(urlParam);
+			params = new StringEntity(data);
+			put.setEntity(params);
+			response = put;
+			break;
+		default:
+			HttpGet get2 = new HttpGet(urlParam);
+			response = get2;
+			break;
+		}
+
+		response.setHeader(CONTENT_TYPE_HEADER, JSON_CONTENT_TYPE);
+		response.setHeader(ACCEPT_HEADER, JSON_CONTENT_TYPE);
+		response.setHeader(AUTHORIZATION_HEADER, "Bearer " + accessToken);
+		response.setHeader("Connection", "Keep-Alive");
+		response.setHeader("Keep-Alive", "header");
+
+		return response;
 	}
+	/**
+	 * Default constructor.
+	 */
+	public HttpProcessor() {
+		super();
+	}
+
 }

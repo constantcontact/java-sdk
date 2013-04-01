@@ -1,17 +1,18 @@
 package com.constantcontact.util;
 
 import com.constantcontact.util.http.HttpProcessor;
-import com.constantcontact.util.http.HttpProcessor.HttpMethod;
+import com.constantcontact.util.http.constants.ProcessorBase.HttpMethod;
 
 /**
- * Class implementation of REST client.
+ * Implementation of REST client in Constant Contact.
  * 
  * @author ConstantContact
- *
+ * 
  */
 public class RestClient implements IRestClient {
 	/**
 	 * Make HTTP GET request.
+	 * 
 	 * @param url Request URL.
 	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @return The response body, http info, and error (if one exists).
@@ -22,7 +23,8 @@ public class RestClient implements IRestClient {
 	}
 
 	/**
-	 * Make an HTTP POST request. 
+	 * Make an HTTP POST request.
+	 * 
 	 * @param url Request URL.
 	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param data Data to send with request.
@@ -34,7 +36,8 @@ public class RestClient implements IRestClient {
 	}
 
 	/**
-	 * Make an HTTP PUT request. 
+	 * Make an HTTP PUT request.
+	 * 
 	 * @param url Request URL.
 	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param data Data to send with request.
@@ -59,5 +62,12 @@ public class RestClient implements IRestClient {
 
 	private CUrlResponse makeHttpRequest(String urlParam, HttpMethod method, String accessToken, String data) {
 		return HttpProcessor.makeHttpRequest(urlParam, method, accessToken, data);
+	}
+	
+	/**
+	 * Default constructor.
+	 */
+	public RestClient() {
+		super();
 	}
 }

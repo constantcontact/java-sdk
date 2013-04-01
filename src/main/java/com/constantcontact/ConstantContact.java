@@ -2,18 +2,74 @@ package com.constantcontact;
 
 import java.util.List;
 
-import com.constantcontact.auth.CtcOAuth2;
-import com.constantcontact.auth.ICtcOAuth2;
+import com.constantcontact.authentication.CtcOAuth2;
+import com.constantcontact.authentication.ICtcOAuth2;
+import com.constantcontact.components.accounts.VerifiedEmailAddress;
+import com.constantcontact.components.activities.contacts.request.AddContactsRequest;
+import com.constantcontact.components.activities.contacts.request.ClearListsRequest;
+import com.constantcontact.components.activities.contacts.request.ExportContactsRequest;
+import com.constantcontact.components.activities.contacts.request.RemoveContactsRequest;
+import com.constantcontact.components.activities.contacts.response.ContactsResponse;
+import com.constantcontact.components.activities.contacts.response.DetailedStatusReport;
+import com.constantcontact.components.activities.contacts.response.SummaryReport;
 import com.constantcontact.components.contacts.Contact;
 import com.constantcontact.components.contacts.ContactList;
-import com.constantcontact.services.ContactService;
-import com.constantcontact.services.IContactService;
-import com.constantcontact.services.IListService;
-import com.constantcontact.services.ListService;
+import com.constantcontact.components.contacts.tracking.bounces.ContactTrackingBounce;
+import com.constantcontact.components.contacts.tracking.clicks.ContactTrackingClick;
+import com.constantcontact.components.contacts.tracking.forwards.ContactTrackingForward;
+import com.constantcontact.components.contacts.tracking.opens.ContactTrackingOpen;
+import com.constantcontact.components.contacts.tracking.reports.summary.ContactTrackingSummaryReport;
+import com.constantcontact.components.contacts.tracking.sends.ContactTrackingSend;
+import com.constantcontact.components.contacts.tracking.unsubscribes.ContactTrackingUnsubscribe;
+import com.constantcontact.components.emailcampaigns.EmailCampaignBase;
+import com.constantcontact.components.emailcampaigns.EmailCampaignRequest;
+import com.constantcontact.components.emailcampaigns.EmailCampaignResponse;
+import com.constantcontact.components.emailcampaigns.schedules.EmailCampaignSchedule;
+import com.constantcontact.components.emailcampaigns.tracking.bounces.EmailCampaignTrackingBounce;
+import com.constantcontact.components.emailcampaigns.tracking.clicks.EmailCampaignTrackingClick;
+import com.constantcontact.components.emailcampaigns.tracking.forwards.EmailCampaignTrackingForward;
+import com.constantcontact.components.emailcampaigns.tracking.opens.EmailCampaignTrackingOpen;
+import com.constantcontact.components.emailcampaigns.tracking.reports.summary.EmailCampaignTrackingSummary;
+import com.constantcontact.components.emailcampaigns.tracking.sends.EmailCampaignTrackingSend;
+import com.constantcontact.components.emailcampaigns.tracking.unsubscribes.EmailCampaignTrackingUnsubscribe;
+import com.constantcontact.components.generic.response.ResultSet;
+import com.constantcontact.exceptions.ConstantContactException;
+import com.constantcontact.exceptions.service.ConstantContactServiceException;
+import com.constantcontact.services.accounts.AccountService;
+import com.constantcontact.services.accounts.IAccountService;
+import com.constantcontact.services.activities.BulkActivitiesService;
+import com.constantcontact.services.activities.IBulkActivitiesService;
+import com.constantcontact.services.contactlists.ContactListService;
+import com.constantcontact.services.contactlists.IContactListService;
+import com.constantcontact.services.contacts.ContactService;
+import com.constantcontact.services.contacts.IContactService;
+import com.constantcontact.services.contacts.tracking.ContactTrackingService;
+import com.constantcontact.services.contacts.tracking.IContactTrackingService;
+import com.constantcontact.services.emailcampaigns.EmailCampaignService;
+import com.constantcontact.services.emailcampaigns.IEmailCampaignService;
+import com.constantcontact.services.emailcampaigns.schedule.EmailCampaignScheduleService;
+import com.constantcontact.services.emailcampaigns.schedule.IEmailCampaignScheduleService;
+import com.constantcontact.services.emailcampaigns.tracking.EmailCampaignTrackingService;
+import com.constantcontact.services.emailcampaigns.tracking.IEmailCampaignTrackingService;
 import com.constantcontact.util.Config;
+import com.constantcontact.util.ConfigurationManager;
+import com.constantcontact.util.Config.Errors;
 
 /**
- * Main class meant to be used by users to access Constant Contact API functionality.
+ * Main Constant Contact class.<br/>
+ * This is meant to be used by users to access Constant Contact API functionality.<br/>
+ * <b>DO NOT USE SERVICE LAYER CALLS ON YOUR OWN</b>, unless you have your own way of providing the OAuth access token AND data validation. <br/>
+ * Class Contains a local instance of {@link CtcOAuth2} and one from each Service :
+ * <ul>
+ * <li>{@link ContactService}</li>
+ * <li>{@link ContactListService}</li>
+ * <li>{@link EmailCampaignService}</li>
+ * <li>{@link AccountService}</li>
+ * <li>{@link EmailCampaignScheduleService}</li>
+ * <li>{@link EmailCampaignTrackingService}</li>
+ * <li>{@link ContactTrackingService}</li>
+ * <li>{@link BulkActivitiesService}</li>
+ * </ul>
  * 
  * @author ConstantContact
  */
@@ -21,19 +77,126 @@ public class ConstantContact {
 	private String accessToken;
 	private ICtcOAuth2 oAuth;
 	private IContactService contactService;
-	private IListService listService;
+	private IContactListService contactListService;
+	private IEmailCampaignService emailCampaignService;
+	private IAccountService accountService;
+	private IEmailCampaignScheduleService emailCampaignScheduleService;
+	private IEmailCampaignTrackingService emailCampaignTrackingService;
+	private IContactTrackingService contactTrackingService;
+	private IBulkActivitiesService bulkActivitiesService;
 
 	/**
-	 * Class constructor.
+	 * Default Class constructor.<br/>
+	 * Initializes all Services and the OAuth token fetcher;
 	 */
 	public ConstantContact() {
-		this.oAuth = new CtcOAuth2();
-		this.contactService = new ContactService();
-		this.listService = new ListService();
+		
+		USERNAME = ConfigurationManager.getAppSettings("Username");
+		PASSWORD = ConfigurationManager.getAppSettings("Password");
+		API_KEY = ConfigurationManager.getAppSettings("APIKey");
+		REDIRECT_URL = ConfigurationManager.getAppSettings("RedirectURL");
+		
+		this.setOAuth(new CtcOAuth2());
+		this.setContactService(new ContactService());
+		this.setListService(new ContactListService());
+		this.setEmailCampaignService(new EmailCampaignService());
+		this.setAccountService(new AccountService());
+		this.setEmailCampaignScheduleService(new EmailCampaignScheduleService());
+		this.setEmailCampaignTrackingService(new EmailCampaignTrackingService());
+		this.setContactTrackingService(new ContactTrackingService());
+		this.setBulkActivitiesService(new BulkActivitiesService());
 	}
 	
 	/**
-	 * Get the access token.
+	 * Custom Class constructor.<br/>
+	 * Initializes all Services and the OAuth token fetcher;
+	 *
+	 * @param username The email account
+	 * @param password The password of the Constant Contact email account.
+	 * @param apiKey The API key provided by Constant Contact.
+	 * @param redirectUrl The redirect url.
+	 */
+	public ConstantContact(String username, String password, String apiKey, String redirectUrl) {
+		
+		USERNAME = username;
+		PASSWORD = password;
+		API_KEY = apiKey;
+		REDIRECT_URL = redirectUrl;
+		
+		this.setOAuth(new CtcOAuth2(username, password, apiKey, redirectUrl));
+		this.setContactService(new ContactService());
+		this.setListService(new ContactListService());
+		this.setEmailCampaignService(new EmailCampaignService());
+		this.setAccountService(new AccountService());
+		this.setEmailCampaignScheduleService(new EmailCampaignScheduleService());
+		this.setEmailCampaignTrackingService(new EmailCampaignTrackingService());
+		this.setContactTrackingService(new ContactTrackingService());
+		this.setBulkActivitiesService(new BulkActivitiesService());
+	}
+	
+	/**
+	 * The Singleton holder class for Constant Contact.
+	 * 
+	 * @author Constant Contact
+	 */
+	private static final class SingletonHolder {
+		private static final ConstantContact INSTANCE = new ConstantContact(USERNAME, PASSWORD, API_KEY, REDIRECT_URL);
+	}
+	
+	/**
+	 * The Singleton getter method for Constant Contact.
+	 * 
+	 * @return The instance of Constant Contact class.
+	 */
+	public static final ConstantContact getInstance() {
+		return SingletonHolder.INSTANCE;
+	}
+	
+	private static String USERNAME;
+	private static String PASSWORD;
+	private static String API_KEY;
+	private static String REDIRECT_URL;
+
+	/**
+	 * Gets the username.
+	 * 
+	 * @return The username.
+	 */
+	public String getUsername() {
+		return USERNAME;
+	}
+	
+	/**
+	 * Gets the password.
+	 * 
+	 * @return The password.
+	 */
+	public String getPassword() {
+		return PASSWORD;
+	}
+	
+	/**
+	 * Gets the redirect URL.
+	 * 
+	 * @return The redirect URL.
+	 */
+	public String getRedirectUrl() {
+		return REDIRECT_URL;
+	}
+	
+	/**
+	 * Gets the API key.
+	 * 
+	 * @return The API key.
+	 */
+	public String getApiKey() {
+		return API_KEY;
+	}
+
+	/**
+	 * Get the access token.<br/>
+	 * Actually more than a getter: if accessToken is null, method will call the handshake flow and get it.
+	 * 
 	 * @return The access token.
 	 */
 	public String getAccessToken() {
@@ -42,33 +205,43 @@ public class ConstantContact {
 		}
 		return accessToken;
 	}
-	
+
+
+	// XXX:
+	// ****************************************************************************//
+	// GETTERS AND SETTERS ********************************************************//
+	// ****************************************************************************//
+
 	/**
 	 * Get the authorization class.
+	 * 
 	 * @return The authorization class.
 	 */
 	public ICtcOAuth2 getOAuth() {
 		return oAuth;
 	}
-	
+
 	/**
 	 * Set the authorization class.
+	 * 
 	 * @param oAuth The authorization class.
 	 */
 	public void setOAuth(ICtcOAuth2 oAuth) {
 		this.oAuth = oAuth;
 	}
-	
+
 	/**
 	 * Get the Contact service.
+	 * 
 	 * @return The Contact service.
 	 */
 	public IContactService getContactService() {
 		return contactService;
 	}
-	
+
 	/**
 	 * Set the Contact service.
+	 * 
 	 * @param contactService The Contact service.
 	 */
 	public void setContactService(IContactService contactService) {
@@ -77,219 +250,1803 @@ public class ConstantContact {
 
 	/**
 	 * Get the List service.
+	 * 
 	 * @return The List service.
 	 */
-	public IListService getListService() {
-		return listService;
-	}
-	
-	/**
-	 * Set the List service.
-	 * @param listService The List service.
-	 */
-	public void setListService(IListService listService) {
-		this.listService = listService;
+	public IContactListService getListService() {
+		return contactListService;
 	}
 
 	/**
-	 * Get a set of contacts.
-	 * @param offset Denotes the starting number for the result set.
-	 * @param limit Denotes the number of results per set, limited to 50.
-	 * @return Returns a list of contacts.
+	 * Set the List service.
+	 * 
+	 * @param contactListService The List service.
 	 */
-	public List<Contact> getContacts(Integer offset, Integer limit) {
+	public void setListService(IContactListService contactListService) {
+		this.contactListService = contactListService;
+	}
+
+	/**
+	 * Set the {@link EmailCampaignService}
+	 * 
+	 * @param emailCampaignService The {@link EmailCampaignService}
+	 */
+	public void setEmailCampaignService(IEmailCampaignService emailCampaignService) {
+		this.emailCampaignService = emailCampaignService;
+	}
+
+	/**
+	 * Get the {@link EmailCampaignService}
+	 * 
+	 * @return The {@link EmailCampaignService}
+	 */
+	public IEmailCampaignService getEmailCampaignService() {
+		return emailCampaignService;
+	}
+
+	/**
+	 * Set the {@link AccountService}
+	 * 
+	 * @param accountService The {@link AccountService}
+	 */
+	public void setAccountService(IAccountService accountService) {
+		this.accountService = accountService;
+	}
+
+	/**
+	 * Get the {@link AccountService}
+	 * 
+	 * @return The {@link AccountService}
+	 */
+	public IAccountService getAccountService() {
+		return accountService;
+	}
+
+	/**
+	 * Set the {@link EmailCampaignScheduleService}
+	 * 
+	 * @param emailCampaignScheduleService The {@link EmailCampaignScheduleService}
+	 */
+	public void setEmailCampaignScheduleService(IEmailCampaignScheduleService emailCampaignScheduleService) {
+		this.emailCampaignScheduleService = emailCampaignScheduleService;
+	}
+
+	/**
+	 * Get the {@link EmailCampaignScheduleService}
+	 * 
+	 * @return The {@link EmailCampaignScheduleService}
+	 */
+	public IEmailCampaignScheduleService getEmailCampaignScheduleService() {
+		return emailCampaignScheduleService;
+	}
+
+	/**
+	 * Set the {@link EmailCampaignTrackingService}
+	 * 
+	 * @param emailCampaignTrackingSummaryService The {@link EmailCampaignTrackingService}
+	 */
+	public void setEmailCampaignTrackingService(IEmailCampaignTrackingService emailCampaignTrackingSummaryService) {
+		this.emailCampaignTrackingService = emailCampaignTrackingSummaryService;
+	}
+
+	/**
+	 * Get the {@link EmailCampaignTrackingService}
+	 * 
+	 * @return The {@link EmailCampaignTrackingService}
+	 */
+	public IEmailCampaignTrackingService getEmailCampaignTrackingService() {
+		return emailCampaignTrackingService;
+	}
+
+	/**
+	 * Set the {@link ContactTrackingService}
+	 * 
+	 * @param contactTrackingService The {@link ContactTrackingService}
+	 */
+	public void setContactTrackingService(IContactTrackingService contactTrackingService) {
+		this.contactTrackingService = contactTrackingService;
+	}
+
+	/**
+	 * Get the {@link ContactTrackingService}
+	 * 
+	 * @return The {@link ContactTrackingService}
+	 */
+	public IContactTrackingService getContactTrackingService() {
+		return contactTrackingService;
+	}
+
+	/**
+	 * Set the {@link BulkActivitiesService}
+	 * 
+	 * @param bulkActivitiesService The {@link BulkActivitiesService}
+	 */
+	public void setBulkActivitiesService(IBulkActivitiesService bulkActivitiesService) {
+		this.bulkActivitiesService = bulkActivitiesService;
+	}
+
+	/**
+	 * Get the {@link BulkActivitiesService}
+	 * 
+	 * @return The {@link BulkActivitiesService}
+	 */
+	public IBulkActivitiesService getBulkActivitiesService() {
+		return bulkActivitiesService;
+	}
+
+	// XXX:
+	// ****************************************************************************//
+	// END OF GETTERS AND SETTERS ************************************************//
+	// ****************************************************************************//
+
+	/**
+	 * Get contacts API.<br/>
+	 * Details in : {@link ContactService#getContacts(String, Integer, Integer)}
+	 * 
+	 * @param offset The offset
+	 * @param limit The limit
+	 * @return The contacts.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public ResultSet<Contact> getContacts(Integer offset, Integer limit) throws ConstantContactServiceException {
 		return contactService.getContacts(this.getAccessToken(), offset, limit);
 	}
-	
+
 	/**
-	 * Get a set of contacts.
-	 * @return A list of contacts.
+	 * Get contacts API.<br/>
+	 * Details in : {@link ContactService#getContacts(String, Integer, Integer)}
+	 * 
+	 * @return The contacts.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
 	 */
-	public List<Contact> getContacts() {
+	public ResultSet<Contact> getContacts() throws ConstantContactServiceException {
 		return contactService.getContacts(this.getAccessToken(), null, null);
 	}
-	
+
 	/**
-	 * Get an individual contact.
-	 * @param contactId Id of the contact to retrieve.
-	 * @return Returns a contact.
+	 * Get contact API.<br/>
+	 * Details in : {@link ContactService#getContact(String, String)}
+	 * 
+	 * @param contactId The contact id.
+	 * @return The contact.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
 	 */
-	public Contact getContact(int contactId) {
+	public Contact getContact(String contactId) throws ConstantContactServiceException {
 		return contactService.getContact(this.getAccessToken(), contactId);
 	}
-	
+
 	/**
-	 * Get contacts with a specified email address.
-	 * @param email Contact email address to search for.
-	 * @return Returns a list of contacts.
+	 * Get Contact By Email API.<br/>
+	 * Details in : {@link ContactService#getContactByEmail(String, String)}
+	 * 
+	 * @param email The email address.
+	 * @return A {@link ResultSet} of {@link Contact}.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
 	 */
-	public List<Contact> getContactByEmail(String email) {
+	public ResultSet<Contact> getContactByEmail(String email) throws ConstantContactServiceException {
 		return contactService.getContactByEmail(this.getAccessToken(), email);
 	}
 
 	/**
-	 * Add a new contact to an account.
-	 * @param contact Contact to add.
-	 * @return Returns the newly created contact.
+	 * Add Contact API.<br/>
+	 * Details in : {@link ContactService#addContact(String, Contact)}
+	 * 
+	 * @param contact The {@link Contact} to add.
+	 * @return The added contact.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
 	 */
-	public Contact addContact(Contact contact) {
+	public Contact addContact(Contact contact) throws ConstantContactServiceException {
 		return contactService.addContact(this.getAccessToken(), contact);
 	}
-	
+
 	/**
-	 * Sets an individual contact to 'REMOVED' status.
-	 * @param contact Contact to remove.
-	 * @return Returns true if operation succeeded.
-	 * @throws IllegalArgumentException for contact id equal or less than 0.
+	 * Delete Contact API.<br/>
+	 * Details in : {@link #deleteContact(String)}
+	 * 
+	 * @param contact The contact to delete.
+	 * @return true in case of success, an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
 	 */
-	public boolean deleteContact(Contact contact) {
+	public boolean deleteContact(Contact contact) throws IllegalArgumentException, ConstantContactServiceException {
 		if (contact == null) {
 			throw new IllegalArgumentException(Config.Errors.CONTACT_OR_ID);
 		}
 		return deleteContact(contact.getId());
 	}
-	
+
 	/**
-	 * Sets an individual contact to 'REMOVED' status.
-	 * @param contactId Contact id.
-	 * @return Returns true if operation succeeded.
-	 * @throws IllegalArgumentException for contact id equal or less than 0.
+	 * Delete Contact API.<br/>
+	 * Details in : {@link ContactService#deleteContact(String, String)}
+	 * 
+	 * @param contactId The contact id.
+	 * @return true in case of success, an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
 	 */
-    public boolean deleteContact(int contactId) {
-        if (contactId < 1) {
-            throw new IllegalArgumentException(Config.Errors.CONTACT_OR_ID);
-        }
-        return contactService.deleteContact(this.getAccessToken(), contactId);
-    }
+	public boolean deleteContact(String contactId) throws IllegalArgumentException, ConstantContactServiceException {
+		try {
+			int nContactId = Integer.parseInt(contactId);
+			if (nContactId < 1) {
+				throw new NumberFormatException();
+			}
+		} catch (NumberFormatException e) {
+			throw new IllegalArgumentException(Config.Errors.CONTACT_OR_ID);
+		}
+		return contactService.deleteContact(this.getAccessToken(), contactId);
+	}
 
-    /**
-     * Delete a contact from all contact lists.
-     * @param contactId Contact id.
-     * @return Returns true if operation succeeded.
-     * @throws IllegalArgumentException for contact id equal or less than 0.
-     */
-    public boolean deleteContactFromLists(int contactId)
-    {
-        if (contactId < 1) {
-            throw new IllegalArgumentException(Config.Errors.CONTACT_OR_ID);
-        }
-        return contactService.deleteContactFromLists(this.getAccessToken(), contactId);
-    }
+	/**
+	 * Delete Contact From Lists API.<br/>
+	 * Details in : {@link ContactService#deleteContactFromLists(String, String)}
+	 * 
+	 * @param contactId The contact id.
+	 * @return true in case of success, an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public boolean deleteContactFromLists(String contactId) throws IllegalArgumentException, ConstantContactServiceException {
+		try {
+			int nContactId = Integer.parseInt(contactId);
+			if (nContactId < 1) {
+				throw new NumberFormatException();
+			}
+		} catch (NumberFormatException e) {
+			throw new IllegalArgumentException(Config.Errors.CONTACT_OR_ID);
+		}
+		return contactService.deleteContactFromLists(this.getAccessToken(), contactId);
+	}
 
-    /**
-     * Delete a contact from all contact lists.
-     * @param contact Contact object.
-     * @return Returns true if operation succeeded.
-     * @throws IllegalArgumentException for empty contact.
-     */
-    public boolean deleteContactFromLists(Contact contact) {
-        if (contact == null) {
-            throw new IllegalArgumentException(Config.Errors.CONTACT_OR_ID);
-        }
-        return contactService.deleteContactFromLists(this.getAccessToken(), contact.getId());
-    }
+	/**
+	 * Delete Contact From Lists API.<br/>
+	 * Details in : {@link ContactService#deleteContactFromLists(String, String)}
+	 * 
+	 * @param contact The Contact to delete. Match is done on id.
+	 * @return true in case of success, an exception is thrown otherwise.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public boolean deleteContactFromLists(Contact contact) throws ConstantContactServiceException {
+		if (contact == null) {
+			throw new IllegalArgumentException(Config.Errors.CONTACT_OR_ID);
+		}
+		return contactService.deleteContactFromLists(this.getAccessToken(), contact.getId());
+	}
 
-    /**
-     * Delete a contact from all contact lists.
-     * @param contact Contact object.
-     * @param list List object
-     * @return Returns true if operation succeeded.
-     * @throws IllegalArgumentException for empty contact or empty list.
-     */
-    public boolean deleteContactFromList(Contact contact, ContactList list) {
-        if (contact == null) {
-            throw new IllegalArgumentException(Config.Errors.CONTACT_OR_ID);
-        }
-        if (list == null) {
-            throw new IllegalArgumentException(Config.Errors.LIST_OR_ID);
-        }
-        return contactService.deleteContactFromList(this.getAccessToken(), contact.getId(), list.getId());
-    }
+	/**
+	 * Delete Contact From List API.<br/>
+	 * Details in : {@link ContactService#deleteContactFromList(String, String, String)}
+	 * 
+	 * @param contact The {@link Contact}
+	 * @param list The {@link ContactList}
+	 * @return true in case of success, an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public boolean deleteContactFromList(Contact contact, ContactList list) throws IllegalArgumentException, ConstantContactServiceException {
+		if (contact == null) {
+			throw new IllegalArgumentException(Config.Errors.CONTACT_OR_ID);
+		}
+		if (list == null) {
+			throw new IllegalArgumentException(Config.Errors.LIST_OR_ID);
+		}
+		return contactService.deleteContactFromList(this.getAccessToken(), contact.getId(), list.getId());
+	}
 
-    /**
-     * Delete a contact from all contact lists.
-     * @param contactId Contact id.
-     * @param listId List id.
-     * @return Returns true if operation succeeded.
-     * @throws IllegalArgumentException for contact id equal or less than 0 or listId equal or less than 0.
-     */
-    public boolean deleteContactFromList(int contactId, int listId) {
-        if (contactId < 1) {
-            throw new IllegalArgumentException(Config.Errors.CONTACT_OR_ID);
-        }
-        if (listId < 1) {
-            throw new IllegalArgumentException(Config.Errors.LIST_OR_ID);
-        }
+	/**
+	 * Delete Contact From List API.<br/>
+	 * Details in : {@link ContactService#deleteContactFromList(String, String, String)}
+	 * 
+	 * @param contactId The contact id.
+	 * @param listId The list id.
+	 * @return true in case of success, an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public boolean deleteContactFromList(String contactId, String listId) throws IllegalArgumentException, ConstantContactServiceException {
+		try {
+			int nContactId = Integer.parseInt(contactId);
+			if (nContactId < 1) {
+				throw new NumberFormatException();
+			}
+		} catch (NumberFormatException e) {
+			throw new IllegalArgumentException(Config.Errors.CONTACT_OR_ID);
+		}
+		try {
+			int nListId = Integer.parseInt(listId);
+			if (nListId < 1) {
+				throw new NumberFormatException();
+			}
+		} catch (Exception e) {
+			throw new IllegalArgumentException(Config.Errors.LIST_OR_ID);
+		}
 
-        return contactService.deleteContactFromList(this.getAccessToken(), contactId, listId);
-    }
+		return contactService.deleteContactFromList(this.getAccessToken(), contactId, listId);
+	}
 
-    /**
-     * Update an individual contact.
-     * @param contact Contact to update.
-     * @return Returns the updated contact.
-     * @throws IllegalArgumentException for empty contact.
-     */
-    public Contact updateContact(Contact contact) {
-        if (contact == null) {
-            throw new IllegalArgumentException(Config.Errors.CONTACT_OR_ID);
-        }
-        return contactService.updateContact(this.getAccessToken(), contact);
-    }
+	/**
+	 * 
+	 * Update Contact API.<br/>
+	 * Details in : {@link ContactService#updateContact(String, Contact)}
+	 * 
+	 * @param contact The {@link Contact} to update.
+	 * @return The updated {@link Contact} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public Contact updateContact(Contact contact) throws IllegalArgumentException, ConstantContactServiceException {
+		if (contact == null) {
+			throw new IllegalArgumentException(Config.Errors.CONTACT_OR_ID);
+		}
+		if (contact.getId() == null || !(contact.getId().length() > 0)) {
+			throw new IllegalArgumentException(Config.Errors.ID);
+		}
+		return contactService.updateContact(this.getAccessToken(), contact);
+	}
 
-    /**
-     * Get lists.
-     * @return Returns the list of lists where contact belong to.
-     */
-    public List<ContactList> getLists() {
-        return listService.getLists(this.getAccessToken());
-    }
+	/**
+	 * Get Contact Lists API.<br/>
+	 * Details in : {@link ContactListService#getLists(String)}
+	 * 
+	 * @return The Contact Lists in case of success; an exception is thrown otherwise.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public List<ContactList> getLists() throws ConstantContactServiceException {
+		return contactListService.getLists(this.getAccessToken());
+	}
 
-    /**
-     * Get an individual list.
-     * @param listId Id of the list to retrieve.
-     * @return Returns contact list.
-     * @throws IllegalArgumentException where for list id equal or less than 0. 
-     */
-    public ContactList getList(int listId) {
-        if (listId < 1) {
-            throw new IllegalArgumentException(Config.Errors.LIST_OR_ID);
-        }
-        return listService.getList(this.getAccessToken(), listId);
-    }
+	/**
+	 * 
+	 * Get Contact List API.<br/>
+	 * Details in : {@link ContactListService#getList(String, String)}
+	 * 
+	 * @param listId The List id
+	 * @return A {@link ContactList} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public ContactList getList(String listId) throws IllegalArgumentException, ConstantContactServiceException {
+		try {
+			int nListId = Integer.parseInt(listId);
+			if (nListId < 1) {
+				throw new NumberFormatException();
+			}
+		} catch (Exception e) {
+			throw new IllegalArgumentException(Config.Errors.LIST_OR_ID);
+		}
 
-    /**
-     * Add a new list to an account.
-     * @param list List to add.
-     * @return Returns the newly created list.
-     */
-    public ContactList addList(ContactList list) {
-        return listService.addList(this.getAccessToken(), list);
-    }
+		return contactListService.getList(this.getAccessToken(), listId);
+	}
 
-    /**
-     * Get contact that belong to a specific list.
-     * @param list Contact list object.
-     * @return Returns the list of contacts.
-     * @throws IllegalArgumentException for empty list.
-     */
-    public List<Contact> getContactsFromList(ContactList list) {
-        if (list == null) {
-            throw new IllegalArgumentException(Config.Errors.LIST_OR_ID);
-        }
-        return listService.getContactsFromList(this.getAccessToken(), list.getId());
-    }
+	/**
+	 * Add Contact List API.<br/>
+	 * Details in : {@link ContactListService#addList(String, ContactList)}
+	 * 
+	 * @param list The {@link ContactList} to add.
+	 * @return The added {@link ContactList} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public ContactList addList(ContactList list) throws IllegalArgumentException, ConstantContactServiceException {
+		try {
+			return contactListService.addList(this.getAccessToken(), list);
+		} catch (ConstantContactServiceException e) {
+			throw new ConstantContactServiceException(e);
+		}
+	}
 
-    /**
-     * Get contact that belong to a specific list.
-     * @param listId Contact list id.
-     * @return Returns a list of contacts.
-     * @throws IllegalArgumentException for list id less or equal than 0.
-     */
-    public List<Contact> getContactsFromList(int listId) {
-        if (listId < 1) {
-            throw new IllegalArgumentException(Config.Errors.LIST_OR_ID);
-        }
-        return listService.getContactsFromList(this.getAccessToken(), listId);
-    }
+	/**
+	 * 
+	 * Get Contacts From List API.<br/>
+	 * Details in : {@link ContactListService#getContactsFromList(String, String)}
+	 * 
+	 * @param list The {@link ContactList} for which to lookup contacts.
+	 * @return A {@link ResultSet} of {@link Contact} containing data as returned by the server on success; <br/>
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public ResultSet<Contact> getContactsFromList(ContactList list) throws IllegalArgumentException, ConstantContactServiceException {
+		if (list == null) {
+			throw new IllegalArgumentException(Config.Errors.LIST_OR_ID);
+		}
+		return contactListService.getContactsFromList(this.getAccessToken(), list.getId());
+	}
+
+	/**
+	 * 
+	 * Get Contacts From List API.<br/>
+	 * Details in : {@link ContactListService#getContactsFromList(String, String)}
+	 * 
+	 * @param listId The id of the {@link ContactList}
+	 * @return A {@link ResultSet} of {@link Contact} containing data as returned by the server on success; <br/>
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public ResultSet<Contact> getContactsFromList(String listId) throws IllegalArgumentException, ConstantContactServiceException {
+		try {
+			int nListId = Integer.parseInt(listId);
+			if (nListId < 1) {
+				throw new NumberFormatException();
+			}
+		} catch (Exception e) {
+			throw new IllegalArgumentException(Config.Errors.LIST_OR_ID);
+		}
+
+		try {
+			return contactListService.getContactsFromList(this.getAccessToken(), listId);
+		} catch (ConstantContactServiceException e) {
+			throw new ConstantContactServiceException(e);
+		}
+	}
+
+	/**
+	 * 
+	 * Get All Email Campaigns API.<br/>
+	 * Details in : {@link EmailCampaignService#getCampaigns(String, Integer, Integer)}
+	 * 
+	 * @return A {@link ResultSet} of {@link EmailCampaignResponse} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public ResultSet<EmailCampaignResponse> getAllEmailCampaigns() throws IllegalArgumentException, ConstantContactServiceException {
+		return emailCampaignService.getCampaigns(this.getAccessToken(), null, null);
+	}
+
+	/**
+	 * 
+	 * Get Email Campaigns API.<br/>
+	 * Details in : {@link EmailCampaignService#getCampaigns(String, Integer, Integer)}
+	 * 
+	 * @param offset The offset
+	 * @param limit The limit
+	 * @return A {@link ResultSet} of {@link EmailCampaignResponse} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public ResultSet<EmailCampaignResponse> getEmailCampaigns(Integer offset, Integer limit) throws IllegalArgumentException, ConstantContactServiceException {
+		return emailCampaignService.getCampaigns(this.getAccessToken(), offset, limit);
+	}
+
+	/**
+	 * 
+	 * Get Email Campaign API.<br/>
+	 * Details in : {@link EmailCampaignService#getCampaign(String, String)}
+	 * 
+	 * @param campaignId The id of the Email Campaign
+	 * @return An {@link EmailCampaignResponse} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public EmailCampaignResponse getEmailCampaign(String campaignId) throws IllegalArgumentException, ConstantContactServiceException {
+		if (campaignId == null || !(campaignId.length() > 0)) {
+			throw new IllegalArgumentException(Config.Errors.ID);
+		}
+		return emailCampaignService.getCampaign(this.getAccessToken(), campaignId);
+
+	}
+
+	/**
+	 * 
+	 * Update Email Campaign API.<br/>
+	 * Details in : {@link EmailCampaignService#updateCampaign(String, EmailCampaignRequest)}
+	 * 
+	 * @param emailCampaign The {@link EmailCampaignRequest} which we want to update. Match is done on id.
+	 * @return An {@link EmailCampaignResponse} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public EmailCampaignResponse updateEmailCampaign(EmailCampaignRequest emailCampaign) throws IllegalArgumentException, ConstantContactServiceException {
+		if (emailCampaign == null || !(emailCampaign.getId().length() > 0)) {
+			throw new IllegalArgumentException(Config.Errors.ID);
+		}
+		return emailCampaignService.updateCampaign(this.getAccessToken(), emailCampaign);
+	}
+
+	/**
+	 * 
+	 * Add Email Campaign API.<br/>
+	 * Details in : {@link EmailCampaignService#addCampaign(String, EmailCampaignRequest)}
+	 * 
+	 * @param emailCampaign The {@link EmailCampaignRequest} to add.
+	 * @return An {@link EmailCampaignResponse} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public EmailCampaignResponse addEmailCampaign(EmailCampaignRequest emailCampaign) throws IllegalArgumentException, ConstantContactServiceException {
+		if (emailCampaign == null) {
+			throw new IllegalArgumentException(Config.Errors.ID);
+		}
+		return emailCampaignService.addCampaign(this.getAccessToken(), emailCampaign);
+	}
+
+	/**
+	 * 
+	 * Get Verified Email Addresses API.<br/>
+	 * Details in : {@link AccountService#getVerifiedEmailAddresses(String, String)}
+	 * 
+	 * @param status The status
+	 * @return A {@link List} of {@link VerifiedEmailAddress} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public List<VerifiedEmailAddress> getVerifiedEmailAddresses(String status) throws IllegalArgumentException, ConstantContactServiceException {
+		if (status != null && status.length() > 0) {
+			if (!status.equals(VerifiedEmailAddress.Status.CONFIRMED) && !status.equals(VerifiedEmailAddress.Status.UNCONFIRMED))
+				throw new IllegalArgumentException(Config.Errors.STATUS + VerifiedEmailAddress.Status.CONFIRMED + ", " + VerifiedEmailAddress.Status.CONFIRMED);
+		}
+		return accountService.getVerifiedEmailAddresses(this.getAccessToken(), status);
+	}
+
+	/**
+	 * 
+	 * Get Email Campaign Schedules API.<br/>
+	 * Details in : {@link EmailCampaignScheduleService#getSchedules(String, String)}
+	 * 
+	 * @param campaignId The id of the Email Campaign.
+	 * @return A {@link List} of {@link EmailCampaignSchedule} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public List<EmailCampaignSchedule> getEmailCampaignSchedules(String campaignId) throws IllegalArgumentException, ConstantContactServiceException {
+
+		if (campaignId == null || !(campaignId.length() > 0)) {
+			throw new IllegalArgumentException(Config.Errors.ID);
+		}
+
+		return emailCampaignScheduleService.getSchedules(this.getAccessToken(), campaignId);
+	}
+
+	/**
+	 * 
+	 * Get Email Campaign Schedule API.<br/>
+	 * Details in : {@link EmailCampaignScheduleService#getSchedule(String, String, String)}
+	 * 
+	 * @param campaignId The id of the Email Campaign.
+	 * @param scheduleId The id of the Schedule.
+	 * @return An {@link EmailCampaignSchedule} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public EmailCampaignSchedule getEmailCampaignSchedule(String campaignId, String scheduleId) throws IllegalArgumentException,
+			ConstantContactServiceException {
+
+		if (campaignId == null || !(campaignId.length() > 0)) {
+			throw new IllegalArgumentException(Config.Errors.ID);
+		}
+		if (scheduleId == null || !(campaignId.length() > 0)) {
+			throw new IllegalArgumentException(Config.Errors.ID);
+		}
+
+		return emailCampaignScheduleService.getSchedule(this.getAccessToken(), campaignId, scheduleId);
+	}
+
+	/**
+	 * 
+	 * Delete Email Campaign Schedule API.<br/>
+	 * Details in : {@link EmailCampaignScheduleService#deleteSchedule(String, String, String)}
+	 * 
+	 * @param campaignId The id of the Email Campaign.
+	 * @param scheduleId The id of the Schedule.
+	 * @return true in case of success, an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public boolean deleteEmailCampaignSchedule(String campaignId, String scheduleId) throws IllegalArgumentException, ConstantContactServiceException {
+		if (campaignId == null || !(campaignId.length() > 0)) {
+			throw new IllegalArgumentException(Config.Errors.ID);
+		}
+		if (scheduleId == null || !(campaignId.length() > 0)) {
+			throw new IllegalArgumentException(Config.Errors.ID);
+		}
+
+		return emailCampaignScheduleService.deleteSchedule(this.getAccessToken(), campaignId, scheduleId);
+	}
+
+	/**
+	 * 
+	 * Add Email Campaign Schedule API.<br/>
+	 * Details in : {@link EmailCampaignScheduleService#addSchedule(String, String, EmailCampaignSchedule)}
+	 * 
+	 * @param campaignId The id of the Email Campaign for which we need to add a new Schedule.
+	 * @param emailCampaignSchedule The {@link EmailCampaignSchedule} instance to be added. <br/>
+	 *            The inner {@link EmailCampaignSchedule#id} field must be set to null. Reason: WebService will set it.
+	 * @return An {@link EmailCampaignSchedule} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public EmailCampaignSchedule addEmailCampaignSchedule(String campaignId, EmailCampaignSchedule emailCampaignSchedule) throws IllegalArgumentException,
+			ConstantContactServiceException {
+
+		if (campaignId == null || !(campaignId.length() > 0)) {
+			throw new IllegalArgumentException(Config.Errors.ID);
+		}
+		if (emailCampaignSchedule == null) {
+			throw new IllegalArgumentException(Config.Errors.EMAIL_CAMPAIGN_SCHEDULE_NULL);
+		}
+		return emailCampaignScheduleService.addSchedule(this.getAccessToken(), campaignId, emailCampaignSchedule);
+	}
+
+	/**
+	 * 
+	 * Update Email Campaign Schedule API.<br/>
+	 * Details in : {@link EmailCampaignScheduleService#updateSchedule(String, String, String, EmailCampaignSchedule)}
+	 * 
+	 * @param emailCampaignId The campaign id (id field in {@link EmailCampaignBase})
+	 * @param scheduleId The schedule id (id field in {@link EmailCampaignSchedule})
+	 * @param emailCampaignSchedule The {@link EmailCampaignSchedule} instance to update. <br/>
+	 *            The inner {@link EmailCampaignSchedule#id} field must be set to null.
+	 * @return An instance of the updated {@link EmailCampaignSchedule} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public EmailCampaignSchedule updateEmailCampaignSchedule(String emailCampaignId, String scheduleId, EmailCampaignSchedule emailCampaignSchedule)
+			throws IllegalArgumentException, ConstantContactServiceException {
+
+		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
+			throw new IllegalArgumentException(Config.Errors.ID);
+		}
+		if (emailCampaignSchedule == null) {
+			throw new IllegalArgumentException(Config.Errors.EMAIL_CAMPAIGN_SCHEDULE_NULL);
+		}
+		return emailCampaignScheduleService.updateSchedule(this.getAccessToken(), emailCampaignId, scheduleId, emailCampaignSchedule);
+	}
+
+	/**
+	 * 
+	 * Get Email Campaign Tracking Summary API.<br/>
+	 * Details in : {@link EmailCampaignTrackingService#getSummary(String, String)}
+	 * 
+	 * @param emailCampaignId id field in Email Campaign
+	 * @return An {@link EmailCampaignTrackingSummary} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public EmailCampaignTrackingSummary getEmailCampaignTrackingSummary(String emailCampaignId) throws IllegalArgumentException,
+			ConstantContactServiceException {
+
+		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
+			throw new IllegalArgumentException(Config.Errors.ID);
+		}
+		return emailCampaignTrackingService.getSummary(this.getAccessToken(), emailCampaignId);
+	}
+
+	/**
+	 * 
+	 * Get Email Campaign Tracking Bounces API.<br/>
+	 * Details in : {@link EmailCampaignTrackingService#getBounces(String, String, Integer)}
+	 * 
+	 * @param emailCampaignId The id field in Email Campaign
+	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingBounce} in case of success; an exception is thrown otherwise.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 */
+	public ResultSet<EmailCampaignTrackingBounce> getEmailCampaignTrackingBounces(String emailCampaignId) throws ConstantContactServiceException,
+			IllegalArgumentException {
+
+		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
+			throw new IllegalArgumentException(Config.Errors.ID);
+		}
+		return getEmailCampaignTrackingBounces(emailCampaignId, null);
+	}
+
+	/**
+	 * 
+	 * Get Email Campaign Tracking Bounces API.<br/>
+	 * Details in : {@link EmailCampaignTrackingService#getBounces(String, String, Integer)}
+	 * 
+	 * @param emailCampaignId The id field in Email Campaign
+	 * @param limit The limit
+	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingBounce} in case of success; an exception is thrown otherwise.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 */
+	public ResultSet<EmailCampaignTrackingBounce> getEmailCampaignTrackingBounces(String emailCampaignId, Integer limit)
+			throws ConstantContactServiceException, IllegalArgumentException {
+
+		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
+			throw new IllegalArgumentException(Config.Errors.ID);
+		}
+		return emailCampaignTrackingService.getBounces(this.getAccessToken(), emailCampaignId, limit);
+	}
+
+	/**
+	 * 
+	 * Get Email Campaign Tracking Clicks API.<br/>
+	 * Details in : {@link EmailCampaignTrackingService#getClicks(String, String, Integer)}
+	 * 
+	 * @param emailCampaignId The id field in Email Campaign
+	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingClick} in case of success; an exception is thrown otherwise.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 */
+	public ResultSet<EmailCampaignTrackingClick> getEmailCampaignTrackingClicks(String emailCampaignId) throws ConstantContactServiceException,
+			IllegalArgumentException {
+		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
+			throw new IllegalArgumentException(Config.Errors.ID);
+		}
+		return getEmailCampaignTrackingClicks(emailCampaignId, null);
+	}
+
+	/**
+	 * 
+	 * Get Email Campaign Tracking Clicks API.<br/>
+	 * Details in : {@link EmailCampaignTrackingService#getClicks(String, String, Integer)}
+	 * 
+	 * @param emailCampaignId The id field in Email Campaign
+	 * @param limit The limit
+	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingClick} in case of success; an exception is thrown otherwise.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 */
+	public ResultSet<EmailCampaignTrackingClick> getEmailCampaignTrackingClicks(String emailCampaignId, Integer limit) throws ConstantContactServiceException,
+			IllegalArgumentException {
+
+		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
+			throw new IllegalArgumentException(Config.Errors.ID);
+		}
+		return emailCampaignTrackingService.getClicks(this.getAccessToken(), emailCampaignId, limit);
+	}
+
+	/**
+	 * 
+	 * Get Email Campaign Tracking Forwards API.<br/>
+	 * Details in : {@link EmailCampaignTrackingService#getForwards(String, String, Integer)}
+	 * 
+	 * @param emailCampaignId The id field in Email Campaign
+	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingForward} in case of success; an exception is thrown otherwise.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 */
+	public ResultSet<EmailCampaignTrackingForward> getEmailCampaignTrackingForwards(String emailCampaignId) throws ConstantContactServiceException,
+			IllegalArgumentException {
+		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
+			throw new IllegalArgumentException(Config.Errors.ID);
+		}
+		return getEmailCampaignTrackingForwards(emailCampaignId, null);
+	}
+
+	/**
+	 * 
+	 * Get Email Campaign Tracking Forwards API.<br/>
+	 * Details in : {@link EmailCampaignTrackingService#getForwards(String, String, Integer)}
+	 * 
+	 * @param emailCampaignId The id field in Email Campaign
+	 * @param limit The limit
+	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingForward} in case of success; an exception is thrown otherwise.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 */
+	public ResultSet<EmailCampaignTrackingForward> getEmailCampaignTrackingForwards(String emailCampaignId, Integer limit)
+			throws ConstantContactServiceException, IllegalArgumentException {
+
+		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
+			throw new IllegalArgumentException(Config.Errors.ID);
+		}
+		return emailCampaignTrackingService.getForwards(this.getAccessToken(), emailCampaignId, limit);
+	}
+
+	/**
+	 * Get Email Campaign Tracking Opens API.<br/>
+	 * Details in : {@link EmailCampaignTrackingService#getOpens(String, String, Integer)}
+	 * 
+	 * @param emailCampaignId The id field in Email Campaign
+	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingOpen} in case of success; an exception is thrown otherwise.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 */
+	public ResultSet<EmailCampaignTrackingOpen> getEmailCampaignTrackingOpens(String emailCampaignId) throws ConstantContactServiceException,
+			IllegalArgumentException {
+		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
+			throw new IllegalArgumentException(Config.Errors.ID);
+		}
+		return getEmailCampaignTrackingOpens(emailCampaignId, null);
+	}
+
+	/**
+	 * 
+	 * Get Email Campaign Tracking Opens API.<br/>
+	 * Details in : {@link EmailCampaignTrackingService#getOpens(String, String, Integer)}
+	 * 
+	 * @param emailCampaignId The id field in Email Campaign
+	 * @param limit The limit
+	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingOpen} in case of success; an exception is thrown otherwise.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 */
+	public ResultSet<EmailCampaignTrackingOpen> getEmailCampaignTrackingOpens(String emailCampaignId, Integer limit) throws ConstantContactServiceException,
+			IllegalArgumentException {
+
+		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
+			throw new IllegalArgumentException(Config.Errors.ID);
+		}
+		return emailCampaignTrackingService.getOpens(this.getAccessToken(), emailCampaignId, limit);
+	}
+
+	/**
+	 * 
+	 * Get Email Campaign Tracking Sends API.<br/>
+	 * Details in : {@link EmailCampaignTrackingService#getSends(String, String, Integer)}
+	 * 
+	 * @param emailCampaignId The id field in Email Campaign
+	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingSend} in case of success; an exception is thrown otherwise.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 */
+	public ResultSet<EmailCampaignTrackingSend> getEmailCampaignTrackingSends(String emailCampaignId) throws ConstantContactServiceException,
+			IllegalArgumentException {
+		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
+			throw new IllegalArgumentException(Config.Errors.ID);
+		}
+		return getEmailCampaignTrackingSends(emailCampaignId, null);
+	}
+
+	/**
+	 * 
+	 * Get Email Campaign Tracking Sends API.<br/>
+	 * Details in : {@link EmailCampaignTrackingService#getSends(String, String, Integer)}
+	 * 
+	 * @param emailCampaignId The id field in Email Campaign
+	 * @param limit The limit
+	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingSend} in case of success; an exception is thrown otherwise.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 */
+	public ResultSet<EmailCampaignTrackingSend> getEmailCampaignTrackingSends(String emailCampaignId, Integer limit) throws ConstantContactServiceException,
+			IllegalArgumentException {
+
+		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
+			throw new IllegalArgumentException(Config.Errors.ID);
+		}
+		return emailCampaignTrackingService.getSends(this.getAccessToken(), emailCampaignId, limit);
+	}
+
+	/**
+	 * 
+	 * Get Email Campaign Tracking Unsubscribes API.<br/>
+	 * Details in : {@link EmailCampaignTrackingService#getUnsubscribes(String, String, Integer)}
+	 * 
+	 * @param emailCampaignId The id field in Email Campaign
+	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingUnsubscribe} in case of success; an exception is thrown otherwise.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 */
+	public ResultSet<EmailCampaignTrackingUnsubscribe> getEmailCampaignTrackingUnsubscribes(String emailCampaignId) throws ConstantContactServiceException,
+			IllegalArgumentException {
+		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
+			throw new IllegalArgumentException(Config.Errors.ID);
+		}
+		return getEmailCampaignTrackingUnsubscribes(emailCampaignId, null);
+	}
+
+	/**
+	 * 
+	 * Get Email Campaign Tracking Unsubscribes API.<br/>
+	 * Details in : {@link EmailCampaignTrackingService#getUnsubscribes(String, String, Integer)}
+	 * 
+	 * @param emailCampaignId The id field in Email Campaign
+	 * @param limit The limit
+	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingUnsubscribe} in case of success; an exception is thrown otherwise.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 */
+	public ResultSet<EmailCampaignTrackingUnsubscribe> getEmailCampaignTrackingUnsubscribes(String emailCampaignId, Integer limit)
+			throws ConstantContactServiceException, IllegalArgumentException {
+
+		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
+			throw new IllegalArgumentException(Config.Errors.ID);
+		}
+		return emailCampaignTrackingService.getUnsubscribes(this.getAccessToken(), emailCampaignId, limit);
+	}
+
+	/**
+	 * 
+	 * Get Email Campaign Tracking Clicks By Link API.<br/>
+	 * Details in : {@link EmailCampaignTrackingService#getClicksByLinkId(String, String, String, Integer)}
+	 * 
+	 * @param emailCampaignId The id field in Email Campaign
+	 * @param linkId The link id
+	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingClick} in case of success; an exception is thrown otherwise.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 */
+	public ResultSet<EmailCampaignTrackingClick> getEmailCampaignTrackingClicksByLink(String emailCampaignId, String linkId)
+			throws ConstantContactServiceException, IllegalArgumentException {
+		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
+			throw new IllegalArgumentException(Config.Errors.ID);
+		}
+		return emailCampaignTrackingService.getClicksByLinkId(this.getAccessToken(), emailCampaignId, linkId, null);
+	}
+
+	/**
+	 * Get Email Campaign Tracking Clicks By Link API.<br/>
+	 * Details in : {@link EmailCampaignTrackingService#getClicksByLinkId(String, String, String, Integer)}
+	 * 
+	 * @param emailCampaignId The id field in Email Campaign
+	 * @param linkId The link id
+	 * @param limit The limit
+	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingClick} in case of success; an exception is thrown otherwise.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 */
+	public ResultSet<EmailCampaignTrackingClick> getEmailCampaignTrackingClicksByLink(String emailCampaignId, String linkId, Integer limit)
+			throws ConstantContactServiceException, IllegalArgumentException {
+
+		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
+			throw new IllegalArgumentException(Config.Errors.ID);
+		}
+		return emailCampaignTrackingService.getClicksByLinkId(this.getAccessToken(), emailCampaignId, linkId, limit);
+	}
+
+	/**
+	 * Get Contact Tracking Summary API.<br/>
+	 * Details in : {@link ContactTrackingService#getSummary(String, String)}
+	 * 
+	 * @param contactId The contact id.
+	 * @return A {@link ContactTrackingSummaryReport} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public ContactTrackingSummaryReport getContactTrackingSummary(String contactId) throws IllegalArgumentException, ConstantContactServiceException {
+
+		if (contactId == null || !(contactId.length() > 0)) {
+			throw new IllegalArgumentException(Config.Errors.ID);
+		}
+		return contactTrackingService.getSummary(this.getAccessToken(), contactId);
+	}
+
+	/**
+	 * 
+	 * Get Contact Tracking Bounces API.<br/>
+	 * Details in : {@link ContactTrackingService#getBounces(String, String, Integer)}
+	 * 
+	 * @param contactId The contact id.
+	 * @return A {@link ResultSet} of {@link ContactTrackingBounce} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public ResultSet<ContactTrackingBounce> getContactTrackingBounces(String contactId) throws IllegalArgumentException, ConstantContactServiceException {
+		if (contactId == null || !(contactId.length() > 0)) {
+			throw new IllegalArgumentException(Config.Errors.ID);
+		}
+		return contactTrackingService.getBounces(this.getAccessToken(), contactId, null);
+	}
+
+	/**
+	 * 
+	 * Get Contact Tracking Bounces API.<br/>
+	 * Details in : {@link ContactTrackingService#getBounces(String, String, Integer)}
+	 * 
+	 * @param contactId The contact id.
+	 * @param limit The limit
+	 * @return A {@link ResultSet} of {@link ContactTrackingBounce} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public ResultSet<ContactTrackingBounce> getContactTrackingBounces(String contactId, Integer limit) throws IllegalArgumentException,
+			ConstantContactServiceException {
+		if (contactId == null || !(contactId.length() > 0)) {
+			throw new IllegalArgumentException(Config.Errors.ID);
+		}
+		return contactTrackingService.getBounces(this.getAccessToken(), contactId, limit);
+	}
+
+	/**
+	 * 
+	 * Get Contact Tracking Clicks API.<br/>
+	 * Details in : {@link ContactTrackingService#getClicks(String, String, Integer)}
+	 * 
+	 * @param contactId The contact id.
+	 * @return A {@link ResultSet} of {@link ContactTrackingClick} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public ResultSet<ContactTrackingClick> getContactTrackingClicks(String contactId) throws IllegalArgumentException, ConstantContactServiceException {
+		if (contactId == null || !(contactId.length() > 0)) {
+			throw new IllegalArgumentException(Config.Errors.ID);
+		}
+		return getContactTrackingClicks(contactId, null);
+	}
+
+	/**
+	 * 
+	 * Get Contact Tracking Clicks API.<br/>
+	 * Details in : {@link ContactTrackingService#getClicks(String, String, Integer)}
+	 * 
+	 * @param contactId The contact id.
+	 * @param limit The limit
+	 * @return A {@link ResultSet} of {@link ContactTrackingClick} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public ResultSet<ContactTrackingClick> getContactTrackingClicks(String contactId, Integer limit) throws IllegalArgumentException,
+			ConstantContactServiceException {
+		if (contactId == null || !(contactId.length() > 0)) {
+			throw new IllegalArgumentException(Config.Errors.ID);
+		}
+		return contactTrackingService.getClicks(this.getAccessToken(), contactId, limit);
+	}
+
+	/**
+	 * 
+	 * Get Contact Tracking Forwards API.<br/>
+	 * Details in : {@link ContactTrackingService#getForwards(String, String, Integer)}
+	 * 
+	 * @param contactId The contact id.
+	 * @return A {@link ResultSet} of {@link ContactTrackingForward} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public ResultSet<ContactTrackingForward> getContactTrackingForwards(String contactId) throws IllegalArgumentException, ConstantContactServiceException {
+		if (contactId == null || !(contactId.length() > 0)) {
+			throw new IllegalArgumentException(Config.Errors.ID);
+		}
+		return contactTrackingService.getForwards(this.getAccessToken(), contactId, null);
+	}
+
+	/**
+	 * 
+	 * Get Contact Tracking Forwards API.<br/>
+	 * Details in : {@link ContactTrackingService#getForwards(String, String, Integer)}
+	 * 
+	 * @param contactId The contact id.
+	 * @param limit The limit
+	 * @return A {@link ResultSet} of {@link ContactTrackingForward} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public ResultSet<ContactTrackingForward> getContactTrackingForwards(String contactId, Integer limit) throws IllegalArgumentException,
+			ConstantContactServiceException {
+		if (contactId == null || !(contactId.length() > 0)) {
+			throw new IllegalArgumentException(Config.Errors.ID);
+		}
+		return contactTrackingService.getForwards(this.getAccessToken(), contactId, limit);
+	}
+
+	/**
+	 * 
+	 * Get Contact Tracking Opens API.<br/>
+	 * Details in : {@link ContactTrackingService#getOpens(String, String, Integer)}
+	 * 
+	 * @param contactId The contact id.
+	 * @return A {@link ResultSet} of {@link ContactTrackingOpen} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public ResultSet<ContactTrackingOpen> getContactTrackingOpens(String contactId) throws IllegalArgumentException, ConstantContactServiceException {
+		if (contactId == null || !(contactId.length() > 0)) {
+			throw new IllegalArgumentException(Config.Errors.ID);
+		}
+		return contactTrackingService.getOpens(this.getAccessToken(), contactId, null);
+	}
+
+	/**
+	 * 
+	 * Get Contact Tracking Opens API.<br/>
+	 * Details in : {@link ContactTrackingService#getOpens(String, String, Integer)}
+	 * 
+	 * @param contactId The contact id.
+	 * @param limit The limit
+	 * @return A {@link ResultSet} of {@link ContactTrackingOpen} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public ResultSet<ContactTrackingOpen> getContactTrackingOpens(String contactId, Integer limit) throws IllegalArgumentException,
+			ConstantContactServiceException {
+		if (contactId == null || !(contactId.length() > 0)) {
+			throw new IllegalArgumentException(Config.Errors.ID);
+		}
+		return contactTrackingService.getOpens(this.getAccessToken(), contactId, limit);
+	}
+
+	/**
+	 * 
+	 * Get Contact Tracking Sends API.<br/>
+	 * Details in : {@link ContactTrackingService#getSends(String, String, Integer)}
+	 * 
+	 * @param contactId The contact id.
+	 * @return A {@link ResultSet} of {@link ContactTrackingSend} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public ResultSet<ContactTrackingSend> getContactTrackingSends(String contactId) throws IllegalArgumentException, ConstantContactServiceException {
+		if (contactId == null || !(contactId.length() > 0)) {
+			throw new IllegalArgumentException(Config.Errors.ID);
+		}
+		return contactTrackingService.getSends(this.getAccessToken(), contactId, null);
+	}
+
+	/**
+	 * 
+	 * Get Contact Tracking Sends API.<br/>
+	 * Details in : {@link ContactTrackingService#getSends(String, String, Integer)}
+	 * 
+	 * @param contactId The contact id.
+	 * @param limit The limit
+	 * @return A {@link ResultSet} of {@link ContactTrackingSend} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public ResultSet<ContactTrackingSend> getContactTrackingSends(String contactId, Integer limit) throws IllegalArgumentException,
+			ConstantContactServiceException {
+		if (contactId == null || !(contactId.length() > 0)) {
+			throw new IllegalArgumentException(Config.Errors.ID);
+		}
+		return contactTrackingService.getSends(this.getAccessToken(), contactId, limit);
+	}
+
+	/**
+	 * 
+	 * Get Contact Tracking Unsubscribes API.<br/>
+	 * Details in : {@link ContactTrackingService#getUnsubscribes(String, String, Integer)}
+	 * 
+	 * @param contactId The contact id.
+	 * @return A {@link ResultSet} of {@link ContactTrackingUnsubscribe} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public ResultSet<ContactTrackingUnsubscribe> getContactTrackingUnsubscribes(String contactId) throws IllegalArgumentException,
+			ConstantContactServiceException {
+		if (contactId == null || !(contactId.length() > 0)) {
+			throw new IllegalArgumentException(Config.Errors.ID);
+		}
+		return contactTrackingService.getUnsubscribes(this.getAccessToken(), contactId, null);
+	}
+
+	/**
+	 * 
+	 * Get Contact Tracking Unsubscribes API.<br/>
+	 * Details in : {@link ContactTrackingService#getUnsubscribes(String, String, Integer)}
+	 * 
+	 * @param contactId The contact id.
+	 * @param limit The limit
+	 * @return A {@link ResultSet} of {@link ContactTrackingUnsubscribe} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public ResultSet<ContactTrackingUnsubscribe> getContactTrackingUnsubscribes(String contactId, Integer limit) throws IllegalArgumentException,
+			ConstantContactServiceException {
+		if (contactId == null || !(contactId.length() > 0)) {
+			throw new IllegalArgumentException(Config.Errors.ID);
+		}
+		return contactTrackingService.getUnsubscribes(this.getAccessToken(), contactId, limit);
+	}
+
+	/**
+	 * 
+	 * Add Bulk Contacts API.<br/>
+	 * Details in : {@link BulkActivitiesService#addContacts(String, AddContactsRequest)}
+	 * 
+	 * @param request The {@link AddContactsRequest}
+	 * @return A {@link ContactsResponse} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public ContactsResponse addBulkContacts(AddContactsRequest request) throws IllegalArgumentException, ConstantContactServiceException {
+		if (request == null) {
+			throw new IllegalArgumentException(Config.Errors.BULK_CONTACTS_REQUEST_NULL);
+		}
+		return bulkActivitiesService.addContacts(this.getAccessToken(), request);
+	}
+
+	/**
+	 * 
+	 * Remove Bulk Contacts From Lists API.<br/>
+	 * Details in : {@link BulkActivitiesService#removeContactsFromLists(String, RemoveContactsRequest)}
+	 * 
+	 * @param request A {@link RemoveContactsRequest}
+	 * @return A {@link ContactsResponse} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public ContactsResponse removeBulkContactsFromLists(RemoveContactsRequest request) throws IllegalArgumentException, ConstantContactServiceException {
+		if (request == null) {
+			throw new IllegalArgumentException(Config.Errors.BULK_CONTACTS_REQUEST_NULL);
+		}
+		return bulkActivitiesService.removeContactsFromLists(this.getAccessToken(), request);
+	}
+
+	/**
+	 * 
+	 * Clear Bulk Contacts Lists API.<br/>
+	 * Details in : {@link BulkActivitiesService#clearLists(String, ClearListsRequest)}
+	 * 
+	 * @param request A {@link ClearListsRequest}
+	 * @return A {@link ContactsResponse} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public ContactsResponse clearBulkContactsLists(ClearListsRequest request) throws IllegalArgumentException, ConstantContactServiceException {
+		if (request == null) {
+			throw new IllegalArgumentException(Config.Errors.BULK_CONTACTS_REQUEST_NULL);
+		}
+		return bulkActivitiesService.clearLists(this.getAccessToken(), request);
+	}
+
+	/**
+	 * 
+	 * Export Bulk Contacts API.<br/>
+	 * Details in : {@link BulkActivitiesService#exportContacts(String, ExportContactsRequest)}
+	 * 
+	 * @param request A {@link ExportContactsRequest}
+	 * @return A {@link ContactsResponse} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public ContactsResponse exportBulkContacts(ExportContactsRequest request) throws IllegalArgumentException, ConstantContactServiceException {
+		if (request == null) {
+			throw new IllegalArgumentException(Config.Errors.BULK_CONTACTS_REQUEST_NULL);
+		}
+		return bulkActivitiesService.exportContacts(this.getAccessToken(), request);
+	}
+
+	/**
+	 * 
+	 * Get Bulk Summary Report API.<br/>
+	 * Details in : {@link BulkActivitiesService#getSummaryReport(String)}
+	 * 
+	 * @return A {@link List} of {@link SummaryReport} in case of success; an exception is thrown otherwise.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public List<SummaryReport> getBulkSummaryReport() throws ConstantContactServiceException {
+
+		return bulkActivitiesService.getSummaryReport(this.getAccessToken());
+	}
+
+	/**
+	 * 
+	 * Get Bulk Detailed Status Report API.<br/>
+	 * Details in : {@link BulkActivitiesService#getDetailedStatusReport(String, String, String, String)}
+	 * 
+	 * @param status The status
+	 * @param type The type
+	 * @param id The id
+	 * @return A {@link List} of {@link DetailedStatusReport} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public List<DetailedStatusReport> getBulkDetailedStatusReport(String status, String type, String id) throws IllegalArgumentException,
+			ConstantContactServiceException {
+		return bulkActivitiesService.getDetailedStatusReport(this.getAccessToken(), status, type, id);
+	}
 }
