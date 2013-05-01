@@ -27,15 +27,21 @@ public class EmailCampaignService extends BaseService implements IEmailCampaignS
 	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param offset The offset
 	 * @param limit The limit
+	 * @param modifiedSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the Email Campaigns modified since the supplied date. <br/>
+	 * 		   If you want to bypass this filter set modifiedSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link EmailCampaignResponse} containing data as returned by the server on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 	@Override
-	public ResultSet<EmailCampaignResponse> getCampaigns(String accessToken, Integer offset, Integer limit) throws ConstantContactServiceException {
+	public ResultSet<EmailCampaignResponse> getCampaigns(String accessToken, Integer offset, Integer limit, String modifiedSinceTimestamp) throws ConstantContactServiceException {
 		ResultSet<EmailCampaignResponse> campaigns = null;
 		try {
 			String url = paginateUrl(String.format("%1$s%2$s", Config.Endpoints.BASE_URL, Config.Endpoints.EMAILCAMPAIGNS), offset, limit);
+			
+			if(modifiedSinceTimestamp != null)
+				url = appendParam(url, "modified_since", modifiedSinceTimestamp);
 			
 			CUrlResponse response = getRestClient().get(url, accessToken);
 			

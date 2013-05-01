@@ -24,15 +24,21 @@ public class ContactListService extends BaseService implements IContactListServi
 	 * Implements the Get lists for an account operation by calling the ConstantContact server side.
 	 * 
 	 * @param accessToken Constant Contact OAuth2 access token.
+	 * @param modifiedSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the lists modified since the supplied date. <br/>
+	 * 		   If you want to bypass this filter set modifiedSinceTimestamp to null.
 	 * @return Returns a list of {@link ContactList} containing values as returned by the server on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 	@Override
-	public List<ContactList> getLists(String accessToken) throws ConstantContactServiceException {
+	public List<ContactList> getLists(String accessToken, String modifiedSinceTimestamp) throws ConstantContactServiceException {
 		List<ContactList> lists = null;
 		try {
 			String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, Config.Endpoints.LISTS);
+						
+			if(modifiedSinceTimestamp != null)
+				url = appendParam(url, "modified_since", modifiedSinceTimestamp);
 			
 			CUrlResponse response = getRestClient().get(url, accessToken);
 			if (response.hasData()) {

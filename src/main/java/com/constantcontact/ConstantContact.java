@@ -2,8 +2,7 @@ package com.constantcontact;
 
 import java.util.List;
 
-import com.constantcontact.authentication.CtcOAuth2;
-import com.constantcontact.authentication.ICtcOAuth2;
+
 import com.constantcontact.components.accounts.VerifiedEmailAddress;
 import com.constantcontact.components.activities.contacts.request.AddContactsRequest;
 import com.constantcontact.components.activities.contacts.request.ClearListsRequest;
@@ -52,14 +51,11 @@ import com.constantcontact.services.emailcampaigns.schedule.IEmailCampaignSchedu
 import com.constantcontact.services.emailcampaigns.tracking.EmailCampaignTrackingService;
 import com.constantcontact.services.emailcampaigns.tracking.IEmailCampaignTrackingService;
 import com.constantcontact.util.Config;
-import com.constantcontact.util.ConfigurationManager;
 import com.constantcontact.util.Config.Errors;
 
 /**
  * Main Constant Contact class.<br/>
  * This is meant to be used by users to access Constant Contact API functionality.<br/>
- * <b>DO NOT USE SERVICE LAYER CALLS ON YOUR OWN</b>, unless you have your own way of providing the OAuth access token AND data validation. <br/>
- * Class Contains a local instance of {@link CtcOAuth2} and one from each Service :
  * <ul>
  * <li>{@link ContactService}</li>
  * <li>{@link ContactListService}</li>
@@ -74,8 +70,10 @@ import com.constantcontact.util.Config.Errors;
  * @author ConstantContact
  */
 public class ConstantContact {
+
 	private String accessToken;
-	private ICtcOAuth2 oAuth;
+	public static String API_KEY;
+	
 	private IContactService contactService;
 	private IContactListService contactListService;
 	private IEmailCampaignService emailCampaignService;
@@ -84,46 +82,18 @@ public class ConstantContact {
 	private IEmailCampaignTrackingService emailCampaignTrackingService;
 	private IContactTrackingService contactTrackingService;
 	private IBulkActivitiesService bulkActivitiesService;
-
-	/**
-	 * Default Class constructor.<br/>
-	 * Initializes all Services and the OAuth token fetcher;
-	 */
-	public ConstantContact() {
-		
-		USERNAME = ConfigurationManager.getAppSettings("Username");
-		PASSWORD = ConfigurationManager.getAppSettings("Password");
-		API_KEY = ConfigurationManager.getAppSettings("APIKey");
-		REDIRECT_URL = ConfigurationManager.getAppSettings("RedirectURL");
-		
-		this.setOAuth(new CtcOAuth2());
-		this.setContactService(new ContactService());
-		this.setListService(new ContactListService());
-		this.setEmailCampaignService(new EmailCampaignService());
-		this.setAccountService(new AccountService());
-		this.setEmailCampaignScheduleService(new EmailCampaignScheduleService());
-		this.setEmailCampaignTrackingService(new EmailCampaignTrackingService());
-		this.setContactTrackingService(new ContactTrackingService());
-		this.setBulkActivitiesService(new BulkActivitiesService());
-	}
 	
 	/**
 	 * Custom Class constructor.<br/>
 	 * Initializes all Services and the OAuth token fetcher;
 	 *
-	 * @param username The email account
-	 * @param password The password of the Constant Contact email account.
 	 * @param apiKey The API key provided by Constant Contact.
-	 * @param redirectUrl The redirect url.
+	 * @param accessToken The The API key provided by Constant Contact Authentication workflow.
 	 */
-	public ConstantContact(String username, String password, String apiKey, String redirectUrl) {
-		
-		USERNAME = username;
-		PASSWORD = password;
-		API_KEY = apiKey;
-		REDIRECT_URL = redirectUrl;
-		
-		this.setOAuth(new CtcOAuth2(username, password, apiKey, redirectUrl));
+	public ConstantContact(String apiKey, String accessToken) {
+
+		this.accessToken = accessToken;
+		ConstantContact.API_KEY = apiKey;
 		this.setContactService(new ContactService());
 		this.setListService(new ContactListService());
 		this.setEmailCampaignService(new EmailCampaignService());
@@ -135,100 +105,18 @@ public class ConstantContact {
 	}
 	
 	/**
-	 * The Singleton holder class for Constant Contact.
-	 * 
-	 * @author Constant Contact
-	 */
-	private static final class SingletonHolder {
-		private static final ConstantContact INSTANCE = new ConstantContact(USERNAME, PASSWORD, API_KEY, REDIRECT_URL);
-	}
-	
-	/**
-	 * The Singleton getter method for Constant Contact.
-	 * 
-	 * @return The instance of Constant Contact class.
-	 */
-	public static final ConstantContact getInstance() {
-		return SingletonHolder.INSTANCE;
-	}
-	
-	private static String USERNAME;
-	private static String PASSWORD;
-	private static String API_KEY;
-	private static String REDIRECT_URL;
-
-	/**
-	 * Gets the username.
-	 * 
-	 * @return The username.
-	 */
-	public String getUsername() {
-		return USERNAME;
-	}
-	
-	/**
-	 * Gets the password.
-	 * 
-	 * @return The password.
-	 */
-	public String getPassword() {
-		return PASSWORD;
-	}
-	
-	/**
-	 * Gets the redirect URL.
-	 * 
-	 * @return The redirect URL.
-	 */
-	public String getRedirectUrl() {
-		return REDIRECT_URL;
-	}
-	
-	/**
-	 * Gets the API key.
-	 * 
-	 * @return The API key.
-	 */
-	public String getApiKey() {
-		return API_KEY;
-	}
-
-	/**
 	 * Get the access token.<br/>
-	 * Actually more than a getter: if accessToken is null, method will call the handshake flow and get it.
 	 * 
 	 * @return The access token.
 	 */
 	public String getAccessToken() {
-		if (accessToken == null || accessToken.trim().length() == 0) {
-			accessToken = this.oAuth.getAccessToken();
-		}
 		return accessToken;
 	}
 
 
-	// XXX:
 	// ****************************************************************************//
 	// GETTERS AND SETTERS ********************************************************//
 	// ****************************************************************************//
-
-	/**
-	 * Get the authorization class.
-	 * 
-	 * @return The authorization class.
-	 */
-	public ICtcOAuth2 getOAuth() {
-		return oAuth;
-	}
-
-	/**
-	 * Set the authorization class.
-	 * 
-	 * @param oAuth The authorization class.
-	 */
-	public void setOAuth(ICtcOAuth2 oAuth) {
-		this.oAuth = oAuth;
-	}
 
 	/**
 	 * Get the Contact service.
@@ -374,17 +262,19 @@ public class ConstantContact {
 		return bulkActivitiesService;
 	}
 
-	// XXX:
 	// ****************************************************************************//
 	// END OF GETTERS AND SETTERS ************************************************//
 	// ****************************************************************************//
 
 	/**
 	 * Get contacts API.<br/>
-	 * Details in : {@link ContactService#getContacts(String, Integer, Integer)}
+	 * Details in : {@link ContactService#getContacts(String, Integer, Integer, String)}
 	 * 
 	 * @param offset The offset
 	 * @param limit The limit
+	 * @param modifiedSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the contacts modified since the supplied date. <br/>
+	 * 		   If you want to bypass this filter set modifiedSinceTimestamp to null.
 	 * @return The contacts.
 	 * @throws ConstantContactServiceException Thrown when :
 	 *             <ul>
@@ -395,13 +285,17 @@ public class ConstantContact {
 	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
 	 */
-	public ResultSet<Contact> getContacts(Integer offset, Integer limit) throws ConstantContactServiceException {
-		return contactService.getContacts(this.getAccessToken(), offset, limit);
+	public ResultSet<Contact> getContacts(Integer offset, Integer limit, String modifiedSinceTimestamp) throws ConstantContactServiceException {
+		return contactService.getContacts(this.getAccessToken(), offset, limit, modifiedSinceTimestamp);
 	}
 
 	/**
 	 * Get contacts API.<br/>
-	 * Details in : {@link ContactService#getContacts(String, Integer, Integer)}
+	 * Details in : {@link ContactService#getContacts(String, Integer, Integer, String)}
+	 * 
+	 * @param modifiedSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the contacts modified since the supplied date. <br/>
+	 * 		   If you want to bypass this filter set modifiedSinceTimestamp to null.
 	 * 
 	 * @return The contacts.
 	 * @throws ConstantContactServiceException Thrown when :
@@ -413,8 +307,8 @@ public class ConstantContact {
 	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
 	 */
-	public ResultSet<Contact> getContacts() throws ConstantContactServiceException {
-		return contactService.getContacts(this.getAccessToken(), null, null);
+	public ResultSet<Contact> getContacts(String modifiedSinceTimestamp) throws ConstantContactServiceException {
+		return contactService.getContacts(this.getAccessToken(), null, null, modifiedSinceTimestamp);
 	}
 
 	/**
@@ -681,7 +575,11 @@ public class ConstantContact {
 
 	/**
 	 * Get Contact Lists API.<br/>
-	 * Details in : {@link ContactListService#getLists(String)}
+	 * Details in : {@link ContactListService#getLists(String, String)}
+	 * 
+	 * @param modifiedSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the contact lists modified since the supplied date. <br/>
+	 * 		   If you want to bypass this filter set modifiedSinceTimestamp to null.
 	 * 
 	 * @return The Contact Lists in case of success; an exception is thrown otherwise.
 	 * @throws ConstantContactServiceException Thrown when :
@@ -693,8 +591,8 @@ public class ConstantContact {
 	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
 	 */
-	public List<ContactList> getLists() throws ConstantContactServiceException {
-		return contactListService.getLists(this.getAccessToken());
+	public List<ContactList> getLists(String modifiedSinceTimestamp) throws ConstantContactServiceException {
+		return contactListService.getLists(this.getAccessToken(), modifiedSinceTimestamp);
 	}
 
 	/**
@@ -820,7 +718,7 @@ public class ConstantContact {
 	/**
 	 * 
 	 * Get All Email Campaigns API.<br/>
-	 * Details in : {@link EmailCampaignService#getCampaigns(String, Integer, Integer)}
+	 * Details in : {@link EmailCampaignService#getCampaigns(String, Integer, Integer, String)}
 	 * 
 	 * @return A {@link ResultSet} of {@link EmailCampaignResponse} in case of success; an exception is thrown otherwise.
 	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
@@ -836,16 +734,20 @@ public class ConstantContact {
 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
 	 */
 	public ResultSet<EmailCampaignResponse> getAllEmailCampaigns() throws IllegalArgumentException, ConstantContactServiceException {
-		return emailCampaignService.getCampaigns(this.getAccessToken(), null, null);
+		return emailCampaignService.getCampaigns(this.getAccessToken(), null, null, null);
 	}
 
 	/**
 	 * 
 	 * Get Email Campaigns API.<br/>
-	 * Details in : {@link EmailCampaignService#getCampaigns(String, Integer, Integer)}
+	 * Details in : {@link EmailCampaignService#getCampaigns(String, Integer, Integer, String)}
 	 * 
 	 * @param offset The offset
 	 * @param limit The limit
+	 * @param modifiedSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the email campaigns modified since the supplied date. <br/>
+	 * 		   If you want to bypass this filter set modifiedSinceTimestamp to null.
+	 * 
 	 * @return A {@link ResultSet} of {@link EmailCampaignResponse} in case of success; an exception is thrown otherwise.
 	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
 	 *             The exception also contains a description of the cause.<br/>
@@ -859,8 +761,8 @@ public class ConstantContact {
 	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
 	 */
-	public ResultSet<EmailCampaignResponse> getEmailCampaigns(Integer offset, Integer limit) throws IllegalArgumentException, ConstantContactServiceException {
-		return emailCampaignService.getCampaigns(this.getAccessToken(), offset, limit);
+	public ResultSet<EmailCampaignResponse> getEmailCampaigns(Integer offset, Integer limit, String modifiedSinceTimestamp) throws IllegalArgumentException, ConstantContactServiceException {
+		return emailCampaignService.getCampaigns(this.getAccessToken(), offset, limit, modifiedSinceTimestamp);
 	}
 
 	/**
@@ -1131,9 +1033,12 @@ public class ConstantContact {
 	/**
 	 * 
 	 * Get Email Campaign Tracking Summary API.<br/>
-	 * Details in : {@link EmailCampaignTrackingService#getSummary(String, String)}
+	 * Details in : {@link EmailCampaignTrackingService#getSummary(String, String, String)}
 	 * 
 	 * @param emailCampaignId id field in Email Campaign
+	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the summary since the supplied date. <br/>
+	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
 	 * @return An {@link EmailCampaignTrackingSummary} in case of success; an exception is thrown otherwise.
 	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
 	 *             The exception also contains a description of the cause.<br/>
@@ -1147,13 +1052,13 @@ public class ConstantContact {
 	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
 	 */
-	public EmailCampaignTrackingSummary getEmailCampaignTrackingSummary(String emailCampaignId) throws IllegalArgumentException,
+	public EmailCampaignTrackingSummary getEmailCampaignTrackingSummary(String emailCampaignId, String createdSinceTimestamp) throws IllegalArgumentException,
 			ConstantContactServiceException {
 
 		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
 			throw new IllegalArgumentException(Config.Errors.ID);
 		}
-		return emailCampaignTrackingService.getSummary(this.getAccessToken(), emailCampaignId);
+		return emailCampaignTrackingService.getSummary(this.getAccessToken(), emailCampaignId, createdSinceTimestamp);
 	}
 
 	/**
@@ -1216,9 +1121,12 @@ public class ConstantContact {
 	/**
 	 * 
 	 * Get Email Campaign Tracking Clicks API.<br/>
-	 * Details in : {@link EmailCampaignTrackingService#getClicks(String, String, Integer)}
+	 * Details in : {@link EmailCampaignTrackingService#getClicks(String, String, Integer, String)}
 	 * 
 	 * @param emailCampaignId The id field in Email Campaign
+	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the clicks performed since the supplied date. <br/>
+	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingClick} in case of success; an exception is thrown otherwise.
 	 * @throws ConstantContactServiceException Thrown when :
 	 *             <ul>
@@ -1232,21 +1140,24 @@ public class ConstantContact {
 	 *             The exception also contains a description of the cause.<br/>
 	 *             Error message is taken from one of the members of {@link Errors}
 	 */
-	public ResultSet<EmailCampaignTrackingClick> getEmailCampaignTrackingClicks(String emailCampaignId) throws ConstantContactServiceException,
+	public ResultSet<EmailCampaignTrackingClick> getEmailCampaignTrackingClicks(String emailCampaignId, String createdSinceTimestamp) throws ConstantContactServiceException,
 			IllegalArgumentException {
 		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
 			throw new IllegalArgumentException(Config.Errors.ID);
 		}
-		return getEmailCampaignTrackingClicks(emailCampaignId, null);
+		return getEmailCampaignTrackingClicks(emailCampaignId, null, createdSinceTimestamp);
 	}
 
 	/**
 	 * 
 	 * Get Email Campaign Tracking Clicks API.<br/>
-	 * Details in : {@link EmailCampaignTrackingService#getClicks(String, String, Integer)}
+	 * Details in : {@link EmailCampaignTrackingService#getClicks(String, String, Integer, String)}
 	 * 
 	 * @param emailCampaignId The id field in Email Campaign
 	 * @param limit The limit
+	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the clicks performed since the supplied date. <br/>
+	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingClick} in case of success; an exception is thrown otherwise.
 	 * @throws ConstantContactServiceException Thrown when :
 	 *             <ul>
@@ -1260,21 +1171,24 @@ public class ConstantContact {
 	 *             The exception also contains a description of the cause.<br/>
 	 *             Error message is taken from one of the members of {@link Errors}
 	 */
-	public ResultSet<EmailCampaignTrackingClick> getEmailCampaignTrackingClicks(String emailCampaignId, Integer limit) throws ConstantContactServiceException,
+	public ResultSet<EmailCampaignTrackingClick> getEmailCampaignTrackingClicks(String emailCampaignId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException,
 			IllegalArgumentException {
 
 		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
 			throw new IllegalArgumentException(Config.Errors.ID);
 		}
-		return emailCampaignTrackingService.getClicks(this.getAccessToken(), emailCampaignId, limit);
+		return emailCampaignTrackingService.getClicks(this.getAccessToken(), emailCampaignId, limit, createdSinceTimestamp);
 	}
 
 	/**
 	 * 
 	 * Get Email Campaign Tracking Forwards API.<br/>
-	 * Details in : {@link EmailCampaignTrackingService#getForwards(String, String, Integer)}
+	 * Details in : {@link EmailCampaignTrackingService#getForwards(String, String, Integer, String)}
 	 * 
 	 * @param emailCampaignId The id field in Email Campaign
+	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the forwards performed since the supplied date. <br/>
+	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingForward} in case of success; an exception is thrown otherwise.
 	 * @throws ConstantContactServiceException Thrown when :
 	 *             <ul>
@@ -1288,21 +1202,24 @@ public class ConstantContact {
 	 *             The exception also contains a description of the cause.<br/>
 	 *             Error message is taken from one of the members of {@link Errors}
 	 */
-	public ResultSet<EmailCampaignTrackingForward> getEmailCampaignTrackingForwards(String emailCampaignId) throws ConstantContactServiceException,
+	public ResultSet<EmailCampaignTrackingForward> getEmailCampaignTrackingForwards(String emailCampaignId, String createdSinceTimestamp) throws ConstantContactServiceException,
 			IllegalArgumentException {
 		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
 			throw new IllegalArgumentException(Config.Errors.ID);
 		}
-		return getEmailCampaignTrackingForwards(emailCampaignId, null);
+		return getEmailCampaignTrackingForwards(emailCampaignId, null, createdSinceTimestamp);
 	}
 
 	/**
 	 * 
 	 * Get Email Campaign Tracking Forwards API.<br/>
-	 * Details in : {@link EmailCampaignTrackingService#getForwards(String, String, Integer)}
+	 * Details in : {@link EmailCampaignTrackingService#getForwards(String, String, Integer, String)}
 	 * 
 	 * @param emailCampaignId The id field in Email Campaign
 	 * @param limit The limit
+	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the forwards performed since the supplied date. <br/>
+	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingForward} in case of success; an exception is thrown otherwise.
 	 * @throws ConstantContactServiceException Thrown when :
 	 *             <ul>
@@ -1316,20 +1233,23 @@ public class ConstantContact {
 	 *             The exception also contains a description of the cause.<br/>
 	 *             Error message is taken from one of the members of {@link Errors}
 	 */
-	public ResultSet<EmailCampaignTrackingForward> getEmailCampaignTrackingForwards(String emailCampaignId, Integer limit)
+	public ResultSet<EmailCampaignTrackingForward> getEmailCampaignTrackingForwards(String emailCampaignId, Integer limit, String createdSinceTimestamp)
 			throws ConstantContactServiceException, IllegalArgumentException {
 
 		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
 			throw new IllegalArgumentException(Config.Errors.ID);
 		}
-		return emailCampaignTrackingService.getForwards(this.getAccessToken(), emailCampaignId, limit);
+		return emailCampaignTrackingService.getForwards(this.getAccessToken(), emailCampaignId, limit, createdSinceTimestamp);
 	}
 
 	/**
 	 * Get Email Campaign Tracking Opens API.<br/>
-	 * Details in : {@link EmailCampaignTrackingService#getOpens(String, String, Integer)}
+	 * Details in : {@link EmailCampaignTrackingService#getOpens(String, String, Integer, String)}
 	 * 
 	 * @param emailCampaignId The id field in Email Campaign
+	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the opens performed since the supplied date. <br/>
+	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingOpen} in case of success; an exception is thrown otherwise.
 	 * @throws ConstantContactServiceException Thrown when :
 	 *             <ul>
@@ -1343,21 +1263,24 @@ public class ConstantContact {
 	 *             The exception also contains a description of the cause.<br/>
 	 *             Error message is taken from one of the members of {@link Errors}
 	 */
-	public ResultSet<EmailCampaignTrackingOpen> getEmailCampaignTrackingOpens(String emailCampaignId) throws ConstantContactServiceException,
+	public ResultSet<EmailCampaignTrackingOpen> getEmailCampaignTrackingOpens(String emailCampaignId, String createdSinceTimestamp) throws ConstantContactServiceException,
 			IllegalArgumentException {
 		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
 			throw new IllegalArgumentException(Config.Errors.ID);
 		}
-		return getEmailCampaignTrackingOpens(emailCampaignId, null);
+		return getEmailCampaignTrackingOpens(emailCampaignId, null, createdSinceTimestamp);
 	}
 
 	/**
 	 * 
 	 * Get Email Campaign Tracking Opens API.<br/>
-	 * Details in : {@link EmailCampaignTrackingService#getOpens(String, String, Integer)}
+	 * Details in : {@link EmailCampaignTrackingService#getOpens(String, String, Integer, String)}
 	 * 
 	 * @param emailCampaignId The id field in Email Campaign
 	 * @param limit The limit
+	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the opens performed since the supplied date. <br/>
+	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingOpen} in case of success; an exception is thrown otherwise.
 	 * @throws ConstantContactServiceException Thrown when :
 	 *             <ul>
@@ -1371,21 +1294,24 @@ public class ConstantContact {
 	 *             The exception also contains a description of the cause.<br/>
 	 *             Error message is taken from one of the members of {@link Errors}
 	 */
-	public ResultSet<EmailCampaignTrackingOpen> getEmailCampaignTrackingOpens(String emailCampaignId, Integer limit) throws ConstantContactServiceException,
+	public ResultSet<EmailCampaignTrackingOpen> getEmailCampaignTrackingOpens(String emailCampaignId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException,
 			IllegalArgumentException {
 
 		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
 			throw new IllegalArgumentException(Config.Errors.ID);
 		}
-		return emailCampaignTrackingService.getOpens(this.getAccessToken(), emailCampaignId, limit);
+		return emailCampaignTrackingService.getOpens(this.getAccessToken(), emailCampaignId, limit, createdSinceTimestamp);
 	}
 
 	/**
 	 * 
 	 * Get Email Campaign Tracking Sends API.<br/>
-	 * Details in : {@link EmailCampaignTrackingService#getSends(String, String, Integer)}
+	 * Details in : {@link EmailCampaignTrackingService#getSends(String, String, Integer, String)}
 	 * 
 	 * @param emailCampaignId The id field in Email Campaign
+	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the sends performed since the supplied date. <br/>
+	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingSend} in case of success; an exception is thrown otherwise.
 	 * @throws ConstantContactServiceException Thrown when :
 	 *             <ul>
@@ -1399,21 +1325,24 @@ public class ConstantContact {
 	 *             The exception also contains a description of the cause.<br/>
 	 *             Error message is taken from one of the members of {@link Errors}
 	 */
-	public ResultSet<EmailCampaignTrackingSend> getEmailCampaignTrackingSends(String emailCampaignId) throws ConstantContactServiceException,
+	public ResultSet<EmailCampaignTrackingSend> getEmailCampaignTrackingSends(String emailCampaignId, String createdSinceTimestamp) throws ConstantContactServiceException,
 			IllegalArgumentException {
 		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
 			throw new IllegalArgumentException(Config.Errors.ID);
 		}
-		return getEmailCampaignTrackingSends(emailCampaignId, null);
+		return getEmailCampaignTrackingSends(emailCampaignId, null, createdSinceTimestamp);
 	}
 
 	/**
 	 * 
 	 * Get Email Campaign Tracking Sends API.<br/>
-	 * Details in : {@link EmailCampaignTrackingService#getSends(String, String, Integer)}
+	 * Details in : {@link EmailCampaignTrackingService#getSends(String, String, Integer, String)}
 	 * 
 	 * @param emailCampaignId The id field in Email Campaign
 	 * @param limit The limit
+	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the sends performed since the supplied date. <br/>
+	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingSend} in case of success; an exception is thrown otherwise.
 	 * @throws ConstantContactServiceException Thrown when :
 	 *             <ul>
@@ -1427,21 +1356,24 @@ public class ConstantContact {
 	 *             The exception also contains a description of the cause.<br/>
 	 *             Error message is taken from one of the members of {@link Errors}
 	 */
-	public ResultSet<EmailCampaignTrackingSend> getEmailCampaignTrackingSends(String emailCampaignId, Integer limit) throws ConstantContactServiceException,
+	public ResultSet<EmailCampaignTrackingSend> getEmailCampaignTrackingSends(String emailCampaignId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException,
 			IllegalArgumentException {
 
 		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
 			throw new IllegalArgumentException(Config.Errors.ID);
 		}
-		return emailCampaignTrackingService.getSends(this.getAccessToken(), emailCampaignId, limit);
+		return emailCampaignTrackingService.getSends(this.getAccessToken(), emailCampaignId, limit, createdSinceTimestamp);
 	}
 
 	/**
 	 * 
 	 * Get Email Campaign Tracking Unsubscribes API.<br/>
-	 * Details in : {@link EmailCampaignTrackingService#getUnsubscribes(String, String, Integer)}
+	 * Details in : {@link EmailCampaignTrackingService#getUnsubscribes(String, String, Integer, String)}
 	 * 
 	 * @param emailCampaignId The id field in Email Campaign
+	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the unsubcribes performed since the supplied date. <br/>
+	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingUnsubscribe} in case of success; an exception is thrown otherwise.
 	 * @throws ConstantContactServiceException Thrown when :
 	 *             <ul>
@@ -1455,21 +1387,24 @@ public class ConstantContact {
 	 *             The exception also contains a description of the cause.<br/>
 	 *             Error message is taken from one of the members of {@link Errors}
 	 */
-	public ResultSet<EmailCampaignTrackingUnsubscribe> getEmailCampaignTrackingUnsubscribes(String emailCampaignId) throws ConstantContactServiceException,
+	public ResultSet<EmailCampaignTrackingUnsubscribe> getEmailCampaignTrackingUnsubscribes(String emailCampaignId, String createdSinceTimestamp) throws ConstantContactServiceException,
 			IllegalArgumentException {
 		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
 			throw new IllegalArgumentException(Config.Errors.ID);
 		}
-		return getEmailCampaignTrackingUnsubscribes(emailCampaignId, null);
+		return getEmailCampaignTrackingUnsubscribes(emailCampaignId, null, createdSinceTimestamp);
 	}
 
 	/**
 	 * 
 	 * Get Email Campaign Tracking Unsubscribes API.<br/>
-	 * Details in : {@link EmailCampaignTrackingService#getUnsubscribes(String, String, Integer)}
+	 * Details in : {@link EmailCampaignTrackingService#getUnsubscribes(String, String, Integer, String)}
 	 * 
 	 * @param emailCampaignId The id field in Email Campaign
 	 * @param limit The limit
+	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the unsubscribes performed since the supplied date. <br/>
+	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingUnsubscribe} in case of success; an exception is thrown otherwise.
 	 * @throws ConstantContactServiceException Thrown when :
 	 *             <ul>
@@ -1483,22 +1418,25 @@ public class ConstantContact {
 	 *             The exception also contains a description of the cause.<br/>
 	 *             Error message is taken from one of the members of {@link Errors}
 	 */
-	public ResultSet<EmailCampaignTrackingUnsubscribe> getEmailCampaignTrackingUnsubscribes(String emailCampaignId, Integer limit)
+	public ResultSet<EmailCampaignTrackingUnsubscribe> getEmailCampaignTrackingUnsubscribes(String emailCampaignId, Integer limit, String createdSinceTimestamp)
 			throws ConstantContactServiceException, IllegalArgumentException {
 
 		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
 			throw new IllegalArgumentException(Config.Errors.ID);
 		}
-		return emailCampaignTrackingService.getUnsubscribes(this.getAccessToken(), emailCampaignId, limit);
+		return emailCampaignTrackingService.getUnsubscribes(this.getAccessToken(), emailCampaignId, limit, createdSinceTimestamp);
 	}
 
 	/**
 	 * 
 	 * Get Email Campaign Tracking Clicks By Link API.<br/>
-	 * Details in : {@link EmailCampaignTrackingService#getClicksByLinkId(String, String, String, Integer)}
+	 * Details in : {@link EmailCampaignTrackingService#getClicksByLinkId(String, String, String, Integer, String)}
 	 * 
 	 * @param emailCampaignId The id field in Email Campaign
 	 * @param linkId The link id
+	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the clicks performed since the supplied date. <br/>
+	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingClick} in case of success; an exception is thrown otherwise.
 	 * @throws ConstantContactServiceException Thrown when :
 	 *             <ul>
@@ -1512,21 +1450,24 @@ public class ConstantContact {
 	 *             The exception also contains a description of the cause.<br/>
 	 *             Error message is taken from one of the members of {@link Errors}
 	 */
-	public ResultSet<EmailCampaignTrackingClick> getEmailCampaignTrackingClicksByLink(String emailCampaignId, String linkId)
+	public ResultSet<EmailCampaignTrackingClick> getEmailCampaignTrackingClicksByLink(String emailCampaignId, String linkId, String createdSinceTimestamp)
 			throws ConstantContactServiceException, IllegalArgumentException {
 		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
 			throw new IllegalArgumentException(Config.Errors.ID);
 		}
-		return emailCampaignTrackingService.getClicksByLinkId(this.getAccessToken(), emailCampaignId, linkId, null);
+		return emailCampaignTrackingService.getClicksByLinkId(this.getAccessToken(), emailCampaignId, linkId, null, createdSinceTimestamp);
 	}
 
 	/**
 	 * Get Email Campaign Tracking Clicks By Link API.<br/>
-	 * Details in : {@link EmailCampaignTrackingService#getClicksByLinkId(String, String, String, Integer)}
+	 * Details in : {@link EmailCampaignTrackingService#getClicksByLinkId(String, String, String, Integer, String)}
 	 * 
 	 * @param emailCampaignId The id field in Email Campaign
 	 * @param linkId The link id
 	 * @param limit The limit
+	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the clicks performed since the supplied date. <br/>
+	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingClick} in case of success; an exception is thrown otherwise.
 	 * @throws ConstantContactServiceException Thrown when :
 	 *             <ul>
@@ -1540,20 +1481,23 @@ public class ConstantContact {
 	 *             The exception also contains a description of the cause.<br/>
 	 *             Error message is taken from one of the members of {@link Errors}
 	 */
-	public ResultSet<EmailCampaignTrackingClick> getEmailCampaignTrackingClicksByLink(String emailCampaignId, String linkId, Integer limit)
+	public ResultSet<EmailCampaignTrackingClick> getEmailCampaignTrackingClicksByLink(String emailCampaignId, String linkId, Integer limit, String createdSinceTimestamp)
 			throws ConstantContactServiceException, IllegalArgumentException {
 
 		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
 			throw new IllegalArgumentException(Config.Errors.ID);
 		}
-		return emailCampaignTrackingService.getClicksByLinkId(this.getAccessToken(), emailCampaignId, linkId, limit);
+		return emailCampaignTrackingService.getClicksByLinkId(this.getAccessToken(), emailCampaignId, linkId, limit, createdSinceTimestamp);
 	}
 
 	/**
 	 * Get Contact Tracking Summary API.<br/>
-	 * Details in : {@link ContactTrackingService#getSummary(String, String)}
+	 * Details in : {@link ContactTrackingService#getSummary(String, String, String)}
 	 * 
 	 * @param contactId The contact id.
+	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the summary since the supplied date. <br/>
+	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
 	 * @return A {@link ContactTrackingSummaryReport} in case of success; an exception is thrown otherwise.
 	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
 	 *             The exception also contains a description of the cause.<br/>
@@ -1567,12 +1511,12 @@ public class ConstantContact {
 	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
 	 */
-	public ContactTrackingSummaryReport getContactTrackingSummary(String contactId) throws IllegalArgumentException, ConstantContactServiceException {
+	public ContactTrackingSummaryReport getContactTrackingSummary(String contactId, String createdSinceTimestamp) throws IllegalArgumentException, ConstantContactServiceException {
 
 		if (contactId == null || !(contactId.length() > 0)) {
 			throw new IllegalArgumentException(Config.Errors.ID);
 		}
-		return contactTrackingService.getSummary(this.getAccessToken(), contactId);
+		return contactTrackingService.getSummary(this.getAccessToken(), contactId, createdSinceTimestamp);
 	}
 
 	/**
@@ -1632,7 +1576,7 @@ public class ConstantContact {
 	/**
 	 * 
 	 * Get Contact Tracking Clicks API.<br/>
-	 * Details in : {@link ContactTrackingService#getClicks(String, String, Integer)}
+	 * Details in : {@link ContactTrackingService#getClicks(String, String, Integer, String)}
 	 * 
 	 * @param contactId The contact id.
 	 * @return A {@link ResultSet} of {@link ContactTrackingClick} in case of success; an exception is thrown otherwise.
@@ -1648,20 +1592,23 @@ public class ConstantContact {
 	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
 	 */
-	public ResultSet<ContactTrackingClick> getContactTrackingClicks(String contactId) throws IllegalArgumentException, ConstantContactServiceException {
+	public ResultSet<ContactTrackingClick> getContactTrackingClicks(String contactId, String createdSinceTimestamp) throws IllegalArgumentException, ConstantContactServiceException {
 		if (contactId == null || !(contactId.length() > 0)) {
 			throw new IllegalArgumentException(Config.Errors.ID);
 		}
-		return getContactTrackingClicks(contactId, null);
+		return getContactTrackingClicks(contactId, null, createdSinceTimestamp);
 	}
 
 	/**
 	 * 
 	 * Get Contact Tracking Clicks API.<br/>
-	 * Details in : {@link ContactTrackingService#getClicks(String, String, Integer)}
+	 * Details in : {@link ContactTrackingService#getClicks(String, String, Integer, String)}
 	 * 
 	 * @param contactId The contact id.
 	 * @param limit The limit
+	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the clicks performed since the supplied date. <br/>
+	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link ContactTrackingClick} in case of success; an exception is thrown otherwise.
 	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
 	 *             The exception also contains a description of the cause.<br/>
@@ -1675,20 +1622,23 @@ public class ConstantContact {
 	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
 	 */
-	public ResultSet<ContactTrackingClick> getContactTrackingClicks(String contactId, Integer limit) throws IllegalArgumentException,
+	public ResultSet<ContactTrackingClick> getContactTrackingClicks(String contactId, Integer limit, String createdSinceTimestamp) throws IllegalArgumentException,
 			ConstantContactServiceException {
 		if (contactId == null || !(contactId.length() > 0)) {
 			throw new IllegalArgumentException(Config.Errors.ID);
 		}
-		return contactTrackingService.getClicks(this.getAccessToken(), contactId, limit);
+		return contactTrackingService.getClicks(this.getAccessToken(), contactId, limit, createdSinceTimestamp);
 	}
 
 	/**
 	 * 
 	 * Get Contact Tracking Forwards API.<br/>
-	 * Details in : {@link ContactTrackingService#getForwards(String, String, Integer)}
+	 * Details in : {@link ContactTrackingService#getForwards(String, String, Integer, String)}
 	 * 
 	 * @param contactId The contact id.
+	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the forwards performed since the supplied date. <br/>
+	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link ContactTrackingForward} in case of success; an exception is thrown otherwise.
 	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
 	 *             The exception also contains a description of the cause.<br/>
@@ -1702,20 +1652,23 @@ public class ConstantContact {
 	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
 	 */
-	public ResultSet<ContactTrackingForward> getContactTrackingForwards(String contactId) throws IllegalArgumentException, ConstantContactServiceException {
+	public ResultSet<ContactTrackingForward> getContactTrackingForwards(String contactId, String createdSinceTimestamp) throws IllegalArgumentException, ConstantContactServiceException {
 		if (contactId == null || !(contactId.length() > 0)) {
 			throw new IllegalArgumentException(Config.Errors.ID);
 		}
-		return contactTrackingService.getForwards(this.getAccessToken(), contactId, null);
+		return contactTrackingService.getForwards(this.getAccessToken(), contactId, null, createdSinceTimestamp);
 	}
 
 	/**
 	 * 
 	 * Get Contact Tracking Forwards API.<br/>
-	 * Details in : {@link ContactTrackingService#getForwards(String, String, Integer)}
+	 * Details in : {@link ContactTrackingService#getForwards(String, String, Integer, String)}
 	 * 
 	 * @param contactId The contact id.
 	 * @param limit The limit
+	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the forwards performed since the supplied date. <br/>
+	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link ContactTrackingForward} in case of success; an exception is thrown otherwise.
 	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
 	 *             The exception also contains a description of the cause.<br/>
@@ -1729,20 +1682,23 @@ public class ConstantContact {
 	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
 	 */
-	public ResultSet<ContactTrackingForward> getContactTrackingForwards(String contactId, Integer limit) throws IllegalArgumentException,
+	public ResultSet<ContactTrackingForward> getContactTrackingForwards(String contactId, Integer limit, String createdSinceTimestamp) throws IllegalArgumentException,
 			ConstantContactServiceException {
 		if (contactId == null || !(contactId.length() > 0)) {
 			throw new IllegalArgumentException(Config.Errors.ID);
 		}
-		return contactTrackingService.getForwards(this.getAccessToken(), contactId, limit);
+		return contactTrackingService.getForwards(this.getAccessToken(), contactId, limit, createdSinceTimestamp);
 	}
 
 	/**
 	 * 
 	 * Get Contact Tracking Opens API.<br/>
-	 * Details in : {@link ContactTrackingService#getOpens(String, String, Integer)}
+	 * Details in : {@link ContactTrackingService#getOpens(String, String, Integer, String)}
 	 * 
 	 * @param contactId The contact id.
+	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the opens performed since the supplied date. <br/>
+	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link ContactTrackingOpen} in case of success; an exception is thrown otherwise.
 	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
 	 *             The exception also contains a description of the cause.<br/>
@@ -1756,20 +1712,23 @@ public class ConstantContact {
 	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
 	 */
-	public ResultSet<ContactTrackingOpen> getContactTrackingOpens(String contactId) throws IllegalArgumentException, ConstantContactServiceException {
+	public ResultSet<ContactTrackingOpen> getContactTrackingOpens(String contactId, String createdSinceTimestamp) throws IllegalArgumentException, ConstantContactServiceException {
 		if (contactId == null || !(contactId.length() > 0)) {
 			throw new IllegalArgumentException(Config.Errors.ID);
 		}
-		return contactTrackingService.getOpens(this.getAccessToken(), contactId, null);
+		return contactTrackingService.getOpens(this.getAccessToken(), contactId, null, createdSinceTimestamp);
 	}
 
 	/**
 	 * 
 	 * Get Contact Tracking Opens API.<br/>
-	 * Details in : {@link ContactTrackingService#getOpens(String, String, Integer)}
+	 * Details in : {@link ContactTrackingService#getOpens(String, String, Integer, String)}
 	 * 
 	 * @param contactId The contact id.
 	 * @param limit The limit
+	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the opens performed since the supplied date. <br/>
+	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link ContactTrackingOpen} in case of success; an exception is thrown otherwise.
 	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
 	 *             The exception also contains a description of the cause.<br/>
@@ -1783,20 +1742,23 @@ public class ConstantContact {
 	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
 	 */
-	public ResultSet<ContactTrackingOpen> getContactTrackingOpens(String contactId, Integer limit) throws IllegalArgumentException,
+	public ResultSet<ContactTrackingOpen> getContactTrackingOpens(String contactId, Integer limit, String createdSinceTimestamp) throws IllegalArgumentException,
 			ConstantContactServiceException {
 		if (contactId == null || !(contactId.length() > 0)) {
 			throw new IllegalArgumentException(Config.Errors.ID);
 		}
-		return contactTrackingService.getOpens(this.getAccessToken(), contactId, limit);
+		return contactTrackingService.getOpens(this.getAccessToken(), contactId, limit, createdSinceTimestamp);
 	}
 
 	/**
 	 * 
 	 * Get Contact Tracking Sends API.<br/>
-	 * Details in : {@link ContactTrackingService#getSends(String, String, Integer)}
+	 * Details in : {@link ContactTrackingService#getSends(String, String, Integer, String)}
 	 * 
 	 * @param contactId The contact id.
+	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the sends performed since the supplied date. <br/>
+	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link ContactTrackingSend} in case of success; an exception is thrown otherwise.
 	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
 	 *             The exception also contains a description of the cause.<br/>
@@ -1810,20 +1772,23 @@ public class ConstantContact {
 	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
 	 */
-	public ResultSet<ContactTrackingSend> getContactTrackingSends(String contactId) throws IllegalArgumentException, ConstantContactServiceException {
+	public ResultSet<ContactTrackingSend> getContactTrackingSends(String contactId, String createdSinceTimestamp) throws IllegalArgumentException, ConstantContactServiceException {
 		if (contactId == null || !(contactId.length() > 0)) {
 			throw new IllegalArgumentException(Config.Errors.ID);
 		}
-		return contactTrackingService.getSends(this.getAccessToken(), contactId, null);
+		return contactTrackingService.getSends(this.getAccessToken(), contactId, null, createdSinceTimestamp);
 	}
 
 	/**
 	 * 
 	 * Get Contact Tracking Sends API.<br/>
-	 * Details in : {@link ContactTrackingService#getSends(String, String, Integer)}
+	 * Details in : {@link ContactTrackingService#getSends(String, String, Integer, String)}
 	 * 
 	 * @param contactId The contact id.
 	 * @param limit The limit
+	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the sends performed since the supplied date. <br/>
+	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link ContactTrackingSend} in case of success; an exception is thrown otherwise.
 	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
 	 *             The exception also contains a description of the cause.<br/>
@@ -1837,20 +1802,23 @@ public class ConstantContact {
 	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
 	 */
-	public ResultSet<ContactTrackingSend> getContactTrackingSends(String contactId, Integer limit) throws IllegalArgumentException,
+	public ResultSet<ContactTrackingSend> getContactTrackingSends(String contactId, Integer limit, String createdSinceTimestamp) throws IllegalArgumentException,
 			ConstantContactServiceException {
 		if (contactId == null || !(contactId.length() > 0)) {
 			throw new IllegalArgumentException(Config.Errors.ID);
 		}
-		return contactTrackingService.getSends(this.getAccessToken(), contactId, limit);
+		return contactTrackingService.getSends(this.getAccessToken(), contactId, limit, createdSinceTimestamp);
 	}
 
 	/**
 	 * 
 	 * Get Contact Tracking Unsubscribes API.<br/>
-	 * Details in : {@link ContactTrackingService#getUnsubscribes(String, String, Integer)}
+	 * Details in : {@link ContactTrackingService#getUnsubscribes(String, String, Integer, String)}
 	 * 
 	 * @param contactId The contact id.
+	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the unsubscribes performed since the supplied date. <br/>
+	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link ContactTrackingUnsubscribe} in case of success; an exception is thrown otherwise.
 	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
 	 *             The exception also contains a description of the cause.<br/>
@@ -1864,21 +1832,24 @@ public class ConstantContact {
 	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
 	 */
-	public ResultSet<ContactTrackingUnsubscribe> getContactTrackingUnsubscribes(String contactId) throws IllegalArgumentException,
+	public ResultSet<ContactTrackingUnsubscribe> getContactTrackingUnsubscribes(String contactId, String createdSinceTimestamp) throws IllegalArgumentException,
 			ConstantContactServiceException {
 		if (contactId == null || !(contactId.length() > 0)) {
 			throw new IllegalArgumentException(Config.Errors.ID);
 		}
-		return contactTrackingService.getUnsubscribes(this.getAccessToken(), contactId, null);
+		return contactTrackingService.getUnsubscribes(this.getAccessToken(), contactId, null, createdSinceTimestamp);
 	}
 
 	/**
 	 * 
 	 * Get Contact Tracking Unsubscribes API.<br/>
-	 * Details in : {@link ContactTrackingService#getUnsubscribes(String, String, Integer)}
+	 * Details in : {@link ContactTrackingService#getUnsubscribes(String, String, Integer, String)}
 	 * 
 	 * @param contactId The contact id.
 	 * @param limit The limit
+	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the unsubscribes performed since the supplied date. <br/>
+	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link ContactTrackingUnsubscribe} in case of success; an exception is thrown otherwise.
 	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
 	 *             The exception also contains a description of the cause.<br/>
@@ -1892,12 +1863,12 @@ public class ConstantContact {
 	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
 	 */
-	public ResultSet<ContactTrackingUnsubscribe> getContactTrackingUnsubscribes(String contactId, Integer limit) throws IllegalArgumentException,
+	public ResultSet<ContactTrackingUnsubscribe> getContactTrackingUnsubscribes(String contactId, Integer limit, String createdSinceTimestamp) throws IllegalArgumentException,
 			ConstantContactServiceException {
 		if (contactId == null || !(contactId.length() > 0)) {
 			throw new IllegalArgumentException(Config.Errors.ID);
 		}
-		return contactTrackingService.getUnsubscribes(this.getAccessToken(), contactId, limit);
+		return contactTrackingService.getUnsubscribes(this.getAccessToken(), contactId, limit, createdSinceTimestamp);
 	}
 
 	/**

@@ -1,23 +1,18 @@
 package com.constantcontact.util.http;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.constantcontact.ConstantContact;
 import com.constantcontact.components.Component;
 import com.constantcontact.exceptions.component.ConstantContactComponentException;
-import com.constantcontact.httpclient.HttpResponse;
-import com.constantcontact.httpclient.client.methods.HttpDelete;
-import com.constantcontact.httpclient.client.methods.HttpGet;
-import com.constantcontact.httpclient.client.methods.HttpPost;
-import com.constantcontact.httpclient.client.methods.HttpPut;
-import com.constantcontact.httpclient.client.methods.HttpUriRequest;
-import com.constantcontact.httpclient.entity.StringEntity;
-import com.constantcontact.httpclient.impl.client.DefaultHttpClient;
 import com.constantcontact.util.CUrlRequestError;
 import com.constantcontact.util.CUrlResponse;
 import com.constantcontact.util.Config;
@@ -25,58 +20,56 @@ import com.constantcontact.util.http.constants.ProcessorBase;
 
 /**
  * Low-level Class responsible with HTTP requests in Constant Contact.<br/>
- * Outside has access only to {@link HttpProcessor#makeHttpRequest(String, HttpMethod, String, String)}
+ * Outside has access only to
+ * {@link HttpProcessor#makeHttpRequest(String, HttpMethod, String, String)}
  * 
  * @author ConstantContact
  */
 public class HttpProcessor implements ProcessorBase {
 
 	/**
-	 * Makes a HTTP request to the Endpoint specified in urlParam and using the HTTP method specified by httpMethod.
+	 * Makes a HTTP request to the Endpoint specified in urlParam and using the
+	 * HTTP method specified by httpMethod.
 	 * 
-	 * @param urlParam The URL of the resource, as a {@link String}
-	 * @param httpMethod The {@link HttpMethod}
-	 * @param accessToken Constant Contact OAuth2 access token.
-	 * @param data A {@link String} containing the data or NULL when there is no data to send (eg. in GET call).
-	 * @return A {@link CUrlResponse} containing either the response data, or the error info otherwise.
+	 * @param urlParam
+	 *            The URL of the resource, as a {@link String}
+	 * @param httpMethod
+	 *            The {@link HttpMethod}
+	 * @param accessToken
+	 *            Constant Contact OAuth2 access token.
+	 * @param data
+	 *            A {@link String} containing the data or NULL when there is no
+	 *            data to send (eg. in GET call).
+	 * @return A {@link CUrlResponse} containing either the response data, or
+	 *         the error info otherwise.
 	 */
+	static HttpURLConnection connection;
+
 	public static CUrlResponse makeHttpRequest(String urlParam, HttpMethod httpMethod, String accessToken, String data) {
 
-		DefaultHttpClient client = new DefaultHttpClient();
-		HttpUriRequest uriRequest = null;
 		BufferedReader reader = null;
-		StringBuilder buffer = null; // we'll use StringBuilder to reduce the amount of garbage collection
-		String line = "";
 
 		CUrlResponse urlResponse = new CUrlResponse();
 		String responseMessage = null;
 		String errorMessage = null;
 		try {
-			uriRequest = clientConnection(urlParam, httpMethod, accessToken, data);
-			HttpResponse httpResponse = client.execute(uriRequest);
 
-			int responseCode = httpResponse.getStatusLine().getStatusCode();
-			urlResponse.setStatusCode(responseCode); // first of all, set the status code.
+			responseMessage = clientConnection(urlParam, httpMethod, accessToken, data);
 
-			if (responseCode == HttpURLConnection.HTTP_NO_CONTENT) { // nothing else to do since we came out empty...
+			int responseCode = connection.getResponseCode();
+			urlResponse.setStatusCode(responseCode);
+
+			if (responseCode == HttpURLConnection.HTTP_NO_CONTENT) {
 				return urlResponse;
 			}
 
 			if (responseCode != HttpURLConnection.HTTP_OK && responseCode != Config.HTTP_CODES.EMAIL_CAMPAIGN_SCHEDULE_CREATED) {
-				String statusLine = httpResponse.getStatusLine().toString();
-				errorMessage = "Response with status: " + statusLine;
+				errorMessage = "Response with status: " + responseCode;
 				urlResponse.setError(true);
 			}
-			
-			reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()));
-			buffer = new StringBuilder();
-			while ((line = reader.readLine()) != null) {
-				buffer.append(line).append('\n');
-			}
-			responseMessage = buffer.toString();
 
 			if (responseMessage == null || responseMessage.trim() == "") {
-				errorMessage = "Response was not returned or is null";
+				errorMessage = "Response was not returned or is null. Status code: " + responseCode;
 			}
 
 		} catch (Exception e) {
@@ -91,88 +84,149 @@ public class HttpProcessor implements ProcessorBase {
 				}// silently ignore
 				reader = null;
 			}
-			buffer = null;
-			client = null;
 		}
 		if (urlResponse.isError()) {
-			
+
 			List<CUrlRequestError> cUrlRequestErrors = new ArrayList<CUrlRequestError>();
-			
-			//if there is an error and response message is not empty capture server errors
-			if(responseMessage != null) {				
-				try {					
+
+			// if there is an error and response message is not empty capture server errors
+
+			if (responseMessage != null) {
+				try {
 					List<CUrlRequestError> cUrlRequestErrors2 = Component.listFromJSON(responseMessage, CUrlRequestError.class);
 					cUrlRequestErrors.addAll(cUrlRequestErrors2);
-					
+
 				} catch (ConstantContactComponentException e) {
 					CUrlRequestError cUrlRequestError = new CUrlRequestError("error", errorMessage);
 					cUrlRequestErrors.add(cUrlRequestError);
-				}				
+				}
 			} else {
 				CUrlRequestError cUrlRequestError = new CUrlRequestError("error", errorMessage);
-				cUrlRequestErrors.add(cUrlRequestError);				
+				cUrlRequestErrors.add(cUrlRequestError);
 			}
 			urlResponse.setInfo(cUrlRequestErrors);
-			
+
 		} else {
 			urlResponse.setBody(responseMessage);
 		}
-
+		connection.disconnect();
 		return urlResponse;
 	}
-
 
 	/**
 	 * Create the UriRequest to the Constant Contact endpoint.
 	 * 
-	 * @param urlParam The exact URL to request.
-	 * @param httpMethod The {@link HttpMethod} specifying the HTTP Method to use (POST, GET, etc)
-	 * @param accessToken The Constant Contact OAuth2 access token.
+	 * @param urlParam
+	 *            The exact URL to request.
+	 * @param httpMethod
+	 *            The {@link HttpMethod} specifying the HTTP Method to use
+	 *            (POST, GET, etc)
+	 * @param accessToken
+	 *            The Constant Contact OAuth2 access token.
 	 * @return A HttpUriRequest
-	 * @throws Exception When something went wrong.
+	 * @throws Exception
+	 *             When something went wrong.
 	 */
-	
-	private static HttpUriRequest clientConnection(String urlParam, HttpMethod httpMethod, String accessToken, String data) throws Exception {
-		HttpUriRequest response;
-		StringEntity params = new StringEntity("");
-		String bindString = urlParam.contains("=") ?  "&" : "?";		
-		urlParam = String.format("%1$s%2$sapi_key=%3$s", urlParam, bindString, ConstantContact.getInstance().getApiKey());
+
+	private static String clientConnection(String urlParam, HttpMethod httpMethod, String accessToken, String data) throws Exception {
+
+		String bindString = urlParam.contains("=") ? "&" : "?";
+		urlParam = String.format("%1$s%2$sapi_key=%3$s", urlParam, bindString, ConstantContact.API_KEY);
+
+		URL url = new URL(urlParam);
+		
+		System.out.println("URL :" + urlParam);
+
+		connection = (HttpURLConnection) url.openConnection();
+		connection.setReadTimeout(10000);
+		connection.setUseCaches(false);
+
+		connection.setRequestProperty(CONTENT_TYPE_HEADER, JSON_CONTENT_TYPE);
+		connection.addRequestProperty(ACCEPT_HEADER, JSON_CONTENT_TYPE);
+		connection.addRequestProperty(AUTHORIZATION_HEADER, "Bearer " + accessToken);
+		connection.addRequestProperty("Connection", "Keep-Alive");
+		connection.addRequestProperty("Keep-Alive", "header");
+
+		if (data != null)
+			connection.addRequestProperty("Content-Length", "" + Integer.toString(data.getBytes().length));
 		
 		switch (httpMethod) {
 		case GET:
-			HttpGet get = new HttpGet(urlParam);
-			response = get;
-			break;
+			return executeRequest(data, accessToken);
 		case POST:
-			HttpPost post = new HttpPost(urlParam);	
-			params = new StringEntity(data);
-			post.setEntity(params);
-		    response = post;
-			break;
+			connection.setDoInput(true);
+			connection.setDoOutput(true);
+			connection.setRequestMethod("POST");
+			
+			return executeRequest(data, accessToken);
 		case DELETE:
-			HttpDelete delete = new HttpDelete(urlParam);
-			response = delete;
-			break;
-		case PUT:
-			HttpPut put = new HttpPut(urlParam);
-			params = new StringEntity(data);
-			put.setEntity(params);
-			response = put;
-			break;
+			connection.setRequestMethod("DELETE");
+			
+			return executeRequest(data, accessToken);
+ 		case PUT:
+			connection.setRequestMethod("PUT");
+			connection.setDoInput(true);
+			connection.setDoOutput(true);
+			
+			return executeRequest(data, accessToken);
 		default:
-			HttpGet get2 = new HttpGet(urlParam);
-			response = get2;
-			break;
+			connection.setRequestMethod("GET");
+			return executeRequest(data, accessToken);
 		}
-
-		response.setHeader(CONTENT_TYPE_HEADER, JSON_CONTENT_TYPE);
-		response.setHeader(ACCEPT_HEADER, JSON_CONTENT_TYPE);
-		response.setHeader(AUTHORIZATION_HEADER, "Bearer " + accessToken);
-		response.setHeader("Connection", "Keep-Alive");
-		response.setHeader("Keep-Alive", "header");
-
-		return response;
 	}
+	/**
+	 * Sends the url request to the Constant Contact endpoint.
+	 * Sends the associated data if any, and returns the server response.
+	 * 
+	 * @param data
+	 * @param accessToken
+	 * @return server response
+	 */
+	public static String executeRequest(String data, String accessToken) {
+
+		try {
+			// Send request
+			if (data != null) {				
+				DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
+				wr.writeBytes(data);
+				wr.flush();
+				wr.close();
+			}
+			
+			//Get the resonse
+			InputStream is = null;
+			
+			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK || connection.getResponseCode()  == Config.HTTP_CODES.EMAIL_CAMPAIGN_SCHEDULE_CREATED) {
+				is = connection.getInputStream();
+			} else {
+				is = connection.getErrorStream();
+			}
+			
+			BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+			String line;
+			StringBuffer response = new StringBuffer();
+			
+			while ((line = rd.readLine()) != null) {
+				response.append(line);
+				response.append('\r');
+			}
+			rd.close();
+
+			return response.toString();
+			
+		} catch (Exception e) {
+
+			e.printStackTrace();
+			return null;
+
+		} finally {
+
+			if (connection != null) {
+				connection.disconnect();
+			}
+		}
+	}
+
 	/**
 	 * Default constructor.
 	 */

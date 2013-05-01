@@ -80,6 +80,8 @@ public abstract class EmailCampaignBase extends Component implements Serializabl
 	@JsonIgnore
 	private String createdDate;
 	@JsonIgnore
+	private String permalinkUrl;
+	@JsonIgnore
 	private String archiveStatus;
 	@JsonIgnore
 	private String archiveUrl;
@@ -373,6 +375,16 @@ public abstract class EmailCampaignBase extends Component implements Serializabl
 	public String getCreatedDate() {
 		return createdDate;
 	}
+	
+	/**
+	 * Get the PermalinkUrl
+	 * 
+	 * @return The PermalinkUrl
+	 */
+	@JsonProperty("permalink_url")
+	public String getPermalinkUrl() {
+		return permalinkUrl;
+	}
 
 	/**
 	 * Get the Archive Status
@@ -653,6 +665,15 @@ public abstract class EmailCampaignBase extends Component implements Serializabl
 	 */
 	public void setCreatedDate(String createdDate) {
 		this.createdDate = createdDate;
+	}
+	
+	/**
+	 * Set the PermalinkUrl
+	 * 
+	 * @param permalinkUrl Permalink URL
+	 */
+	public void setPermalinkUrl(String permalinkUrl) {
+		this.permalinkUrl = permalinkUrl;
 	}
 
 	/**

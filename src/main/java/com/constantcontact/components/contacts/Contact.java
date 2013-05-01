@@ -65,6 +65,7 @@ public class Contact extends Component implements Serializable {
 	private String createdDate;
 	@JsonIgnore
 	private String modifiedDate;
+	
 	/**
 	 * Gets the id.
 	 * 
@@ -483,8 +484,7 @@ public class Contact extends Component implements Serializable {
 	 */
 	public void setCellPhone(String cellPhone) {
 		this.cellPhone = cellPhone;
-	}
-
+	}	
 	/**
 	 * Default constructor.
 	 */

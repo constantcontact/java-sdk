@@ -1,7 +1,4 @@
 com.constantcontact
-com.constantcontact.authentication
-com.constantcontact.authentication.components
-com.constantcontact.authentication.util
 com.constantcontact.components
 com.constantcontact.components.accounts
 com.constantcontact.components.activities.contacts.request
@@ -29,7 +26,6 @@ com.constantcontact.components.emailcampaigns.tracking.unsubscribes
 com.constantcontact.components.generic.response
 com.constantcontact.components.generic.sources
 com.constantcontact.exceptions
-com.constantcontact.exceptions.authentication
 com.constantcontact.exceptions.component
 com.constantcontact.exceptions.service
 com.constantcontact.services.accounts

@@ -11,45 +11,32 @@ Also add this libraries to classpath of project:
 	jackson-annotations-2.1.1.jar
 	jackson-core-2.1.1.jar
 	jackson-databind-2.1.3.jar
-	constant-contact-httpclient-4.2.3.jar
 
-2) Place your credentials in app.config file.
+2) Installation for Android projects
 
-`APIKey=APIkey`
-<br>
-`ConsumerSecret=ConsumerSecret`
-<br>
-`Password=password`
-<br>
-`Username=username`
-<br>
-`RedirectURL=RedirectURL`
+In order to use the Constant Contact SDK for Android you have to include
+ constantcontact-2.0.jar and jackson dependencies presented at 1) in your Android Project.
+
+3) For Eclipse Android development if NoDefClassFoundError is raised then:
+	
+	a) make sure that the dependency libraries are located in libs/ directory;
+	b) Go to Project Properties -> Java Build Path -> Order and Export, and move the 
+	dependency jar libraries to the top of the list.
 
 ## Usage
 
 1) In the file you wish to use the SDK include the following code in your file:
 
- `import com.constantcontact.*;`
-<br>
- `import com.constantcontact.components.contacts.*;` 
-<br>
-`import com.constantcontact.services.*;`
-<br>
-`import com.constantcontact.authentication.*;`
-<br>
-`import com.constantcontact.util.*;`  
+import com.constantcontact.ConstantContact;
 
 
 2) Create a ConstantContact object
 
-In order to use credentials defined in app.config file you can use this constructor:
 
-`ConstantContact constantContact = new ConstantContact(); ` 
+`ConstantContact constantContact = new ConstantContact("<apiKey>", "<accessToken>");`  
 
-
-Otherwise the credentials can be specified as constructor parameters
-
-`ConstantContact constantContact = new ConstantContact("username", "password", "apiKey", "redirectUrl");`       
+The API key represents the Application Key provided by Constant Contact for a specific application.
+The access token is obtained by performing the Constant Contact Authentication process.     
                                                           
                   
 3) Use the functions of the SDK using the created object.   
@@ -62,10 +49,6 @@ Otherwise the credentials can be specified as constructor parameters
        
 `ResultSet<Contact> contactList =  constantContact.getContacts();` 
 
-
-4)Usage in Android
-
-In order to use the Constant Contact SDK for Android you have to include constant contact SDK sources and libraries.
 
 
 
