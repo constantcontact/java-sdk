@@ -26,16 +26,23 @@ public class ContactService extends BaseService implements IContactService {
 	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param offset Offset.
 	 * @param limit Limit.
+	 * @param modifiedSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the contacts modified since the supplied date. <br/>
+	 * 		   If you want to bypass this filter set modifiedSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link Contact} containing data as returned by the server on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 	@Override
-	public ResultSet<Contact> getContacts(String accessToken, Integer offset, Integer limit) throws ConstantContactServiceException {
+	public ResultSet<Contact> getContacts(String accessToken, Integer offset, Integer limit, String modifiedSinceTimestamp) throws ConstantContactServiceException {
 		ResultSet<Contact> contacts = null;
 		try {
 			// Construct access URL
 			String url = paginateUrl(String.format("%1$s%2$s", Config.Endpoints.BASE_URL, Config.Endpoints.CONTACTS), offset, limit);
+			
+			if(modifiedSinceTimestamp != null)
+				url = appendParam(url, "modified_since", modifiedSinceTimestamp);
+			
 			// Get REST response
 			CUrlResponse response = getRestClient().get(url, accessToken);
 			if (response.hasData()) {

@@ -25,6 +25,9 @@ public class EmailCampaignTrackingClick extends TrackingBase implements Serializ
 
 	@JsonIgnore
 	private String linkId;
+	
+	@JsonIgnore
+	private String createdSince;
 
 	/**
 	 * Get the Click Date
@@ -45,6 +48,16 @@ public class EmailCampaignTrackingClick extends TrackingBase implements Serializ
 	public String getLinkId() {
 		return linkId;
 	}
+	
+	/**
+	 * Get the Created Since Date
+	 * 
+	 * @return The Created Since Date
+	 */
+	@JsonProperty("created_since")
+	public String getCreatedSince() {
+		return createdSince;
+	}
 
 	/**
 	 * Set the Click Date
@@ -63,6 +76,7 @@ public class EmailCampaignTrackingClick extends TrackingBase implements Serializ
 	public void setLinkId(String linkId) {
 		this.linkId = linkId;
 	}
+	
 
 	/**
 	 * Default constructor.

@@ -20,11 +20,12 @@ public interface IContactListService extends IBaseService {
 	 * Implements the Get lists for an account operation by calling the ConstantContact server side.
 	 * 
 	 * @param accessToken Constant Contact OAuth2 access token.
+	 * 
 	 * @return Returns a list of {@link ContactList} containing values as returned by the server on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	List<ContactList> getLists(String accessToken) throws ConstantContactServiceException;
+	List<ContactList> getLists(String accessToken, String modifiedSinceTimestamp) throws ConstantContactServiceException;
 
 	/**
 	 * Implements the add list for an account operation by calling the ConstantContact server side.

@@ -79,6 +79,18 @@ public class EmailCampaignRequest extends EmailCampaignBase implements Serializa
 	public String getModifiedDate() {
 		return super.getModifiedDate();
 	}
+	
+	/**
+	 * Override of {@link EmailCampaignBase#getPermalinkUrl()} to hide it via JsonIgnore.<br/>
+	 * Reason: server returns an error when this field appears in a request.
+	 * 
+	 * @return Call to parent method
+	 */
+	@Override
+	@JsonIgnore
+	public String getPermalinkUrl() {
+		return super.getPermalinkUrl();
+	}
 
 	/**
 	 * Override of {@link EmailCampaignBase#getSentToContactLists()} to hide it via JsonIgnore.<br/>
@@ -87,7 +99,6 @@ public class EmailCampaignRequest extends EmailCampaignBase implements Serializa
 	 * @return Call to parent method
 	 */
 	@Override
-	@JsonIgnore
 	public List<SentToContactList> getSentToContactLists() {
 		return super.getSentToContactLists();
 	}
