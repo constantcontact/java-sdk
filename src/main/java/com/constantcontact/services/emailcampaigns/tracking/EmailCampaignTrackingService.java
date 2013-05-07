@@ -29,16 +29,24 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 	 * 
 	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param emailCampaignId The id field in Email Campaign
+	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the summary since the supplied date. <br/>
+	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
 	 * @return An {@link EmailCampaignTrackingSummary} containing the summary - values returned by the server side - on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 	@Override
-	public EmailCampaignTrackingSummary getSummary(String accessToken, String emailCampaignId) throws ConstantContactServiceException {
+	public EmailCampaignTrackingSummary getSummary(String accessToken, String emailCampaignId, String createdSinceTimestamp) throws ConstantContactServiceException {
 
 		EmailCampaignTrackingSummary summary = null;
 		try {
 			String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, String.format(Config.Endpoints.EMAILCAMPAIGNS_TRACKING_REPORTS_SUMMARY, emailCampaignId));
+			
+			if (createdSinceTimestamp != null) {
+				url = appendParam(url,"created_since", createdSinceTimestamp);
+			}			
+			
 			CUrlResponse response = getRestClient().get(url, accessToken);
 
 			if (response.hasData()) {
@@ -108,12 +116,15 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param emailCampaignId The id field in Email Campaign
 	 * @param limit The limit
+	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the clicks performed since the supplied date. <br/>
+	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingClick} containing the clicks - values returned by the server side - on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 	@Override
-	public ResultSet<EmailCampaignTrackingClick> getClicks(String accessToken, String emailCampaignId, Integer limit) throws ConstantContactServiceException {
+	public ResultSet<EmailCampaignTrackingClick> getClicks(String accessToken, String emailCampaignId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException {
 
 		ResultSet<EmailCampaignTrackingClick> clicks = null;
 		try {
@@ -122,6 +133,12 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 			if (limit != null) {
 				sb.append("?limit=").append(limit);
 			}
+			
+			if (createdSinceTimestamp != null) {
+				sb.append(limit != null ? "&" : "?");
+				sb.append("created_since=").append(createdSinceTimestamp);
+			}
+			
 			String url = sb.toString();
 
 			CUrlResponse response = getRestClient().get(url, accessToken);
@@ -151,12 +168,15 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param emailCampaignId The id field in Email Campaign
 	 * @param limit The limit
+	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the forwards performed since the supplied date. <br/>
+	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingForward} containing the forwards - values returned by the server side - on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 	@Override
-	public ResultSet<EmailCampaignTrackingForward> getForwards(String accessToken, String emailCampaignId, Integer limit)
+	public ResultSet<EmailCampaignTrackingForward> getForwards(String accessToken, String emailCampaignId, Integer limit, String createdSinceTimestamp)
 			throws ConstantContactServiceException {
 		ResultSet<EmailCampaignTrackingForward> forwards = null;
 		try {
@@ -165,6 +185,12 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 			if (limit != null) {
 				sb.append("?limit=").append(limit);
 			}
+			
+			if (createdSinceTimestamp != null) {
+				sb.append(limit != null ? "&" : "?");
+				sb.append("created_since=").append(createdSinceTimestamp);
+			}
+			
 			String url = sb.toString();
 
 			CUrlResponse response = getRestClient().get(url, accessToken);
@@ -194,12 +220,15 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param emailCampaignId The id field in Email Campaign
 	 * @param limit
+	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the opens performed since the supplied date. <br/>
+	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingOpen} containing the opens - values returned by the server side - on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 	@Override
-	public ResultSet<EmailCampaignTrackingOpen> getOpens(String accessToken, String emailCampaignId, Integer limit) throws ConstantContactServiceException {
+	public ResultSet<EmailCampaignTrackingOpen> getOpens(String accessToken, String emailCampaignId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException {
 		ResultSet<EmailCampaignTrackingOpen> opens = null;
 		try {
 			StringBuilder sb = new StringBuilder();
@@ -207,6 +236,12 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 			if (limit != null) {
 				sb.append("?limit=").append(limit);
 			}
+			
+			if (createdSinceTimestamp != null) {
+				sb.append(limit != null ? "&" : "?");
+				sb.append("created_since=").append(createdSinceTimestamp);
+			}
+			
 			String url = sb.toString();
 
 			CUrlResponse response = getRestClient().get(url, accessToken);
@@ -236,12 +271,15 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param emailCampaignId The id field in Email Campaign
 	 * @param limit The limit
+	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the sends performed since the supplied date. <br/>
+	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingSend} containing the sends - values returned by the server side - on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 	@Override
-	public ResultSet<EmailCampaignTrackingSend> getSends(String accessToken, String emailCampaignId, Integer limit) throws ConstantContactServiceException {
+	public ResultSet<EmailCampaignTrackingSend> getSends(String accessToken, String emailCampaignId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException {
 		ResultSet<EmailCampaignTrackingSend> sends = null;
 		try {
 			StringBuilder sb = new StringBuilder();
@@ -249,6 +287,12 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 			if (limit != null) {
 				sb.append("?limit=").append(limit);
 			}
+			
+			if (createdSinceTimestamp != null) {
+				sb.append(limit != null ? "&" : "?");
+				sb.append("created_since=").append(createdSinceTimestamp);
+			}
+			
 			String url = sb.toString();
 
 			CUrlResponse response = getRestClient().get(url, accessToken);
@@ -278,12 +322,15 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param emailCampaignId The id field in Email Campaign
 	 * @param limit The limit
+	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the unsubscribes performed since the supplied date. <br/>
+	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingUnsubscribe} containing the unsubscribes - values returned by the server side - on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 	@Override
-	public ResultSet<EmailCampaignTrackingUnsubscribe> getUnsubscribes(String accessToken, String emailCampaignId, Integer limit)
+	public ResultSet<EmailCampaignTrackingUnsubscribe> getUnsubscribes(String accessToken, String emailCampaignId, Integer limit, String createdSinceTimestamp)
 			throws ConstantContactServiceException {
 		ResultSet<EmailCampaignTrackingUnsubscribe> unsubscribes = null;
 		try {
@@ -292,6 +339,12 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 			if (limit != null) {
 				sb.append("?limit=").append(limit);
 			}
+			
+			if (createdSinceTimestamp != null) {
+				sb.append(limit != null ? "&" : "?");
+				sb.append("created_since=").append(createdSinceTimestamp);
+			}
+			
 			String url = sb.toString();
 
 			CUrlResponse response = getRestClient().get(url, accessToken);
@@ -322,13 +375,16 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 	 * @param emailCampaignId The id field in Email Campaign
 	 * @param linkId The link id
 	 * @param limit The limit
+	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the clicks performed since the supplied date. <br/>
+	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingClick} containing the clicks for the given link id - values returned by the server side - on
 	 *         success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 	@Override
-	public ResultSet<EmailCampaignTrackingClick> getClicksByLinkId(String accessToken, String emailCampaignId, String linkId, Integer limit)
+	public ResultSet<EmailCampaignTrackingClick> getClicksByLinkId(String accessToken, String emailCampaignId, String linkId, Integer limit, String createdSinceTimestamp)
 			throws ConstantContactServiceException {
 		ResultSet<EmailCampaignTrackingClick> clicks = null;
 		try {
@@ -338,6 +394,12 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 			if (limit != null) {
 				sb.append("?limit=").append(limit);
 			}
+			
+			if (createdSinceTimestamp != null) {
+				sb.append(limit != null ? "&" : "?");
+				sb.append("created_since=").append(createdSinceTimestamp);
+			}
+			
 			String url = sb.toString();
 
 			CUrlResponse response = getRestClient().get(url, accessToken);
