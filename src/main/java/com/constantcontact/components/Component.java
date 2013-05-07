@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.exceptions.component.ConstantContactComponentException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
@@ -35,6 +36,7 @@ public abstract class Component implements Serializable {
 	public static <T> List<T> listFromJSON(String json, Class<T> objClass) throws ConstantContactComponentException {
 		List<T> obj = null;
 		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		try {
 			TypeFactory typeFactory = mapper.getTypeFactory();
 			CollectionType collectionType = typeFactory.constructCollectionType(List.class, objClass);
@@ -56,6 +58,7 @@ public abstract class Component implements Serializable {
 	public static <T> T fromJSON(String json, Class<T> objClass) throws ConstantContactComponentException {
 		T obj = null;
 		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		try {
 			obj = mapper.readValue(json, objClass);
 		} catch (Exception e) {
@@ -75,6 +78,7 @@ public abstract class Component implements Serializable {
 	public static <T> ResultSet<T> resultSetFromJSON(String json, Class<T> objClass) throws ConstantContactComponentException {
 		ResultSet<T> obj = null;
 		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		try {
 			TypeFactory typeFactory = mapper.getTypeFactory();
 			JavaType javaType = typeFactory.constructParametricType(ResultSet.class, objClass);

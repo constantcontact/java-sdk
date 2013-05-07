@@ -30,6 +30,8 @@ public class ContactList extends Component implements Serializable {
 	private String name;
 	@JsonIgnore
 	private int contactCount;
+	@JsonIgnore
+	private String createdDate;
 
 	/**
 	 * Gets the id.
@@ -78,6 +80,16 @@ public class ContactList extends Component implements Serializable {
 	public String getName() {
 		return name;
 	}
+	
+	/**
+	 * Get the creation date
+	 * 
+	 * @return The creation date
+	 */
+	@JsonProperty("created_date")
+	public String getCreatedDate() {
+		return createdDate;
+	}
 
 	/**
 	 * Get the Contact Count
@@ -105,6 +117,15 @@ public class ContactList extends Component implements Serializable {
 	 */
 	public void setContactCount(int contactCount) {
 		this.contactCount = contactCount;
+	}
+	
+	/**
+	 * Set the creation date
+	 * 
+	 * @param createdDate The creation date
+	 */
+	public void setCreatedDate(String createdDate) {
+		this.createdDate = createdDate;
 	}
 
 	/**
