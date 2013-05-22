@@ -35,7 +35,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
+
 	public ContactTrackingSummaryReport getSummary(String accessToken, String contactId, String createdSinceTimestamp) throws ConstantContactServiceException {
 		ContactTrackingSummaryReport summary = null;
 		try {
@@ -75,7 +75,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
+
 	public ResultSet<ContactTrackingBounce> getBounces(String accessToken, String contactId, Integer limit) throws ConstantContactServiceException {
 
 		ResultSet<ContactTrackingBounce> bounces = null;
@@ -122,7 +122,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
+
 	public ResultSet<ContactTrackingClick> getClicks(String accessToken, String contactId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException {
 		ResultSet<ContactTrackingClick> clicks = null;
 		try {
@@ -173,7 +173,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
+
 	public ResultSet<ContactTrackingForward> getForwards(String accessToken, String contactId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException {
 		ResultSet<ContactTrackingForward> forwards = null;
 		try {
@@ -224,7 +224,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
+
 	public ResultSet<ContactTrackingOpen> getOpens(String accessToken, String contactId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException {
 		ResultSet<ContactTrackingOpen> opens = null;
 		try {
@@ -275,7 +275,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
+
 	public ResultSet<ContactTrackingSend> getSends(String accessToken, String contactId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException {
 		ResultSet<ContactTrackingSend> sends = null;
 		try {
@@ -326,7 +326,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
+
 	public ResultSet<ContactTrackingUnsubscribe> getUnsubscribes(String accessToken, String contactId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException {
 		ResultSet<ContactTrackingUnsubscribe> unsubscribes = null;
 		try {

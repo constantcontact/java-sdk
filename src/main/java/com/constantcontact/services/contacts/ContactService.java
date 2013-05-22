@@ -151,7 +151,8 @@ public class ContactService extends BaseService implements IContactService {
 			String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, Config.Endpoints.CONTACTS);
 			String json = contact.toJSON();
 			
-			//TODO append action by visitor
+			if(actionByVisitor == true)
+				url = appendParam(url, "action_by", "ACTION_BY_VISITOR");
 			
 			CUrlResponse response = getRestClient().post(url, accessToken, json);
 			if (response.hasData()) {
@@ -282,7 +283,8 @@ public class ContactService extends BaseService implements IContactService {
 			String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, String.format(Config.Endpoints.CONTACT, contact.getId()));
 			String json = contact.toJSON();
 			
-			//TODO url append action by visitor
+			if(actionByVisitor == true)
+				url = appendParam(url, "action_by", "ACTION_BY_VISITOR");
 			
 			CUrlResponse response = getRestClient().put(url, accessToken, json);
 			if (response.hasData()) {

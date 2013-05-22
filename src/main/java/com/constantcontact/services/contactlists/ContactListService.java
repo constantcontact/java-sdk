@@ -31,7 +31,7 @@ public class ContactListService extends BaseService implements IContactListServi
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
+
 	public List<ContactList> getLists(String accessToken, String modifiedSinceTimestamp) throws ConstantContactServiceException {
 		List<ContactList> lists = null;
 		try {
@@ -68,7 +68,7 @@ public class ContactListService extends BaseService implements IContactListServi
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
+
 	public ContactList addList(String accessToken, ContactList list) throws ConstantContactServiceException {
 		ContactList newList = null;
 		try {
@@ -103,7 +103,7 @@ public class ContactListService extends BaseService implements IContactListServi
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
+
 	public ContactList getList(String accessToken, String listId) throws ConstantContactServiceException {
 		ContactList list = null;
 		try {
@@ -137,7 +137,7 @@ public class ContactListService extends BaseService implements IContactListServi
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
+
 	public ResultSet<Contact> getContactsFromList(String accessToken, String listId) throws ConstantContactServiceException {
 		ResultSet<Contact> contacts = null;
 		try {
@@ -171,7 +171,7 @@ public class ContactListService extends BaseService implements IContactListServi
 	 * @return Returns true if operation succeeded; an exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */	
-	@Override
+
 	public boolean deleteList(String accessToken, String listId) throws ConstantContactServiceException {
 		try {
 			String url = String.format("%1$s%2$s",Config.Endpoints.BASE_URL, String.format(Config.Endpoints.LIST, listId));

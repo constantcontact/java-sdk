@@ -368,6 +368,22 @@ public class ConstantContact {
 		return contactService.addContact(this.getAccessToken(), contact, actionByVisitor.booleanValue());
 	}
 	
+	/**
+	 * Add Contact API.<br/>
+	 * Details in : {@link ContactService#addContact(String, Contact)}
+	 * 
+	 * @param contact The {@link Contact} to add.
+	 * @return The added contact.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	
 	public Contact addContact(Contact contact) throws ConstantContactServiceException {
 		return contactService.addContact(this.getAccessToken(), contact, false);
 	}
@@ -576,6 +592,26 @@ public class ConstantContact {
 		}
 		return contactService.updateContact(this.getAccessToken(), contact, false);
 	}
+	
+	/**
+	 * 
+	 * Update Contact API.<br/>
+	 * Details in : {@link ContactService#updateContact(String, Contact)}
+	 * 
+	 * @param contact The {@link Contact} to update.
+	 * @return The updated {@link Contact} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
 	
 	public Contact updateContact(Contact contact, Boolean actionByVisitor) throws IllegalArgumentException, ConstantContactServiceException {
 		if (contact == null) {

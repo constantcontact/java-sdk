@@ -34,7 +34,7 @@ public class EmailCampaignService extends BaseService implements IEmailCampaignS
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
+
 	public ResultSet<EmailCampaignResponse> getCampaigns(String accessToken, Integer offset, Integer limit, String modifiedSinceTimestamp) throws ConstantContactServiceException {
 		ResultSet<EmailCampaignResponse> campaigns = null;
 		try {
@@ -73,7 +73,7 @@ public class EmailCampaignService extends BaseService implements IEmailCampaignS
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
+
 	public EmailCampaignResponse getCampaign(String accessToken, String campaignId) throws ConstantContactServiceException {
 		EmailCampaignResponse campaign = null;
 		try {
@@ -109,7 +109,7 @@ public class EmailCampaignService extends BaseService implements IEmailCampaignS
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
+
 	public EmailCampaignResponse addCampaign(String accessToken, EmailCampaignRequest emailCampaign) throws ConstantContactServiceException {
 		EmailCampaignResponse newEmailCampaign = null;
 		try {
@@ -145,7 +145,7 @@ public class EmailCampaignService extends BaseService implements IEmailCampaignS
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
+
 	public EmailCampaignResponse updateCampaign(String accessToken, EmailCampaignRequest emailCampaign) throws ConstantContactServiceException {
 		EmailCampaignResponse updateEmailCampaign = null;
 		try {
@@ -181,7 +181,7 @@ public class EmailCampaignService extends BaseService implements IEmailCampaignS
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
+
 	public boolean deleteCampaign(String accessToken, String emailCampaignId) throws ConstantContactServiceException {
 		try {
 			String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, String.format(Config.Endpoints.EMAILCAMPAIGNS_ID, emailCampaignId));
