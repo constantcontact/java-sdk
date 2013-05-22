@@ -364,8 +364,12 @@ public class ConstantContact {
 	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
 	 */
+	public Contact addContact(Contact contact, Boolean actionByVisitor) throws ConstantContactServiceException {
+		return contactService.addContact(this.getAccessToken(), contact, actionByVisitor.booleanValue());
+	}
+	
 	public Contact addContact(Contact contact) throws ConstantContactServiceException {
-		return contactService.addContact(this.getAccessToken(), contact);
+		return contactService.addContact(this.getAccessToken(), contact, false);
 	}
 
 	/**
@@ -570,7 +574,17 @@ public class ConstantContact {
 		if (contact.getId() == null || !(contact.getId().length() > 0)) {
 			throw new IllegalArgumentException(Config.Errors.ID);
 		}
-		return contactService.updateContact(this.getAccessToken(), contact);
+		return contactService.updateContact(this.getAccessToken(), contact, false);
+	}
+	
+	public Contact updateContact(Contact contact, Boolean actionByVisitor) throws IllegalArgumentException, ConstantContactServiceException {
+		if (contact == null) {
+			throw new IllegalArgumentException(Config.Errors.CONTACT_OR_ID);
+		}
+		if (contact.getId() == null || !(contact.getId().length() > 0)) {
+			throw new IllegalArgumentException(Config.Errors.ID);
+		}
+		return contactService.updateContact(this.getAccessToken(), contact, actionByVisitor.booleanValue());
 	}
 
 	/**

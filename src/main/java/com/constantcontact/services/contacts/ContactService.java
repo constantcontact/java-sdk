@@ -33,7 +33,7 @@ public class ContactService extends BaseService implements IContactService {
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
+
 	public ResultSet<Contact> getContacts(String accessToken, Integer offset, Integer limit, String modifiedSinceTimestamp) throws ConstantContactServiceException {
 		ResultSet<Contact> contacts = null;
 		try {
@@ -73,7 +73,7 @@ public class ContactService extends BaseService implements IContactService {
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
+
 	public Contact getContact(String accessToken, String contactId) throws ConstantContactServiceException {
 		Contact contact = null;
 		try {
@@ -108,7 +108,7 @@ public class ContactService extends BaseService implements IContactService {
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
+
 	public ResultSet<Contact> getContactByEmail(String accessToken, String email) throws ConstantContactServiceException {
 		ResultSet<Contact> contacts = null;
 		try {
@@ -144,12 +144,14 @@ public class ContactService extends BaseService implements IContactService {
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
-	public Contact addContact(String accessToken, Contact contact) throws ConstantContactServiceException {
+
+	public Contact addContact(String accessToken, Contact contact, Boolean actionByVisitor) throws ConstantContactServiceException {
 		Contact newContact = null;
 		try {
 			String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, Config.Endpoints.CONTACTS);
 			String json = contact.toJSON();
+			
+			//TODO append action by visitor
 			
 			CUrlResponse response = getRestClient().post(url, accessToken, json);
 			if (response.hasData()) {
@@ -179,7 +181,7 @@ public class ContactService extends BaseService implements IContactService {
 	 * @return Returns true if operation succeeded; an exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
+
 	public boolean deleteContact(String accessToken, String contactId) throws ConstantContactServiceException {
 		try {
 			String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, String.format(Config.Endpoints.CONTACT, contactId));
@@ -210,7 +212,7 @@ public class ContactService extends BaseService implements IContactService {
 	 * @return Returns true if operation succeeded; an exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
+
 	public boolean deleteContactFromLists(String accessToken, String contactId) throws ConstantContactServiceException {
 		try {
 			String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, String.format(Config.Endpoints.CONTACT_LISTS, contactId));
@@ -241,7 +243,7 @@ public class ContactService extends BaseService implements IContactService {
 	 * @return Returns true if operation succeeded; an exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
+
 	public boolean deleteContactFromList(String accessToken, String contactId, String listId) throws ConstantContactServiceException {
 		try {
 			String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, String.format(Config.Endpoints.CONTACT_LIST, contactId, listId));
@@ -273,12 +275,14 @@ public class ContactService extends BaseService implements IContactService {
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
-	public Contact updateContact(String accessToken, Contact contact) throws ConstantContactServiceException {
+
+	public Contact updateContact(String accessToken, Contact contact, Boolean actionByVisitor) throws ConstantContactServiceException {
 		Contact updateContact = null;
 		try {
 			String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, String.format(Config.Endpoints.CONTACT, contact.getId()));
 			String json = contact.toJSON();
+			
+			//TODO url append action by visitor
 			
 			CUrlResponse response = getRestClient().put(url, accessToken, json);
 			if (response.hasData()) {
