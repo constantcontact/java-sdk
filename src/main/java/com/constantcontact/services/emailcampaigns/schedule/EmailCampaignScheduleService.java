@@ -30,7 +30,7 @@ public class EmailCampaignScheduleService extends BaseService implements IEmailC
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
+
 	public EmailCampaignSchedule getSchedule(String accessToken, String campaignId, String scheduleId) throws ConstantContactServiceException {
 		EmailCampaignSchedule schedule = null;
 		try {
@@ -67,7 +67,7 @@ public class EmailCampaignScheduleService extends BaseService implements IEmailC
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
+
 	public EmailCampaignSchedule updateSchedule(String accessToken, String campaignId, String scheduleId, EmailCampaignSchedule emailCampaignSchedule)
 			throws ConstantContactServiceException {
 
@@ -104,7 +104,7 @@ public class EmailCampaignScheduleService extends BaseService implements IEmailC
 	 * @return true when deleted with success; an exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
+
 	public boolean deleteSchedule(String accessToken, String campaignId, String scheduleId) throws ConstantContactServiceException {
 		try {
 			String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, String.format(Config.Endpoints.EMAILCAMPAIGNS_SCHEDULES_ID, campaignId, scheduleId));
@@ -135,7 +135,7 @@ public class EmailCampaignScheduleService extends BaseService implements IEmailC
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
+
 	public List<EmailCampaignSchedule> getSchedules(String accessToken, String campaignId) throws ConstantContactServiceException {
 		List<EmailCampaignSchedule> schedules = null;
 		try {
@@ -171,7 +171,7 @@ public class EmailCampaignScheduleService extends BaseService implements IEmailC
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
+
 	public EmailCampaignSchedule addSchedule(String accessToken, String campaignId, EmailCampaignSchedule emailCampaignSchedule)
 			throws ConstantContactServiceException {
 		EmailCampaignSchedule newSchedule = null;

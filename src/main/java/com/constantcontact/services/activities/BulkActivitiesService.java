@@ -36,7 +36,7 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
+
 	public ContactsResponse addContacts(String accessToken, AddContactsRequest request) throws ConstantContactServiceException {
 
 		ContactsResponse contactsResponse = null;
@@ -72,7 +72,7 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
+
 	public ContactsResponse removeContactsFromLists(String accessToken, RemoveContactsRequest request) throws ConstantContactServiceException {
 		ContactsResponse contactsResponse = null;
 		try {
@@ -106,7 +106,7 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
+
 	public ContactsResponse clearLists(String accessToken, ClearListsRequest request) throws ConstantContactServiceException {
 		ContactsResponse contactsResponse = null;
 		try {
@@ -140,7 +140,7 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
+
 	public ContactsResponse exportContacts(String accessToken, ExportContactsRequest request) throws ConstantContactServiceException {
 		ContactsResponse contactsResponse = null;
 		try {
@@ -173,7 +173,7 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
+
 	public List<SummaryReport> getSummaryReport(String accessToken) throws ConstantContactServiceException {
 		List<SummaryReport> activitiesResponse = null;
 		try {
@@ -209,7 +209,7 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
+
 	public List<DetailedStatusReport> getDetailedStatusReport(String accessToken, String status, String type, String id) throws ConstantContactServiceException {
 
 		List<DetailedStatusReport> detailedStatusReports = null;

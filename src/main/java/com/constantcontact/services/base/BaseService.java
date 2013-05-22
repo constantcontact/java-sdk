@@ -48,7 +48,7 @@ public abstract class BaseService implements IBaseService {
 	 * 
 	 * @return Rest client.
 	 */
-	@Override
+
 	public IRestClient getRestClient() {
 		return restClient;
 	}
