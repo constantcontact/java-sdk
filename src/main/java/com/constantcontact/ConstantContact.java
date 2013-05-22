@@ -351,7 +351,7 @@ public class ConstantContact {
 
 	/**
 	 * Add Contact API.<br/>
-	 * Details in : {@link ContactService#addContact(String, Contact)}
+	 * Details in : {@link ContactService#addContact(String, Contact, Boolean)}
 	 * 
 	 * @param contact The {@link Contact} to add.
 	 * @return The added contact.
@@ -370,7 +370,7 @@ public class ConstantContact {
 	
 	/**
 	 * Add Contact API.<br/>
-	 * Details in : {@link ContactService#addContact(String, Contact)}
+	 * Details in : {@link ContactService#addContact(String, Contact, Boolean)}
 	 * 
 	 * @param contact The {@link Contact} to add.
 	 * @return The added contact.
@@ -567,7 +567,7 @@ public class ConstantContact {
 	/**
 	 * 
 	 * Update Contact API.<br/>
-	 * Details in : {@link ContactService#updateContact(String, Contact)}
+	 * Details in : {@link ContactService#updateContact(String, Contact, Boolean)}
 	 * 
 	 * @param contact The {@link Contact} to update.
 	 * @return The updated {@link Contact} in case of success; an exception is thrown otherwise.
@@ -596,7 +596,7 @@ public class ConstantContact {
 	/**
 	 * 
 	 * Update Contact API.<br/>
-	 * Details in : {@link ContactService#updateContact(String, Contact)}
+	 * Details in : {@link ContactService#updateContact(String, Contact, Boolean)}
 	 * 
 	 * @param contact The {@link Contact} to update.
 	 * @return The updated {@link Contact} in case of success; an exception is thrown otherwise.
