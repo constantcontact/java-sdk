@@ -59,7 +59,7 @@ public interface IContactService extends IBaseService {
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	Contact addContact(String accessToken, Contact contact) throws ConstantContactServiceException;
+	Contact addContact(String accessToken, Contact contact, Boolean actionByVisitor) throws ConstantContactServiceException;
 
 	/**
 	 * Implements the delete Contact operation of the Contacts API by calling the ConstantContact server side.
@@ -102,5 +102,5 @@ public interface IContactService extends IBaseService {
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	Contact updateContact(String accessToken, Contact contact) throws ConstantContactServiceException;
+	Contact updateContact(String accessToken, Contact contact, Boolean actionByVisitor) throws ConstantContactServiceException;
 }

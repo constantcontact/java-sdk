@@ -193,7 +193,7 @@ public class HttpProcessor implements ProcessorBase {
 				wr.close();
 			}
 			
-			//Get the resonse
+			//Get the response
 			InputStream is = null;
 			
 			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK || connection.getResponseCode()  == Config.HTTP_CODES.EMAIL_CAMPAIGN_SCHEDULE_CREATED) {
@@ -205,14 +205,14 @@ public class HttpProcessor implements ProcessorBase {
 			BufferedReader rd = new BufferedReader(new InputStreamReader(is));
 			String line;
 			StringBuffer response = new StringBuffer();
-			
+		
 			while ((line = rd.readLine()) != null) {
 				response.append(line);
 				response.append('\r');
 			}
 			rd.close();
-
 			return response.toString();
+
 			
 		} catch (Exception e) {
 

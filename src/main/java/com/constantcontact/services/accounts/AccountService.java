@@ -29,7 +29,7 @@ public class AccountService extends BaseService implements IAccountService {
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
+
 	public List<VerifiedEmailAddress> getVerifiedEmailAddresses(String accessToken, String status) throws ConstantContactServiceException {
 		List<VerifiedEmailAddress> addresses = new ArrayList<VerifiedEmailAddress>();
 		try {
