@@ -17,7 +17,6 @@ public class RestClient implements IRestClient {
 	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @return The response body, http info, and error (if one exists).
 	 */
-	@Override
 	public CUrlResponse get(String url, String accessToken) {
 		return makeHttpRequest(url, HttpMethod.GET, accessToken, null);
 	}
@@ -30,7 +29,6 @@ public class RestClient implements IRestClient {
 	 * @param data Data to send with request.
 	 * @return The response body, http info, and error (if one exists).
 	 */
-	@Override
 	public CUrlResponse post(String url, String accessToken, String data) {
 		return makeHttpRequest(url, HttpMethod.POST, accessToken, data);
 	}
@@ -43,7 +41,6 @@ public class RestClient implements IRestClient {
 	 * @param data Data to send with request.
 	 * @return The response body, http info, and error (if one exists).
 	 */
-	@Override
 	public CUrlResponse put(String url, String accessToken, String data) {
 		return makeHttpRequest(url, HttpMethod.PUT, accessToken, data);
 	}
@@ -55,7 +52,6 @@ public class RestClient implements IRestClient {
 	 * @param accessToken Constant Contact OAuth2 access token
 	 * @return The response body, http info, and error (if one exists).
 	 */
-	@Override
 	public CUrlResponse delete(String url, String accessToken) {
 		return makeHttpRequest(url, HttpMethod.DELETE, accessToken, null);
 	}

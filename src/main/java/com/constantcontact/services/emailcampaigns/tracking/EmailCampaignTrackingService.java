@@ -36,7 +36,6 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
 	public EmailCampaignTrackingSummary getSummary(String accessToken, String emailCampaignId, String createdSinceTimestamp) throws ConstantContactServiceException {
 
 		EmailCampaignTrackingSummary summary = null;
@@ -78,7 +77,6 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
 	public ResultSet<EmailCampaignTrackingBounce> getBounces(String accessToken, String emailCampaignId, Integer limit) throws ConstantContactServiceException {
 		ResultSet<EmailCampaignTrackingBounce> bounces = null;
 		try {
@@ -123,7 +121,6 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
 	public ResultSet<EmailCampaignTrackingClick> getClicks(String accessToken, String emailCampaignId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException {
 
 		ResultSet<EmailCampaignTrackingClick> clicks = null;
@@ -175,7 +172,6 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
 	public ResultSet<EmailCampaignTrackingForward> getForwards(String accessToken, String emailCampaignId, Integer limit, String createdSinceTimestamp)
 			throws ConstantContactServiceException {
 		ResultSet<EmailCampaignTrackingForward> forwards = null;
@@ -227,7 +223,6 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
 	public ResultSet<EmailCampaignTrackingOpen> getOpens(String accessToken, String emailCampaignId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException {
 		ResultSet<EmailCampaignTrackingOpen> opens = null;
 		try {
@@ -278,7 +273,6 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
 	public ResultSet<EmailCampaignTrackingSend> getSends(String accessToken, String emailCampaignId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException {
 		ResultSet<EmailCampaignTrackingSend> sends = null;
 		try {
@@ -329,7 +323,6 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
 	public ResultSet<EmailCampaignTrackingUnsubscribe> getUnsubscribes(String accessToken, String emailCampaignId, Integer limit, String createdSinceTimestamp)
 			throws ConstantContactServiceException {
 		ResultSet<EmailCampaignTrackingUnsubscribe> unsubscribes = null;
@@ -383,7 +376,6 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	@Override
 	public ResultSet<EmailCampaignTrackingClick> getClicksByLinkId(String accessToken, String emailCampaignId, String linkId, Integer limit, String createdSinceTimestamp)
 			throws ConstantContactServiceException {
 		ResultSet<EmailCampaignTrackingClick> clicks = null;
