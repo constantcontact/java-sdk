@@ -2,7 +2,6 @@ package com.constantcontact.services.emailcampaigns;
 
 import com.constantcontact.components.emailcampaigns.EmailCampaignRequest;
 import com.constantcontact.components.emailcampaigns.EmailCampaignResponse;
-import com.constantcontact.components.generic.response.Pagination;
 import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.base.IBaseService;
@@ -27,26 +26,6 @@ public interface IEmailCampaignService extends IBaseService {
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 	ResultSet<EmailCampaignResponse> getCampaigns(String accessToken, Integer limit, String modifiedSinceTimestamp) throws ConstantContactServiceException;
-	
-	/**
-	 * Gets all the Email Campaigns.<br/>
-	 * Implements the get Campaigns operation of the Email Campaign API by calling the ConstantContact server side.
-	 * 
-	 * @param accessToken
-	 *          Constant Contact OAuth2 access token.
-	 * @param pagination
-	 *          Pagination for fetching next set of Email Campaigns.
-	 * @param modifiedSinceTimestamp
-	 *          This time stamp is an ISO-8601 ordinal date supporting offset. <br/>
-	 *          It will return only the Email Campaigns modified since the supplied date. <br/>
-	 *          If you want to bypass this filter set modifiedSinceTimestamp to null.
-	 * @return A {@link ResultSet} of {@link EmailCampaignResponse} containing data as returned by the server on success; <br/>
-	 *         An exception is thrown otherwise.
-	 * @throws ConstantContactServiceException
-	 *           When something went wrong in the Constant Contact flow or an error is returned from server.
-	 */
-	ResultSet<EmailCampaignResponse> getCampaignsFromPage(String accessToken, Pagination pagination, String modifiedSinceTimestamp) throws ConstantContactServiceException;
-
 	
 	/**
 	 * Gets a single Email Campaign.<br/>
