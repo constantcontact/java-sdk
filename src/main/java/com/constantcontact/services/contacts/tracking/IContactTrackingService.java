@@ -7,6 +7,7 @@ import com.constantcontact.components.contacts.tracking.opens.ContactTrackingOpe
 import com.constantcontact.components.contacts.tracking.reports.summary.ContactTrackingSummaryReport;
 import com.constantcontact.components.contacts.tracking.sends.ContactTrackingSend;
 import com.constantcontact.components.contacts.tracking.unsubscribes.ContactTrackingUnsubscribe;
+import com.constantcontact.components.generic.response.Pagination;
 import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.base.IBaseService;
@@ -44,6 +45,9 @@ public interface IContactTrackingService extends IBaseService {
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 	public ResultSet<ContactTrackingBounce> getBounces(String accessToken, String contactId, Integer limit) throws ConstantContactServiceException;
+	
+	//TODO change documentation
+	public ResultSet<ContactTrackingBounce> getBounces(String accessToken, String contactId, Pagination pagination) throws ConstantContactServiceException;
 
 	/**
 	 * Implements the get Clicks operation of the Contact Tracking API by calling the ConstantContact server side.
@@ -59,6 +63,9 @@ public interface IContactTrackingService extends IBaseService {
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 	public ResultSet<ContactTrackingClick> getClicks(String accessToken, String contactId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException;
+	
+	//TODO change documentation
+	public ResultSet<ContactTrackingClick> getClicks(String accessToken, String contactId, Pagination pagination, String createdSinceTimestamp) throws ConstantContactServiceException;
 
 	/**
 	 * Implements the get Forwards operation of the Contact Tracking API by calling the ConstantContact server side.
@@ -74,6 +81,9 @@ public interface IContactTrackingService extends IBaseService {
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 	public ResultSet<ContactTrackingForward> getForwards(String accessToken, String contactId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException;
+	
+	//TODO change documentation
+	public ResultSet<ContactTrackingForward> getForwards(String accessToken, String contactId, Pagination pagination, String createdSinceTimestamp) throws ConstantContactServiceException;
 
 	/**
 	 * Implements the get Opens operation of the Contact Tracking API by calling the ConstantContact server side.
@@ -89,6 +99,9 @@ public interface IContactTrackingService extends IBaseService {
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 	public ResultSet<ContactTrackingOpen> getOpens(String accessToken, String contactId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException;
+	
+	//TODO change documentation
+	public ResultSet<ContactTrackingOpen> getOpens(String accessToken, String contactId, Pagination pagination, String createdSinceTimestamp) throws ConstantContactServiceException;
 
 	/**
 	 * Implements the get Sends operation of the Contact Tracking API by calling the ConstantContact server side.
@@ -104,6 +117,9 @@ public interface IContactTrackingService extends IBaseService {
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 	public ResultSet<ContactTrackingSend> getSends(String accessToken, String contactId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException;
+	
+	//TODO change documentation
+	public ResultSet<ContactTrackingSend> getSends(String accessToken, String contactId, Pagination pagination, String createdSinceTimestamp) throws ConstantContactServiceException;
 
 	/**
 	 * Implements the get Unsubscribes operation of the Contact Tracking API by calling the ConstantContact server side.
@@ -119,4 +135,7 @@ public interface IContactTrackingService extends IBaseService {
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 	public ResultSet<ContactTrackingUnsubscribe> getUnsubscribes(String accessToken, String contactId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException;
+	
+	//TODO change documentation
+	public ResultSet<ContactTrackingUnsubscribe> getUnsubscribes(String accessToken, String contactId, Pagination pagination, String createdSinceTimestamp) throws ConstantContactServiceException;
 }
