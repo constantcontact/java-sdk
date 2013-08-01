@@ -176,7 +176,6 @@ public class ContactListService extends BaseService implements IContactListServi
 	 * Implements the Get all contacts from an individual list operation by calling the ConstantContact server side.
 	 * 
 	 * @param accessToken Constant Contact OAuth2 access token.
-	 * @param listId List id to retrieve contacts for.
 	 * @param pagination {@link Pagination} object that contains the link to the next set of contacts.
 	 * 
 	 * @return A {@link ResultSet} of {@link Contact} containing data as returned by the server on success; <br/>
@@ -184,10 +183,10 @@ public class ContactListService extends BaseService implements IContactListServi
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 
-	public ResultSet<Contact> getContactsFromListAtPage(String accessToken, String listId, Pagination pagination, String modifiedSinceTimestamp) throws ConstantContactServiceException {
+	public ResultSet<Contact> getContactsFromListAtPage(String accessToken, Pagination pagination, String modifiedSinceTimestamp) throws ConstantContactServiceException {
 		ResultSet<Contact> contacts = null;
 		try {		
-			if(pagination == null || pagination.getNextLink() == null)
+			if(pagination.getNextLink() == null)
 				return null;
 			
 			String url = paginateUrl(Config.Endpoints.BASE_URL_HOST, pagination.getNextLink(), null);

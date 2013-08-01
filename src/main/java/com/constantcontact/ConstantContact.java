@@ -823,7 +823,6 @@ public class ConstantContact {
 	 * Get Contacts From List API.<br/>
 	 * Details in : {@link ContactListService#getContactsFromList(String, String)}
 	 * 
-	 * @param listId The id of the {@link ContactList}
 	 * @return A {@link ResultSet} of {@link Contact} containing data as returned by the server on success; <br/>
 	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
 	 *             The exception also contains a description of the cause.<br/>
@@ -837,12 +836,12 @@ public class ConstantContact {
 	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
 	 */
-	public ResultSet<Contact> getContactsFromList(ContactList list, Pagination pagination, String modifiedSinceTimestamp)
+	public ResultSet<Contact> getContactsFromList(Pagination pagination, String modifiedSinceTimestamp)
 			throws IllegalArgumentException, ConstantContactServiceException {
-		if (list == null) {
-			throw new IllegalArgumentException(Config.Errors.LIST_OR_ID);
+		if (pagination == null) {
+			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
 		}
-		return contactListService.getContactsFromListAtPage(this.getAccessToken(), list.getId(), pagination, modifiedSinceTimestamp);
+		return contactListService.getContactsFromListAtPage(this.getAccessToken(), pagination, modifiedSinceTimestamp);
 	}
 	
 	//TODO change doc
