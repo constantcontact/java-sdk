@@ -1295,7 +1295,7 @@ public class ConstantContact {
 		if (pagination == null) {
 			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
 		}
-		return emailCampaignTrackingService.getBouncesByPage(this.getAccessToken(), pagination);
+		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, EmailCampaignTrackingBounce.class, null, null);
 	}	
 
 	/**
@@ -1367,7 +1367,7 @@ public class ConstantContact {
 		if (pagination == null) {
 			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
 		}
-		return emailCampaignTrackingService.getClicksByPage(this.getAccessToken(), pagination, createdSinceTimestamp);
+		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, EmailCampaignTrackingClick.class, TimeStampName.CREATED_SINCE, createdSinceTimestamp);
 	}
 	
 
@@ -1440,7 +1440,7 @@ public class ConstantContact {
 		if (pagination == null) {
 			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
 		}
-		return emailCampaignTrackingService.getForwardsByPage(this.getAccessToken(), pagination, createdSinceTimestamp);
+		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, EmailCampaignTrackingForward.class, TimeStampName.CREATED_SINCE, createdSinceTimestamp);
 	}
 
 	/**
@@ -1511,7 +1511,7 @@ public class ConstantContact {
 		if (pagination == null) {
 			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
 		}
-		return emailCampaignTrackingService.getOpensByPage(this.getAccessToken(), pagination, createdSinceTimestamp);
+		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, EmailCampaignTrackingOpen.class, TimeStampName.CREATED_SINCE, createdSinceTimestamp);
 	}
 	
 	/**
@@ -1583,7 +1583,7 @@ public class ConstantContact {
 		if (pagination == null) {
 			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
 		}
-		return emailCampaignTrackingService.getSendsByPage(this.getAccessToken(), pagination, createdSinceTimestamp);
+		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, EmailCampaignTrackingSend.class, TimeStampName.CREATED_SINCE, createdSinceTimestamp);
 	}
 
 	/**
@@ -1654,7 +1654,7 @@ public class ConstantContact {
 		if (pagination == null) {
 			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
 		}
-		return emailCampaignTrackingService.getUnsubscribesByPage(this.getAccessToken(), pagination, createdSinceTimestamp);
+		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, EmailCampaignTrackingUnsubscribe.class, TimeStampName.CREATED_SINCE, createdSinceTimestamp);
 	}
 
 	/**
@@ -1721,13 +1721,13 @@ public class ConstantContact {
 	}
 	
 	//TODO change documentation
-	public ResultSet<EmailCampaignTrackingClick> getEmailCampaignTrackingClicksByPage(Pagination pagination, String createdSinceTimestamp)
+	public ResultSet<EmailCampaignTrackingClick> getEmailCampaignTrackingClicksByLink(Pagination pagination, String createdSinceTimestamp)
 			throws ConstantContactServiceException, IllegalArgumentException {
 
 		if (pagination == null) {
 			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
 		}
-		return emailCampaignTrackingService.getClicksByLinkIdFromPage(this.getAccessToken(), pagination, createdSinceTimestamp);
+		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, EmailCampaignTrackingClick.class, TimeStampName.CREATED_SINCE, createdSinceTimestamp);
 	}
 
 	/**
