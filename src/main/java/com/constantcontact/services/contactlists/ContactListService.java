@@ -6,6 +6,7 @@ import java.util.List;
 import com.constantcontact.components.Component;
 import com.constantcontact.components.contacts.Contact;
 import com.constantcontact.components.contacts.ContactList;
+import com.constantcontact.components.generic.response.Pagination;
 import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.base.BaseService;
@@ -133,15 +134,67 @@ public class ContactListService extends BaseService implements IContactListServi
 	 * 
 	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param listId List id to retrieve contacts for.
+	 * @param limit Maximum number of contacts to retrieve. Default is 50.
+	 * @param modifiedSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/>
+	 * 	  	It will return only the contacts modified since the supplied date. <br/>
+	 * 		If you want to bypass this filter set modifiedSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link Contact} containing data as returned by the server on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 
-	public ResultSet<Contact> getContactsFromList(String accessToken, String listId) throws ConstantContactServiceException {
+	public ResultSet<Contact> getContactsFromList(String accessToken, String listId, Integer limit, String modifiedSinceTimestamp) throws ConstantContactServiceException {
 		ResultSet<Contact> contacts = null;
 		try {
 			String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, String.format(Config.Endpoints.LIST_CONTACTS, listId));
+			url = paginateUrl(url, limit);
+			
+			if (modifiedSinceTimestamp != null) {
+		        url = appendParam(url, "modified_since", modifiedSinceTimestamp);
+		      }
+			
+			CUrlResponse response = getRestClient().get(url, accessToken);
+			if (response.hasData()) {
+				contacts = Component.resultSetFromJSON(response.getBody(), Contact.class);
+			}
+			if (response.isError()) {
+				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
+						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
+				response.getInfo().add(new CUrlRequestError("url", url));
+				constantContactException.setErrorInfo(response.getInfo());
+				throw constantContactException;
+			}
+		} catch (ConstantContactServiceException e) {
+			throw new ConstantContactServiceException(e);
+		} catch (Exception e) {
+			throw new ConstantContactServiceException(e);
+		}
+		return contacts;
+	}
+	
+	/**
+	 * Implements the Get all contacts from an individual list operation by calling the ConstantContact server side.
+	 * 
+	 * @param accessToken Constant Contact OAuth2 access token.
+	 * @param listId List id to retrieve contacts for.
+	 * @param pagination {@link Pagination} object that contains the link to the next set of contacts.
+	 * 
+	 * @return A {@link ResultSet} of {@link Contact} containing data as returned by the server on success; <br/>
+	 *         An exception is thrown otherwise.
+	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
+	 */
+
+	public ResultSet<Contact> getContactsFromListAtPage(String accessToken, String listId, Pagination pagination, String modifiedSinceTimestamp) throws ConstantContactServiceException {
+		ResultSet<Contact> contacts = null;
+		try {		
+			if(pagination == null || pagination.getNextLink() == null)
+				return null;
+			
+			String url = paginateUrl(Config.Endpoints.BASE_URL_HOST, pagination.getNextLink(), null);
+			
+			if (modifiedSinceTimestamp != null) {
+		        url = appendParam(url, "modified_since", modifiedSinceTimestamp);
+		    }
 			
 			CUrlResponse response = getRestClient().get(url, accessToken);
 			if (response.hasData()) {

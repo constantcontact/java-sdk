@@ -25,7 +25,6 @@ public class ContactService extends BaseService implements IContactService {
    * Implements the get Contacts operation of the Contacts API by calling the ConstantContact server side.
    * 
    * @param accessToken Constant Contact OAuth2 access token.
-   * @param offset Offset.
    * @param limit Limit.
    * @param modifiedSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/>
    * 		   It will return only the contacts modified since the supplied date. <br/>
@@ -35,12 +34,11 @@ public class ContactService extends BaseService implements IContactService {
    * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
    */
 
-  @Override
-  public ResultSet<Contact> getContacts(String accessToken, Integer offset, Integer limit, String modifiedSinceTimestamp) throws ConstantContactServiceException {
+  public ResultSet<Contact> getContacts(String accessToken, Integer limit, String modifiedSinceTimestamp) throws ConstantContactServiceException {
     ResultSet<Contact> contacts = null;
     try {
       // Construct access URL
-      String url = paginateUrl(String.format("%1$s%2$s", Config.Endpoints.BASE_URL, Config.Endpoints.CONTACTS), offset, limit);
+      String url = paginateUrl(String.format("%1$s%2$s", Config.Endpoints.BASE_URL, Config.Endpoints.CONTACTS), limit);
 
       if(modifiedSinceTimestamp != null) {
         url = appendParam(url, "modified_since", modifiedSinceTimestamp);
@@ -65,6 +63,40 @@ public class ContactService extends BaseService implements IContactService {
     }
     return contacts;
   }
+  
+  public ResultSet<Contact> getContactsFromPage(String accessToken, Pagination pagination, String modifiedSinceTimestamp) throws ConstantContactServiceException {
+
+	    ResultSet<Contact> contacts = null;
+	    if (pagination == null || pagination.getNextLink() == null) {
+	      return null;
+	    }
+	    try {
+	      // Construct access URL
+	      String url = paginateUrl(Config.Endpoints.BASE_URL_HOST, pagination.getNextLink(), null);
+
+	      if (modifiedSinceTimestamp != null) {
+	        url = appendParam(url, "modified_since", modifiedSinceTimestamp);
+	      }
+
+	      // Get REST response
+	      CUrlResponse response = getRestClient().get(url, accessToken);
+	      if (response.hasData()) {
+	        contacts = Component.resultSetFromJSON(response.getBody(), Contact.class);
+	      }
+	      if (response.isError()) {
+	        ConstantContactServiceException constantContactException = new ConstantContactServiceException(
+	            ConstantContactServiceException.RESPONSE_ERR_SERVICE);
+	        response.getInfo().add(new CUrlRequestError("url", url));
+	        constantContactException.setErrorInfo(response.getInfo());
+	        throw constantContactException;
+	      }
+	    } catch (ConstantContactServiceException e) {
+	      throw new ConstantContactServiceException(e);
+	    } catch (Exception e) {
+	      throw new ConstantContactServiceException(e);
+	    }
+	    return contacts;
+	  }
 
   /**
    * Gets a single contact for the current user, based on the contact id.<br/>
@@ -77,7 +109,6 @@ public class ContactService extends BaseService implements IContactService {
    * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
    */
 
-  @Override
   public Contact getContact(String accessToken, String contactId) throws ConstantContactServiceException {
     Contact contact = null;
     try {
@@ -113,7 +144,6 @@ public class ContactService extends BaseService implements IContactService {
    * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
    */
 
-  @Override
   public ResultSet<Contact> getContactByEmail(String accessToken, String email) throws ConstantContactServiceException {
     ResultSet<Contact> contacts = null;
     try {
@@ -150,7 +180,7 @@ public class ContactService extends BaseService implements IContactService {
    * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
    */
 
-  @Override
+
   public Contact addContact(String accessToken, Contact contact, Boolean actionByVisitor) throws ConstantContactServiceException {
     Contact newContact = null;
     try {
@@ -190,7 +220,7 @@ public class ContactService extends BaseService implements IContactService {
    * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
    */
 
-  @Override
+
   public boolean deleteContact(String accessToken, String contactId) throws ConstantContactServiceException {
     try {
       String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, String.format(Config.Endpoints.CONTACT, contactId));
@@ -222,7 +252,7 @@ public class ContactService extends BaseService implements IContactService {
    * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
    */
 
-  @Override
+
   public boolean deleteContactFromLists(String accessToken, String contactId) throws ConstantContactServiceException {
     try {
       String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, String.format(Config.Endpoints.CONTACT_LISTS, contactId));
@@ -254,7 +284,7 @@ public class ContactService extends BaseService implements IContactService {
    * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
    */
 
-  @Override
+
   public boolean deleteContactFromList(String accessToken, String contactId, String listId) throws ConstantContactServiceException {
     try {
       String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, String.format(Config.Endpoints.CONTACT_LIST, contactId, listId));
@@ -287,7 +317,7 @@ public class ContactService extends BaseService implements IContactService {
    * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
    */
 
-  @Override
+
   public Contact updateContact(String accessToken, Contact contact, Boolean actionByVisitor) throws ConstantContactServiceException {
     Contact updateContact = null;
     try {
@@ -323,40 +353,4 @@ public class ContactService extends BaseService implements IContactService {
   public ContactService() {
     super();
   }
-
-  @Override
-  public ResultSet<Contact> getContactsFromNextPage(String accessToken, Pagination pagination, String modifiedSinceTimestamp) throws ConstantContactServiceException {
-
-    ResultSet<Contact> contacts = null;
-    if (pagination.getNextLink() == null) {
-      return null;
-    }
-    try {
-      // Construct access URL
-      String url = paginateUrl(Config.Endpoints.BASE_URL_HOST, pagination.getNextLink(), null);
-
-      if (modifiedSinceTimestamp != null) {
-        url = appendParam(url, "modified_since", modifiedSinceTimestamp);
-      }
-
-      // Get REST response
-      CUrlResponse response = getRestClient().get(url, accessToken);
-      if (response.hasData()) {
-        contacts = Component.resultSetFromJSON(response.getBody(), Contact.class);
-      }
-      if (response.isError()) {
-        ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-            ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-        response.getInfo().add(new CUrlRequestError("url", url));
-        constantContactException.setErrorInfo(response.getInfo());
-        throw constantContactException;
-      }
-    } catch (ConstantContactServiceException e) {
-      throw new ConstantContactServiceException(e);
-    } catch (Exception e) {
-      throw new ConstantContactServiceException(e);
-    }
-    return contacts;
-  }
-
 }

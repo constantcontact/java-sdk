@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.constantcontact.components.contacts.Contact;
 import com.constantcontact.components.contacts.ContactList;
+import com.constantcontact.components.generic.response.Pagination;
 import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.base.IBaseService;
@@ -50,16 +51,30 @@ public interface IContactListService extends IBaseService {
 	ContactList getList(String accessToken, String listId) throws ConstantContactServiceException;
 
 	/**
-	 * Implements the Get all contacts from an individual list operation by calling the ConstantContact server side.
+	 * Implements the Get contacts from an individual list operation by calling the ConstantContact server side.
 	 * 
 	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param listId List id to retrieve contacts for.
+	 * @param limit Maximum number of contacts to retrieve. Default is 50.
 	 * @return Returns a list of {@link Contact} containing values as returned by the server on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	ResultSet<Contact> getContactsFromList(String accessToken, String listId) throws ConstantContactServiceException;
+	public ResultSet<Contact> getContactsFromList(String accessToken, String listId, Integer limit, String modifiedSinceTimestamp) throws ConstantContactServiceException;
 	
+	/**
+	 * Implements the Get contacts from an individual list operation by calling the ConstantContact server side.
+	 * 
+	 * @param accessToken Constant Contact OAuth2 access token.
+	 * @param listId List id to retrieve contacts for.
+	 * @param pagination {@link Pagination} object that contains the link to the next set of contacts.
+	 * @return Returns a list of {@link Contact} containing values as returned by the server on success; <br/>
+	 *         An exception is thrown otherwise.
+	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
+	 */
+	
+	ResultSet<Contact> getContactsFromListAtPage(String accessToken, String listId, Pagination pagination, String modifiedSinceTimestamp) throws ConstantContactServiceException;
+
 	/**
 	 * Implements the delete ContactList operation of the Contact Lists API by calling the ConstantContact server side.
 	 * 
