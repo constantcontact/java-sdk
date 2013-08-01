@@ -11,7 +11,6 @@ import com.constantcontact.components.contacts.tracking.unsubscribes.ContactTrac
 import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.base.BaseService;
-import com.constantcontact.components.generic.response.Pagination;
 import com.constantcontact.util.CUrlRequestError;
 import com.constantcontact.util.CUrlResponse;
 import com.constantcontact.util.Config;
@@ -109,36 +108,6 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 		}
 		return bounces;
 	}
-	
-	
-	//TODO change documentation
-	public ResultSet<ContactTrackingBounce> getBouncesByPage(String accessToken, Pagination pagination) throws ConstantContactServiceException {
-		ResultSet<ContactTrackingBounce> bounces = null;
-		try {			
-			if(pagination.getNextLink() == null)
-				return null;
-			
-			String url = paginateUrl(Config.Endpoints.BASE_URL_HOST, pagination.getNextLink(), null);
-
-			CUrlResponse response = getRestClient().get(url, accessToken);
-
-			if (response.hasData()) {
-				bounces = Component.resultSetFromJSON(response.getBody(), ContactTrackingBounce.class);
-			}
-			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
-			}
-		} catch (ConstantContactServiceException e) {
-			throw new ConstantContactServiceException(e);
-		} catch (Exception e) {
-			throw new ConstantContactServiceException(e);
-		}
-		return bounces;
-	}
 
 	/**
 	 * Implements the get Clicks operation of the Contact Tracking API by calling the ConstantContact server side.
@@ -170,39 +139,6 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 			}
 						
 			String url = sb.toString();
-
-			CUrlResponse response = getRestClient().get(url, accessToken);
-
-			if (response.hasData()) {
-				clicks = Component.resultSetFromJSON(response.getBody(), ContactTrackingClick.class);
-			}
-			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
-			}
-		} catch (ConstantContactServiceException e) {
-			throw new ConstantContactServiceException(e);
-		} catch (Exception e) {
-			throw new ConstantContactServiceException(e);
-		}
-		return clicks;
-	}
-	//TODO change documentation
-	public ResultSet<ContactTrackingClick> getClicksByPage(String accessToken, Pagination pagination, String createdSinceTimestamp) 
-			throws ConstantContactServiceException {
-		ResultSet<ContactTrackingClick> clicks = null;
-		try {
-			if(pagination.getNextLink() == null)
-				return null;
-			
-			String url = paginateUrl(Config.Endpoints.BASE_URL_HOST, pagination.getNextLink(), null);
-			
-			if (createdSinceTimestamp != null) {
-				url = appendParam(url, "created_since", createdSinceTimestamp);
-			}						
 
 			CUrlResponse response = getRestClient().get(url, accessToken);
 
@@ -273,41 +209,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 		}
 		return forwards;
 	}
-	
-	//TODO change documentation
-	public ResultSet<ContactTrackingForward> getForwardsByPage(String accessToken, Pagination pagination, String createdSinceTimestamp) 
-			throws ConstantContactServiceException {
-		ResultSet<ContactTrackingForward> forwards = null;
-		try {
-			if(pagination.getNextLink() == null)
-				return null;
-			
-			String url = paginateUrl(Config.Endpoints.BASE_URL_HOST, pagination.getNextLink(), null);
-			
-			if (createdSinceTimestamp != null) {
-				url = appendParam(url, "created_since", createdSinceTimestamp);
-			}
-
-			CUrlResponse response = getRestClient().get(url, accessToken);
-
-			if (response.hasData()) {
-				forwards = Component.resultSetFromJSON(response.getBody(), ContactTrackingForward.class);
-			}
-			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
-			}
-		} catch (ConstantContactServiceException e) {
-			throw new ConstantContactServiceException(e);
-		} catch (Exception e) {
-			throw new ConstantContactServiceException(e);
-		}
-		return forwards;
-	}
-
+		
 	/**
 	 * Implements the get Opens operation of the Contact Tracking API by calling the ConstantContact server side.
 	 * 
@@ -358,40 +260,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 		}
 		return opens;
 	}
-	//TODO change documentation
-	public ResultSet<ContactTrackingOpen> getOpensByPage(String accessToken, Pagination pagination, String createdSinceTimestamp)
-			throws ConstantContactServiceException {
-		ResultSet<ContactTrackingOpen> opens = null;
-		try {
-			if(pagination.getNextLink() == null)
-				return null;
-			
-			String url = paginateUrl(Config.Endpoints.BASE_URL_HOST, pagination.getNextLink(), null);
-			
-			if (createdSinceTimestamp != null) {
-				url = appendParam(url, "created_since", createdSinceTimestamp);
-			}
-
-			CUrlResponse response = getRestClient().get(url, accessToken);
-
-			if (response.hasData()) {
-				opens = Component.resultSetFromJSON(response.getBody(), ContactTrackingOpen.class);
-			}
-			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
-			}
-		} catch (ConstantContactServiceException e) {
-			throw new ConstantContactServiceException(e);
-		} catch (Exception e) {
-			throw new ConstantContactServiceException(e);
-		}
-		return opens;
-	}
-
+	
 	/**
 	 * Implements the get Sends operation of the Contact Tracking API by calling the ConstantContact server side.
 	 * 
@@ -443,40 +312,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 		return sends;
 	}
 	
-	//TODO change documentation
-	public ResultSet<ContactTrackingSend> getSendsByPage(String accessToken, Pagination pagination, String createdSinceTimestamp) 
-			throws ConstantContactServiceException {
-		ResultSet<ContactTrackingSend> sends = null;
-		try {
-			if(pagination.getNextLink() == null)
-				return null;
-			
-			String url = paginateUrl(Config.Endpoints.BASE_URL_HOST, pagination.getNextLink(), null);
-			
-			if (createdSinceTimestamp != null) {
-				url = appendParam(url, "created_since", createdSinceTimestamp);
-			}
-
-			CUrlResponse response = getRestClient().get(url, accessToken);
-
-			if (response.hasData()) {
-				sends = Component.resultSetFromJSON(response.getBody(), ContactTrackingSend.class);
-			}
-			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
-			}
-		} catch (ConstantContactServiceException e) {
-			throw new ConstantContactServiceException(e);
-		} catch (Exception e) {
-			throw new ConstantContactServiceException(e);
-		}
-		return sends;	
-	}
-
+	
 	/**
 	 * Implements the get Unsubscribes operation of the Contact Tracking API by calling the ConstantContact server side.
 	 * 
@@ -527,40 +363,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 		}
 		return unsubscribes;
 	}
-	//TODO change documentation
-	public ResultSet<ContactTrackingUnsubscribe> getUnsubscribesByPage(String accessToken, Pagination pagination, String createdSinceTimestamp) 
-			throws ConstantContactServiceException {
-		ResultSet<ContactTrackingUnsubscribe> unsubscribes = null;
-		try {
-			if(pagination.getNextLink() == null)
-				return null;
-			
-			String url = paginateUrl(Config.Endpoints.BASE_URL_HOST, pagination.getNextLink(), null);
-			
-			if (createdSinceTimestamp != null) {
-				url = appendParam(url, "created_since", createdSinceTimestamp);
-			}
-
-			CUrlResponse response = getRestClient().get(url, accessToken);
-
-			if (response.hasData()) {
-				unsubscribes = Component.resultSetFromJSON(response.getBody(), ContactTrackingUnsubscribe.class);
-			}
-			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
-			}
-		} catch (ConstantContactServiceException e) {
-			throw new ConstantContactServiceException(e);
-		} catch (Exception e) {
-			throw new ConstantContactServiceException(e);
-		}
-		return unsubscribes;
-	}
-
+	
 	/**
 	 * Default constructor.
 	 */
