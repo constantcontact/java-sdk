@@ -1731,6 +1731,14 @@ public class ConstantContact {
 		}
 		return contactTrackingService.getBounces(this.getAccessToken(), contactId, limit);
 	}
+	
+	//TODO change doc
+	public ResultSet<ContactTrackingBounce> getContactTrackingBounces(Pagination pagination) throws IllegalArgumentException, ConstantContactServiceException {
+		if(pagination == null) {
+			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);			
+		}
+		return contactTrackingService.getBouncesByPage(this.getAccessToken(), pagination);
+	}
 
 	/**
 	 * 
@@ -1787,6 +1795,14 @@ public class ConstantContact {
 			throw new IllegalArgumentException(Config.Errors.ID);
 		}
 		return contactTrackingService.getClicks(this.getAccessToken(), contactId, limit, createdSinceTimestamp);
+	}
+	
+	//TODO change doc
+	public ResultSet<ContactTrackingClick> getContactTrackingClicks(Pagination pagination, String createdSinceTimestamp) throws IllegalArgumentException, ConstantContactServiceException {
+		if(pagination == null) {
+			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);			
+		}
+		return contactTrackingService.getClicksByPage(this.getAccessToken(), pagination, createdSinceTimestamp);
 	}
 
 	/**
@@ -1848,6 +1864,14 @@ public class ConstantContact {
 		}
 		return contactTrackingService.getForwards(this.getAccessToken(), contactId, limit, createdSinceTimestamp);
 	}
+	
+	//TODO change docs
+	public ResultSet<ContactTrackingForward> getContactTrackingForwards(Pagination pagination, String createdSinceTimestamp) throws IllegalArgumentException, ConstantContactServiceException {
+		if (pagination == null) {
+			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+		}
+		return contactTrackingService.getForwardsByPage(this.getAccessToken(), pagination, createdSinceTimestamp);
+	}
 
 	/**
 	 * 
@@ -1907,6 +1931,13 @@ public class ConstantContact {
 			throw new IllegalArgumentException(Config.Errors.ID);
 		}
 		return contactTrackingService.getOpens(this.getAccessToken(), contactId, limit, createdSinceTimestamp);
+	}
+	//TODO change docs
+	public ResultSet<ContactTrackingOpen> getContactTrackingOpens(Pagination pagination, String createdSinceTimestamp) throws IllegalArgumentException, ConstantContactServiceException {
+		if(pagination == null) {
+			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+		}
+		return contactTrackingService.getOpensByPage(this.getAccessToken(), pagination, createdSinceTimestamp);
 	}
 
 	/**
@@ -1968,7 +1999,14 @@ public class ConstantContact {
 		}
 		return contactTrackingService.getSends(this.getAccessToken(), contactId, limit, createdSinceTimestamp);
 	}
-
+	
+	//TODO change docs
+	public ResultSet<ContactTrackingSend> getContactTrackingSends(Pagination pagination, String createdSinceTimestamp) throws IllegalArgumentException, ConstantContactServiceException {
+		if(pagination == null) {
+			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+		}
+		return contactTrackingService.getSendsByPage(this.getAccessToken(), pagination, createdSinceTimestamp);
+	}
 	/**
 	 * 
 	 * Get Contact Tracking Unsubscribes API.<br/>
@@ -2029,7 +2067,16 @@ public class ConstantContact {
 		}
 		return contactTrackingService.getUnsubscribes(this.getAccessToken(), contactId, limit, createdSinceTimestamp);
 	}
-
+	
+	//TODO change docs
+	public ResultSet<ContactTrackingUnsubscribe> getContactTrackingUnsubscribes(Pagination pagination, String createdSinceTimestamp) throws IllegalArgumentException,
+		ConstantContactServiceException {
+		if(pagination == null) {
+			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+		}
+		return contactTrackingService.getUnsubscribesByPage(this.getAccessToken(), pagination, createdSinceTimestamp);
+	}
+	
 	/**
 	 * 
 	 * Add Bulk Contacts API.<br/>

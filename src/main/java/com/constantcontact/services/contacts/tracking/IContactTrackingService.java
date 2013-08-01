@@ -47,7 +47,7 @@ public interface IContactTrackingService extends IBaseService {
 	public ResultSet<ContactTrackingBounce> getBounces(String accessToken, String contactId, Integer limit) throws ConstantContactServiceException;
 	
 	//TODO change documentation
-	public ResultSet<ContactTrackingBounce> getBouncesByPage(String accessToken, String contactId, Pagination pagination) throws ConstantContactServiceException;
+	public ResultSet<ContactTrackingBounce> getBouncesByPage(String accessToken, Pagination pagination) throws ConstantContactServiceException;
 
 	/**
 	 * Implements the get Clicks operation of the Contact Tracking API by calling the ConstantContact server side.
@@ -65,7 +65,7 @@ public interface IContactTrackingService extends IBaseService {
 	public ResultSet<ContactTrackingClick> getClicks(String accessToken, String contactId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException;
 	
 	//TODO change documentation
-	public ResultSet<ContactTrackingClick> getClicksByPage(String accessToken, String contactId, Pagination pagination, String createdSinceTimestamp) throws ConstantContactServiceException;
+	public ResultSet<ContactTrackingClick> getClicksByPage(String accessToken, Pagination pagination, String createdSinceTimestamp) throws ConstantContactServiceException;
 
 	/**
 	 * Implements the get Forwards operation of the Contact Tracking API by calling the ConstantContact server side.
@@ -83,7 +83,7 @@ public interface IContactTrackingService extends IBaseService {
 	public ResultSet<ContactTrackingForward> getForwards(String accessToken, String contactId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException;
 	
 	//TODO change documentation
-	public ResultSet<ContactTrackingForward> getForwardsByPage(String accessToken, String contactId, Pagination pagination, String createdSinceTimestamp) throws ConstantContactServiceException;
+	public ResultSet<ContactTrackingForward> getForwardsByPage(String accessToken, Pagination pagination, String createdSinceTimestamp) throws ConstantContactServiceException;
 
 	/**
 	 * Implements the get Opens operation of the Contact Tracking API by calling the ConstantContact server side.
@@ -101,7 +101,7 @@ public interface IContactTrackingService extends IBaseService {
 	public ResultSet<ContactTrackingOpen> getOpens(String accessToken, String contactId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException;
 	
 	//TODO change documentation
-	public ResultSet<ContactTrackingOpen> getOpensByPage(String accessToken, String contactId, Pagination pagination, String createdSinceTimestamp) throws ConstantContactServiceException;
+	public ResultSet<ContactTrackingOpen> getOpensByPage(String accessToken, Pagination pagination, String createdSinceTimestamp) throws ConstantContactServiceException;
 
 	/**
 	 * Implements the get Sends operation of the Contact Tracking API by calling the ConstantContact server side.
@@ -119,7 +119,7 @@ public interface IContactTrackingService extends IBaseService {
 	public ResultSet<ContactTrackingSend> getSends(String accessToken, String contactId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException;
 	
 	//TODO change documentation
-	public ResultSet<ContactTrackingSend> getSendsByPage(String accessToken, String contactId, Pagination pagination, String createdSinceTimestamp) throws ConstantContactServiceException;
+	public ResultSet<ContactTrackingSend> getSendsByPage(String accessToken, Pagination pagination, String createdSinceTimestamp) throws ConstantContactServiceException;
 
 	/**
 	 * Implements the get Unsubscribes operation of the Contact Tracking API by calling the ConstantContact server side.
@@ -137,5 +137,5 @@ public interface IContactTrackingService extends IBaseService {
 	public ResultSet<ContactTrackingUnsubscribe> getUnsubscribes(String accessToken, String contactId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException;
 	
 	//TODO change documentation
-	public ResultSet<ContactTrackingUnsubscribe> getUnsubscribesByPage(String accessToken, String contactId, Pagination pagination, String createdSinceTimestamp) throws ConstantContactServiceException;
+	public ResultSet<ContactTrackingUnsubscribe> getUnsubscribesByPage(String accessToken, Pagination pagination, String createdSinceTimestamp) throws ConstantContactServiceException;
 }
