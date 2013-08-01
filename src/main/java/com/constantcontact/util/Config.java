@@ -20,12 +20,12 @@ public final class Config {
     /**
      * API access URL Host.
      */
-    public static final String BASE_URL_HOST = "https://api.constantcontact.com/";
+    public static final String BASE_URL_HOST = "https://api.constantcontact.com";
 
     /**
      * API access URL.
      */
-    public static final String BASE_URL = BASE_URL_HOST + "v2/";
+    public static final String BASE_URL = BASE_URL_HOST + "/" + "v2/";
 
     /**
      * Access a contact.
