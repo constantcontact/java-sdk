@@ -4,7 +4,6 @@ import java.net.HttpURLConnection;
 
 import com.constantcontact.components.Component;
 import com.constantcontact.components.contacts.Contact;
-import com.constantcontact.components.generic.response.Pagination;
 import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.base.BaseService;
@@ -63,40 +62,6 @@ public class ContactService extends BaseService implements IContactService {
     }
     return contacts;
   }
-  
-  public ResultSet<Contact> getContactsFromPage(String accessToken, Pagination pagination, String modifiedSinceTimestamp) throws ConstantContactServiceException {
-
-	    ResultSet<Contact> contacts = null;
-	    if (pagination == null || pagination.getNextLink() == null) {
-	      return null;
-	    }
-	    try {
-	      // Construct access URL
-	      String url = paginateUrl(Config.Endpoints.BASE_URL_HOST, pagination.getNextLink(), null);
-
-	      if (modifiedSinceTimestamp != null) {
-	        url = appendParam(url, "modified_since", modifiedSinceTimestamp);
-	      }
-
-	      // Get REST response
-	      CUrlResponse response = getRestClient().get(url, accessToken);
-	      if (response.hasData()) {
-	        contacts = Component.resultSetFromJSON(response.getBody(), Contact.class);
-	      }
-	      if (response.isError()) {
-	        ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-	            ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-	        response.getInfo().add(new CUrlRequestError("url", url));
-	        constantContactException.setErrorInfo(response.getInfo());
-	        throw constantContactException;
-	      }
-	    } catch (ConstantContactServiceException e) {
-	      throw new ConstantContactServiceException(e);
-	    } catch (Exception e) {
-	      throw new ConstantContactServiceException(e);
-	    }
-	    return contacts;
-	  }
 
   /**
    * Gets a single contact for the current user, based on the contact id.<br/>
@@ -345,7 +310,8 @@ public class ContactService extends BaseService implements IContactService {
       throw new ConstantContactServiceException(e);
     }
     return updateContact;
-  }
+  }  
+	
 
   /**
    * Default constructor.

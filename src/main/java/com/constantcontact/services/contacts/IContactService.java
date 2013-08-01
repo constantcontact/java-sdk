@@ -1,7 +1,6 @@
 package com.constantcontact.services.contacts;
 
 import com.constantcontact.components.contacts.Contact;
-import com.constantcontact.components.generic.response.Pagination;
 import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.base.IBaseService;
@@ -27,24 +26,6 @@ public interface IContactService extends IBaseService {
    * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
    */
   ResultSet<Contact> getContacts(String accessToken, Integer limit, String modifiedSinceTimestamp) throws ConstantContactServiceException;
-
-  /**
-   * Implements the get Contacts operation of the Contacts API by calling the ConstantContact server side.
-   * 
-   * @param accessToken
-   *          Constant Contact OAuth2 access token.
-   * @param pagination
-   *          Pagination for fetching next set of contacts.
-   * @param modifiedSinceTimestamp
-   *          This time stamp is an ISO-8601 ordinal date supporting offset. <br/>
-   *          It will return only the contacts modified since the supplied date. <br/>
-   *          If you want to bypass this filter set modifiedSinceTimestamp to null.
-   * @return A {@link ResultSet} of {@link Contact} containing data as returned by the server on success; <br/>
-   *         An exception is thrown otherwise.
-   * @throws ConstantContactServiceException
-   *           When something went wrong in the Constant Contact flow or an error is returned from server.
-   */
-  ResultSet<Contact> getContactsFromPage(String accessToken, Pagination pagination, String modifiedSinceTimestamp) throws ConstantContactServiceException;
 
   /**
    * Implements the get Contact operation of the Contacts API by calling the ConstantContact server side.

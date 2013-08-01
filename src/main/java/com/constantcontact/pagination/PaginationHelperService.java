@@ -13,7 +13,7 @@ import com.constantcontact.util.Config;
 public class PaginationHelperService extends BaseService {
 	
 	//TODO documentation
-	public <T> ResultSet<T> getPage(String accessToken, Pagination pagination, Class<T> objClass, TimeStampName timeStampName, String timeStamp)
+	public <T> ResultSet<T> getPage(String accessToken, Pagination pagination, Class<T> objectClass, TimeStampName timeStampName, String timeStamp)
 			throws ConstantContactServiceException {
 		ResultSet<T> pageResultSet = null;
 		if (pagination.getNextLink() == null) {
@@ -33,7 +33,7 @@ public class PaginationHelperService extends BaseService {
 			// Get REST response
 			CUrlResponse response = getRestClient().get(url, accessToken);
 			if (response.hasData()) {
-				pageResultSet = Component.resultSetFromJSON(response.getBody(), objClass);
+				pageResultSet = Component.resultSetFromJSON(response.getBody(), objectClass);
 			}
 			if (response.isError()) {
 				ConstantContactServiceException constantContactException = new ConstantContactServiceException(

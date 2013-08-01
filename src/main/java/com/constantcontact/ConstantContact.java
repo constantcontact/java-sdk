@@ -854,7 +854,7 @@ public class ConstantContact {
 		if (pagination == null) {
 			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
 		}
-		return contactListService.getContactsFromListAtPage(this.getAccessToken(), pagination, modifiedSinceTimestamp);
+		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, Contact.class, TimeStampName.MODIFIED_SINCE, modifiedSinceTimestamp);
 	}
 	
 	//TODO change doc
