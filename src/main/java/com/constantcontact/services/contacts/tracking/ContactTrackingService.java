@@ -112,7 +112,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 	
 	
 	//TODO change documentation
-	public ResultSet<ContactTrackingBounce> getBounces(String accessToken, String contactId, Pagination pagination) throws ConstantContactServiceException {
+	public ResultSet<ContactTrackingBounce> getBouncesByPage(String accessToken, String contactId, Pagination pagination) throws ConstantContactServiceException {
 		ResultSet<ContactTrackingBounce> bounces = null;
 		try {			
 			if(pagination.getNextLink() == null)
@@ -191,7 +191,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 		return clicks;
 	}
 	//TODO change documentation
-	public ResultSet<ContactTrackingClick> getClicks(String accessToken, String contactId, Pagination pagination, String createdSinceTimestamp) 
+	public ResultSet<ContactTrackingClick> getClicksByPage(String accessToken, String contactId, Pagination pagination, String createdSinceTimestamp) 
 			throws ConstantContactServiceException {
 		ResultSet<ContactTrackingClick> clicks = null;
 		try {
@@ -275,7 +275,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 	}
 	
 	//TODO change documentation
-	public ResultSet<ContactTrackingForward> getForwards(String accessToken, String contactId, Pagination pagination, String createdSinceTimestamp) 
+	public ResultSet<ContactTrackingForward> getForwardsByPage(String accessToken, String contactId, Pagination pagination, String createdSinceTimestamp) 
 			throws ConstantContactServiceException {
 		ResultSet<ContactTrackingForward> forwards = null;
 		try {
@@ -359,7 +359,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 		return opens;
 	}
 	//TODO change documentation
-	public ResultSet<ContactTrackingOpen> getOpens(String accessToken, String contactId, Pagination pagination, String createdSinceTimestamp)
+	public ResultSet<ContactTrackingOpen> getOpensByPage(String accessToken, String contactId, Pagination pagination, String createdSinceTimestamp)
 			throws ConstantContactServiceException {
 		ResultSet<ContactTrackingOpen> opens = null;
 		try {
@@ -444,7 +444,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 	}
 	
 	//TODO change documentation
-	public ResultSet<ContactTrackingSend> getSends(String accessToken, String contactId, Pagination pagination, String createdSinceTimestamp) 
+	public ResultSet<ContactTrackingSend> getSendsByPage(String accessToken, String contactId, Pagination pagination, String createdSinceTimestamp) 
 			throws ConstantContactServiceException {
 		ResultSet<ContactTrackingSend> sends = null;
 		try {
@@ -528,7 +528,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 		return unsubscribes;
 	}
 	//TODO change documentation
-	public ResultSet<ContactTrackingUnsubscribe> getUnsubscribes(String accessToken, String contactId, Pagination pagination, String createdSinceTimestamp) 
+	public ResultSet<ContactTrackingUnsubscribe> getUnsubscribesByPage(String accessToken, String contactId, Pagination pagination, String createdSinceTimestamp) 
 			throws ConstantContactServiceException {
 		ResultSet<ContactTrackingUnsubscribe> unsubscribes = null;
 		try {
