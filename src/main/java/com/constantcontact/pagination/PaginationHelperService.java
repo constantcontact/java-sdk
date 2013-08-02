@@ -9,10 +9,28 @@ import com.constantcontact.util.CUrlRequestError;
 import com.constantcontact.util.CUrlResponse;
 import com.constantcontact.util.Config;
 
-//TODO documentation
+/**
+ * Service Layer Implementation for pagination in Constant Contact.
+ * 
+ * @author ConstantContact
+ * 
+ */
 public class PaginationHelperService extends BaseService {
 	
-	//TODO documentation
+	/**
+	 * Generic method that returns a {@link ResultSet} of objects, based on a {@link Pagination} object and a specified object class.
+	 * 
+	 * @param accessToken Constant Contact OAuth2 access token.
+	 * @param pagination
+	 *          {@link Pagination} for fetching next set of data.
+	 * @param objectClass The class of the objects that are expected in the {@link ResultSet}.
+	 * @param timeStampName Name of the parameter attached to the request. Details in {@link TimeStampName}.
+	 * @param timeStamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/>
+	 * 		   If you want to bypass this filter set timeStamp to null.    
+	 * @return A {@link ResultSet} of "objectClass" that containing data as returned by the server on success; <br/>
+	 *         An exception is thrown otherwise.
+	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
+	 */
 	public <T> ResultSet<T> getPage(String accessToken, Pagination pagination, Class<T> objectClass, TimeStampName timeStampName, String timeStamp)
 			throws ConstantContactServiceException {
 		ResultSet<T> pageResultSet = null;
@@ -57,7 +75,12 @@ public class PaginationHelperService extends BaseService {
 		super();
 	}
 
-	//TODO documentation
+	/**
+	 * Contains a list of valid parameter names.
+	 * 
+	 * @author ConstantContact
+	 *
+	 */
 	public static enum TimeStampName {
 		MODIFIED_SINCE("modified_since"), 
 		CREATED_SINCE("created_since");
