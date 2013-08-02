@@ -133,15 +133,24 @@ public class ContactListService extends BaseService implements IContactListServi
 	 * 
 	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param listId List id to retrieve contacts for.
+	 * @param limit Maximum number of contacts to retrieve. Default is 50.
+	 * @param modifiedSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/>
+	 * 	  	It will return only the contacts modified since the supplied date. <br/>
+	 * 		If you want to bypass this filter set modifiedSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link Contact} containing data as returned by the server on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 
-	public ResultSet<Contact> getContactsFromList(String accessToken, String listId) throws ConstantContactServiceException {
+	public ResultSet<Contact> getContactsFromList(String accessToken, String listId, Integer limit, String modifiedSinceTimestamp) throws ConstantContactServiceException {
 		ResultSet<Contact> contacts = null;
 		try {
 			String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, String.format(Config.Endpoints.LIST_CONTACTS, listId));
+			url = paginateUrl(url, limit);
+			
+			if (modifiedSinceTimestamp != null) {
+		        url = appendParam(url, "modified_since", modifiedSinceTimestamp);
+		      }
 			
 			CUrlResponse response = getRestClient().get(url, accessToken);
 			if (response.hasData()) {
@@ -161,7 +170,7 @@ public class ContactListService extends BaseService implements IContactListServi
 		}
 		return contacts;
 	}
-	
+		
 	/**
 	 * Deletes a single contact list based on contact list unique identifier.<br/>
 	 * Implements the delete ContactList operation of the Contact Lists API by calling the ConstantContact server side.

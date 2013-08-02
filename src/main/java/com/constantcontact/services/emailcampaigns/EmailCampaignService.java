@@ -25,7 +25,6 @@ public class EmailCampaignService extends BaseService implements IEmailCampaignS
 	 * Implements the get Campaigns operation of the Email Campaign API by calling the ConstantContact server side.
 	 * 
 	 * @param accessToken Constant Contact OAuth2 access token.
-	 * @param offset The offset
 	 * @param limit The limit
 	 * @param modifiedSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
 	 * 		   It will return only the Email Campaigns modified since the supplied date. <br/>
@@ -35,10 +34,10 @@ public class EmailCampaignService extends BaseService implements IEmailCampaignS
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 
-	public ResultSet<EmailCampaignResponse> getCampaigns(String accessToken, Integer offset, Integer limit, String modifiedSinceTimestamp) throws ConstantContactServiceException {
+	public ResultSet<EmailCampaignResponse> getCampaigns(String accessToken, Integer limit, String modifiedSinceTimestamp) throws ConstantContactServiceException {
 		ResultSet<EmailCampaignResponse> campaigns = null;
 		try {
-			String url = paginateUrl(String.format("%1$s%2$s", Config.Endpoints.BASE_URL, Config.Endpoints.EMAILCAMPAIGNS), offset, limit);
+			String url = paginateUrl(String.format("%1$s%2$s", Config.Endpoints.BASE_URL, Config.Endpoints.EMAILCAMPAIGNS), limit);
 			
 			if(modifiedSinceTimestamp != null)
 				url = appendParam(url, "modified_since", modifiedSinceTimestamp);
@@ -62,7 +61,6 @@ public class EmailCampaignService extends BaseService implements IEmailCampaignS
 		}
 		return campaigns;
 	}
-
 	/**
 	 * Gets a single Email Campaign.<br/>
 	 * Implements the get Campaign operation of the Email Campaign API by calling the ConstantContact server side.

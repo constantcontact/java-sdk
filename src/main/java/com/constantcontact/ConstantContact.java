@@ -31,9 +31,12 @@ import com.constantcontact.components.emailcampaigns.tracking.opens.EmailCampaig
 import com.constantcontact.components.emailcampaigns.tracking.reports.summary.EmailCampaignTrackingSummary;
 import com.constantcontact.components.emailcampaigns.tracking.sends.EmailCampaignTrackingSend;
 import com.constantcontact.components.emailcampaigns.tracking.unsubscribes.EmailCampaignTrackingUnsubscribe;
+import com.constantcontact.components.generic.response.Pagination;
 import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.exceptions.ConstantContactException;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
+import com.constantcontact.pagination.PaginationHelperService;
+import com.constantcontact.pagination.PaginationHelperService.TimeStampName;
 import com.constantcontact.services.accounts.AccountService;
 import com.constantcontact.services.accounts.IAccountService;
 import com.constantcontact.services.activities.BulkActivitiesService;
@@ -82,13 +85,14 @@ public class ConstantContact {
 	private IEmailCampaignTrackingService emailCampaignTrackingService;
 	private IContactTrackingService contactTrackingService;
 	private IBulkActivitiesService bulkActivitiesService;
+	private PaginationHelperService paginationHelperService;
 	
 	/**
 	 * Custom Class constructor.<br/>
-	 * Initializes all Services and the OAuth token fetcher;
+	 * Initializes all Services;
 	 *
 	 * @param apiKey The API key provided by Constant Contact.
-	 * @param accessToken The The API key provided by Constant Contact Authentication workflow.
+	 * @param accessToken The access token provided by Constant Contact Authentication workflow.
 	 */
 	public ConstantContact(String apiKey, String accessToken) {
 
@@ -102,6 +106,7 @@ public class ConstantContact {
 		this.setEmailCampaignTrackingService(new EmailCampaignTrackingService());
 		this.setContactTrackingService(new ContactTrackingService());
 		this.setBulkActivitiesService(new BulkActivitiesService());
+		this.setPaginationHelperService(new PaginationHelperService());
 	}
 	
 	/**
@@ -261,6 +266,24 @@ public class ConstantContact {
 	public IBulkActivitiesService getBulkActivitiesService() {
 		return bulkActivitiesService;
 	}
+	
+	/**
+	 * Get the {@link PaginationHelperService}
+	 * 
+	 * @return The {@link PaginationHelperService}
+	 */
+	public PaginationHelperService getPaginationHelperService(){
+		return paginationHelperService;
+	}
+	
+	/**
+	 * Set the {@link PaginationHelperService}
+	 * 
+	 * @param paginationHelperService The {@link PaginationHelperService}
+	 */
+	public void setPaginationHelperService(PaginationHelperService paginationHelperService) {
+		this.paginationHelperService = paginationHelperService;
+	}
 
 	// ****************************************************************************//
 	// END OF GETTERS AND SETTERS ************************************************//
@@ -268,9 +291,8 @@ public class ConstantContact {
 
 	/**
 	 * Get contacts API.<br/>
-	 * Details in : {@link ContactService#getContacts(String, Integer, Integer, String)}
+	 * Details in : {@link ContactService#getContacts(String, Integer, String)}
 	 * 
-	 * @param offset The offset
 	 * @param limit The limit
 	 * @param modifiedSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
 	 * 		   It will return only the contacts modified since the supplied date. <br/>
@@ -285,13 +307,12 @@ public class ConstantContact {
 	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
 	 */
-	public ResultSet<Contact> getContacts(Integer offset, Integer limit, String modifiedSinceTimestamp) throws ConstantContactServiceException {
-		return contactService.getContacts(this.getAccessToken(), offset, limit, modifiedSinceTimestamp);
+	public ResultSet<Contact> getContacts(Integer limit, String modifiedSinceTimestamp) throws ConstantContactServiceException {
+		return contactService.getContacts(this.getAccessToken(), limit, modifiedSinceTimestamp);
 	}
-
 	/**
 	 * Get contacts API.<br/>
-	 * Details in : {@link ContactService#getContacts(String, Integer, Integer, String)}
+	 * Details in : {@link ContactService#getContacts(String, Integer, String)}
 	 * 
 	 * @param modifiedSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
 	 * 		   It will return only the contacts modified since the supplied date. <br/>
@@ -308,8 +329,41 @@ public class ConstantContact {
 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
 	 */
 	public ResultSet<Contact> getContacts(String modifiedSinceTimestamp) throws ConstantContactServiceException {
-		return contactService.getContacts(this.getAccessToken(), null, null, modifiedSinceTimestamp);
+		return contactService.getContacts(this.getAccessToken(), null, modifiedSinceTimestamp);
 	}
+	
+	/**
+	 * Get contacts API.<br/>
+	 * Details in : {@link PaginationHelperService#getPage(String, Pagination, Class, TimeStampName, String)}
+	 * 
+	 * @param pagination {@link Pagination} object.
+	 *            
+	 * @param modifiedSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the contacts modified since the supplied date. <br/>
+	 * 		   If you want to bypass this filter set modifiedSinceTimestamp to null.
+	 * 
+	 * @return The contacts.
+	 * 
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public ResultSet<Contact> getContacts(Pagination pagination, String modifiedSinceTimestamp) throws ConstantContactServiceException,
+	IllegalArgumentException {
+		if(pagination == null) {
+			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+		}
+		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, Contact.class, TimeStampName.MODIFIED_SINCE, modifiedSinceTimestamp);
+	}
+
 
 	/**
 	 * Get contact API.<br/>
@@ -702,11 +756,10 @@ public class ConstantContact {
 			throw new ConstantContactServiceException(e);
 		}
 	}
-
 	/**
 	 * 
 	 * Get Contacts From List API.<br/>
-	 * Details in : {@link ContactListService#getContactsFromList(String, String)}
+	 * Details in : {@link ContactListService#getContactsFromList(String, String, Integer, String)}
 	 * 
 	 * @param list The {@link ContactList} for which to lookup contacts.
 	 * @return A {@link ResultSet} of {@link Contact} containing data as returned by the server on success; <br/>
@@ -726,13 +779,13 @@ public class ConstantContact {
 		if (list == null) {
 			throw new IllegalArgumentException(Config.Errors.LIST_OR_ID);
 		}
-		return contactListService.getContactsFromList(this.getAccessToken(), list.getId());
+		return contactListService.getContactsFromList(this.getAccessToken(), list.getId(), null, null);
 	}
 
 	/**
 	 * 
 	 * Get Contacts From List API.<br/>
-	 * Details in : {@link ContactListService#getContactsFromList(String, String)}
+	 * Details in : {@link ContactListService#getContactsFromList(String, String, Integer, String)}
 	 * 
 	 * @param listId The id of the {@link ContactList}
 	 * @return A {@link ResultSet} of {@link Contact} containing data as returned by the server on success; <br/>
@@ -759,7 +812,7 @@ public class ConstantContact {
 		}
 
 		try {
-			return contactListService.getContactsFromList(this.getAccessToken(), listId);
+			return contactListService.getContactsFromList(this.getAccessToken(), listId, null, null);
 		} catch (ConstantContactServiceException e) {
 			throw new ConstantContactServiceException(e);
 		}
@@ -767,8 +820,68 @@ public class ConstantContact {
 
 	/**
 	 * 
-	 * Get All Email Campaigns API.<br/>
-	 * Details in : {@link EmailCampaignService#getCampaigns(String, Integer, Integer, String)}
+	 * Get Contacts From List API.<br/>
+	 * Details in : {@link ContactListService#getContactsFromList(String, String, Integer, String)}
+	 * 
+	 * @param list The {@link ContactList} object.
+	 * @param limit Maximum number of {@link Contact} objects returned. Default is 50. <br/>
+	 * 				To bypass this filter set limit to null.
+	 * @return A {@link ResultSet} of {@link Contact} containing data as returned by the server on success; <br/>
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public ResultSet<Contact> getContactsFromList(ContactList list, Integer limit, String modifiedSinceTimestamp) throws IllegalArgumentException,
+	ConstantContactServiceException {
+		if (list == null) {
+			throw new IllegalArgumentException(Config.Errors.LIST_OR_ID);
+		}
+		return contactListService.getContactsFromList(this.getAccessToken(), list.getId(), limit, modifiedSinceTimestamp);
+	}
+
+	/**
+	 * 
+	 * Get Contacts From List API.<br/>
+	 * Details in : {@link PaginationHelperService#getPage(String, Pagination, Class, TimeStampName, String)}
+	 * 
+	 * @param pagination
+	 *          {@link Pagination} for fetching next set of contacts.
+	 * @param modifiedSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/>
+	 * 		   It will return only the contacts modified since the supplied date. <br/>
+	 * 		   If you want to bypass this filter set modifiedSinceTimestamp to null.       
+	 * @return A {@link ResultSet} of {@link Contact} containing data as returned by the server on success; <br/>
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public ResultSet<Contact> getContactsFromList(Pagination pagination, String modifiedSinceTimestamp)
+			throws IllegalArgumentException, ConstantContactServiceException {
+		if (pagination == null) {
+			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+		}
+		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, Contact.class, TimeStampName.MODIFIED_SINCE, modifiedSinceTimestamp);
+	}
+	
+	/**
+	 * 
+	 * Get Email Campaigns API.<br/>
+	 * Details in : {@link EmailCampaignService#getCampaigns(String, Integer, String)}
 	 * 
 	 * @return A {@link ResultSet} of {@link EmailCampaignResponse} in case of success; an exception is thrown otherwise.
 	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
@@ -783,16 +896,15 @@ public class ConstantContact {
 	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
 	 */
-	public ResultSet<EmailCampaignResponse> getAllEmailCampaigns() throws IllegalArgumentException, ConstantContactServiceException {
-		return emailCampaignService.getCampaigns(this.getAccessToken(), null, null, null);
+	public ResultSet<EmailCampaignResponse> getEmailCampaigns() throws IllegalArgumentException, ConstantContactServiceException {
+		return emailCampaignService.getCampaigns(this.getAccessToken(), null, null);
 	}
 
 	/**
 	 * 
 	 * Get Email Campaigns API.<br/>
-	 * Details in : {@link EmailCampaignService#getCampaigns(String, Integer, Integer, String)}
+	 * Details in : {@link EmailCampaignService#getCampaigns(String, Integer, String)}
 	 * 
-	 * @param offset The offset
 	 * @param limit The limit
 	 * @param modifiedSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
 	 * 		   It will return only the email campaigns modified since the supplied date. <br/>
@@ -811,8 +923,41 @@ public class ConstantContact {
 	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
 	 */
-	public ResultSet<EmailCampaignResponse> getEmailCampaigns(Integer offset, Integer limit, String modifiedSinceTimestamp) throws IllegalArgumentException, ConstantContactServiceException {
-		return emailCampaignService.getCampaigns(this.getAccessToken(), offset, limit, modifiedSinceTimestamp);
+	public ResultSet<EmailCampaignResponse> getEmailCampaigns(Integer limit, String modifiedSinceTimestamp) throws IllegalArgumentException,
+	ConstantContactServiceException {
+		return emailCampaignService.getCampaigns(this.getAccessToken(), limit, modifiedSinceTimestamp);
+	}
+
+	/**
+	 * 
+	 * Get Email Campaigns API.<br/>
+	 * Details in : {@link PaginationHelperService#getPage(String, Pagination, Class, TimeStampName, String)}
+	 * 
+	 * @param pagination
+	 *          {@link Pagination} for fetching next set of campaigns.   
+	 * @param modifiedSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the email campaigns modified since the supplied date. <br/>
+	 * 		   If you want to bypass this filter set modifiedSinceTimestamp to null.
+	 * 
+	 * @return A {@link ResultSet} of {@link EmailCampaignResponse} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public ResultSet<EmailCampaignResponse> getEmailCampaigns(Pagination pagination, String modifiedSinceTimestamp) throws IllegalArgumentException,
+			ConstantContactServiceException, IllegalArgumentException {
+		if(pagination == null) {
+			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+		}
+		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, EmailCampaignResponse.class, TimeStampName.MODIFIED_SINCE, modifiedSinceTimestamp);
 	}
 
 	/**
@@ -1167,6 +1312,34 @@ public class ConstantContact {
 		}
 		return emailCampaignTrackingService.getBounces(this.getAccessToken(), emailCampaignId, limit);
 	}
+	
+	/**
+	 * 
+	 * Get Email Campaign Tracking Bounces API.<br/>
+	 * Details in : {@link PaginationHelperService#getPage(String, Pagination, Class, TimeStampName, String)}
+	 * 
+	 * @param pagination
+	 *          {@link Pagination} for fetching next set of data.
+	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingBounce} in case of success; an exception is thrown otherwise.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 */
+	public ResultSet<EmailCampaignTrackingBounce> getEmailCampaignTrackingBounces(Pagination pagination) throws ConstantContactServiceException,
+	IllegalArgumentException {
+		if (pagination == null) {
+			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+		}
+		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, EmailCampaignTrackingBounce.class, null, null);
+	}	
 
 	/**
 	 * 
@@ -1229,6 +1402,39 @@ public class ConstantContact {
 		}
 		return emailCampaignTrackingService.getClicks(this.getAccessToken(), emailCampaignId, limit, createdSinceTimestamp);
 	}
+	
+	/**
+	 * 
+	 * Get Email Campaign Tracking Clicks API.<br/>
+	 * Details in : {@link PaginationHelperService#getPage(String, Pagination, Class, TimeStampName, String)}
+	 * 
+	 * @param pagination
+	 *          {@link Pagination} for fetching next set of data.
+	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the clicks performed since the supplied date. <br/>
+	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
+	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingClick} in case of success; an exception is thrown otherwise.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 */
+	public ResultSet<EmailCampaignTrackingClick> getEmailCampaignTrackingClicks(Pagination pagination, String createdSinceTimestamp) throws ConstantContactServiceException,
+	IllegalArgumentException {
+
+		if (pagination == null) {
+			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+		}
+		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, EmailCampaignTrackingClick.class, TimeStampName.CREATED_SINCE, createdSinceTimestamp);
+	}
+	
 
 	/**
 	 * 
@@ -1290,6 +1496,38 @@ public class ConstantContact {
 			throw new IllegalArgumentException(Config.Errors.ID);
 		}
 		return emailCampaignTrackingService.getForwards(this.getAccessToken(), emailCampaignId, limit, createdSinceTimestamp);
+	}
+	
+	/**
+	 * 
+	 * Get Email Campaign Tracking Forwards API.<br/>
+	 * Details in : {@link PaginationHelperService#getPage(String, Pagination, Class, TimeStampName, String)}
+	 * 
+	 * @param pagination
+	 *          {@link Pagination} for fetching next set of data.
+	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the forwards performed since the supplied date. <br/>
+	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
+	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingForward} in case of success; an exception is thrown otherwise.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 */
+	public ResultSet<EmailCampaignTrackingForward> getEmailCampaignTrackingForwards(Pagination pagination, String createdSinceTimestamp)
+			throws ConstantContactServiceException, IllegalArgumentException {
+
+		if (pagination == null) {
+			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+		}
+		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, EmailCampaignTrackingForward.class, TimeStampName.CREATED_SINCE, createdSinceTimestamp);
 	}
 
 	/**
@@ -1355,6 +1593,38 @@ public class ConstantContact {
 
 	/**
 	 * 
+	 * Get Email Campaign Tracking Opens API.<br/>
+	 * Details in : {@link PaginationHelperService#getPage(String, Pagination, Class, TimeStampName, String)}
+	 * 
+	 * @param pagination
+	 *          {@link Pagination} for fetching next set of data.
+	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the opens performed since the supplied date. <br/>
+	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
+	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingOpen} in case of success; an exception is thrown otherwise.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 */
+	public ResultSet<EmailCampaignTrackingOpen> getEmailCampaignTrackingOpens(Pagination pagination, String createdSinceTimestamp) throws ConstantContactServiceException,
+	IllegalArgumentException {
+
+		if (pagination == null) {
+			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+		}
+		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, EmailCampaignTrackingOpen.class, TimeStampName.CREATED_SINCE, createdSinceTimestamp);
+	}
+	
+	/**
+	 * 
 	 * Get Email Campaign Tracking Sends API.<br/>
 	 * Details in : {@link EmailCampaignTrackingService#getSends(String, String, Integer, String)}
 	 * 
@@ -1413,6 +1683,38 @@ public class ConstantContact {
 			throw new IllegalArgumentException(Config.Errors.ID);
 		}
 		return emailCampaignTrackingService.getSends(this.getAccessToken(), emailCampaignId, limit, createdSinceTimestamp);
+	}
+	
+	/**
+	 * 
+	 * Get Email Campaign Tracking Sends API.<br/>
+	 * Details in : {@link PaginationHelperService#getPage(String, Pagination, Class, TimeStampName, String)}
+	 * 
+	 * @param pagination
+	 *          {@link Pagination} for fetching next set of data.
+	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the sends performed since the supplied date. <br/>
+	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
+	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingSend} in case of success; an exception is thrown otherwise.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 */
+	public ResultSet<EmailCampaignTrackingSend> getEmailCampaignTrackingSends(Pagination pagination, String createdSinceTimestamp) throws ConstantContactServiceException,
+	IllegalArgumentException {
+
+		if (pagination == null) {
+			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+		}
+		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, EmailCampaignTrackingSend.class, TimeStampName.CREATED_SINCE, createdSinceTimestamp);
 	}
 
 	/**
@@ -1476,6 +1778,38 @@ public class ConstantContact {
 		}
 		return emailCampaignTrackingService.getUnsubscribes(this.getAccessToken(), emailCampaignId, limit, createdSinceTimestamp);
 	}
+	
+	/**
+	 * 
+	 * Get Email Campaign Tracking Unsubscribes API.<br/>
+	 * Details in : {@link PaginationHelperService#getPage(String, Pagination, Class, TimeStampName, String)}
+	 * 
+	 * @param pagination
+	 *          {@link Pagination} for fetching next set of data.
+	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the unsubscribes performed since the supplied date. <br/>
+	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
+	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingUnsubscribe} in case of success; an exception is thrown otherwise.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 */
+	public ResultSet<EmailCampaignTrackingUnsubscribe> getEmailCampaignTrackingUnsubscribes(Pagination pagination, String createdSinceTimestamp)
+			throws ConstantContactServiceException, IllegalArgumentException {
+
+		if (pagination == null) {
+			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+		}
+		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, EmailCampaignTrackingUnsubscribe.class, TimeStampName.CREATED_SINCE, createdSinceTimestamp);
+	}
 
 	/**
 	 * 
@@ -1538,6 +1872,37 @@ public class ConstantContact {
 			throw new IllegalArgumentException(Config.Errors.ID);
 		}
 		return emailCampaignTrackingService.getClicksByLinkId(this.getAccessToken(), emailCampaignId, linkId, limit, createdSinceTimestamp);
+	}
+	
+	/**
+	 * Get Email Campaign Tracking Clicks By Link API.<br/>
+	 * Details in : {@link PaginationHelperService#getPage(String, Pagination, Class, TimeStampName, String)}
+	 * 
+	 * @param pagination
+	 *          {@link Pagination} for fetching next set of data.
+	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the clicks performed since the supplied date. <br/>
+	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
+	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingClick} in case of success; an exception is thrown otherwise.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 */
+	public ResultSet<EmailCampaignTrackingClick> getEmailCampaignTrackingClicksByLink(Pagination pagination, String createdSinceTimestamp)
+			throws ConstantContactServiceException, IllegalArgumentException {
+
+		if (pagination == null) {
+			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+		}
+		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, EmailCampaignTrackingClick.class, TimeStampName.CREATED_SINCE, createdSinceTimestamp);
 	}
 
 	/**
@@ -1622,6 +1987,33 @@ public class ConstantContact {
 		}
 		return contactTrackingService.getBounces(this.getAccessToken(), contactId, limit);
 	}
+	
+	/**
+	 * 
+	 * Get Contact Tracking Bounces API.<br/>
+	 * Details in : {@link PaginationHelperService#getPage(String, Pagination, Class, TimeStampName, String)}
+	 * 
+	 * @param pagination
+	 *          {@link Pagination} for fetching next set of data.
+	 * @return A {@link ResultSet} of {@link ContactTrackingBounce} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public ResultSet<ContactTrackingBounce> getContactTrackingBounces(Pagination pagination) throws IllegalArgumentException, ConstantContactServiceException {
+		if(pagination == null) {
+			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);			
+		}
+		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, ContactTrackingBounce.class, null, null);
+	}
 
 	/**
 	 * 
@@ -1678,6 +2070,36 @@ public class ConstantContact {
 			throw new IllegalArgumentException(Config.Errors.ID);
 		}
 		return contactTrackingService.getClicks(this.getAccessToken(), contactId, limit, createdSinceTimestamp);
+	}
+	
+	/**
+	 * 
+	 * Get Contact Tracking Clicks API.<br/>
+	 * Details in : {@link PaginationHelperService#getPage(String, Pagination, Class, TimeStampName, String)}
+	 * 
+	 * @param pagination
+	 *          {@link Pagination} for fetching next set of data.
+	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the clicks performed since the supplied date. <br/>
+	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
+	 * @return A {@link ResultSet} of {@link ContactTrackingClick} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public ResultSet<ContactTrackingClick> getContactTrackingClicks(Pagination pagination, String createdSinceTimestamp) throws IllegalArgumentException, ConstantContactServiceException {
+		if(pagination == null) {
+			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);			
+		}
+		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, ContactTrackingClick.class, TimeStampName.CREATED_SINCE, createdSinceTimestamp);
 	}
 
 	/**
@@ -1739,6 +2161,36 @@ public class ConstantContact {
 		}
 		return contactTrackingService.getForwards(this.getAccessToken(), contactId, limit, createdSinceTimestamp);
 	}
+	
+	/**
+	 * 
+	 * Get Contact Tracking Forwards API.<br/>
+	 * Details in : {@link PaginationHelperService#getPage(String, Pagination, Class, TimeStampName, String)}
+	 * 
+	 * @param pagination
+	 *          {@link Pagination} for fetching next set of data.
+	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the forwards performed since the supplied date. <br/>
+	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
+	 * @return A {@link ResultSet} of {@link ContactTrackingForward} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public ResultSet<ContactTrackingForward> getContactTrackingForwards(Pagination pagination, String createdSinceTimestamp) throws IllegalArgumentException, ConstantContactServiceException {
+		if (pagination == null) {
+			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+		}
+		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, ContactTrackingForward.class, TimeStampName.CREATED_SINCE, createdSinceTimestamp);
+	}
 
 	/**
 	 * 
@@ -1798,6 +2250,36 @@ public class ConstantContact {
 			throw new IllegalArgumentException(Config.Errors.ID);
 		}
 		return contactTrackingService.getOpens(this.getAccessToken(), contactId, limit, createdSinceTimestamp);
+	}
+	
+	/**
+	 * 
+	 * Get Contact Tracking Opens API.<br/>
+	 * Details in : {@link PaginationHelperService#getPage(String, Pagination, Class, TimeStampName, String)}
+	 * 
+	 * @param pagination
+	 *          {@link Pagination} for fetching next set of data.
+	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the opens performed since the supplied date. <br/>
+	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
+	 * @return A {@link ResultSet} of {@link ContactTrackingOpen} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public ResultSet<ContactTrackingOpen> getContactTrackingOpens(Pagination pagination, String createdSinceTimestamp) throws IllegalArgumentException, ConstantContactServiceException {
+		if(pagination == null) {
+			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+		}
+		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, ContactTrackingOpen.class, TimeStampName.CREATED_SINCE, createdSinceTimestamp);
 	}
 
 	/**
@@ -1859,7 +2341,36 @@ public class ConstantContact {
 		}
 		return contactTrackingService.getSends(this.getAccessToken(), contactId, limit, createdSinceTimestamp);
 	}
-
+	
+	/**
+	 * 
+	 * Get Contact Tracking Sends API.<br/>
+	 * Details in : {@link PaginationHelperService#getPage(String, Pagination, Class, TimeStampName, String)}
+	 * 
+	 * @param pagination
+	 *          {@link Pagination} for fetching next set of data.
+	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the sends performed since the supplied date. <br/>
+	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
+	 * @return A {@link ResultSet} of {@link ContactTrackingSend} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public ResultSet<ContactTrackingSend> getContactTrackingSends(Pagination pagination, String createdSinceTimestamp) throws IllegalArgumentException, ConstantContactServiceException {
+		if(pagination == null) {
+			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+		}
+		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, ContactTrackingSend.class, TimeStampName.CREATED_SINCE, createdSinceTimestamp);
+	}
 	/**
 	 * 
 	 * Get Contact Tracking Unsubscribes API.<br/>
@@ -1920,7 +2431,38 @@ public class ConstantContact {
 		}
 		return contactTrackingService.getUnsubscribes(this.getAccessToken(), contactId, limit, createdSinceTimestamp);
 	}
-
+	
+	/**
+	 * 
+	 * Get Contact Tracking Unsubscribes API.<br/>
+	 * Details in : {@link PaginationHelperService#getPage(String, Pagination, Class, TimeStampName, String)}
+	 * 
+	 * @param pagination
+	 *          {@link Pagination} for fetching next set of data.
+	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * 		   It will return only the unsubscribes performed since the supplied date. <br/>
+	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
+	 * @return A {@link ResultSet} of {@link ContactTrackingUnsubscribe} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public ResultSet<ContactTrackingUnsubscribe> getContactTrackingUnsubscribes(Pagination pagination, String createdSinceTimestamp) throws IllegalArgumentException,
+		ConstantContactServiceException {
+		if(pagination == null) {
+			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+		}
+		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, ContactTrackingUnsubscribe.class, TimeStampName.CREATED_SINCE, createdSinceTimestamp);
+	}
+	
 	/**
 	 * 
 	 * Add Bulk Contacts API.<br/>

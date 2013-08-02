@@ -19,14 +19,14 @@ public interface IEmailCampaignService extends IBaseService {
 	 * Implements the get Campaigns operation of the Email Campaign API by calling the ConstantContact server side.
 	 * 
 	 * @param accessToken Constant Contact OAuth2 access token.
-	 * @param offset The offset
 	 * @param limit The limit
 	 * @param modifiedSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. It will return only the Email Campaigns modified since the supplied date.
 	 * @return A {@link ResultSet} of {@link EmailCampaignResponse} containing data as returned by the server on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	ResultSet<EmailCampaignResponse> getCampaigns(String accessToken, Integer offset, Integer limit, String modifiedSinceTimestamp) throws ConstantContactServiceException;
+	ResultSet<EmailCampaignResponse> getCampaigns(String accessToken, Integer limit, String modifiedSinceTimestamp) throws ConstantContactServiceException;
+	
 	/**
 	 * Gets a single Email Campaign.<br/>
 	 * Implements the get Campaign operation of the Email Campaign API by calling the ConstantContact server side.

@@ -159,7 +159,6 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 		}
 		return clicks;
 	}
-
 	/**
 	 * Implements the get Forwards operation of the Contact Tracking API by calling the ConstantContact server side.
 	 * 
@@ -210,7 +209,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 		}
 		return forwards;
 	}
-
+		
 	/**
 	 * Implements the get Opens operation of the Contact Tracking API by calling the ConstantContact server side.
 	 * 
@@ -261,7 +260,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 		}
 		return opens;
 	}
-
+	
 	/**
 	 * Implements the get Sends operation of the Contact Tracking API by calling the ConstantContact server side.
 	 * 
@@ -312,7 +311,8 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 		}
 		return sends;
 	}
-
+	
+	
 	/**
 	 * Implements the get Unsubscribes operation of the Contact Tracking API by calling the ConstantContact server side.
 	 * 
@@ -363,7 +363,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 		}
 		return unsubscribes;
 	}
-
+	
 	/**
 	 * Default constructor.
 	 */

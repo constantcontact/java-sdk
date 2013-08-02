@@ -20,12 +20,12 @@ public final class Config {
     /**
      * API access URL Host.
      */
-    public static final String BASE_URL_HOST = "https://api.constantcontact.com/";
+    public static final String BASE_URL_HOST = "https://api.constantcontact.com";
 
     /**
      * API access URL.
      */
-    public static final String BASE_URL = BASE_URL_HOST + "v2/";
+    public static final String BASE_URL = BASE_URL_HOST + "/" + "v2/";
 
     /**
      * Access a contact.
@@ -324,7 +324,12 @@ public final class Config {
      * Contacts Request null error.
      */
     public static final String BULK_CONTACTS_REQUEST_NULL = "ContactsRequest parameter must not be null.";
-
+    
+    /**
+     * Pagination null error
+     */
+    public static final String PAGINATION_NULL = "Pagination parameter must not be null";
+    
     /**
      * Default constructor.<br/>
      * Made private to prevent instantiation.<br/>

@@ -28,6 +28,7 @@ com.constantcontact.components.generic.sources
 com.constantcontact.exceptions
 com.constantcontact.exceptions.component
 com.constantcontact.exceptions.service
+com.constantcontact.pagination
 com.constantcontact.services.accounts
 com.constantcontact.services.activities
 com.constantcontact.services.base
