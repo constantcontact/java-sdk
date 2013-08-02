@@ -307,8 +307,8 @@ public class ConstantContact {
 	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
 	 */
-	public ResultSet<Contact> getContacts(Integer limit, String modifiedSinceTimestamp) throws ConstantContactServiceException {
-		return contactService.getContacts(this.getAccessToken(), limit, modifiedSinceTimestamp);
+	public ResultSet<Contact> getContacts(Integer limit, String modifiedSinceTimestamp, String status) throws ConstantContactServiceException {
+		return contactService.getContacts(this.getAccessToken(), limit, modifiedSinceTimestamp, status);
 	}
 	/**
 	 * Get contacts API.<br/>
@@ -329,7 +329,7 @@ public class ConstantContact {
 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
 	 */
 	public ResultSet<Contact> getContacts(String modifiedSinceTimestamp) throws ConstantContactServiceException {
-		return contactService.getContacts(this.getAccessToken(), null, modifiedSinceTimestamp);
+		return contactService.getContacts(this.getAccessToken(), null, modifiedSinceTimestamp, null);
 	}
 	
 	/**

@@ -28,12 +28,14 @@ public class ContactService extends BaseService implements IContactService {
    * @param modifiedSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/>
    * 		   It will return only the contacts modified since the supplied date. <br/>
    * 		   If you want to bypass this filter set modifiedSinceTimestamp to null.
+   * @param status allows contacts to be returned based upon their current active state <br/>
+   * 		   Available Active States are < ACTIVE | UNCONFIRMED | OPTOUT | REMOVED >
    * @return A {@link ResultSet} of {@link Contact} containing data as returned by the server on success; <br/>
    *         An exception is thrown otherwise.
    * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
    */
 
-  public ResultSet<Contact> getContacts(String accessToken, Integer limit, String modifiedSinceTimestamp) throws ConstantContactServiceException {
+  public ResultSet<Contact> getContacts(String accessToken, Integer limit, String modifiedSinceTimestamp, String status) throws ConstantContactServiceException {
     ResultSet<Contact> contacts = null;
     try {
       // Construct access URL
@@ -42,7 +44,11 @@ public class ContactService extends BaseService implements IContactService {
       if(modifiedSinceTimestamp != null) {
         url = appendParam(url, "modified_since", modifiedSinceTimestamp);
       }
-
+      
+      if(status != null) {
+    	   url = appendParam(url, "status", status);
+      }
+      
       // Get REST response
       CUrlResponse response = getRestClient().get(url, accessToken);
       if (response.hasData()) {
