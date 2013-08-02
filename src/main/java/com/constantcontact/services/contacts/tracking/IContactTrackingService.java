@@ -59,7 +59,7 @@ public interface IContactTrackingService extends IBaseService {
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 	public ResultSet<ContactTrackingClick> getClicks(String accessToken, String contactId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException;
-
+	
 	/**
 	 * Implements the get Forwards operation of the Contact Tracking API by calling the ConstantContact server side.
 	 * 
@@ -74,7 +74,7 @@ public interface IContactTrackingService extends IBaseService {
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 	public ResultSet<ContactTrackingForward> getForwards(String accessToken, String contactId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException;
-
+	
 	/**
 	 * Implements the get Opens operation of the Contact Tracking API by calling the ConstantContact server side.
 	 * 
@@ -89,7 +89,7 @@ public interface IContactTrackingService extends IBaseService {
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 	public ResultSet<ContactTrackingOpen> getOpens(String accessToken, String contactId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException;
-
+	
 	/**
 	 * Implements the get Sends operation of the Contact Tracking API by calling the ConstantContact server side.
 	 * 
@@ -104,7 +104,7 @@ public interface IContactTrackingService extends IBaseService {
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 	public ResultSet<ContactTrackingSend> getSends(String accessToken, String contactId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException;
-
+	
 	/**
 	 * Implements the get Unsubscribes operation of the Contact Tracking API by calling the ConstantContact server side.
 	 * 

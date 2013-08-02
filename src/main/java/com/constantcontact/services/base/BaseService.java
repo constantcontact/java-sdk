@@ -49,7 +49,6 @@ public abstract class BaseService implements IBaseService {
    * @return Rest client.
    */
 
-  @Override
   public IRestClient getRestClient() {
     return restClient;
   }
@@ -59,25 +58,20 @@ public abstract class BaseService implements IBaseService {
    * 
    * @param restClient Rest client.
    */
-  @Override
   public void setRestClient(IRestClient restClient) {
     this.restClient = restClient;
   }
 
   /**
-   * Helper function to build a url depending on the offset and limit.
+   * Helper function to build a url depending on the limit.
    * 
    * @param url Url.
-   * @param offset Offset.
    * @param limit Limit
    * @return Returns an URL string.
    */
-  public static String paginateUrl(String url, Integer offset, Integer limit) {
+  public static String paginateUrl(String url, Integer limit) {
     String paginateUrl = url;
     StringBuilder sb = new StringBuilder();
-    if (offset != null) {
-      sb.append("offset=").append(offset);
-    }
     if (limit != null) {
       sb.append(sb.length() > 0 ? "&" : "").append("limit=").append(limit);
     }

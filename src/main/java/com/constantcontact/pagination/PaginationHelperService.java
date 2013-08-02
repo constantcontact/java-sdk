@@ -1,0 +1,98 @@
+package com.constantcontact.pagination;
+
+import com.constantcontact.components.Component;
+import com.constantcontact.components.generic.response.Pagination;
+import com.constantcontact.components.generic.response.ResultSet;
+import com.constantcontact.exceptions.service.ConstantContactServiceException;
+import com.constantcontact.services.base.BaseService;
+import com.constantcontact.util.CUrlRequestError;
+import com.constantcontact.util.CUrlResponse;
+import com.constantcontact.util.Config;
+
+/**
+ * Service Layer Implementation for pagination in Constant Contact.
+ * 
+ * @author ConstantContact
+ * 
+ */
+public class PaginationHelperService extends BaseService {
+	
+	/**
+	 * Generic method that returns a {@link ResultSet} of objects, based on a {@link Pagination} object and a specified object class.
+	 * 
+	 * @param accessToken Constant Contact OAuth2 access token.
+	 * @param pagination
+	 *          {@link Pagination} for fetching next set of data.
+	 * @param objectClass The class of the objects that are expected in the {@link ResultSet}.
+	 * @param timeStampName Name of the parameter attached to the request. Details in {@link TimeStampName}.
+	 * @param timeStamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/>
+	 * 		   If you want to bypass this filter set timeStamp to null.    
+	 * @return A {@link ResultSet} of "objectClass" that containing data as returned by the server on success; <br/>
+	 *         An exception is thrown otherwise.
+	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
+	 */
+	public <T> ResultSet<T> getPage(String accessToken, Pagination pagination, Class<T> objectClass, TimeStampName timeStampName, String timeStamp)
+			throws ConstantContactServiceException {
+		ResultSet<T> pageResultSet = null;
+		if (pagination.getNextLink() == null) {
+			return null;
+		}
+		try {			
+			String url = paginateUrl(Config.Endpoints.BASE_URL_HOST, pagination.getNextLink(), null);
+			if(pagination.getNextLink() == null) {
+				return null;
+			}
+			
+			//append timestamp to the request if any.
+			if (timeStampName != null && timeStamp != null) {
+				url = appendParam(url, timeStampName.toString(), timeStamp);
+			}
+			
+			// Get REST response
+			CUrlResponse response = getRestClient().get(url, accessToken);
+			if (response.hasData()) {
+				pageResultSet = Component.resultSetFromJSON(response.getBody(), objectClass);
+			}
+			if (response.isError()) {
+				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
+						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
+				response.getInfo().add(new CUrlRequestError("url", url));
+				constantContactException.setErrorInfo(response.getInfo());
+				throw constantContactException;
+			}
+		} catch (ConstantContactServiceException e) {
+			throw new ConstantContactServiceException(e);
+		} catch (Exception e) {
+			throw new ConstantContactServiceException(e);
+		}
+		return pageResultSet;
+	}
+	
+	/**
+	 * Default constructor.
+	 */
+	public PaginationHelperService(){
+		super();
+	}
+
+	/**
+	 * Contains a list of valid parameter names.
+	 * 
+	 * @author ConstantContact
+	 *
+	 */
+	public static enum TimeStampName {
+		MODIFIED_SINCE("modified_since"), 
+		CREATED_SINCE("created_since");
+
+		private final String stringValue;
+
+		private TimeStampName(final String s) {
+			stringValue = s;
+		}
+
+		public String toString() {
+			return stringValue;
+		}
+	}
+}
