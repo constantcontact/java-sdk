@@ -63,7 +63,13 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 		return contactsResponse;
 	}
 
-	/**
+	public ContactsResponse addContacts(String accessToken, AddContactsMultiPartRequest multiPartRequest)
+            throws ConstantContactServiceException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /**
 	 * Implements the bulk remove Contacts From Lists operation by calling the ConstantContact server side.
 	 * 
 	 * @param accessToken Constant Contact OAuth2 access token.
@@ -97,7 +103,13 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 		return contactsResponse;
 	}
 
-	/**
+	public ContactsResponse removeContactsFromLists(String accessToken, RemoveContactsMultiPartRequest multiPartRequest)
+            throws ConstantContactServiceException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /**
 	 * Implements the bulk clear Lists operation by calling the ConstantContact server side.
 	 * 
 	 * @param accessToken Constant Contact OAuth2 access token.
