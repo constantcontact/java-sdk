@@ -147,12 +147,11 @@ public class HttpProcessor implements ProcessorBase {
 		connection.addRequestProperty("Connection", "Keep-Alive");
 		connection.addRequestProperty("Keep-Alive", "header");
 
-		if (data != null)
+		if (data != null){
 			connection.addRequestProperty("Content-Length", "" + Integer.toString(data.getBytes().length));
+		}
 		
 		switch (httpMethod) {
-		case GET:
-			return executeRequest(data, accessToken);
 		case POST:
 			connection.setDoInput(true);
 			connection.setDoOutput(true);
@@ -169,6 +168,7 @@ public class HttpProcessor implements ProcessorBase {
 			connection.setDoOutput(true);
 			
 			return executeRequest(data, accessToken);
+ 		case GET:
 		default:
 			connection.setRequestMethod("GET");
 			return executeRequest(data, accessToken);
