@@ -7,9 +7,9 @@ import com.constantcontact.components.activities.contacts.request.AddContactsReq
 import com.constantcontact.components.activities.contacts.request.ClearListsRequest;
 import com.constantcontact.components.activities.contacts.request.ExportContactsRequest;
 import com.constantcontact.components.activities.contacts.request.RemoveContactsRequest;
+import com.constantcontact.components.activities.contacts.response.ContactsResponse;
 import com.constantcontact.components.activities.contacts.response.DetailedStatusReport;
 import com.constantcontact.components.activities.contacts.response.SummaryReport;
-import com.constantcontact.components.activities.contacts.response.ContactsResponse;
 import com.constantcontact.components.activities.contacts.types.BulkActivityStatus;
 import com.constantcontact.components.activities.contacts.types.BulkActivityType;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
@@ -17,6 +17,8 @@ import com.constantcontact.services.base.BaseService;
 import com.constantcontact.util.CUrlRequestError;
 import com.constantcontact.util.CUrlResponse;
 import com.constantcontact.util.Config;
+import com.constantcontact.util.http.MultipartBody;
+import com.constantcontact.util.http.MultipartBuilder;
 
 /**
  * Service Layer Implementation for the Bulk Activities in Constant Contact.
@@ -62,14 +64,13 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 		}
 		return contactsResponse;
 	}
-/*
-	public ContactsResponse addContacts(String accessToken, AddContactsMultiPartRequest multiPartRequest)
+
+	public void addContacts(String accessToken, MultipartBody multipartRequest)
             throws ConstantContactServiceException {
-        // TODO Auto-generated method stub
-        return null;
+        //getRestClient().post(url, accessToken, multipartRequest);
     }
-*/
-    /**
+
+	/**
 	 * Implements the bulk remove Contacts From Lists operation by calling the ConstantContact server side.
 	 * 
 	 * @param accessToken Constant Contact OAuth2 access token.
@@ -102,14 +103,14 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 		}
 		return contactsResponse;
 	}
-/*
-	public ContactsResponse removeContactsFromLists(String accessToken, RemoveContactsMultiPartRequest multiPartRequest)
+
+	public void removeContactsFromLists(String accessToken, MultipartBody multiPartRequest)
             throws ConstantContactServiceException {
         // TODO Auto-generated method stub
-        return null;
+        return;
     }
-*/
-    /**
+
+	/**
 	 * Implements the bulk clear Lists operation by calling the ConstantContact server side.
 	 * 
 	 * @param accessToken Constant Contact OAuth2 access token.

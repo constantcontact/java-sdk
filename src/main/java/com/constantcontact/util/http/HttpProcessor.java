@@ -29,6 +29,25 @@ public class HttpProcessor implements ProcessorBase {
 
     static HttpURLConnection connection;
     
+    /**
+     * Convenience method that automatically converts from Strings to bytes before calling makeHttpRequest.
+     * @param urlParam
+     * @param httpMethod
+     * @param contentType
+     * @param accessToken
+     * @param data
+     * @return
+     */
+    public static CUrlResponse makeHttpRequest(String urlParam, HttpMethod httpMethod, ContentType contentType, String accessToken, String data) {
+        byte[] bytes = null;
+        
+        if (data != null){
+            bytes = data.getBytes();
+        }
+        
+        return makeHttpRequest(urlParam, httpMethod, contentType, accessToken, bytes);
+    }
+    
 	/**
 	 * Makes a HTTP request to the Endpoint specified in urlParam and using the
 	 * HTTP method specified by httpMethod.
@@ -47,7 +66,7 @@ public class HttpProcessor implements ProcessorBase {
 	 * @return A {@link CUrlResponse} containing either the response data, or
 	 *         the error info otherwise.
 	 */
-	public static CUrlResponse makeHttpRequest(String urlParam, HttpMethod httpMethod, ContentType contentType, String accessToken, String data) {
+	public static CUrlResponse makeHttpRequest(String urlParam, HttpMethod httpMethod, ContentType contentType, String accessToken, byte[] data) {
 
 		BufferedReader reader = null;
 
@@ -132,7 +151,7 @@ public class HttpProcessor implements ProcessorBase {
 	 *             When something went wrong.
 	 */
 
-	private static String clientConnection(String urlParam, HttpMethod httpMethod, String contentType, String accessToken, String data) throws Exception {
+	private static String clientConnection(String urlParam, HttpMethod httpMethod, String contentType, String accessToken, byte[] data) throws Exception {
 
 		String bindString = urlParam.contains("=") ? "&" : "?";
 		urlParam = String.format("%1$s%2$sapi_key=%3$s", urlParam, bindString, ConstantContact.API_KEY);
@@ -152,7 +171,7 @@ public class HttpProcessor implements ProcessorBase {
 		connection.addRequestProperty("Keep-Alive", "header");
 
 		if (data != null){
-			connection.addRequestProperty("Content-Length", "" + Integer.toString(data.getBytes().length));
+			connection.addRequestProperty("Content-Length", "" + Integer.toString(data.length));
 		}
 		
 		switch (httpMethod) {
@@ -186,13 +205,13 @@ public class HttpProcessor implements ProcessorBase {
 	 * @param accessToken
 	 * @return server response
 	 */
-	public static String executeRequest(String data, String accessToken) {
+	public static String executeRequest(byte[] data, String accessToken) {
 
 		try {
 			// Send request
 			if (data != null) {				
 				DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
-				wr.writeBytes(data);
+				wr.write(data);
 				wr.flush();
 				wr.close();
 			}

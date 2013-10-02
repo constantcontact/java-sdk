@@ -6,13 +6,14 @@ import com.constantcontact.components.activities.contacts.request.AddContactsReq
 import com.constantcontact.components.activities.contacts.request.ClearListsRequest;
 import com.constantcontact.components.activities.contacts.request.ExportContactsRequest;
 import com.constantcontact.components.activities.contacts.request.RemoveContactsRequest;
+import com.constantcontact.components.activities.contacts.response.ContactsResponse;
 import com.constantcontact.components.activities.contacts.response.DetailedStatusReport;
 import com.constantcontact.components.activities.contacts.response.SummaryReport;
-import com.constantcontact.components.activities.contacts.response.ContactsResponse;
 import com.constantcontact.components.activities.contacts.types.BulkActivityStatus;
 import com.constantcontact.components.activities.contacts.types.BulkActivityType;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.base.IBaseService;
+import com.constantcontact.util.http.MultipartBody;
 
 /**
  * Interface for the {@link BulkActivitiesService} in Constant Contact.
@@ -42,7 +43,7 @@ public interface IBulkActivitiesService extends IBaseService {
      *         An exception is thrown otherwise.
      * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
      */
-    // public ContactsResponse addContacts(String accessToken, AddContactsMultiPartRequest multiPartRequest) throws ConstantContactServiceException;
+    public void addContacts(String accessToken, MultipartBody multiPartRequest) throws ConstantContactServiceException;
 	
 	/**
 	 * Implements the bulk remove Contacts From Lists operation by calling the ConstantContact server side.
@@ -64,7 +65,7 @@ public interface IBulkActivitiesService extends IBaseService {
      *         An exception is thrown otherwise.
      * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
      */
-    // public ContactsResponse removeContactsFromLists(String accessToken, RemoveContactsMultiPartRequest multiPartRequest) throws ConstantContactServiceException;	
+    public void removeContactsFromLists(String accessToken, MultipartBody multiPartRequest) throws ConstantContactServiceException;	
 	
 	/**
 	 * Implements the bulk clear Lists operation by calling the ConstantContact server side.

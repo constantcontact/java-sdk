@@ -11,6 +11,10 @@ public class MultipartBody {
         bodyAsBytes = body;
     }
     
+    public byte[] getBytes(){
+        return bodyAsBytes;
+    }
+    
     public String toString(){
         return bodyAsBytes.toString();
     }
