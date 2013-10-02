@@ -76,9 +76,9 @@ public class RestClient implements IRestClient {
 	
 	private CUrlResponse makeMultipartRequest(String urlParam, String accessToken, MultipartBody data) {
 	    
-	    String bodyAsString = data.toString();
+	    byte[] bodyBytes = data.getBytes();
 	    
-	    return HttpProcessor.makeHttpRequest(urlParam, HttpMethod.POST, ContentType.FORM_DATA, accessToken, bodyAsString);
+	    return HttpProcessor.makeHttpRequest(urlParam, HttpMethod.POST, ContentType.FORM_DATA, accessToken, bodyBytes);
     }
 	
 	/**

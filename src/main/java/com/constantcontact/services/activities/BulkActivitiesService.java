@@ -67,7 +67,8 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 
 	public void addContacts(String accessToken, MultipartBody multipartRequest)
             throws ConstantContactServiceException {
-        //getRestClient().post(url, accessToken, multipartRequest);
+	    String url = Config.Endpoints.BASE_URL + Config.Endpoints.ACTIVITIES_ADD_CONTACTS;
+        getRestClient().postMultipart(url, accessToken, multipartRequest);
     }
 
 	/**

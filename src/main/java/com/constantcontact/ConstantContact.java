@@ -1,7 +1,13 @@
 package com.constantcontact;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 
 import com.constantcontact.components.accounts.VerifiedEmailAddress;
 import com.constantcontact.components.activities.contacts.request.AddContactsRequest;
@@ -55,6 +61,8 @@ import com.constantcontact.services.emailcampaigns.tracking.EmailCampaignTrackin
 import com.constantcontact.services.emailcampaigns.tracking.IEmailCampaignTrackingService;
 import com.constantcontact.util.Config;
 import com.constantcontact.util.Config.Errors;
+import com.constantcontact.util.http.MultipartBody;
+import com.constantcontact.util.http.MultipartBuilder;
 
 /**
  * Main Constant Contact class.<br/>
@@ -2489,6 +2497,26 @@ public class ConstantContact {
 		return bulkActivitiesService.addContacts(this.getAccessToken(), request);
 	}
 
+	public void addBulkContactsMultipart(String fileName, File file, ArrayList<String> listIds) throws ConstantContactServiceException, IOException{
+       
+	    Map<String,String> textParts = new HashMap<String,String>(); 
+	    StringBuilder lists = new StringBuilder();
+	    
+	    lists.append(listIds.remove(0));
+	    for (String list : listIds){
+	        lists.append(",");
+	        lists.append(list);
+	    }
+	    
+	    textParts.put("lists", lists.toString());
+	    
+	    InputStream fileStream = new FileInputStream(file);
+	    
+	    MultipartBody request = MultipartBuilder.buildMultipartBody(textParts, fileName, fileStream);
+	    
+	    bulkActivitiesService.addContacts(this.getAccessToken(), request);
+	}
+	
 	/**
 	 * 
 	 * Remove Bulk Contacts From Lists API.<br/>
