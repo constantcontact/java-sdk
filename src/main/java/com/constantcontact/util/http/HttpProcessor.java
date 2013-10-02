@@ -29,28 +29,6 @@ public class HttpProcessor implements ProcessorBase {
 
     static HttpURLConnection connection;
     
-    /**
-     * Makes a HTTP request to the Endpoint specified in urlParam and using the
-     * HTTP method specified by httpMethod.
-     * 
-     * Convenience version of method that always has a content-type of application/json
-     * 
-     * @param urlParam
-     *            The URL of the resource, as a {@link String}
-     * @param httpMethod
-     *            The {@link HttpMethod}
-     * @param accessToken
-     *            Constant Contact OAuth2 access token.
-     * @param data
-     *            A {@link String} containing the data or NULL when there is no
-     *            data to send (eg. in GET call).
-     * @return A {@link CUrlResponse} containing either the response data, or
-     *         the error info otherwise.
-     */
-    public static CUrlResponse makeHttpRequest(String urlParam, HttpMethod httpMethod, String accessToken, String data) {
-        return makeHttpRequest(urlParam, httpMethod, ContentType.JSON, accessToken, data);
-    }
-    
 	/**
 	 * Makes a HTTP request to the Endpoint specified in urlParam and using the
 	 * HTTP method specified by httpMethod.
