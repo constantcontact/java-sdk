@@ -324,6 +324,21 @@ public final class Config {
      * Contacts Request null error.
      */
     public static final String BULK_CONTACTS_REQUEST_NULL = "ContactsRequest parameter must not be null.";
+
+    /**
+     * Contacts File Name null error.
+     */
+    public static final String BULK_CONTACTS_FILE_NAME_NULL = "FileName parameter must not be null.";
+    
+    /**
+     * Contacts File null error.
+     */
+    public static final String BULK_CONTACTS_FILE_NULL = "File parameter must not be null.";
+    
+    /**
+     * Contacts ListId null error.
+     */
+    public static final String BULK_CONTACTS_LIST_NULL = "ListIds parameter must not be null.";
     
     /**
      * Pagination null error

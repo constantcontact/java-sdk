@@ -18,7 +18,6 @@ import com.constantcontact.util.CUrlRequestError;
 import com.constantcontact.util.CUrlResponse;
 import com.constantcontact.util.Config;
 import com.constantcontact.util.http.MultipartBody;
-import com.constantcontact.util.http.MultipartBuilder;
 
 /**
  * Service Layer Implementation for the Bulk Activities in Constant Contact.
@@ -65,10 +64,31 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 		return contactsResponse;
 	}
 
-	public void addContacts(String accessToken, MultipartBody multipartRequest)
+	public ContactsResponse addContacts(String accessToken, MultipartBody multipartRequest)
             throws ConstantContactServiceException {
-	    String url = Config.Endpoints.BASE_URL + Config.Endpoints.ACTIVITIES_ADD_CONTACTS;
-        getRestClient().postMultipart(url, accessToken, multipartRequest);
+	    
+	    ContactsResponse contactsResponse = null;
+        try {
+            String url = Config.Endpoints.BASE_URL + Config.Endpoints.ACTIVITIES_ADD_CONTACTS;
+            CUrlResponse response = getRestClient().postMultipart(url, accessToken, multipartRequest);
+            if (response.hasData()) {
+                contactsResponse = Component.fromJSON(response.getBody(), ContactsResponse.class);
+            }
+
+            if (response.isError()) {
+                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
+                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
+                response.getInfo().add(new CUrlRequestError("url", url));
+                constantContactException.setErrorInfo(response.getInfo());
+                throw constantContactException;
+            }
+        } catch (ConstantContactServiceException e) {
+            throw new ConstantContactServiceException(e);
+        } catch (Exception e) {
+            throw new ConstantContactServiceException(e);
+        }
+        return contactsResponse;
+	    
     }
 
 	/**
@@ -105,10 +125,31 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 		return contactsResponse;
 	}
 
-	public void removeContactsFromLists(String accessToken, MultipartBody multiPartRequest)
+    public ContactsResponse removeContactsFromLists(String accessToken, MultipartBody multipartRequest)
             throws ConstantContactServiceException {
-        // TODO Auto-generated method stub
-        return;
+
+        ContactsResponse contactsResponse = null;
+        try {
+            String url = Config.Endpoints.BASE_URL + Config.Endpoints.ACTIVITIES_REMOVE_FROM_LISTS;
+            CUrlResponse response = getRestClient().postMultipart(url, accessToken, multipartRequest);
+            if (response.hasData()) {
+                contactsResponse = Component.fromJSON(response.getBody(), ContactsResponse.class);
+            }
+            if (response.isError()) {
+                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
+                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
+                response.getInfo().add(new CUrlRequestError("url", url));
+                constantContactException.setErrorInfo(response.getInfo());
+                throw constantContactException;
+            }
+        }
+        catch (ConstantContactServiceException e) {
+            throw new ConstantContactServiceException(e);
+        }
+        catch (Exception e) {
+            throw new ConstantContactServiceException(e);
+        }
+        return contactsResponse;
     }
 
 	/**

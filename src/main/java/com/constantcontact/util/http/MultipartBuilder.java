@@ -32,7 +32,7 @@ public class MultipartBuilder {
         ByteArrayOutputStream byteArray = new ByteArrayOutputStream();
         DataOutputStream request = new DataOutputStream(byteArray);
 
-        // Write out the text parts.
+        // Write out the misc. text parts.
         Iterator<Entry<String, String>> iter = textParts.entrySet().iterator();
         while (iter.hasNext()) {
             Map.Entry<String, String> pairs = (Map.Entry<String, String>) iter.next();
@@ -47,6 +47,14 @@ public class MultipartBuilder {
             request.writeBytes(CRLF);
         }
 
+        // Write the file name text part
+        request.writeBytes(TWO_HYPHENS + ProcessorBase.MULTIPART_BOUNDARY + CRLF);
+        request.writeBytes("Content-Disposition: form-data; name=\"file_name\"" + CRLF);
+        request.writeBytes("Content-Type: text/plain; charset=US-ASCII" + CRLF);
+        request.writeBytes("Content-Transfer-Encoding: 8bit" + CRLF + CRLF);
+        request.writeBytes(fileName);
+        request.writeBytes(CRLF);
+        
         // Now, we write the file.
         request.writeBytes(TWO_HYPHENS + ProcessorBase.MULTIPART_BOUNDARY + CRLF);
 
@@ -67,8 +75,6 @@ public class MultipartBuilder {
         
         request.flush();
         request.close();
-        
-        System.out.println("Test...\n" + byteArray.toString());
         
         return new MultipartBody(byteArray.toByteArray());
     }
