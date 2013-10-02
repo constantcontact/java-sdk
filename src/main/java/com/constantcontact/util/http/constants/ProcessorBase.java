@@ -42,9 +42,14 @@ public interface ProcessorBase {
     public final static String MULTIPART_CONTENT_TYPE = "multipart/form-data";
     
     /**
+     * The boundary we will use in our multipart requests
+     */
+    public final static String MULTIPART_BOUNDARY = "ihLgaHFfpPMsYLTKiwf4";
+    
+    /**
      * constant for boundary content type. Used with multipart after a semicolon
      */
-    public final static String BOUNDARY_CONTENT_TYPE = "boundary=ihLgaHFfpPMsYLTKiwf4";
+    public final static String BOUNDARY_CONTENT_TYPE = "boundary=" + MULTIPART_BOUNDARY;
 	
 	/**
 	 * A single Space

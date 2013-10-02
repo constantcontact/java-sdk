@@ -1,6 +1,7 @@
 package com.constantcontact.util;
 
 import com.constantcontact.util.http.HttpProcessor;
+import com.constantcontact.util.http.MultipartBody;
 import com.constantcontact.util.http.constants.ProcessorBase.ContentType;
 import com.constantcontact.util.http.constants.ProcessorBase.HttpMethod;
 
@@ -42,7 +43,7 @@ public class RestClient implements IRestClient {
      * @param data Data to send with request.
      * @return The response body, http info, and error (if one exists).
      */
-    public CUrlResponse postMultipart(String url, String accessToken, String data) {
+    public CUrlResponse postMultipart(String url, String accessToken, MultipartBody data) {
         return makeMultipartRequest(url, accessToken, data);
     }
 
@@ -73,8 +74,11 @@ public class RestClient implements IRestClient {
 		return HttpProcessor.makeHttpRequest(urlParam, method, ContentType.JSON, accessToken, data);
 	}
 	
-	private CUrlResponse makeMultipartRequest(String urlParam, String accessToken, String data) {
-	    return HttpProcessor.makeHttpRequest(urlParam, HttpMethod.POST, ContentType.FORM_DATA, accessToken, data);
+	private CUrlResponse makeMultipartRequest(String urlParam, String accessToken, MultipartBody data) {
+	    
+	    String bodyAsString = data.toString();
+	    
+	    return HttpProcessor.makeHttpRequest(urlParam, HttpMethod.POST, ContentType.FORM_DATA, accessToken, bodyAsString);
     }
 	
 	/**
