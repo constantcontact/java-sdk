@@ -37,6 +37,16 @@ public interface ProcessorBase {
 	public final static String JSON_CONTENT_TYPE = "application/json";
 
 	/**
+     * constant for "multipart/form-data" content type
+     */
+    public final static String MULTIPART_CONTENT_TYPE = "multipart/form-data";
+    
+    /**
+     * constant for boundary content type. Used with multipart after a semicolon
+     */
+    public final static String BOUNDARY_CONTENT_TYPE = "boundary=ihLgaHFfpPMsYLTKiwf4";
+	
+	/**
 	 * A single Space
 	 */
 	public final static String SPACE = " ";
@@ -82,21 +92,29 @@ public interface ProcessorBase {
 	 * @author ConstantContact
 	 */
 	public static enum HttpMethod {
-		/**
-		 * GET
-		 */
 		GET,
-		/**
-		 * POST
-		 */
 		POST,
-		/**
-		 * DELETE
-		 */
 		DELETE,
-		/**
-		 * PUT
-		 */
 		PUT
 	}
+	
+	/**
+     * The allowed ContentTypes
+     * 
+     * @author csciuto
+     */
+    public static enum ContentType {
+        JSON(JSON_CONTENT_TYPE),
+        FORM_DATA(MULTIPART_CONTENT_TYPE+";"+BOUNDARY_CONTENT_TYPE);
+        
+        private String stringVal;
+        
+        ContentType(String stringVal){
+            this.stringVal = stringVal;
+        }
+        
+        public String getStringVal(){
+            return stringVal;
+        }
+    }
 }

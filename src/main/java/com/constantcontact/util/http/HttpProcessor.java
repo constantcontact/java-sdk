@@ -27,6 +27,30 @@ import com.constantcontact.util.http.constants.ProcessorBase;
  */
 public class HttpProcessor implements ProcessorBase {
 
+    static HttpURLConnection connection;
+    
+    /**
+     * Makes a HTTP request to the Endpoint specified in urlParam and using the
+     * HTTP method specified by httpMethod.
+     * 
+     * Convenience version of method that always has a content-type of application/json
+     * 
+     * @param urlParam
+     *            The URL of the resource, as a {@link String}
+     * @param httpMethod
+     *            The {@link HttpMethod}
+     * @param accessToken
+     *            Constant Contact OAuth2 access token.
+     * @param data
+     *            A {@link String} containing the data or NULL when there is no
+     *            data to send (eg. in GET call).
+     * @return A {@link CUrlResponse} containing either the response data, or
+     *         the error info otherwise.
+     */
+    public static CUrlResponse makeHttpRequest(String urlParam, HttpMethod httpMethod, String accessToken, String data) {
+        return makeHttpRequest(urlParam, httpMethod, ContentType.JSON, accessToken, data);
+    }
+    
 	/**
 	 * Makes a HTTP request to the Endpoint specified in urlParam and using the
 	 * HTTP method specified by httpMethod.
@@ -35,6 +59,8 @@ public class HttpProcessor implements ProcessorBase {
 	 *            The URL of the resource, as a {@link String}
 	 * @param httpMethod
 	 *            The {@link HttpMethod}
+	 * @param contentType
+	 *             The request body's content type
 	 * @param accessToken
 	 *            Constant Contact OAuth2 access token.
 	 * @param data
@@ -43,9 +69,7 @@ public class HttpProcessor implements ProcessorBase {
 	 * @return A {@link CUrlResponse} containing either the response data, or
 	 *         the error info otherwise.
 	 */
-	static HttpURLConnection connection;
-
-	public static CUrlResponse makeHttpRequest(String urlParam, HttpMethod httpMethod, String accessToken, String data) {
+	public static CUrlResponse makeHttpRequest(String urlParam, HttpMethod httpMethod, ContentType contentType, String accessToken, String data) {
 
 		BufferedReader reader = null;
 
@@ -54,7 +78,7 @@ public class HttpProcessor implements ProcessorBase {
 		String errorMessage = null;
 		try {
 
-			responseMessage = clientConnection(urlParam, httpMethod, accessToken, data);
+			responseMessage = clientConnection(urlParam, httpMethod, contentType.getStringVal(), accessToken, data);
 
 			int responseCode = connection.getResponseCode();
 			urlResponse.setStatusCode(responseCode);
@@ -121,6 +145,8 @@ public class HttpProcessor implements ProcessorBase {
 	 * @param httpMethod
 	 *            The {@link HttpMethod} specifying the HTTP Method to use
 	 *            (POST, GET, etc)
+	 * @param contentType
+	 *             The content type of the request body. Usually application/json
 	 * @param accessToken
 	 *            The Constant Contact OAuth2 access token.
 	 * @return A HttpUriRequest
@@ -128,7 +154,7 @@ public class HttpProcessor implements ProcessorBase {
 	 *             When something went wrong.
 	 */
 
-	private static String clientConnection(String urlParam, HttpMethod httpMethod, String accessToken, String data) throws Exception {
+	private static String clientConnection(String urlParam, HttpMethod httpMethod, String contentType, String accessToken, String data) throws Exception {
 
 		String bindString = urlParam.contains("=") ? "&" : "?";
 		urlParam = String.format("%1$s%2$sapi_key=%3$s", urlParam, bindString, ConstantContact.API_KEY);
@@ -141,7 +167,7 @@ public class HttpProcessor implements ProcessorBase {
 		connection.setReadTimeout(10000);
 		connection.setUseCaches(false);
 
-		connection.setRequestProperty(CONTENT_TYPE_HEADER, JSON_CONTENT_TYPE);
+		connection.setRequestProperty(CONTENT_TYPE_HEADER, contentType);
 		connection.addRequestProperty(ACCEPT_HEADER, JSON_CONTENT_TYPE);
 		connection.addRequestProperty(AUTHORIZATION_HEADER, "Bearer " + accessToken);
 		connection.addRequestProperty("Connection", "Keep-Alive");
