@@ -298,13 +298,14 @@ public class ConstantContact {
 	// ****************************************************************************//
 
 	/**
-	 * Get contacts API.<br/>
+	 * Get contacts API. <br/>
 	 * Details in : {@link ContactService#getContacts(String, Integer, String)}
 	 * 
-	 * @param limit The limit
+	 * @param limit The maximum number of results to return - can be null.
 	 * @param modifiedSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
 	 * 		   It will return only the contacts modified since the supplied date. <br/>
 	 * 		   If you want to bypass this filter set modifiedSinceTimestamp to null.
+	 * @param status Return only records with the given status. Does not support VISITOR or NON_SUBSCRIBER
 	 * @return The contacts.
 	 * @throws ConstantContactServiceException Thrown when :
 	 *             <ul>
@@ -315,29 +316,13 @@ public class ConstantContact {
 	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
 	 */
-	public ResultSet<Contact> getContacts(Integer limit, String modifiedSinceTimestamp) throws ConstantContactServiceException {
-		return contactService.getContacts(this.getAccessToken(), limit, modifiedSinceTimestamp);
-	}
-	/**
-	 * Get contacts API.<br/>
-	 * Details in : {@link ContactService#getContacts(String, Integer, String)}
-	 * 
-	 * @param modifiedSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
-	 * 		   It will return only the contacts modified since the supplied date. <br/>
-	 * 		   If you want to bypass this filter set modifiedSinceTimestamp to null.
-	 * 
-	 * @return The contacts.
-	 * @throws ConstantContactServiceException Thrown when :
-	 *             <ul>
-	 *             <li>something went wrong either on the client side;</li>
-	 *             <li>or an error message was received from the server side.</li>
-	 *             </ul>
-	 * <br/>
-	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
-	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
-	 */
-	public ResultSet<Contact> getContacts(String modifiedSinceTimestamp) throws ConstantContactServiceException {
-		return contactService.getContacts(this.getAccessToken(), null, modifiedSinceTimestamp);
+	public ResultSet<Contact> getContacts(Integer limit, String modifiedSinceTimestamp, Contact.Status status) throws ConstantContactServiceException {
+	    
+	    if (status != null && (status.equals(Contact.Status.VISITOR) || status.equals(Contact.Status.NON_SUBSCRIBER))){
+	        throw new IllegalArgumentException(Config.Errors.STATUS + " ACTIVE, OPTOUT, REMOVED, UNCONFIRMED.");
+	    }
+	    
+		return contactService.getContacts(this.getAccessToken(), limit, modifiedSinceTimestamp, status);
 	}
 	
 	/**
@@ -345,10 +330,6 @@ public class ConstantContact {
 	 * Details in : {@link PaginationHelperService#getPage(String, Pagination, Class, TimeStampName, String)}
 	 * 
 	 * @param pagination {@link Pagination} object.
-	 *            
-	 * @param modifiedSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
-	 * 		   It will return only the contacts modified since the supplied date. <br/>
-	 * 		   If you want to bypass this filter set modifiedSinceTimestamp to null.
 	 * 
 	 * @return The contacts.
 	 * 
@@ -364,12 +345,12 @@ public class ConstantContact {
 	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
 	 */
-	public ResultSet<Contact> getContacts(Pagination pagination, String modifiedSinceTimestamp) throws ConstantContactServiceException,
+	public ResultSet<Contact> getContacts(Pagination pagination) throws ConstantContactServiceException,
 	IllegalArgumentException {
 		if(pagination == null) {
 			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
 		}
-		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, Contact.class, TimeStampName.MODIFIED_SINCE, modifiedSinceTimestamp);
+		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, Contact.class);
 	}
 
 
@@ -862,9 +843,6 @@ public class ConstantContact {
 	 * 
 	 * @param pagination
 	 *          {@link Pagination} for fetching next set of contacts.
-	 * @param modifiedSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/>
-	 * 		   It will return only the contacts modified since the supplied date. <br/>
-	 * 		   If you want to bypass this filter set modifiedSinceTimestamp to null.       
 	 * @return A {@link ResultSet} of {@link Contact} containing data as returned by the server on success; <br/>
 	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
 	 *             The exception also contains a description of the cause.<br/>
@@ -878,12 +856,12 @@ public class ConstantContact {
 	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
 	 */
-	public ResultSet<Contact> getContactsFromList(Pagination pagination, String modifiedSinceTimestamp)
+	public ResultSet<Contact> getContactsFromList(Pagination pagination)
 			throws IllegalArgumentException, ConstantContactServiceException {
 		if (pagination == null) {
 			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
 		}
-		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, Contact.class, TimeStampName.MODIFIED_SINCE, modifiedSinceTimestamp);
+		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, Contact.class);
 	}
 	
 	/**
@@ -943,10 +921,6 @@ public class ConstantContact {
 	 * 
 	 * @param pagination
 	 *          {@link Pagination} for fetching next set of campaigns.   
-	 * @param modifiedSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
-	 * 		   It will return only the email campaigns modified since the supplied date. <br/>
-	 * 		   If you want to bypass this filter set modifiedSinceTimestamp to null.
-	 * 
 	 * @return A {@link ResultSet} of {@link EmailCampaignResponse} in case of success; an exception is thrown otherwise.
 	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
 	 *             The exception also contains a description of the cause.<br/>
@@ -960,12 +934,12 @@ public class ConstantContact {
 	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
 	 */
-	public ResultSet<EmailCampaignResponse> getEmailCampaigns(Pagination pagination, String modifiedSinceTimestamp) throws IllegalArgumentException,
+	public ResultSet<EmailCampaignResponse> getEmailCampaigns(Pagination pagination) throws IllegalArgumentException,
 			ConstantContactServiceException, IllegalArgumentException {
 		if(pagination == null) {
 			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
 		}
-		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, EmailCampaignResponse.class, TimeStampName.MODIFIED_SINCE, modifiedSinceTimestamp);
+		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, EmailCampaignResponse.class);
 	}
 
 	/**
@@ -1346,7 +1320,7 @@ public class ConstantContact {
 		if (pagination == null) {
 			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
 		}
-		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, EmailCampaignTrackingBounce.class, null, null);
+		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, EmailCampaignTrackingBounce.class);
 	}	
 
 	/**
@@ -1418,9 +1392,6 @@ public class ConstantContact {
 	 * 
 	 * @param pagination
 	 *          {@link Pagination} for fetching next set of data.
-	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
-	 * 		   It will return only the clicks performed since the supplied date. <br/>
-	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingClick} in case of success; an exception is thrown otherwise.
 	 * @throws ConstantContactServiceException Thrown when :
 	 *             <ul>
@@ -1434,13 +1405,13 @@ public class ConstantContact {
 	 *             The exception also contains a description of the cause.<br/>
 	 *             Error message is taken from one of the members of {@link Errors}
 	 */
-	public ResultSet<EmailCampaignTrackingClick> getEmailCampaignTrackingClicks(Pagination pagination, String createdSinceTimestamp) throws ConstantContactServiceException,
+	public ResultSet<EmailCampaignTrackingClick> getEmailCampaignTrackingClicks(Pagination pagination) throws ConstantContactServiceException,
 	IllegalArgumentException {
 
 		if (pagination == null) {
 			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
 		}
-		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, EmailCampaignTrackingClick.class, TimeStampName.CREATED_SINCE, createdSinceTimestamp);
+		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, EmailCampaignTrackingClick.class);
 	}
 	
 
@@ -1513,9 +1484,6 @@ public class ConstantContact {
 	 * 
 	 * @param pagination
 	 *          {@link Pagination} for fetching next set of data.
-	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
-	 * 		   It will return only the forwards performed since the supplied date. <br/>
-	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingForward} in case of success; an exception is thrown otherwise.
 	 * @throws ConstantContactServiceException Thrown when :
 	 *             <ul>
@@ -1535,7 +1503,7 @@ public class ConstantContact {
 		if (pagination == null) {
 			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
 		}
-		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, EmailCampaignTrackingForward.class, TimeStampName.CREATED_SINCE, createdSinceTimestamp);
+		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, EmailCampaignTrackingForward.class);
 	}
 
 	/**
@@ -1606,9 +1574,6 @@ public class ConstantContact {
 	 * 
 	 * @param pagination
 	 *          {@link Pagination} for fetching next set of data.
-	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
-	 * 		   It will return only the opens performed since the supplied date. <br/>
-	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingOpen} in case of success; an exception is thrown otherwise.
 	 * @throws ConstantContactServiceException Thrown when :
 	 *             <ul>
@@ -1622,13 +1587,13 @@ public class ConstantContact {
 	 *             The exception also contains a description of the cause.<br/>
 	 *             Error message is taken from one of the members of {@link Errors}
 	 */
-	public ResultSet<EmailCampaignTrackingOpen> getEmailCampaignTrackingOpens(Pagination pagination, String createdSinceTimestamp) throws ConstantContactServiceException,
+	public ResultSet<EmailCampaignTrackingOpen> getEmailCampaignTrackingOpens(Pagination pagination) throws ConstantContactServiceException,
 	IllegalArgumentException {
 
 		if (pagination == null) {
 			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
 		}
-		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, EmailCampaignTrackingOpen.class, TimeStampName.CREATED_SINCE, createdSinceTimestamp);
+		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, EmailCampaignTrackingOpen.class);
 	}
 	
 	/**
@@ -1700,9 +1665,6 @@ public class ConstantContact {
 	 * 
 	 * @param pagination
 	 *          {@link Pagination} for fetching next set of data.
-	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
-	 * 		   It will return only the sends performed since the supplied date. <br/>
-	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingSend} in case of success; an exception is thrown otherwise.
 	 * @throws ConstantContactServiceException Thrown when :
 	 *             <ul>
@@ -1716,13 +1678,13 @@ public class ConstantContact {
 	 *             The exception also contains a description of the cause.<br/>
 	 *             Error message is taken from one of the members of {@link Errors}
 	 */
-	public ResultSet<EmailCampaignTrackingSend> getEmailCampaignTrackingSends(Pagination pagination, String createdSinceTimestamp) throws ConstantContactServiceException,
+	public ResultSet<EmailCampaignTrackingSend> getEmailCampaignTrackingSends(Pagination pagination) throws ConstantContactServiceException,
 	IllegalArgumentException {
 
 		if (pagination == null) {
 			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
 		}
-		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, EmailCampaignTrackingSend.class, TimeStampName.CREATED_SINCE, createdSinceTimestamp);
+		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, EmailCampaignTrackingSend.class);
 	}
 
 	/**
@@ -1794,9 +1756,6 @@ public class ConstantContact {
 	 * 
 	 * @param pagination
 	 *          {@link Pagination} for fetching next set of data.
-	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
-	 * 		   It will return only the unsubscribes performed since the supplied date. <br/>
-	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingUnsubscribe} in case of success; an exception is thrown otherwise.
 	 * @throws ConstantContactServiceException Thrown when :
 	 *             <ul>
@@ -1810,13 +1769,13 @@ public class ConstantContact {
 	 *             The exception also contains a description of the cause.<br/>
 	 *             Error message is taken from one of the members of {@link Errors}
 	 */
-	public ResultSet<EmailCampaignTrackingUnsubscribe> getEmailCampaignTrackingUnsubscribes(Pagination pagination, String createdSinceTimestamp)
+	public ResultSet<EmailCampaignTrackingUnsubscribe> getEmailCampaignTrackingUnsubscribes(Pagination pagination)
 			throws ConstantContactServiceException, IllegalArgumentException {
 
 		if (pagination == null) {
 			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
 		}
-		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, EmailCampaignTrackingUnsubscribe.class, TimeStampName.CREATED_SINCE, createdSinceTimestamp);
+		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, EmailCampaignTrackingUnsubscribe.class);
 	}
 
 	/**
@@ -1888,9 +1847,6 @@ public class ConstantContact {
 	 * 
 	 * @param pagination
 	 *          {@link Pagination} for fetching next set of data.
-	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
-	 * 		   It will return only the clicks performed since the supplied date. <br/>
-	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingClick} in case of success; an exception is thrown otherwise.
 	 * @throws ConstantContactServiceException Thrown when :
 	 *             <ul>
@@ -1904,13 +1860,13 @@ public class ConstantContact {
 	 *             The exception also contains a description of the cause.<br/>
 	 *             Error message is taken from one of the members of {@link Errors}
 	 */
-	public ResultSet<EmailCampaignTrackingClick> getEmailCampaignTrackingClicksByLink(Pagination pagination, String createdSinceTimestamp)
+	public ResultSet<EmailCampaignTrackingClick> getEmailCampaignTrackingClicksByLink(Pagination pagination)
 			throws ConstantContactServiceException, IllegalArgumentException {
 
 		if (pagination == null) {
 			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
 		}
-		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, EmailCampaignTrackingClick.class, TimeStampName.CREATED_SINCE, createdSinceTimestamp);
+		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, EmailCampaignTrackingClick.class);
 	}
 
 	/**
@@ -2020,7 +1976,7 @@ public class ConstantContact {
 		if(pagination == null) {
 			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);			
 		}
-		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, ContactTrackingBounce.class, null, null);
+		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, ContactTrackingBounce.class);
 	}
 
 	/**
@@ -2087,9 +2043,6 @@ public class ConstantContact {
 	 * 
 	 * @param pagination
 	 *          {@link Pagination} for fetching next set of data.
-	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
-	 * 		   It will return only the clicks performed since the supplied date. <br/>
-	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link ContactTrackingClick} in case of success; an exception is thrown otherwise.
 	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
 	 *             The exception also contains a description of the cause.<br/>
@@ -2107,7 +2060,7 @@ public class ConstantContact {
 		if(pagination == null) {
 			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);			
 		}
-		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, ContactTrackingClick.class, TimeStampName.CREATED_SINCE, createdSinceTimestamp);
+		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, ContactTrackingClick.class);
 	}
 
 	/**
@@ -2177,9 +2130,6 @@ public class ConstantContact {
 	 * 
 	 * @param pagination
 	 *          {@link Pagination} for fetching next set of data.
-	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
-	 * 		   It will return only the forwards performed since the supplied date. <br/>
-	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link ContactTrackingForward} in case of success; an exception is thrown otherwise.
 	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
 	 *             The exception also contains a description of the cause.<br/>
@@ -2197,7 +2147,7 @@ public class ConstantContact {
 		if (pagination == null) {
 			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
 		}
-		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, ContactTrackingForward.class, TimeStampName.CREATED_SINCE, createdSinceTimestamp);
+		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, ContactTrackingForward.class);
 	}
 
 	/**
@@ -2267,9 +2217,6 @@ public class ConstantContact {
 	 * 
 	 * @param pagination
 	 *          {@link Pagination} for fetching next set of data.
-	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
-	 * 		   It will return only the opens performed since the supplied date. <br/>
-	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link ContactTrackingOpen} in case of success; an exception is thrown otherwise.
 	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
 	 *             The exception also contains a description of the cause.<br/>
@@ -2287,7 +2234,7 @@ public class ConstantContact {
 		if(pagination == null) {
 			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
 		}
-		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, ContactTrackingOpen.class, TimeStampName.CREATED_SINCE, createdSinceTimestamp);
+		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, ContactTrackingOpen.class);
 	}
 
 	/**
@@ -2357,9 +2304,6 @@ public class ConstantContact {
 	 * 
 	 * @param pagination
 	 *          {@link Pagination} for fetching next set of data.
-	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
-	 * 		   It will return only the sends performed since the supplied date. <br/>
-	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link ContactTrackingSend} in case of success; an exception is thrown otherwise.
 	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
 	 *             The exception also contains a description of the cause.<br/>
@@ -2377,7 +2321,7 @@ public class ConstantContact {
 		if(pagination == null) {
 			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
 		}
-		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, ContactTrackingSend.class, TimeStampName.CREATED_SINCE, createdSinceTimestamp);
+		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, ContactTrackingSend.class);
 	}
 	/**
 	 * 
@@ -2463,12 +2407,12 @@ public class ConstantContact {
 	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
 	 */
-	public ResultSet<ContactTrackingUnsubscribe> getContactTrackingUnsubscribes(Pagination pagination, String createdSinceTimestamp) throws IllegalArgumentException,
+	public ResultSet<ContactTrackingUnsubscribe> getContactTrackingUnsubscribes(Pagination pagination) throws IllegalArgumentException,
 		ConstantContactServiceException {
 		if(pagination == null) {
 			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
 		}
-		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, ContactTrackingUnsubscribe.class, TimeStampName.CREATED_SINCE, createdSinceTimestamp);
+		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, ContactTrackingUnsubscribe.class);
 	}
 	
 	/**
