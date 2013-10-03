@@ -27,6 +27,27 @@ import com.constantcontact.util.http.constants.ProcessorBase;
  */
 public class HttpProcessor implements ProcessorBase {
 
+    static HttpURLConnection connection;
+    
+    /**
+     * Convenience method that automatically converts from Strings to bytes before calling makeHttpRequest.
+     * @param urlParam
+     * @param httpMethod
+     * @param contentType
+     * @param accessToken
+     * @param data
+     * @return
+     */
+    public static CUrlResponse makeHttpRequest(String urlParam, HttpMethod httpMethod, ContentType contentType, String accessToken, String data) {
+        byte[] bytes = null;
+        
+        if (data != null){
+            bytes = data.getBytes();
+        }
+        
+        return makeHttpRequest(urlParam, httpMethod, contentType, accessToken, bytes);
+    }
+    
 	/**
 	 * Makes a HTTP request to the Endpoint specified in urlParam and using the
 	 * HTTP method specified by httpMethod.
@@ -35,6 +56,8 @@ public class HttpProcessor implements ProcessorBase {
 	 *            The URL of the resource, as a {@link String}
 	 * @param httpMethod
 	 *            The {@link HttpMethod}
+	 * @param contentType
+	 *             The request body's content type
 	 * @param accessToken
 	 *            Constant Contact OAuth2 access token.
 	 * @param data
@@ -43,9 +66,7 @@ public class HttpProcessor implements ProcessorBase {
 	 * @return A {@link CUrlResponse} containing either the response data, or
 	 *         the error info otherwise.
 	 */
-	static HttpURLConnection connection;
-
-	public static CUrlResponse makeHttpRequest(String urlParam, HttpMethod httpMethod, String accessToken, String data) {
+	public static CUrlResponse makeHttpRequest(String urlParam, HttpMethod httpMethod, ContentType contentType, String accessToken, byte[] data) {
 
 		BufferedReader reader = null;
 
@@ -54,7 +75,7 @@ public class HttpProcessor implements ProcessorBase {
 		String errorMessage = null;
 		try {
 
-			responseMessage = clientConnection(urlParam, httpMethod, accessToken, data);
+			responseMessage = clientConnection(urlParam, httpMethod, contentType.getStringVal(), accessToken, data);
 
 			int responseCode = connection.getResponseCode();
 			urlResponse.setStatusCode(responseCode);
@@ -121,6 +142,8 @@ public class HttpProcessor implements ProcessorBase {
 	 * @param httpMethod
 	 *            The {@link HttpMethod} specifying the HTTP Method to use
 	 *            (POST, GET, etc)
+	 * @param contentType
+	 *             The content type of the request body. Usually application/json
 	 * @param accessToken
 	 *            The Constant Contact OAuth2 access token.
 	 * @return A HttpUriRequest
@@ -128,7 +151,7 @@ public class HttpProcessor implements ProcessorBase {
 	 *             When something went wrong.
 	 */
 
-	private static String clientConnection(String urlParam, HttpMethod httpMethod, String accessToken, String data) throws Exception {
+	private static String clientConnection(String urlParam, HttpMethod httpMethod, String contentType, String accessToken, byte[] data) throws Exception {
 
 		String bindString = urlParam.contains("=") ? "&" : "?";
 		urlParam = String.format("%1$s%2$sapi_key=%3$s", urlParam, bindString, ConstantContact.API_KEY);
@@ -141,18 +164,17 @@ public class HttpProcessor implements ProcessorBase {
 		connection.setReadTimeout(10000);
 		connection.setUseCaches(false);
 
-		connection.setRequestProperty(CONTENT_TYPE_HEADER, JSON_CONTENT_TYPE);
+		connection.setRequestProperty(CONTENT_TYPE_HEADER, contentType);
 		connection.addRequestProperty(ACCEPT_HEADER, JSON_CONTENT_TYPE);
 		connection.addRequestProperty(AUTHORIZATION_HEADER, "Bearer " + accessToken);
 		connection.addRequestProperty("Connection", "Keep-Alive");
 		connection.addRequestProperty("Keep-Alive", "header");
 
-		if (data != null)
-			connection.addRequestProperty("Content-Length", "" + Integer.toString(data.getBytes().length));
+		if (data != null){
+			connection.addRequestProperty("Content-Length", "" + Integer.toString(data.length));
+		}
 		
 		switch (httpMethod) {
-		case GET:
-			return executeRequest(data, accessToken);
 		case POST:
 			connection.setDoInput(true);
 			connection.setDoOutput(true);
@@ -169,6 +191,7 @@ public class HttpProcessor implements ProcessorBase {
 			connection.setDoOutput(true);
 			
 			return executeRequest(data, accessToken);
+ 		case GET:
 		default:
 			connection.setRequestMethod("GET");
 			return executeRequest(data, accessToken);
@@ -182,13 +205,13 @@ public class HttpProcessor implements ProcessorBase {
 	 * @param accessToken
 	 * @return server response
 	 */
-	public static String executeRequest(String data, String accessToken) {
+	public static String executeRequest(byte[] data, String accessToken) {
 
 		try {
 			// Send request
 			if (data != null) {				
 				DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
-				wr.writeBytes(data);
+				wr.write(data);
 				wr.flush();
 				wr.close();
 			}
