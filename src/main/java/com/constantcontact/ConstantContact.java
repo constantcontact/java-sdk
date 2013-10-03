@@ -2589,7 +2589,7 @@ public class ConstantContact {
      *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
      *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
      */
-    public ContactsResponse removeBuldContactsFromListsMultipart(String fileName, File file, ArrayList<String> listIds)
+    public ContactsResponse removeBulkContactsFromListsMultipart(String fileName, File file, ArrayList<String> listIds)
             throws ConstantContactServiceException, IOException {
 
         if (fileName == null || "".equals(fileName)) {
