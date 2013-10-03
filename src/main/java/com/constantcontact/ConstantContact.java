@@ -1,7 +1,13 @@
 package com.constantcontact;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 
 import com.constantcontact.components.accounts.VerifiedEmailAddress;
 import com.constantcontact.components.activities.contacts.request.AddContactsRequest;
@@ -55,6 +61,8 @@ import com.constantcontact.services.emailcampaigns.tracking.EmailCampaignTrackin
 import com.constantcontact.services.emailcampaigns.tracking.IEmailCampaignTrackingService;
 import com.constantcontact.util.Config;
 import com.constantcontact.util.Config.Errors;
+import com.constantcontact.util.http.MultipartBody;
+import com.constantcontact.util.http.MultipartBuilder;
 
 /**
  * Main Constant Contact class.<br/>
@@ -2489,6 +2497,53 @@ public class ConstantContact {
 		return bulkActivitiesService.addContacts(this.getAccessToken(), request);
 	}
 
+    /**
+     * 
+     * Add Bulk Contacts API.<br/>
+     * Details in : {@link BulkActivitiesService#addContacts(String, MultipartBody)}
+     * 
+     * @param request The {@link AddContactsRequest}
+     * @return A {@link ContactsResponse} in case of success; an exception is thrown otherwise.
+     * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+     *             The exception also contains a description of the cause.<br/>
+     *             Error message is taken from one of the members of {@link Errors}
+     * @throws ConstantContactServiceException Thrown when :
+     *             <ul>
+     *             <li>something went wrong either on the client side;</li>
+     *             <li>or an error message was received from the server side.</li>
+     *             </ul>
+     * <br/>
+     *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+     *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+     */
+	public ContactsResponse addBulkContactsMultipart(String fileName, File file, ArrayList<String> listIds) throws ConstantContactServiceException, IOException{
+       
+	    if (fileName == null || "".equals(fileName)){
+	        throw new IllegalArgumentException(Config.Errors.BULK_CONTACTS_FILE_NAME_NULL);
+	    } else if (file == null){
+	        throw new IllegalArgumentException(Config.Errors.BULK_CONTACTS_FILE_NULL);
+	    } else if (listIds == null){
+            throw new IllegalArgumentException(Config.Errors.BULK_CONTACTS_LIST_NULL);
+        }
+	    
+	    Map<String,String> textParts = new HashMap<String,String>(); 
+	    StringBuilder lists = new StringBuilder();
+	    
+	    lists.append(listIds.remove(0));
+	    for (String list : listIds){
+	        lists.append(",");
+	        lists.append(list);
+	    }
+	    
+	    textParts.put("lists", lists.toString());
+	    
+	    InputStream fileStream = new FileInputStream(file);
+	    
+	    MultipartBody request = MultipartBuilder.buildMultipartBody(textParts, fileName, fileStream);
+	    
+	    return bulkActivitiesService.addContacts(this.getAccessToken(), request);
+	}
+	
 	/**
 	 * 
 	 * Remove Bulk Contacts From Lists API.<br/>
@@ -2514,6 +2569,56 @@ public class ConstantContact {
 		}
 		return bulkActivitiesService.removeContactsFromLists(this.getAccessToken(), request);
 	}
+	
+	   /**
+     * 
+     * Remove Bulk Contacts From Lists API.<br/>
+     * Details in : {@link BulkActivitiesService#removeContactsFromLists(String, MultipartBody)}
+     * 
+     * @param request A {@link RemoveContactsRequest}
+     * @return A {@link ContactsResponse} in case of success; an exception is thrown otherwise.
+     * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+     *             The exception also contains a description of the cause.<br/>
+     *             Error message is taken from one of the members of {@link Errors}
+     * @throws ConstantContactServiceException Thrown when :
+     *             <ul>
+     *             <li>something went wrong either on the client side;</li>
+     *             <li>or an error message was received from the server side.</li>
+     *             </ul>
+     * <br/>
+     *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+     *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+     */
+    public ContactsResponse removeBuldContactsFromListsMultipart(String fileName, File file, ArrayList<String> listIds)
+            throws ConstantContactServiceException, IOException {
+
+        if (fileName == null || "".equals(fileName)) {
+            throw new IllegalArgumentException(Config.Errors.BULK_CONTACTS_FILE_NAME_NULL);
+        }
+        else if (file == null) {
+            throw new IllegalArgumentException(Config.Errors.BULK_CONTACTS_FILE_NULL);
+        }
+        else if (listIds == null) {
+            throw new IllegalArgumentException(Config.Errors.BULK_CONTACTS_LIST_NULL);
+        }
+
+        Map<String, String> textParts = new HashMap<String, String>();
+        StringBuilder lists = new StringBuilder();
+
+        lists.append(listIds.remove(0));
+        for (String list : listIds) {
+            lists.append(",");
+            lists.append(list);
+        }
+
+        textParts.put("lists", lists.toString());
+
+        InputStream fileStream = new FileInputStream(file);
+
+        MultipartBody request = MultipartBuilder.buildMultipartBody(textParts, fileName, fileStream);
+
+        return bulkActivitiesService.removeContactsFromLists(this.getAccessToken(), request);
+    }
 
 	/**
 	 * 

@@ -1,5 +1,7 @@
 package com.constantcontact.util;
 
+import com.constantcontact.util.http.MultipartBody;
+
 /**
  * Interface for {@link RestClient} in Constant Contact.
  * 
@@ -26,6 +28,16 @@ public interface IRestClient {
 	 */
 	CUrlResponse post(String url, String accessToken, String data);
 
+    /**
+     * Make an HTTP POST request with a multipart body.
+     * 
+     * @param url Request URL.
+     * @param accessToken Constant Contact OAuth2 access token.
+     * @param data Data to send with request.
+     * @return The response body, http info, and error (if one exists).
+     */	
+	public CUrlResponse postMultipart(String url, String accessToken, MultipartBody data);
+	
 	/**
 	 * Make an HTTP PUT request.
 	 * 
