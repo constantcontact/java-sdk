@@ -21,11 +21,12 @@ public interface IContactService extends IBaseService {
    * @param modifiedSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/>
    * 		   It will return only the contacts modified since the supplied date. <br/>
    * 		   If you want to bypass this filter set modifiedSinceTimestamp to null.
+   * @param status The status of contacts to return.
    * @return A {@link ResultSet} of {@link Contact} containing data as returned by the server on success; <br/>
    *         An exception is thrown otherwise.
    * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
    */
-  ResultSet<Contact> getContacts(String accessToken, Integer limit, String modifiedSinceTimestamp) throws ConstantContactServiceException;
+  ResultSet<Contact> getContacts(String accessToken, Integer limit, String modifiedSinceTimestamp, Contact.Status status) throws ConstantContactServiceException;
 
   /**
    * Implements the get Contact operation of the Contacts API by calling the ConstantContact server side.
