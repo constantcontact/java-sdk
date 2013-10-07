@@ -25,7 +25,7 @@ public interface IContactService extends IBaseService {
    *         An exception is thrown otherwise.
    * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
    */
-  ResultSet<Contact> getContacts(String accessToken, Integer limit, String modifiedSinceTimestamp) throws ConstantContactServiceException;
+  ResultSet<Contact> getContacts(String accessToken, Integer limit, String modifiedSinceTimestamp, String status) throws ConstantContactServiceException;
 
   /**
    * Implements the get Contact operation of the Contacts API by calling the ConstantContact server side.
