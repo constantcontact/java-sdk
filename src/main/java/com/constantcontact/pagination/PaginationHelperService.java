@@ -24,14 +24,11 @@ public class PaginationHelperService extends BaseService {
 	 * @param pagination
 	 *          {@link Pagination} for fetching next set of data.
 	 * @param objectClass The class of the objects that are expected in the {@link ResultSet}.
-	 * @param timeStampName Name of the parameter attached to the request. Details in {@link TimeStampName}.
-	 * @param timeStamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/>
-	 * 		   If you want to bypass this filter set timeStamp to null.    
 	 * @return A {@link ResultSet} of "objectClass" that containing data as returned by the server on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	public <T> ResultSet<T> getPage(String accessToken, Pagination pagination, Class<T> objectClass, TimeStampName timeStampName, String timeStamp)
+	public <T> ResultSet<T> getPage(String accessToken, Pagination pagination, Class<T> objectClass)
 			throws ConstantContactServiceException {
 		ResultSet<T> pageResultSet = null;
 		if (pagination.getNextLink() == null) {
@@ -41,11 +38,6 @@ public class PaginationHelperService extends BaseService {
 			String url = paginateUrl(Config.Endpoints.BASE_URL_HOST, pagination.getNextLink(), null);
 			if(pagination.getNextLink() == null) {
 				return null;
-			}
-			
-			//append timestamp to the request if any.
-			if (timeStampName != null && timeStamp != null) {
-				url = appendParam(url, timeStampName.toString(), timeStamp);
 			}
 			
 			// Get REST response
