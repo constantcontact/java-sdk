@@ -1,7 +1,8 @@
 package com.constantcontact.services.contacts.tracking;
 
+import java.util.List;
+
 import com.constantcontact.components.Component;
-import com.constantcontact.components.common.tracking.TrackingBase;
 import com.constantcontact.components.contacts.tracking.TrackingContactsBase;
 import com.constantcontact.components.contacts.tracking.bounces.ContactTrackingBounce;
 import com.constantcontact.components.contacts.tracking.clicks.ContactTrackingClick;
@@ -73,13 +74,38 @@ public class ContactTrackingService extends BaseService implements IContactTrack
      * 
      * @param accessToken Constant Contact OAuth2 access token.
      * @param contactId The id of the contact.
-     * @return The {@link ContactTrackingSummaryReport} containing data returned by the server on success; <br/>
+     * @return The List of {@link ContactTrackingSummaryReport} containing data returned by the server on success; <br/>
      *         An exception is thrown otherwise.
      * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
      */
-    public ResultSet<ContactTrackingSummaryByCampaignReport> getSummaryByCampaign(String accessToken, String contactId, Integer limit) throws ConstantContactServiceException{
+    public List<ContactTrackingSummaryByCampaignReport> getSummaryByCampaign(String accessToken, String contactId) throws ConstantContactServiceException{
     
-        return null;
+        List<ContactTrackingSummaryByCampaignReport> summary = null;
+        
+        try {
+            StringBuilder sb = new StringBuilder();
+            sb.append(Config.Endpoints.BASE_URL).append(String.format(Config.Endpoints.CONTACTS_TRACKING_REPORTS_BY_CAMPAIGN_SUMMARY, contactId));
+            
+            String url = sb.toString();
+
+            CUrlResponse response = getRestClient().get(url, accessToken);
+
+            if (response.hasData()) {
+                summary = Component.listFromJSON(response.getBody(), ContactTrackingSummaryByCampaignReport.class);
+            }
+            if (response.isError()) {
+                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
+                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
+                response.getInfo().add(new CUrlRequestError("url", url));
+                constantContactException.setErrorInfo(response.getInfo());
+                throw constantContactException;
+            }
+        } catch (ConstantContactServiceException e) {
+            throw new ConstantContactServiceException(e);
+        } catch (Exception e) {
+            throw new ConstantContactServiceException(e);
+        }
+        return summary;
     }
 	
 	/**

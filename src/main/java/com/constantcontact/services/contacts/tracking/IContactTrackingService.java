@@ -1,5 +1,7 @@
 package com.constantcontact.services.contacts.tracking;
 
+import java.util.List;
+
 import com.constantcontact.components.contacts.tracking.TrackingContactsBase;
 import com.constantcontact.components.contacts.tracking.bounces.ContactTrackingBounce;
 import com.constantcontact.components.contacts.tracking.clicks.ContactTrackingClick;
@@ -40,11 +42,11 @@ public interface IContactTrackingService extends IBaseService {
      * 
      * @param accessToken Constant Contact OAuth2 access token.
      * @param contactId The id of the contact.
-     * @return The {@link ContactTrackingSummaryReport} containing data returned by the server on success; <br/>
+     * @return The List of {@link ContactTrackingSummaryReport} containing data returned by the server on success; <br/>
      *         An exception is thrown otherwise.
      * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
      */
-	public ResultSet<ContactTrackingSummaryByCampaignReport> getSummaryByCampaign(String accessToken, String contactId, Integer limit) throws ConstantContactServiceException;
+	public List<ContactTrackingSummaryByCampaignReport> getSummaryByCampaign(String accessToken, String contactId) throws ConstantContactServiceException;
 	
 	/**
      * Implements the get All Activity Types operation of the Contact Tracking API by calling the ConstantContact server side.
