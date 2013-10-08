@@ -91,6 +91,11 @@ public class ContactTrackingService extends BaseService implements IContactTrack
                 sb.append("?limit=").append(limit);
             }
             
+            if (createdSinceTimestamp != null) {
+                sb.append(limit != null ? "&" : "?");
+                sb.append("created_since=").append(createdSinceTimestamp);
+            }
+            
             String url = sb.toString();
 
             CUrlResponse response = getRestClient().get(url, accessToken);
