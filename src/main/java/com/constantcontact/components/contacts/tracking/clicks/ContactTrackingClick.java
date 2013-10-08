@@ -2,7 +2,7 @@ package com.constantcontact.components.contacts.tracking.clicks;
 
 import java.io.Serializable;
 
-import com.constantcontact.components.common.tracking.TrackingBase;
+import com.constantcontact.components.contacts.tracking.TrackingContactsBase;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author ConstantContact
  * 
  */
-public class ContactTrackingClick extends TrackingBase implements Serializable {
+public class ContactTrackingClick extends TrackingContactsBase implements Serializable {
 
 	/**
 	 * Serial version unique identifier.

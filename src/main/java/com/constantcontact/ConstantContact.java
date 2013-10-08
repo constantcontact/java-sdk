@@ -20,6 +20,7 @@ import com.constantcontact.components.activities.contacts.response.SummaryReport
 import com.constantcontact.components.common.tracking.TrackingBase;
 import com.constantcontact.components.contacts.Contact;
 import com.constantcontact.components.contacts.ContactList;
+import com.constantcontact.components.contacts.tracking.TrackingContactsBase;
 import com.constantcontact.components.contacts.tracking.bounces.ContactTrackingBounce;
 import com.constantcontact.components.contacts.tracking.clicks.ContactTrackingClick;
 import com.constantcontact.components.contacts.tracking.forwards.ContactTrackingForward;
@@ -43,7 +44,6 @@ import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.exceptions.ConstantContactException;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.pagination.PaginationHelperService;
-import com.constantcontact.pagination.PaginationHelperService.TimeStampName;
 import com.constantcontact.services.accounts.AccountService;
 import com.constantcontact.services.accounts.IAccountService;
 import com.constantcontact.services.activities.BulkActivitiesService;
@@ -1700,7 +1700,7 @@ public class ConstantContact {
      * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
      *         It will return only the clicks performed since the supplied date. <br/>
      *         If you want to bypass this filter, set createdSinceTimestamp to null.
-     * @return A {@link ResultSet} of {@link TrackingBase} in case of success; an exception is thrown otherwise.
+     * @return A {@link ResultSet} of {@link TrackingContactsBase} in case of success; an exception is thrown otherwise.
      * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
      *             The exception also contains a description of the cause.<br/>
      *             Error message is taken from one of the members of {@link Errors}
@@ -1713,7 +1713,7 @@ public class ConstantContact {
      *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
      *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
      */
-	public ResultSet<? extends TrackingBase> getContactTrackingActivities(String contactId, Integer limit, String createdSinceTimestamp) throws IllegalArgumentException, ConstantContactServiceException {
+	public ResultSet<? extends TrackingContactsBase> getContactTrackingActivities(String contactId, Integer limit, String createdSinceTimestamp) throws IllegalArgumentException, ConstantContactServiceException {
 	    if (contactId == null || !(contactId.length() > 0)) {
 	        throw new IllegalArgumentException(Config.Errors.ID);
 	    }

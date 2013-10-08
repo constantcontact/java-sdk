@@ -2,6 +2,7 @@ package com.constantcontact.services.contacts.tracking;
 
 import com.constantcontact.components.Component;
 import com.constantcontact.components.common.tracking.TrackingBase;
+import com.constantcontact.components.contacts.tracking.TrackingContactsBase;
 import com.constantcontact.components.contacts.tracking.bounces.ContactTrackingBounce;
 import com.constantcontact.components.contacts.tracking.clicks.ContactTrackingClick;
 import com.constantcontact.components.contacts.tracking.forwards.ContactTrackingForward;
@@ -75,13 +76,40 @@ public class ContactTrackingService extends BaseService implements IContactTrack
      * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
      *         It will return only the clicks performed since the supplied date. <br/>
      *         If you want to bypass this filter, set createdSinceTimestamp to null.
-     * @return The {@link ResultSet} of {@link TrackingBase} containing data returned by the server on success; <br/>
+     * @return The {@link ResultSet} of {@link TrackingContactsBase} containing data returned by the server on success; <br/>
      *         An exception is thrown otherwise.
      * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
      */
-    public ResultSet<? extends TrackingBase> getActivities(String accessToken, String contactId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException{
-        ResultSet<ContactTrackingBounce> activities = null;
+    public ResultSet<? extends TrackingContactsBase> getActivities(String accessToken, String contactId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException{
+        ResultSet<? extends TrackingContactsBase> activities = null;
         
+        try {
+            StringBuilder sb = new StringBuilder();
+            sb.append(Config.Endpoints.BASE_URL).append(String.format(Config.Endpoints.CONTACTS_TRACKING_ALL, contactId));
+            
+            if (limit != null) {
+                sb.append("?limit=").append(limit);
+            }
+            
+            String url = sb.toString();
+
+            CUrlResponse response = getRestClient().get(url, accessToken);
+
+            if (response.hasData()) {
+                activities = Component.resultSetFromJSON(response.getBody(), TrackingContactsBase.class);
+            }
+            if (response.isError()) {
+                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
+                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
+                response.getInfo().add(new CUrlRequestError("url", url));
+                constantContactException.setErrorInfo(response.getInfo());
+                throw constantContactException;
+            }
+        } catch (ConstantContactServiceException e) {
+            throw new ConstantContactServiceException(e);
+        } catch (Exception e) {
+            throw new ConstantContactServiceException(e);
+        }
         return activities;
     }
 
