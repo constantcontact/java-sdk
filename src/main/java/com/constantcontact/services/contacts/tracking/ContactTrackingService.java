@@ -61,8 +61,6 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 				constantContactException.setErrorInfo(response.getInfo());
 				throw constantContactException;
 			}
-		} catch (ConstantContactServiceException e) {
-			throw new ConstantContactServiceException(e);
 		} catch (Exception e) {
 			throw new ConstantContactServiceException(e);
 		}
@@ -100,8 +98,6 @@ public class ContactTrackingService extends BaseService implements IContactTrack
                 constantContactException.setErrorInfo(response.getInfo());
                 throw constantContactException;
             }
-        } catch (ConstantContactServiceException e) {
-            throw new ConstantContactServiceException(e);
         } catch (Exception e) {
             throw new ConstantContactServiceException(e);
         }
@@ -151,8 +147,6 @@ public class ContactTrackingService extends BaseService implements IContactTrack
                 constantContactException.setErrorInfo(response.getInfo());
                 throw constantContactException;
             }
-        } catch (ConstantContactServiceException e) {
-            throw new ConstantContactServiceException(e);
         } catch (Exception e) {
             throw new ConstantContactServiceException(e);
         }
@@ -195,8 +189,6 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 				constantContactException.setErrorInfo(response.getInfo());
 				throw constantContactException;
 			}
-		} catch (ConstantContactServiceException e) {
-			throw new ConstantContactServiceException(e);
 		} catch (Exception e) {
 			throw new ConstantContactServiceException(e);
 		}
@@ -246,8 +238,6 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 				constantContactException.setErrorInfo(response.getInfo());
 				throw constantContactException;
 			}
-		} catch (ConstantContactServiceException e) {
-			throw new ConstantContactServiceException(e);
 		} catch (Exception e) {
 			throw new ConstantContactServiceException(e);
 		}
@@ -296,8 +286,6 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 				constantContactException.setErrorInfo(response.getInfo());
 				throw constantContactException;
 			}
-		} catch (ConstantContactServiceException e) {
-			throw new ConstantContactServiceException(e);
 		} catch (Exception e) {
 			throw new ConstantContactServiceException(e);
 		}
@@ -347,8 +335,6 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 				constantContactException.setErrorInfo(response.getInfo());
 				throw constantContactException;
 			}
-		} catch (ConstantContactServiceException e) {
-			throw new ConstantContactServiceException(e);
 		} catch (Exception e) {
 			throw new ConstantContactServiceException(e);
 		}
@@ -398,8 +384,6 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 				constantContactException.setErrorInfo(response.getInfo());
 				throw constantContactException;
 			}
-		} catch (ConstantContactServiceException e) {
-			throw new ConstantContactServiceException(e);
 		} catch (Exception e) {
 			throw new ConstantContactServiceException(e);
 		}
@@ -450,8 +434,6 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 				constantContactException.setErrorInfo(response.getInfo());
 				throw constantContactException;
 			}
-		} catch (ConstantContactServiceException e) {
-			throw new ConstantContactServiceException(e);
 		} catch (Exception e) {
 			throw new ConstantContactServiceException(e);
 		}
