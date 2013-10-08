@@ -5,6 +5,7 @@ import com.constantcontact.components.contacts.tracking.bounces.ContactTrackingB
 import com.constantcontact.components.contacts.tracking.clicks.ContactTrackingClick;
 import com.constantcontact.components.contacts.tracking.forwards.ContactTrackingForward;
 import com.constantcontact.components.contacts.tracking.opens.ContactTrackingOpen;
+import com.constantcontact.components.contacts.tracking.reports.summary.ContactTrackingSummaryByCampaignReport;
 import com.constantcontact.components.contacts.tracking.reports.summary.ContactTrackingSummaryReport;
 import com.constantcontact.components.contacts.tracking.sends.ContactTrackingSend;
 import com.constantcontact.components.contacts.tracking.unsubscribes.ContactTrackingUnsubscribe;
@@ -34,6 +35,17 @@ public interface IContactTrackingService extends IBaseService {
 	 */
 	public ContactTrackingSummaryReport getSummary(String accessToken, String contactId, String createdSinceTimestamp) throws ConstantContactServiceException;
 
+	/**
+     * Implements the get Summary By Campaign operation of the Contact Tracking API by calling the ConstantContact server side.
+     * 
+     * @param accessToken Constant Contact OAuth2 access token.
+     * @param contactId The id of the contact.
+     * @return The {@link ContactTrackingSummaryReport} containing data returned by the server on success; <br/>
+     *         An exception is thrown otherwise.
+     * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
+     */
+	public ResultSet<ContactTrackingSummaryByCampaignReport> getSummaryByCampaign(String accessToken, String contactId, Integer limit) throws ConstantContactServiceException;
+	
 	/**
      * Implements the get All Activity Types operation of the Contact Tracking API by calling the ConstantContact server side.
      * 
