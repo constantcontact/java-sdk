@@ -138,6 +138,11 @@ public final class Config {
     public static final String CONTACTS_TRACKING_REPORTS_SUMMARY = "contacts/%1$s/tracking/reports/summary";
 
     /**
+     * Access contact tracking activities for a given contact.
+     */
+    public static final String CONTACTS_TRACKING_ALL = "contacts/%1$s/tracking/";
+    
+    /**
      * Access contact tracking bounces for a given contact.
      */
     public static final String CONTACTS_TRACKING_BOUNCES = "contacts/%1$s/tracking/bounces";

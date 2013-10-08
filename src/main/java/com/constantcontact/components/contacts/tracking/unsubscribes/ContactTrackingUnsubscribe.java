@@ -2,7 +2,7 @@ package com.constantcontact.components.contacts.tracking.unsubscribes;
 
 import java.io.Serializable;
 
-import com.constantcontact.components.common.tracking.TrackingBase;
+import com.constantcontact.components.contacts.tracking.TrackingContactsBase;
 import com.constantcontact.components.generic.sources.UnsubscribeSource;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author ConstantContact
  * 
  */
-public class ContactTrackingUnsubscribe extends TrackingBase implements Serializable {
+public class ContactTrackingUnsubscribe extends TrackingContactsBase implements Serializable {
 
 	/**
 	 * Serial version unique identifier.
