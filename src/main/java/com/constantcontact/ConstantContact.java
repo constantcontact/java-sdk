@@ -17,6 +17,7 @@ import com.constantcontact.components.activities.contacts.request.RemoveContacts
 import com.constantcontact.components.activities.contacts.response.ContactsResponse;
 import com.constantcontact.components.activities.contacts.response.DetailedStatusReport;
 import com.constantcontact.components.activities.contacts.response.SummaryReport;
+import com.constantcontact.components.common.tracking.TrackingBase;
 import com.constantcontact.components.contacts.Contact;
 import com.constantcontact.components.contacts.ContactList;
 import com.constantcontact.components.contacts.tracking.bounces.ContactTrackingBounce;
@@ -327,7 +328,7 @@ public class ConstantContact {
 	
 	/**
 	 * Get contacts API.<br/>
-	 * Details in : {@link PaginationHelperService#getPage(String, Pagination, Class, TimeStampName, String)}
+	 * Details in : {@link PaginationHelperService#getPage(Pagination)}
 	 * 
 	 * @param pagination {@link Pagination} object.
 	 * 
@@ -748,7 +749,7 @@ public class ConstantContact {
 	/**
 	 * 
 	 * Get Contacts From List API.<br/>
-	 * Details in : {@link ContactListService#getContactsFromList(String, String, Integer, String)}
+	 * Details in : {@link ContactListService#getContactsFromList(String, Integer, String)}
 	 * 
 	 * @param list The {@link ContactList} for which to lookup contacts.
 	 * @return A {@link ResultSet} of {@link Contact} containing data as returned by the server on success; <br/>
@@ -774,7 +775,7 @@ public class ConstantContact {
 	/**
 	 * 
 	 * Get Contacts From List API.<br/>
-	 * Details in : {@link ContactListService#getContactsFromList(String, String, Integer, String)}
+	 * Details in : {@link ContactListService#getContactsFromList(String, Integer, String)}
 	 * 
 	 * @param listId The id of the {@link ContactList}
 	 * @return A {@link ResultSet} of {@link Contact} containing data as returned by the server on success; <br/>
@@ -810,7 +811,7 @@ public class ConstantContact {
 	/**
 	 * 
 	 * Get Contacts From List API.<br/>
-	 * Details in : {@link ContactListService#getContactsFromList(String, String, Integer, String)}
+	 * Details in : {@link ContactListService#getContactsFromList(String, Integer, String)}
 	 * 
 	 * @param list The {@link ContactList} object.
 	 * @param limit Maximum number of {@link Contact} objects returned. Default is 50. <br/>
@@ -839,7 +840,7 @@ public class ConstantContact {
 	/**
 	 * 
 	 * Get Contacts From List API.<br/>
-	 * Details in : {@link PaginationHelperService#getPage(String, Pagination, Class, TimeStampName, String)}
+	 * Details in : {@link PaginationHelperService#getPage(Pagination)}
 	 * 
 	 * @param pagination
 	 *          {@link Pagination} for fetching next set of contacts.
@@ -917,7 +918,7 @@ public class ConstantContact {
 	/**
 	 * 
 	 * Get Email Campaigns API.<br/>
-	 * Details in : {@link PaginationHelperService#getPage(String, Pagination, Class, TimeStampName, String)}
+	 * Details in : {@link PaginationHelperService#getPage(Pagination)}
 	 * 
 	 * @param pagination
 	 *          {@link Pagination} for fetching next set of campaigns.   
@@ -1270,7 +1271,7 @@ public class ConstantContact {
 	/**
 	 * 
 	 * Get Email Campaign Tracking Bounces API.<br/>
-	 * Details in : {@link PaginationHelperService#getPage(String, Pagination, Class, TimeStampName, String)}
+	 * Details in : {@link PaginationHelperService#getPage(Pagination)}
 	 * 
 	 * @param pagination
 	 *          {@link Pagination} for fetching next set of data.
@@ -1298,7 +1299,7 @@ public class ConstantContact {
 	/**
 	 * 
 	 * Get Email Campaign Tracking Clicks API.<br/>
-	 * Details in : {@link EmailCampaignTrackingService#getClicks(String, String, Integer, String)}
+	 * Details in : {@link EmailCampaignTrackingService#getClicks(String, Integer, String)}
 	 * 
 	 * @param emailCampaignId The id field in Email Campaign
 	 * @param limit The limit - Null to use the default.
@@ -1330,7 +1331,7 @@ public class ConstantContact {
 	/**
 	 * 
 	 * Get Email Campaign Tracking Clicks API.<br/>
-	 * Details in : {@link PaginationHelperService#getPage(String, Pagination, Class, TimeStampName, String)}
+	 * Details in : {@link PaginationHelperService#getPage(Pagination)}
 	 * 
 	 * @param pagination
 	 *          {@link Pagination} for fetching next set of data.
@@ -1359,7 +1360,7 @@ public class ConstantContact {
 	/**
 	 * 
 	 * Get Email Campaign Tracking Forwards API.<br/>
-	 * Details in : {@link EmailCampaignTrackingService#getForwards(String, String, Integer, String)}
+	 * Details in : {@link EmailCampaignTrackingService#getForwards(String, Integer, String)}
 	 * 
 	 * @param emailCampaignId The id field in Email Campaign
 	 * @param limit The limit - Null to use the default.
@@ -1391,7 +1392,7 @@ public class ConstantContact {
 	/**
 	 * 
 	 * Get Email Campaign Tracking Forwards API.<br/>
-	 * Details in : {@link PaginationHelperService#getPage(String, Pagination, Class, TimeStampName, String)}
+	 * Details in : {@link PaginationHelperService#getPage(Pagination)}
 	 * 
 	 * @param pagination
 	 *          {@link Pagination} for fetching next set of data.
@@ -1420,7 +1421,7 @@ public class ConstantContact {
 	/**
 	 * 
 	 * Get Email Campaign Tracking Opens API.<br/>
-	 * Details in : {@link EmailCampaignTrackingService#getOpens(String, String, Integer, String)}
+	 * Details in : {@link EmailCampaignTrackingService#getOpens(String, Integer, String)}
 	 * 
 	 * @param emailCampaignId The id field in Email Campaign
 	 * @param limit The limit - Null to use the default.
@@ -1452,7 +1453,7 @@ public class ConstantContact {
 	/**
 	 * 
 	 * Get Email Campaign Tracking Opens API.<br/>
-	 * Details in : {@link PaginationHelperService#getPage(String, Pagination, Class, TimeStampName, String)}
+	 * Details in : {@link PaginationHelperService#getPage(Pagination)}
 	 * 
 	 * @param pagination
 	 *          {@link Pagination} for fetching next set of data.
@@ -1481,7 +1482,7 @@ public class ConstantContact {
 	/**
 	 * 
 	 * Get Email Campaign Tracking Sends API.<br/>
-	 * Details in : {@link EmailCampaignTrackingService#getSends(String, String, Integer, String)}
+	 * Details in : {@link EmailCampaignTrackingService#getSends(String, Integer, String)}
 	 * 
 	 * @param emailCampaignId The id field in Email Campaign
 	 * @param limit The limit - Null to use the default.
@@ -1513,7 +1514,7 @@ public class ConstantContact {
 	/**
 	 * 
 	 * Get Email Campaign Tracking Sends API.<br/>
-	 * Details in : {@link PaginationHelperService#getPage(String, Pagination, Class, TimeStampName, String)}
+	 * Details in : {@link PaginationHelperService#getPage(Pagination)}
 	 * 
 	 * @param pagination
 	 *          {@link Pagination} for fetching next set of data.
@@ -1542,7 +1543,7 @@ public class ConstantContact {
 	/**
 	 * 
 	 * Get Email Campaign Tracking Unsubscribes API.<br/>
-	 * Details in : {@link EmailCampaignTrackingService#getUnsubscribes(String, String, Integer, String)}
+	 * Details in : {@link EmailCampaignTrackingService#getUnsubscribes(String, Integer, String)}
 	 * 
 	 * @param emailCampaignId The id field in Email Campaign
 	 * @param limit The limit - Null to use the default.
@@ -1574,7 +1575,7 @@ public class ConstantContact {
 	/**
 	 * 
 	 * Get Email Campaign Tracking Unsubscribes API.<br/>
-	 * Details in : {@link PaginationHelperService#getPage(String, Pagination, Class, TimeStampName, String)}
+	 * Details in : {@link PaginationHelperService#getPage(Pagination)}
 	 * 
 	 * @param pagination
 	 *          {@link Pagination} for fetching next set of data.
@@ -1602,7 +1603,7 @@ public class ConstantContact {
 
 	/**
 	 * Get Email Campaign Tracking Clicks By Link API.<br/>
-	 * Details in : {@link EmailCampaignTrackingService#getClicksByLinkId(String, String, String, Integer, String)}
+	 * Details in : {@link EmailCampaignTrackingService#getClicksByLinkId(String, String, Integer, String)}
 	 * 
 	 * @param emailCampaignId The id field in Email Campaign
 	 * @param linkId The link id
@@ -1634,7 +1635,7 @@ public class ConstantContact {
 	
 	/**
 	 * Get Email Campaign Tracking Clicks By Link API.<br/>
-	 * Details in : {@link PaginationHelperService#getPage(String, Pagination, Class, TimeStampName, String)}
+	 * Details in : {@link PaginationHelperService#getPage(Pagination)}
 	 * 
 	 * @param pagination
 	 *          {@link Pagination} for fetching next set of data.
@@ -1688,8 +1689,65 @@ public class ConstantContact {
 		}
 		return contactTrackingService.getSummary(this.getAccessToken(), contactId, createdSinceTimestamp);
 	}
+	
+	 /**
+     * 
+     * Get Contact Tracking Activities API.<br/>
+     * Details in : {@link ContactTrackingService#getActivities(String, Integer, String)}
+     * 
+     * @param contactId The contact id.
+     * @param limit The limit - Null to use the default.
+     * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+     *         It will return only the clicks performed since the supplied date. <br/>
+     *         If you want to bypass this filter, set createdSinceTimestamp to null.
+     * @return A {@link ResultSet} of {@link TrackingBase} in case of success; an exception is thrown otherwise.
+     * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+     *             The exception also contains a description of the cause.<br/>
+     *             Error message is taken from one of the members of {@link Errors}
+     * @throws ConstantContactServiceException Thrown when :
+     *             <ul>
+     *             <li>something went wrong either on the client side;</li>
+     *             <li>or an error message was received from the server side.</li>
+     *             </ul>
+     * <br/>
+     *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+     *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+     */
+	public ResultSet<? extends TrackingBase> getContactTrackingActivities(String contactId, Integer limit, String createdSinceTimestamp) throws IllegalArgumentException, ConstantContactServiceException {
+	    if (contactId == null || !(contactId.length() > 0)) {
+	        throw new IllegalArgumentException(Config.Errors.ID);
+	    }
+	    return contactTrackingService.getActivities(this.getAccessToken(), contactId, limit, createdSinceTimestamp);
+	}
 
 	/**
+     * 
+     * Get Contact Tracking Activities API.<br/>
+     * Details in : {@link PaginationHelperService#getPage(Pagination)}
+     * 
+     * @param pagination
+     *          {@link Pagination} for fetching next set of data.
+     * @return A {@link ResultSet} of {@link TrackingBase} in case of success; an exception is thrown otherwise.
+     * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+     *             The exception also contains a description of the cause.<br/>
+     *             Error message is taken from one of the members of {@link Errors}
+     * @throws ConstantContactServiceException Thrown when :
+     *             <ul>
+     *             <li>something went wrong either on the client side;</li>
+     *             <li>or an error message was received from the server side.</li>
+     *             </ul>
+     * <br/>
+     *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+     *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+     */
+    public ResultSet<TrackingBase> getContactTrackingActivities(Pagination pagination) throws IllegalArgumentException, ConstantContactServiceException {
+        if(pagination == null) {
+            throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);          
+        }
+        return getPaginationHelperService().getPage(this.getAccessToken(), pagination, TrackingBase.class);
+    }
+
+    /**
 	 * 
 	 * Get Contact Tracking Bounces API.<br/>
 	 * Details in : {@link ContactTrackingService#getBounces(String, String, Integer)}
@@ -1720,7 +1778,7 @@ public class ConstantContact {
 	/**
 	 * 
 	 * Get Contact Tracking Bounces API.<br/>
-	 * Details in : {@link PaginationHelperService#getPage(String, Pagination, Class, TimeStampName, String)}
+	 * Details in : {@link PaginationHelperService#getPage(Pagination)}
 	 * 
 	 * @param pagination
 	 *          {@link Pagination} for fetching next set of data.
@@ -1747,7 +1805,7 @@ public class ConstantContact {
 	/**
 	 * 
 	 * Get Contact Tracking Clicks API.<br/>
-	 * Details in : {@link ContactTrackingService#getClicks(String, String, Integer, String)}
+	 * Details in : {@link ContactTrackingService#getClicks(String, Integer, String)}
 	 * 
 	 * @param contactId The contact id.
 	 * @param limit The limit - Null to use the default.
@@ -1778,7 +1836,7 @@ public class ConstantContact {
 	/**
 	 * 
 	 * Get Contact Tracking Clicks API.<br/>
-	 * Details in : {@link PaginationHelperService#getPage(String, Pagination, Class, TimeStampName, String)}
+	 * Details in : {@link PaginationHelperService#getPage(Pagination)}
 	 * 
 	 * @param pagination
 	 *          {@link Pagination} for fetching next set of data.
@@ -1805,7 +1863,7 @@ public class ConstantContact {
 	/**
 	 * 
 	 * Get Contact Tracking Forwards API.<br/>
-	 * Details in : {@link ContactTrackingService#getForwards(String, String, Integer, String)}
+	 * Details in : {@link ContactTrackingService#getForwards(String, Integer, String)}
 	 * 
 	 * @param contactId The contact id.
 	 * @param limit The limit - Null to use the default.
@@ -1836,7 +1894,7 @@ public class ConstantContact {
 	/**
 	 * 
 	 * Get Contact Tracking Forwards API.<br/>
-	 * Details in : {@link PaginationHelperService#getPage(String, Pagination, Class, TimeStampName, String)}
+	 * Details in : {@link PaginationHelperService#getPage(Pagination)}
 	 * 
 	 * @param pagination
 	 *          {@link Pagination} for fetching next set of data.
@@ -1863,7 +1921,7 @@ public class ConstantContact {
 	/**
 	 * 
 	 * Get Contact Tracking Opens API.<br/>
-	 * Details in : {@link ContactTrackingService#getOpens(String, String, Integer, String)}
+	 * Details in : {@link ContactTrackingService#getOpens(String, Integer, String)}
 	 * 
 	 * @param contactId The contact id.
 	 * @param limit The limit - Null to use the default.
@@ -1894,7 +1952,7 @@ public class ConstantContact {
 	/**
 	 * 
 	 * Get Contact Tracking Opens API.<br/>
-	 * Details in : {@link PaginationHelperService#getPage(String, Pagination, Class, TimeStampName, String)}
+	 * Details in : {@link PaginationHelperService#getPage(Pagination)}
 	 * 
 	 * @param pagination
 	 *          {@link Pagination} for fetching next set of data.
@@ -1921,7 +1979,7 @@ public class ConstantContact {
 	/**
 	 * 
 	 * Get Contact Tracking Sends API.<br/>
-	 * Details in : {@link ContactTrackingService#getSends(String, String, Integer, String)}
+	 * Details in : {@link ContactTrackingService#getSends(String, Integer, String)}
 	 * 
 	 * @param contactId The contact id.
 	 * @param limit The limit - Null to use the default.
@@ -1952,7 +2010,7 @@ public class ConstantContact {
 	/**
 	 * 
 	 * Get Contact Tracking Sends API.<br/>
-	 * Details in : {@link PaginationHelperService#getPage(String, Pagination, Class, TimeStampName, String)}
+	 * Details in : {@link PaginationHelperService#getPage(Pagination)}
 	 * 
 	 * @param pagination
 	 *          {@link Pagination} for fetching next set of data.
@@ -1979,7 +2037,7 @@ public class ConstantContact {
 	/**
 	 * 
 	 * Get Contact Tracking Unsubscribes API.<br/>
-	 * Details in : {@link ContactTrackingService#getUnsubscribes(String, String, Integer, String)}
+	 * Details in : {@link ContactTrackingService#getUnsubscribes(String, Integer, String)}
 	 * 
 	 * @param contactId The contact id.
 	 * @param limit The limit - Null to use the default.
@@ -2010,7 +2068,7 @@ public class ConstantContact {
 	/**
 	 * 
 	 * Get Contact Tracking Unsubscribes API.<br/>
-	 * Details in : {@link PaginationHelperService#getPage(String, Pagination, Class, TimeStampName, String)}
+	 * Details in : {@link PaginationHelperService#getPage(Pagination)}
 	 * 
 	 * @param pagination
 	 *          {@link Pagination} for fetching next set of data.

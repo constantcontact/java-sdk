@@ -1,6 +1,7 @@
 package com.constantcontact.services.contacts.tracking;
 
 import com.constantcontact.components.Component;
+import com.constantcontact.components.common.tracking.TrackingBase;
 import com.constantcontact.components.contacts.tracking.bounces.ContactTrackingBounce;
 import com.constantcontact.components.contacts.tracking.clicks.ContactTrackingClick;
 import com.constantcontact.components.contacts.tracking.forwards.ContactTrackingForward;
@@ -64,6 +65,25 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 		}
 		return summary;
 	}
+	
+	/**
+     * Implements the get All Activity Types operation of the Contact Tracking API by calling the ConstantContact server side.
+     * 
+     * @param accessToken Constant Contact OAuth2 access token.
+     * @param contactId The id of the contact.
+     * @param limit The limit.
+     * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+     *         It will return only the clicks performed since the supplied date. <br/>
+     *         If you want to bypass this filter, set createdSinceTimestamp to null.
+     * @return The {@link ResultSet} of {@link TrackingBase} containing data returned by the server on success; <br/>
+     *         An exception is thrown otherwise.
+     * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
+     */
+    public ResultSet<? extends TrackingBase> getActivities(String accessToken, String contactId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException{
+        ResultSet<ContactTrackingBounce> activities = null;
+        
+        return activities;
+    }
 
 	/**
 	 * Implements the get Bounces operation of the Contact Tracking API by calling the ConstantContact server side.
