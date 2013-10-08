@@ -25,6 +25,7 @@ import com.constantcontact.components.contacts.tracking.bounces.ContactTrackingB
 import com.constantcontact.components.contacts.tracking.clicks.ContactTrackingClick;
 import com.constantcontact.components.contacts.tracking.forwards.ContactTrackingForward;
 import com.constantcontact.components.contacts.tracking.opens.ContactTrackingOpen;
+import com.constantcontact.components.contacts.tracking.reports.summary.ContactTrackingSummaryByCampaignReport;
 import com.constantcontact.components.contacts.tracking.reports.summary.ContactTrackingSummaryReport;
 import com.constantcontact.components.contacts.tracking.sends.ContactTrackingSend;
 import com.constantcontact.components.contacts.tracking.unsubscribes.ContactTrackingUnsubscribe;
@@ -1690,7 +1691,33 @@ public class ConstantContact {
 		return contactTrackingService.getSummary(this.getAccessToken(), contactId, createdSinceTimestamp);
 	}
 	
-	 /**
+	/**
+     * Get Contact Tracking Summary By Campaign API.<br/>
+     * Details in : {@link ContactTrackingService#getSummaryByCampaign(String, String, Long)}
+     * 
+     * @param contactId The contact id.
+     * @return A {@link List} of {@link ContactTrackingSummaryByCampaignReport} in case of success; an exception is thrown otherwise.
+     * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+     *             The exception also contains a description of the cause.<br/>
+     *             Error message is taken from one of the members of {@link Errors}
+     * @throws ConstantContactServiceException Thrown when :
+     *             <ul>
+     *             <li>something went wrong either on the client side;</li>
+     *             <li>or an error message was received from the server side.</li>
+     *             </ul>
+     * <br/>
+     *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+     *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+     */
+    public List<ContactTrackingSummaryByCampaignReport> getContactTrackingSummaryByCampaign(String contactId) throws IllegalArgumentException, ConstantContactServiceException {
+
+        if (contactId == null || !(contactId.length() > 0)) {
+            throw new IllegalArgumentException(Config.Errors.ID);
+        }
+        return contactTrackingService.getSummaryByCampaign(this.getAccessToken(), contactId);
+    }
+	
+	/**
      * 
      * Get Contact Tracking Activities API.<br/>
      * Details in : {@link ContactTrackingService#getActivities(String, Integer, String)}
