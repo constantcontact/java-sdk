@@ -1717,33 +1717,6 @@ public class ConstantContact {
         return contactTrackingService.getSummaryByCampaign(this.getAccessToken(), contactId);
     }
 	
-    /**
-     * 
-     * Get Contact Tracking Summary By Campaign API.<br/>
-     * Details in : {@link PaginationHelperService#getPage(Pagination)}
-     * 
-     * @param pagination
-     *          {@link Pagination} for fetching next set of data.
-     * @return A {@link ResultSet} of {@link ContactTrackingSummaryByCampaignReport} in case of success; an exception is thrown otherwise.
-     * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
-     *             The exception also contains a description of the cause.<br/>
-     *             Error message is taken from one of the members of {@link Errors}
-     * @throws ConstantContactServiceException Thrown when :
-     *             <ul>
-     *             <li>something went wrong either on the client side;</li>
-     *             <li>or an error message was received from the server side.</li>
-     *             </ul>
-     * <br/>
-     *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
-     *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
-     */
-    public ResultSet<ContactTrackingSummaryByCampaignReport> getContactTrackingSummaryByCampaign(Pagination pagination) throws IllegalArgumentException, ConstantContactServiceException {
-        if(pagination == null) {
-            throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);          
-        }
-        return getPaginationHelperService().getPage(this.getAccessToken(), pagination, ContactTrackingSummaryByCampaignReport.class);
-    }
-    
 	/**
      * 
      * Get Contact Tracking Activities API.<br/>
