@@ -1740,11 +1740,11 @@ public class ConstantContact {
      *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
      *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
      */
-    public ResultSet<TrackingBase> getContactTrackingActivities(Pagination pagination) throws IllegalArgumentException, ConstantContactServiceException {
+    public ResultSet<TrackingContactsBase> getContactTrackingActivities(Pagination pagination) throws IllegalArgumentException, ConstantContactServiceException {
         if(pagination == null) {
             throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);          
         }
-        return getPaginationHelperService().getPage(this.getAccessToken(), pagination, TrackingBase.class);
+        return getPaginationHelperService().getPage(this.getAccessToken(), pagination, TrackingContactsBase.class);
     }
 
     /**
