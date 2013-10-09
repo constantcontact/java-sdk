@@ -42,6 +42,7 @@ import com.constantcontact.components.emailcampaigns.tracking.sends.EmailCampaig
 import com.constantcontact.components.emailcampaigns.tracking.unsubscribes.EmailCampaignTrackingUnsubscribe;
 import com.constantcontact.components.generic.response.Pagination;
 import com.constantcontact.components.generic.response.ResultSet;
+import com.constantcontact.components.library.info.MyLibrarySummary;
 import com.constantcontact.exceptions.ConstantContactException;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.pagination.PaginationHelperService;
@@ -61,6 +62,8 @@ import com.constantcontact.services.emailcampaigns.schedule.EmailCampaignSchedul
 import com.constantcontact.services.emailcampaigns.schedule.IEmailCampaignScheduleService;
 import com.constantcontact.services.emailcampaigns.tracking.EmailCampaignTrackingService;
 import com.constantcontact.services.emailcampaigns.tracking.IEmailCampaignTrackingService;
+import com.constantcontact.services.library.IMyLibraryService;
+import com.constantcontact.services.library.MyLibraryService;
 import com.constantcontact.util.Config;
 import com.constantcontact.util.Config.Errors;
 import com.constantcontact.util.http.MultipartBody;
@@ -95,6 +98,7 @@ public class ConstantContact {
 	private IEmailCampaignTrackingService emailCampaignTrackingService;
 	private IContactTrackingService contactTrackingService;
 	private IBulkActivitiesService bulkActivitiesService;
+	private IMyLibraryService myLibraryService;
 	private PaginationHelperService paginationHelperService;
 	
 	/**
@@ -116,6 +120,7 @@ public class ConstantContact {
 		this.setEmailCampaignTrackingService(new EmailCampaignTrackingService());
 		this.setContactTrackingService(new ContactTrackingService());
 		this.setBulkActivitiesService(new BulkActivitiesService());
+		this.setMyLibraryService(new MyLibraryService());
 		this.setPaginationHelperService(new PaginationHelperService());
 	}
 	
@@ -205,6 +210,24 @@ public class ConstantContact {
 		return accountService;
 	}
 
+	/**
+     * Set the {@link MyLibraryService}
+     * 
+     * @param myLibraryService The {@link MyLibraryService}
+     */
+    public void setMyLibraryService(IMyLibraryService myLibraryService) {
+        this.myLibraryService = myLibraryService;
+    }
+
+    /**
+     * Get the {@link MyLibraryService}
+     * 
+     * @return The {@link MyLibraryService}
+     */
+    public IMyLibraryService getMyLibraryService() {
+        return myLibraryService;
+    }
+	
 	/**
 	 * Set the {@link EmailCampaignScheduleService}
 	 * 
@@ -2370,12 +2393,26 @@ public class ConstantContact {
 		return bulkActivitiesService.getDetailedStatusReport(this.getAccessToken(), status, type, id);
 	}
 	
-	// TODO: Here be MLP
-	
-	public void getLibraryInfo(){
-	    
+	/**
+	 * Retrieve My Library product information. <br />
+	 * Details in : {@link MyLibraryService#getLibraryInfo(String)}
+	 * 
+	 * @return The {@link MyLibrarySummary} for this account
+	 * @throws ConstantContactServiceException Thrown when :
+     *             <ul>
+     *             <li>something went wrong either on the client side;</li>
+     *             <li>or an error message was received from the server side.</li>
+     *             </ul>
+     * <br/>
+     *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+     *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public MyLibrarySummary getLibraryInfo() throws ConstantContactServiceException{
+	    return myLibraryService.getLibraryInfo(this.getAccessToken());
 	}
+
 	
+	   // TODO: Here be MLP
 	
 	public void getLibraryFolders(){
 	    
