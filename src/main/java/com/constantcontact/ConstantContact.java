@@ -2369,4 +2369,68 @@ public class ConstantContact {
 			ConstantContactServiceException {
 		return bulkActivitiesService.getDetailedStatusReport(this.getAccessToken(), status, type, id);
 	}
+	
+	// TODO: Here be MLP
+	
+	public void getLibraryInfo(){
+	    
+	}
+	
+	
+	public void getLibraryFolders(){
+	    
+	}
+	
+	public void addLibraryFolder(){
+	    
+	}
+	
+	public void getLibraryFolder(){
+	    
+	}
+
+    public void updateLibraryFolder(){
+        
+    }
+    
+    public void deleteLibraryFolder(){
+        
+    }
+	
+	public void getLibraryTrash(){
+	    
+	}
+	
+    public void deleteLibraryTrash(){
+        
+    }
+    
+    
+    public void getLibraryFiles(){
+        
+    }
+    
+    public void addLibraryFile(){
+        
+    }
+    
+    public void getLibraryFilesInFolder(){
+        
+    }
+    
+    public void getLibraryFile(){
+        
+    }
+    
+    public void updateLibraryFile(){
+        
+    }
+    
+    public void deleteLibraryFile(){
+        
+    }
+    
+    public void getLibraryFilesUploadStatus(){
+        
+    }
 }
