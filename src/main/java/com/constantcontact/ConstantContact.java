@@ -42,6 +42,8 @@ import com.constantcontact.components.emailcampaigns.tracking.sends.EmailCampaig
 import com.constantcontact.components.emailcampaigns.tracking.unsubscribes.EmailCampaignTrackingUnsubscribe;
 import com.constantcontact.components.generic.response.Pagination;
 import com.constantcontact.components.generic.response.ResultSet;
+import com.constantcontact.components.library.folder.Folder;
+import com.constantcontact.components.library.folder.Folder.FolderSortOptions;
 import com.constantcontact.components.library.info.MyLibrarySummary;
 import com.constantcontact.exceptions.ConstantContactException;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
@@ -2411,14 +2413,38 @@ public class ConstantContact {
 	    return myLibraryService.getLibraryInfo(this.getAccessToken());
 	}
 
-	
-	   // TODO: Here be MLP
-	
-	public void getLibraryFolders(){
-	    
+    /**
+     * Retrieves the list of folders <br />
+     * Details in : {@link MyLibraryService#getLibraryFolders(String, FolderSortOptions, Integer)}
+     * 
+     * @param sortBy The method to sort by. See {@link FolderSortOptions}. Leave null to not use
+     * @param limit The number of results to return. Leave null to use default.
+     * @throws {@link ConstantContactServiceException} When something went wrong
+     *         in the Constant Contact flow or an error is returned from server.
+     * @return The {@link ResultSet} of {@link Folder} Data
+     */
+	public ResultSet<Folder> getLibraryFolders(Folder.FolderSortOptions sortBy, Integer limit) throws ConstantContactServiceException{
+	    return myLibraryService.getLibraryFolders(this.getAccessToken(), sortBy, limit);
 	}
+
+    /**
+     * Retrieves the list of folders <br />
+     * Details in : {@link MyLibraryService#getLibraryFolders(String, FolderSortOptions, Integer)}
+     * 
+     * @param pagination The {@Pagination} to retrieve results for.
+     * @throws {@link ConstantContactServiceException} When something went wrong
+     *         in the Constant Contact flow or an error is returned from server.
+     * @return The {@link ResultSet} of {@link Folder} Data
+     */
+    public ResultSet<Folder> getLibraryFolders(Pagination pagination) throws ConstantContactServiceException{
+        if (pagination == null) {
+            throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+        }
+        return getPaginationHelperService().getPage(this.getAccessToken(), pagination, Folder.class);
+    }
+    
 	
-	public void addLibraryFolder(){
+	public void addLibraryFolder(Folder folder){
 	    
 	}
 	
