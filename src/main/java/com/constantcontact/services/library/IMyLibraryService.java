@@ -52,6 +52,7 @@ public interface IMyLibraryService extends IBaseService {
     /**
      * Get Library Folder API.<br/>
      * 
+     * @param accessToken The Access Token for your user
      * @param folderId The ID for the Folder to return.
      * @return The added {@link Folder}.
      * @throws ConstantContactServiceException Thrown when :
@@ -64,6 +65,41 @@ public interface IMyLibraryService extends IBaseService {
      *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
      */
     public Folder getLibraryFolder(String accessToken, String folderId) throws ConstantContactServiceException;
+    
+    /**
+     * Update Library Folder API.<br/>
+     * 
+     * @param accessToken The Access Token for your user
+     * @param folder The Folder to update.
+     * @param includePayload If the result should be the updated Folder or NULL (defaults to true if left null)
+     * @return The added {@link Folder}, or Null if includePayload was false.
+     * @throws ConstantContactServiceException Thrown when :
+     *             <ul>
+     *             <li>something went wrong either on the client side;</li>
+     *             <li>or an error message was received from the server side.</li>
+     *             </ul>
+     * <br/>
+     *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+     *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+     */ 
+    public Folder updateLibraryFolder(String accessToken, Folder folder, Boolean includePayload) throws ConstantContactServiceException;
+    
+    /**
+     * Delete Library Folder API.<br/>
+     * 
+     * @param accessToken The Access Token for your user
+     * @param folderId The ID for the Folder to delete.
+     * @return Void. Exceptions are raised on failures.
+     * @throws ConstantContactServiceException Thrown when :
+     *             <ul>
+     *             <li>something went wrong either on the client side;</li>
+     *             <li>or an error message was received from the server side.</li>
+     *             </ul>
+     * <br/>
+     *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+     *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+     */
+    public void deleteLibraryFolder(String accessToken, String folderId) throws ConstantContactServiceException;
         
     
 }

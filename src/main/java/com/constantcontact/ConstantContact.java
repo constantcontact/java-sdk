@@ -2491,12 +2491,53 @@ public class ConstantContact {
 	    return myLibraryService.getLibraryFolder(this.getAccessToken(), folderId);
 	}
 
-    public void updateLibraryFolder(){
+    /**
+     * Update Library Folder API.<br/>
+     * Details in : {@link MyLibraryService#updateLibraryFolder(String, String, Boolean)}
+     * 
+     * @param folderId The ID for the Folder to return.
+     * @param includePayload If the result should be the updated Folder or NULL (defaults to true if left null)
+     * @return The added {@link Folder}, or Null if includePayload was false.
+     * @throws ConstantContactServiceException Thrown when :
+     *             <ul>
+     *             <li>something went wrong either on the client side;</li>
+     *             <li>or an error message was received from the server side.</li>
+     *             </ul>
+     * <br/>
+     *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+     *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+     */	
+    public Folder updateLibraryFolder(Folder folder, Boolean includePayload) throws ConstantContactServiceException {
+        
+        if (folder == null || folder.getId() == null || folder.getId().trim().equals("")){
+            throw new IllegalArgumentException(Config.Errors.FOLDER_ID_NULL);
+        }
+        
+        return myLibraryService.updateLibraryFolder(this.getAccessToken(), folder, includePayload);
         
     }
     
-    public void deleteLibraryFolder(){
+    /**
+     * Delete Library Folder API.<br/>
+     * Details in : {@link MyLibraryService#deleteLibraryFolder(String, String)}
+     * 
+     * @param folderId The ID for the Folder to delete.
+     * @return Void. Exceptions are raised on failures.
+     * @throws ConstantContactServiceException Thrown when :
+     *             <ul>
+     *             <li>something went wrong either on the client side;</li>
+     *             <li>or an error message was received from the server side.</li>
+     *             </ul>
+     * <br/>
+     *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+     *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+     */
+    public void deleteLibraryFolder(String folderId) throws ConstantContactServiceException {
+        if (folderId == null || folderId.trim().equals("")){
+            throw new IllegalArgumentException(Config.Errors.FOLDER_ID_NULL);
+        }
         
+        myLibraryService.deleteLibraryFolder(this.getAccessToken(), folderId);
     }
 	
 	public void getLibraryTrash(){

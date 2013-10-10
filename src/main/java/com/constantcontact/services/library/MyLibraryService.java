@@ -151,26 +151,33 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
 
         return newFolder;
     }
-    
+
     /**
      * Get Library Folder API.<br/>
      * 
-     * @param folderId The ID for the Folder to return.
+     * @param accessToken
+     *            The Access Token for your user
+     * @param folderId
+     *            The ID for the Folder to return.
      * @return The added {@link Folder}.
-     * @throws ConstantContactServiceException Thrown when :
+     * @throws ConstantContactServiceException
+     *             Thrown when :
      *             <ul>
      *             <li>something went wrong either on the client side;</li>
      *             <li>or an error message was received from the server side.</li>
      *             </ul>
      * <br/>
-     *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
-     *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+     *             To check if a detailed error message is present, call
+     *             {@link ConstantContactException#hasErrorInfo()} <br/>
+     *             Detailed error message (if present) can be seen by calling
+     *             {@link ConstantContactException#getErrorInfo()}
      */
-    public Folder getLibraryFolder(String accessToken, String folderId) throws ConstantContactServiceException{
+    public Folder getLibraryFolder(String accessToken, String folderId) throws ConstantContactServiceException {
         Folder folder = null;
-        
-        String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, String.format(Config.Endpoints.LIBRARY_FOLDER, folderId));
-        
+
+        String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+                String.format(Config.Endpoints.LIBRARY_FOLDER, folderId));
+
         // Get REST response
         CUrlResponse response = getRestClient().get(url, accessToken);
         if (response.hasData()) {
@@ -190,5 +197,105 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
         }
 
         return folder;
+    }
+
+    /**
+     * Update Library Folder API.<br/>
+     * 
+     * @param accessToken
+     *            The Access Token for your user
+     * @param folder
+     *            The Folder to update.
+     * @param includePayload
+     *            If the result should be the updated Folder or NULL (defaults
+     *            to true if left null)
+     * @return The added {@link Folder}, or Null if includePayload was false.
+     * @throws ConstantContactServiceException
+     *             Thrown when :
+     *             <ul>
+     *             <li>something went wrong either on the client side;</li>
+     *             <li>or an error message was received from the server side.</li>
+     *             </ul>
+     * <br/>
+     *             To check if a detailed error message is present, call
+     *             {@link ConstantContactException#hasErrorInfo()} <br/>
+     *             Detailed error message (if present) can be seen by calling
+     *             {@link ConstantContactException#getErrorInfo()}
+     */
+    public Folder updateLibraryFolder(String accessToken, Folder folder, Boolean includePayload)
+            throws ConstantContactServiceException {
+
+        Folder updateFolder = null;
+
+        String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+                String.format(Config.Endpoints.LIBRARY_FOLDER, folder.getId()));
+        String json;
+        try {
+            json = folder.toJSON();
+        }
+        catch (ConstantContactComponentException e) {
+            throw new ConstantContactServiceException(e);
+        }
+
+        CUrlResponse response = getRestClient().put(url, accessToken, json);
+        if (response.hasData()) {
+            try {
+                updateFolder = Component.fromJSON(response.getBody(), Folder.class);
+            }
+            catch (ConstantContactComponentException e) {
+                throw new ConstantContactServiceException(e);
+            }
+        }
+        if (response.isError()) {
+            ConstantContactServiceException constantContactException = new ConstantContactServiceException(
+                    ConstantContactServiceException.RESPONSE_ERR_SERVICE);
+            response.getInfo().add(new CUrlRequestError("url", url));
+            constantContactException.setErrorInfo(response.getInfo());
+            throw constantContactException;
+        }
+
+        if (includePayload == null || includePayload.booleanValue() == true) {
+            return updateFolder;
+        }
+        else {
+            return null;
+        }
+    }
+
+    /**
+     * Delete Library Folder API.<br/>
+     * 
+     * @param accessToken
+     *            The Access Token for your user
+     * @param folderId
+     *            The ID for the Folder to delete.
+     * @return Void. Exceptions are raised on failures.
+     * @throws ConstantContactServiceException
+     *             Thrown when :
+     *             <ul>
+     *             <li>something went wrong either on the client side;</li>
+     *             <li>or an error message was received from the server side.</li>
+     *             </ul>
+     * <br/>
+     *             To check if a detailed error message is present, call
+     *             {@link ConstantContactException#hasErrorInfo()} <br/>
+     *             Detailed error message (if present) can be seen by calling
+     *             {@link ConstantContactException#getErrorInfo()}
+     */
+    public void deleteLibraryFolder(String accessToken, String folderId) throws ConstantContactServiceException {
+        String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+                String.format(Config.Endpoints.LIBRARY_FOLDER, folderId));
+
+        // Get REST response
+        CUrlResponse response = getRestClient().delete(url, accessToken);
+        if (response.isError()) {
+            ConstantContactServiceException constantContactException = new ConstantContactServiceException(
+                    ConstantContactServiceException.RESPONSE_ERR_SERVICE);
+            response.getInfo().add(new CUrlRequestError("url", url));
+            constantContactException.setErrorInfo(response.getInfo());
+            throw constantContactException;
+        }
+
+        return;
     }
 }
