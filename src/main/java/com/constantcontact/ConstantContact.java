@@ -2443,8 +2443,27 @@ public class ConstantContact {
         return getPaginationHelperService().getPage(this.getAccessToken(), pagination, Folder.class);
     }
     
-	
-	public void addLibraryFolder(Folder folder){
+    /**
+     * Add Library Folder API.<br/>
+     * Details in : {@link MyLibraryService#addLibraryService(String, Folder)}
+     * 
+     * @param contact The {@link Folder} to add.
+     * @return The added Folder.
+     * @throws ConstantContactServiceException Thrown when :
+     *             <ul>
+     *             <li>something went wrong either on the client side;</li>
+     *             <li>or an error message was received from the server side.</li>
+     *             </ul>
+     * <br/>
+     *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+     *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+     */
+	public Folder addLibraryFolder(Folder folder) throws ConstantContactServiceException{
+	    if (folder == null){
+	        throw new IllegalArgumentException(Config.Errors.FOLDER_NULL);
+	    }
+	    
+	    return myLibraryService.addLibraryFolder(this.getAccessToken(),folder);
 	    
 	}
 	

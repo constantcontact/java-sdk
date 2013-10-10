@@ -7,6 +7,7 @@ import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.components.library.folder.Folder;
 import com.constantcontact.components.library.folder.Folder.FolderSortOptions;
 import com.constantcontact.components.library.info.MyLibrarySummary;
+import com.constantcontact.exceptions.ConstantContactException;
 import com.constantcontact.exceptions.component.ConstantContactComponentException;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.base.BaseService;
@@ -57,8 +58,11 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
      * 
      * @param accessToken
      *            The Access Token for your user
-     * @param sortBy The method to sort by. See {@link FolderSortOptions}. Leave null to not use
-     * @param limit The number of results to return. Leave null to use default.
+     * @param sortBy
+     *            The method to sort by. See {@link FolderSortOptions}. Leave
+     *            null to not use
+     * @param limit
+     *            The number of results to return. Leave null to use default.
      * @throws {@link ConstantContactServiceException} When something went wrong
      *         in the Constant Contact flow or an error is returned from server.
      * @return The {@link ResultSet} of {@link Folder} Data
@@ -68,8 +72,8 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
         ResultSet<Folder> folders = null;
 
         // Construct access URL
-        String url = paginateUrl(String.format("%1$s%2$s", Config.Endpoints.BASE_URL, Config.Endpoints.LIBRARY_FOLDERS),
-                limit);
+        String url = paginateUrl(
+                String.format("%1$s%2$s", Config.Endpoints.BASE_URL, Config.Endpoints.LIBRARY_FOLDERS), limit);
 
         if (sortBy != null) {
             try {
@@ -99,5 +103,52 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
         }
 
         return folders;
+    }
+
+    /**
+     * Add Library Folder API.<br/>
+     * 
+     * @param accessToken
+     *            The Access Token for your user
+     * @param folder
+     *            The {@link Folder} to add.
+     * @return The added Folder.
+     * @throws ConstantContactServiceException
+     *             Thrown when :
+     *             <ul>
+     *             <li>something went wrong either on the client side;</li>
+     *             <li>or an error message was received from the server side.</li>
+     *             </ul>
+     * <br/>
+     *             To check if a detailed error message is present, call
+     *             {@link ConstantContactException#hasErrorInfo()} <br/>
+     *             Detailed error message (if present) can be seen by calling
+     *             {@link ConstantContactException#getErrorInfo()}
+     */
+    public Folder addLibraryFolder(String accessToken, Folder folder) throws ConstantContactServiceException {
+        Folder newFolder = null;
+        try {
+            String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, Config.Endpoints.LIBRARY_FOLDERS);
+            String json = folder.toJSON();
+
+            CUrlResponse response = getRestClient().post(url, accessToken, json);
+            if (response.hasData()) {
+                newFolder = Component.fromJSON(response.getBody(), Folder.class);
+
+            }
+            if (response.isError()) {
+                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
+                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
+                response.getInfo().add(new CUrlRequestError("url", url));
+                constantContactException.setErrorInfo(response.getInfo());
+                throw constantContactException;
+            }
+
+        }
+        catch (ConstantContactComponentException e) {
+            throw new ConstantContactServiceException(e);
+        }
+
+        return newFolder;
     }
 }

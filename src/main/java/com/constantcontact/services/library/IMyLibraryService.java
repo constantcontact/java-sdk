@@ -4,6 +4,7 @@ import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.components.library.folder.Folder;
 import com.constantcontact.components.library.folder.Folder.FolderSortOptions;
 import com.constantcontact.components.library.info.MyLibrarySummary;
+import com.constantcontact.exceptions.ConstantContactException;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.base.IBaseService;
 
@@ -30,5 +31,22 @@ public interface IMyLibraryService extends IBaseService {
      * @return The {@link ResultSet} of {@link Folder} Data
      */
     public ResultSet<Folder> getLibraryFolders(String accessToken, Folder.FolderSortOptions sortBy, Integer limit) throws ConstantContactServiceException;
+    
+    /**
+     * Add Library Folder API.<br/>
+     * 
+     * @param accessToken The Access Token for your user
+     * @param folder The {@link Folder} to add.
+     * @return The added Folder.
+     * @throws ConstantContactServiceException Thrown when :
+     *             <ul>
+     *             <li>something went wrong either on the client side;</li>
+     *             <li>or an error message was received from the server side.</li>
+     *             </ul>
+     * <br/>
+     *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+     *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+     */
+    public Folder addLibraryFolder(String accessToken, Folder folder) throws ConstantContactServiceException;
     
 }

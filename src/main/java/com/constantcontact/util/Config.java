@@ -362,6 +362,11 @@ public final class Config {
     public static final String BULK_CONTACTS_LIST_NULL = "ListIds parameter must not be null.";
     
     /**
+     * MyLibrary Folder null error; 
+     */
+    public static final String FOLDER_NULL = "Folder parameter must not be null"; 
+    
+    /**
      * Pagination null error
      */
     public static final String PAGINATION_NULL = "Pagination parameter must not be null";
