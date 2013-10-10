@@ -151,4 +151,44 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
 
         return newFolder;
     }
+    
+    /**
+     * Get Library Folder API.<br/>
+     * 
+     * @param folderId The ID for the Folder to return.
+     * @return The added {@link Folder}.
+     * @throws ConstantContactServiceException Thrown when :
+     *             <ul>
+     *             <li>something went wrong either on the client side;</li>
+     *             <li>or an error message was received from the server side.</li>
+     *             </ul>
+     * <br/>
+     *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+     *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+     */
+    public Folder getLibraryFolder(String accessToken, String folderId) throws ConstantContactServiceException{
+        Folder folder = null;
+        
+        String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, String.format(Config.Endpoints.LIBRARY_FOLDER, folderId));
+        
+        // Get REST response
+        CUrlResponse response = getRestClient().get(url, accessToken);
+        if (response.hasData()) {
+            try {
+                folder = Component.fromJSON(response.getBody(), Folder.class);
+            }
+            catch (ConstantContactComponentException e) {
+                throw new ConstantContactServiceException(e);
+            }
+        }
+        if (response.isError()) {
+            ConstantContactServiceException constantContactException = new ConstantContactServiceException(
+                    ConstantContactServiceException.RESPONSE_ERR_SERVICE);
+            response.getInfo().add(new CUrlRequestError("url", url));
+            constantContactException.setErrorInfo(response.getInfo());
+            throw constantContactException;
+        }
+
+        return folder;
+    }
 }

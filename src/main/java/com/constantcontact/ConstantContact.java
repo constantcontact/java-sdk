@@ -2445,9 +2445,9 @@ public class ConstantContact {
     
     /**
      * Add Library Folder API.<br/>
-     * Details in : {@link MyLibraryService#addLibraryService(String, Folder)}
+     * Details in : {@link MyLibraryService#addLibraryFolder(String, Folder)}
      * 
-     * @param contact The {@link Folder} to add.
+     * @param folder The {@link Folder} to add.
      * @return The added Folder.
      * @throws ConstantContactServiceException Thrown when :
      *             <ul>
@@ -2467,8 +2467,28 @@ public class ConstantContact {
 	    
 	}
 	
-	public void getLibraryFolder(){
+    /**
+     * Get Library Folder API.<br/>
+     * Details in : {@link MyLibraryService#getLibraryFolder(String, String)}
+     * 
+     * @param folderId The ID for the Folder to return.
+     * @return The added {@link Folder}.
+     * @throws ConstantContactServiceException Thrown when :
+     *             <ul>
+     *             <li>something went wrong either on the client side;</li>
+     *             <li>or an error message was received from the server side.</li>
+     *             </ul>
+     * <br/>
+     *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+     *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+     */
+	public Folder getLibraryFolder(String folderId) throws ConstantContactServiceException{
 	    
+	    if (folderId == null || folderId.trim().equals("")){
+	        throw new IllegalArgumentException(Config.Errors.FOLDER_ID_NULL);
+	    }
+	    
+	    return myLibraryService.getLibraryFolder(this.getAccessToken(), folderId);
 	}
 
     public void updateLibraryFolder(){
