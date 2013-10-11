@@ -7,7 +7,7 @@ import com.constantcontact.components.Component;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Folder extends Component implements Serializable {
+public class MyLibraryFolder extends Component implements Serializable {
 
     private static final long serialVersionUID = 7090588308819168942L;
 
@@ -29,7 +29,7 @@ public class Folder extends Component implements Serializable {
     private String name;
     
     @JsonIgnore
-    private List<Folder> children;
+    private List<MyLibraryFolder> children;
     
     @JsonIgnore
     private Integer itemCount;
@@ -63,7 +63,7 @@ public class Folder extends Component implements Serializable {
     }
 
     @JsonProperty("children")
-    public List<Folder> getChildren() {
+    public List<MyLibraryFolder> getChildren() {
         return children;
     }
 
@@ -97,7 +97,7 @@ public class Folder extends Component implements Serializable {
         this.name = name;
     }
 
-    public void setChildren(List<Folder> children) {
+    public void setChildren(List<MyLibraryFolder> children) {
         this.children = children;
     }
 
@@ -113,7 +113,7 @@ public class Folder extends Component implements Serializable {
     public String toString() {
         StringBuilder builder = new StringBuilder();
 
-        builder.append("Folder [");
+        builder.append("MyLibraryFoler [");
 
         builder.append("createdDate=").append(createdDate);
         builder.append(", id=").append(id);
