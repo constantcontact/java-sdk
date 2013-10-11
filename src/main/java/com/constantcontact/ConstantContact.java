@@ -42,6 +42,10 @@ import com.constantcontact.components.emailcampaigns.tracking.sends.EmailCampaig
 import com.constantcontact.components.emailcampaigns.tracking.unsubscribes.EmailCampaignTrackingUnsubscribe;
 import com.constantcontact.components.generic.response.Pagination;
 import com.constantcontact.components.generic.response.ResultSet;
+import com.constantcontact.components.library.file.MyLibraryFile;
+import com.constantcontact.components.library.folder.MyLibraryFolder;
+import com.constantcontact.components.library.folder.MyLibraryFolder.FolderSortOptions;
+import com.constantcontact.components.library.info.MyLibrarySummary;
 import com.constantcontact.exceptions.ConstantContactException;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.pagination.PaginationHelperService;
@@ -61,6 +65,8 @@ import com.constantcontact.services.emailcampaigns.schedule.EmailCampaignSchedul
 import com.constantcontact.services.emailcampaigns.schedule.IEmailCampaignScheduleService;
 import com.constantcontact.services.emailcampaigns.tracking.EmailCampaignTrackingService;
 import com.constantcontact.services.emailcampaigns.tracking.IEmailCampaignTrackingService;
+import com.constantcontact.services.library.IMyLibraryService;
+import com.constantcontact.services.library.MyLibraryService;
 import com.constantcontact.util.Config;
 import com.constantcontact.util.Config.Errors;
 import com.constantcontact.util.http.MultipartBody;
@@ -95,6 +101,7 @@ public class ConstantContact {
 	private IEmailCampaignTrackingService emailCampaignTrackingService;
 	private IContactTrackingService contactTrackingService;
 	private IBulkActivitiesService bulkActivitiesService;
+	private IMyLibraryService myLibraryService;
 	private PaginationHelperService paginationHelperService;
 	
 	/**
@@ -116,6 +123,7 @@ public class ConstantContact {
 		this.setEmailCampaignTrackingService(new EmailCampaignTrackingService());
 		this.setContactTrackingService(new ContactTrackingService());
 		this.setBulkActivitiesService(new BulkActivitiesService());
+		this.setMyLibraryService(new MyLibraryService());
 		this.setPaginationHelperService(new PaginationHelperService());
 	}
 	
@@ -205,6 +213,24 @@ public class ConstantContact {
 		return accountService;
 	}
 
+	/**
+     * Set the {@link MyLibraryService}
+     * 
+     * @param myLibraryService The {@link MyLibraryService}
+     */
+    public void setMyLibraryService(IMyLibraryService myLibraryService) {
+        this.myLibraryService = myLibraryService;
+    }
+
+    /**
+     * Get the {@link MyLibraryService}
+     * 
+     * @return The {@link MyLibraryService}
+     */
+    public IMyLibraryService getMyLibraryService() {
+        return myLibraryService;
+    }
+	
 	/**
 	 * Set the {@link EmailCampaignScheduleService}
 	 * 
@@ -2369,4 +2395,229 @@ public class ConstantContact {
 			ConstantContactServiceException {
 		return bulkActivitiesService.getDetailedStatusReport(this.getAccessToken(), status, type, id);
 	}
+	
+	/**
+	 * Retrieve My Library product information. <br />
+	 * Details in : {@link MyLibraryService#getLibraryInfo(String)}
+	 * 
+	 * @return The {@link MyLibrarySummary} for this account
+	 * @throws ConstantContactServiceException Thrown when :
+     *             <ul>
+     *             <li>something went wrong either on the client side;</li>
+     *             <li>or an error message was received from the server side.</li>
+     *             </ul>
+     * <br/>
+     *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+     *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public MyLibrarySummary getLibraryInfo() throws ConstantContactServiceException{
+	    return myLibraryService.getLibraryInfo(this.getAccessToken());
+	}
+
+    /**
+     * Retrieves the list of folders <br />
+     * Details in : {@link MyLibraryService#getLibraryFolders(String, FolderSortOptions, Integer)}
+     * 
+     * @param sortBy The method to sort by. See {@link FolderSortOptions}. Leave null to not use
+     * @param limit The number of results to return. Leave null to use default.
+     * @throws {@link ConstantContactServiceException} When something went wrong
+     *         in the Constant Contact flow or an error is returned from server.
+     * @return The {@link ResultSet} of {@link MyLibraryFolder} Data
+     */
+	public ResultSet<MyLibraryFolder> getLibraryFolders(MyLibraryFolder.FolderSortOptions sortBy, Integer limit) throws ConstantContactServiceException{
+	    return myLibraryService.getLibraryFolders(this.getAccessToken(), sortBy, limit);
+	}
+
+    /**
+     * Retrieves the list of folders <br />
+     * Details in : {@link MyLibraryService#getLibraryFolders(String, FolderSortOptions, Integer)}
+     * 
+     * @param pagination The {@Pagination} to retrieve results for.
+     * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+     *         The exception also contains a description of the cause.<br/>
+     *         Error message is taken from one of the members of {@link Errors}
+     * @throws {@link ConstantContactServiceException} When something went wrong
+     *         in the Constant Contact flow or an error is returned from server.
+     * @return The {@link ResultSet} of {@link MyLibraryFolder} Data
+     */
+    public ResultSet<MyLibraryFolder> getLibraryFolders(Pagination pagination) throws ConstantContactServiceException, IllegalArgumentException{
+        if (pagination == null) {
+            throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+        }
+        return getPaginationHelperService().getPage(this.getAccessToken(), pagination, MyLibraryFolder.class);
+    }
+    
+    /**
+     * Add Library Folder API.<br/>
+     * Details in : {@link MyLibraryService#addLibraryFolder(String, MyLibraryFolder)}
+     * 
+     * @param folder The {@link MyLibraryFolder} to add.
+     * @return The added Folder.
+     * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+     *             The exception also contains a description of the cause.<br/>
+     *             Error message is taken from one of the members of {@link Errors}
+     * @throws ConstantContactServiceException Thrown when :
+     *             <ul>
+     *             <li>something went wrong either on the client side;</li>
+     *             <li>or an error message was received from the server side.</li>
+     *             </ul>
+     * <br/>
+     *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+     *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+     */
+	public MyLibraryFolder addLibraryFolder(MyLibraryFolder folder) throws ConstantContactServiceException, IllegalArgumentException{
+	    if (folder == null){
+	        throw new IllegalArgumentException(Config.Errors.FOLDER_NULL);
+	    }
+	    
+	    return myLibraryService.addLibraryFolder(this.getAccessToken(),folder);
+	    
+	}
+	
+    /**
+     * Get Library Folder API.<br/>
+     * Details in : {@link MyLibraryService#getLibraryFolder(String, String)}
+     * 
+     * @param folderId The ID for the Folder to return.
+     * @return The added {@link MyLibraryFolder}.
+     * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+     *             The exception also contains a description of the cause.<br/>
+     *             Error message is taken from one of the members of {@link Errors}
+     * @throws ConstantContactServiceException Thrown when :
+     *             <ul>
+     *             <li>something went wrong either on the client side;</li>
+     *             <li>or an error message was received from the server side.</li>
+     *             </ul>
+     * <br/>
+     *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+     *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+     */
+	public MyLibraryFolder getLibraryFolder(String folderId) throws ConstantContactServiceException, IllegalArgumentException{
+	    
+	    if (folderId == null || folderId.trim().equals("")){
+	        throw new IllegalArgumentException(Config.Errors.FOLDER_ID_NULL);
+	    }
+	    
+	    return myLibraryService.getLibraryFolder(this.getAccessToken(), folderId);
+	}
+
+    /**
+     * Update Library Folder API.<br/>
+     * Details in : {@link MyLibraryService#updateLibraryFolder(String, String, Boolean)}
+     * 
+     * @param folderId The ID for the Folder to return.
+     * @param includePayload If the result should be the updated Folder or NULL (defaults to true if left null)
+     * @return The added {@link MyLibraryFolder}, or Null if includePayload was false.
+     * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+     *             The exception also contains a description of the cause.<br/>
+     *             Error message is taken from one of the members of {@link Errors}
+     * @throws ConstantContactServiceException Thrown when :
+     *             <ul>
+     *             <li>something went wrong either on the client side;</li>
+     *             <li>or an error message was received from the server side.</li>
+     *             </ul>
+     * <br/>
+     *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+     *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+     */	
+    public MyLibraryFolder updateLibraryFolder(MyLibraryFolder folder, Boolean includePayload) throws ConstantContactServiceException, IllegalArgumentException {
+        
+        if (folder == null || folder.getId() == null || folder.getId().trim().equals("")){
+            throw new IllegalArgumentException(Config.Errors.FOLDER_ID_NULL);
+        }
+        
+        return myLibraryService.updateLibraryFolder(this.getAccessToken(), folder, includePayload);
+        
+    }
+    
+    /**
+     * Delete Library Folder API.<br/>
+     * Details in : {@link MyLibraryService#deleteLibraryFolder(String, String)}
+     * 
+     * @param folderId The ID for the Folder to delete.
+     * @return Void. Exceptions are raised on failures.
+     * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+     *             The exception also contains a description of the cause.<br/>
+     *             Error message is taken from one of the members of {@link Errors}
+     * @throws ConstantContactServiceException Thrown when :
+     *             <ul>
+     *             <li>something went wrong either on the client side;</li>
+     *             <li>or an error message was received from the server side.</li>
+     *             </ul>
+     * <br/>
+     *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+     *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+     */
+    public void deleteLibraryFolder(String folderId) throws ConstantContactServiceException, IllegalArgumentException {
+        if (folderId == null || folderId.trim().equals("")){
+            throw new IllegalArgumentException(Config.Errors.FOLDER_ID_NULL);
+        }
+        
+        myLibraryService.deleteLibraryFolder(this.getAccessToken(), folderId);
+    }
+	
+    /**
+     * Retrieve Library Trash API.<br/>
+     * Details in : {@link MyLibraryService#getLibraryTrash(String, MyLibraryFile.Type, MyLibraryFile.SortBy, Integer)}
+     * 
+     * @param type - The type of files to return. Null for default.
+     * @param sortBy - The way to sort results. Null for default
+     * @param limit - The number of results to return per page.
+     * @return A {@link ResultSet} of {@link MyLibraryFile} in case of success; an exception is thrown otherwise.
+     * @throws ConstantContactServiceException Thrown when :
+     *             <ul>
+     *             <li>something went wrong either on the client side;</li>
+     *             <li>or an error message was received from the server side.</li>
+     *             </ul>
+     * <br/>
+     *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+     *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+     */
+    public ResultSet<MyLibraryFile> getLibraryTrash(MyLibraryFile.Type type, MyLibraryFile.SortBy sortBy, Integer limit) throws ConstantContactServiceException {
+	    return myLibraryService.getLibraryTrash(this.getAccessToken(), type, sortBy, limit);
+	}
+
+    /**
+     * Retrieve Library Trash API.<br/>
+     * 
+     * @param pagination
+     *          {@link Pagination} for fetching next set of data.
+     * @return A {@link ResultSet} of {@link MyLibraryFile} in case of success; an exception is thrown otherwise.
+     * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+     *             The exception also contains a description of the cause.<br/>
+     *             Error message is taken from one of the members of {@link Errors}
+     * @throws ConstantContactServiceException Thrown when :
+     *             <ul>
+     *             <li>something went wrong either on the client side;</li>
+     *             <li>or an error message was received from the server side.</li>
+     *             </ul>
+     * <br/>
+     *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+     *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+     */
+    public ResultSet<MyLibraryFile> getLibraryTrash(Pagination pagination) throws ConstantContactServiceException, IllegalArgumentException {
+        if(pagination == null) {
+            throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+        }
+        return getPaginationHelperService().getPage(this.getAccessToken(), pagination, MyLibraryFile.class);
+    }
+    
+    /**
+     * Delete Library Trash API.<br/>
+     * 
+     * @return Void
+     * @throws ConstantContactServiceException Thrown when :
+     *             <ul>
+     *             <li>something went wrong either on the client side;</li>
+     *             <li>or an error message was received from the server side.</li>
+     *             </ul>
+     * <br/>
+     *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+     *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+     */
+    public void deleteLibraryTrash() throws ConstantContactServiceException {
+        myLibraryService.deleteLibraryTrash(this.getAccessToken());
+        return;
+    }
+    
 }

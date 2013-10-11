@@ -202,6 +202,17 @@ public final class Config {
      */
     public static final String ACTIVITIES = "activities";
 
+    
+    public static final String LIBRARY_INFO = "library/info";
+    public static final String LIBRARY_FILES = "library/files";
+    public static final String LIBRARY_FOLDERS = "library/folders";
+    
+    public static final String LIBRARY_FOLDER = LIBRARY_FOLDERS + "/%1$s";
+    public static final String LIBRARY_FOLDER_TRASH = LIBRARY_FOLDERS + "/trash/files";
+
+    public static final String LIBRARY_FILE = LIBRARY_FILES + "/%1$s";
+    public static final String LIBRARY_FILE_UPLOAD_STATUS = LIBRARY_FILES + "/uploadStatus/%1$s";
+    
     /**
      * Default constructor.<br/>
      * Made private to prevent instantiation.<br/>
@@ -349,6 +360,16 @@ public final class Config {
      * Contacts ListId null error.
      */
     public static final String BULK_CONTACTS_LIST_NULL = "ListIds parameter must not be null.";
+    
+    /**
+     * MyLibrary Folder null error; 
+     */
+    public static final String FOLDER_NULL = "Folder parameter must not be null"; 
+    
+    /**
+     * MyLibrary FolderId null error; 
+     */
+    public static final String FOLDER_ID_NULL = "FolderId parameter must not be null";
     
     /**
      * Pagination null error

@@ -225,16 +225,21 @@ public class HttpProcessor implements ProcessorBase {
 				is = connection.getErrorStream();
 			}
 			
-			BufferedReader rd = new BufferedReader(new InputStreamReader(is));
-			String line;
-			StringBuffer response = new StringBuffer();
+			if (is != null){
+			    BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+			    String line;
+			    StringBuffer response = new StringBuffer();
 		
-			while ((line = rd.readLine()) != null) {
-				response.append(line);
-				response.append('\r');
+			    while ((line = rd.readLine()) != null) {
+			        response.append(line);
+			        response.append('\r');
+			    }
+			    rd.close();
+			    return response.toString();
 			}
-			rd.close();
-			return response.toString();
+			else {
+			   return null;
+			}
 
 			
 		} catch (Exception e) {
