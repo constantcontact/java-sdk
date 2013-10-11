@@ -150,8 +150,6 @@ public class ContactService extends BaseService implements IContactService {
    *         An exception is thrown otherwise.
    * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
    */
-
-
   public Contact addContact(String accessToken, Contact contact, Boolean actionByVisitor) throws ConstantContactServiceException {
     Contact newContact = null;
     try {
@@ -287,8 +285,6 @@ public class ContactService extends BaseService implements IContactService {
    *         An exception is thrown otherwise.
    * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
    */
-
-
   public Contact updateContact(String accessToken, Contact contact, Boolean actionByVisitor) throws ConstantContactServiceException {
     Contact updateContact = null;
     try {

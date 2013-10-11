@@ -105,11 +105,5 @@ public abstract class Component implements Serializable {
 		}
 		return json;
 	}
-
-	/**
-	 * Default constructor.
-	 */
-	public Component() {
-		super();
-	}
+	
 }
