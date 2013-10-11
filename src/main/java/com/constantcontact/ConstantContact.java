@@ -2620,4 +2620,32 @@ public class ConstantContact {
         return;
     }
     
+    
+    public void getLibraryFiles(){
+        
+    }
+    
+    public void addLibraryFile(){
+        
+    }
+    
+    public void getLibraryFilesInFolder(){
+        
+    }
+    
+    public void getLibraryFile(){
+        
+    }
+    
+    public void updateLibraryFile(){
+        
+    }
+    
+    public void deleteLibraryFile(){
+        
+    }
+    
+    public void getLibraryFilesUploadStatus(){
+        
+    }
 }
