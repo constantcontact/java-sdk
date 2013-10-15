@@ -34,6 +34,7 @@
 				<directory>${project.build.sourceDirectory}</directory>
 				<includes>
 					<include>**/*.config</include>
+                                        <include>**/*.properties</include>
 				</includes>
 			</resource>
 		</resources>
