@@ -236,7 +236,7 @@ public final class Config {
 		
 		Properties prop = new Properties();
 		InputStream in;
-		String baseUrlConfiguration = "https://api.constantcontact.com";
+		String baseUrl = "https://api.constantcontact.com";
 		
 		in = Config.class.getClassLoader().getResourceAsStream("com/constantcontact/util/dest.properties");
 		if (in != null)
@@ -251,12 +251,14 @@ public final class Config {
 				ex.printStackTrace();
 			}
 			  
-			baseUrlConfiguration = prop.getProperty("constantcontact.api.dest.baseurl");
+			String baseUrlConfiguration = prop.getProperty("constantcontact.api.dest.baseurl");
 			if (baseUrlConfiguration != null) 
 			{
-				BASE_URL_HOST = baseUrlConfiguration;
+				baseUrl = baseUrlConfiguration;
 			}
 		}
+		
+		BASE_URL_HOST = baseUrl;
 	}
 	  
     /**
