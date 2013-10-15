@@ -46,7 +46,6 @@ public final class Config {
 	                in.close();
 	            }
 	            catch (IOException ignoreMe) {
-	                ignoreMe.printStackTrace();
 	            }
 
 	            String baseUrlConfiguration = prop.getProperty("constantcontact.api.dest.baseurl");
