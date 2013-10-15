@@ -29,15 +29,6 @@
 
 	<build>
 		<finalName>${project.artifactId}</finalName>
-		<resources>
-			<resource>
-				<directory>${project.build.sourceDirectory}</directory>
-				<includes>
-					<include>**/*.config</include>
-                                        <include>**/*.properties</include>
-				</includes>
-			</resource>
-		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -51,6 +42,14 @@
 					</execution>
 				</executions>
 			</plugin>
+            <plugin>
+               <groupId>org.apache.maven.plugins</groupId>
+               <artifactId>maven-resources-plugin</artifactId>
+               <version>2.5</version>
+               <configuration>
+                   <encoding>UTF-8</encoding>
+               </configuration>
+            </plugin>
 		</plugins>
 	</build>
 </project>

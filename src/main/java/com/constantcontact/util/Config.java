@@ -20,25 +20,52 @@ public final class Config {
    */
   public static final class Endpoints {
 
-	/**
-	* Configurable API access URL Host.
-	*/
-	public static String BASE_URL_HOST;
-	
+    /**
+     * API access URL Host.
+     */
+    public static final String BASE_URL_HOST;  
+      
 	static 
 	{
-		configureBaseUrl();
+	    /*
+	     * Configures BASE_URL.  Value can be loaded from property "constantcontact.api.dest.baseurl"
+	     * in properties file "dest.properties".  Method will defer to default value
+	     * if file or property is not present.
+	      * Throws an IOException if the file is not readable.
+	     */
+		try {
+	        Properties prop = new Properties();
+	        InputStream in;
+	        String baseUrl = "https://api.constantcontact.com";
+	        
+	        in = Config.class.getClassLoader().getResourceAsStream("dest.properties");
+	        
+	        if (in != null) {
+	            prop.load(in);
+	            try {
+	                in.close();
+	            }
+	            catch (IOException ignoreMe) {
+	            }
+
+	            String baseUrlConfiguration = prop.getProperty("constantcontact.api.dest.baseurl");
+	            if (baseUrlConfiguration != null) {
+	                baseUrl = baseUrlConfiguration;
+	            }
+	        }
+	        
+	        BASE_URL_HOST = baseUrl;
+        }
+        catch (IOException e) {
+            throw new IllegalStateException("Cannot configure connection to Constant Contact", e);
+        }
 	}
 	  
-	/**
-	* API access URL Host.
-	*/
-	public static final String CONFIGURED_BASE_URL_HOST = BASE_URL_HOST;
 	
 	/**
 	* API access URL.
 	*/
-	public static final String BASE_URL = CONFIGURED_BASE_URL_HOST + "/" + "v2/";
+	public static final String BASE_URL = BASE_URL_HOST + "/" + "v2/";
 	  
     /**
      * Access a contact.
@@ -226,41 +253,6 @@ public final class Config {
     public static final String LIBRARY_FILE = LIBRARY_FILES + "/%1$s";
     public static final String LIBRARY_FILE_UPLOAD_STATUS = LIBRARY_FILES + "/uploadStatus/%1$s";
     
-	/**
-	* Configures BASE_URL.  Value can be loaded from property "constantcontact.api.dest.baseurl"
-	* in properties file "dest.properties".  Method will defer to default value
-	* if file or property is not present.
-	*/
-	private static void configureBaseUrl() 
-	{
-		
-		Properties prop = new Properties();
-		InputStream in;
-		String baseUrl = "https://api.constantcontact.com";
-		
-		in = Config.class.getClassLoader().getResourceAsStream("com/constantcontact/util/dest.properties");
-		if (in != null)
-		{
-			try
-			{
-				prop.load(in);                   
-				in.close();
-			}
-			catch(IOException ex)
-			{
-				ex.printStackTrace();
-			}
-			  
-			String baseUrlConfiguration = prop.getProperty("constantcontact.api.dest.baseurl");
-			if (baseUrlConfiguration != null) 
-			{
-				baseUrl = baseUrlConfiguration;
-			}
-		}
-		
-		BASE_URL_HOST = baseUrl;
-	}
-	  
     /**
      * Default constructor.<br/>
      * Made private to prevent instantiation.<br/>
