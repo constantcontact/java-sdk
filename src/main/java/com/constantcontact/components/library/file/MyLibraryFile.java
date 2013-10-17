@@ -51,6 +51,18 @@ public class MyLibraryFile extends Component implements Serializable {
     private String folderId;
     
     @JsonIgnore
+    private Integer height;
+    
+    @JsonIgnore
+    private Source source;
+    
+    @JsonIgnore
+    private String description;
+    
+    @JsonIgnore
+    private Boolean isImage;
+    
+    @JsonIgnore
     private MyLibraryThumbnail thumbnail;
 
     @JsonProperty("created_date")
@@ -108,6 +120,26 @@ public class MyLibraryFile extends Component implements Serializable {
         return folderId;
     }
 
+    @JsonProperty("height")
+    public Integer getHeight(){
+        return height;
+    }
+    
+    @JsonProperty("source")
+    public Source getSource(){
+        return source;
+    }
+    
+    @JsonProperty("description")
+    public String getDescription(){
+        return description;
+    }
+    
+    @JsonProperty("is_image")
+    public Boolean getIsImage(){
+        return isImage;
+    }
+
     @JsonProperty("thumbnail")
     public MyLibraryThumbnail getThumbnail() {
         return thumbnail;
@@ -156,6 +188,22 @@ public class MyLibraryFile extends Component implements Serializable {
     public void setFolderId(String folderId) {
         this.folderId = folderId;
     }
+    
+    public void setHeight(Integer height){
+        this.height = height;
+    }
+    
+    public void setSource(Source source){
+        this.source = source;
+    }
+    
+    public void setDescription(String description){
+        this.description = description;
+    }
+    
+    public void setIsImage(Boolean isImage){
+        this.isImage = isImage;
+    }
 
     public void setThumbnail(MyLibraryThumbnail thumbnail) {
         this.thumbnail = thumbnail;
@@ -178,6 +226,9 @@ public class MyLibraryFile extends Component implements Serializable {
         builder.append(", id=").append(id);
         builder.append(", folder=").append(folder);
         builder.append(", folderId=").append(folderId);
+        builder.append(", height=").append(height);
+        builder.append(", source=").append(source);
+        builder.append(", description=").append(description);
         builder.append(", thumbnail=").append(thumbnail);
 
         builder.append("]");
