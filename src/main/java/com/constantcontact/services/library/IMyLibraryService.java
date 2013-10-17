@@ -212,4 +212,21 @@ public interface IMyLibraryService extends IBaseService {
      *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
      */ 
     public MyLibraryFile updateLibraryFile(String accessToken, MyLibraryFile file, Boolean includePayload) throws ConstantContactServiceException;
+    
+    /**
+     * Delete Library File API.<br/>
+     * 
+     * @param accessToken The Access Token for your user
+     * @param fileId The ID for the Folder to delete.
+     * @return Void. Exceptions are raised on failures.
+     * @throws ConstantContactServiceException Thrown when :
+     *             <ul>
+     *             <li>something went wrong either on the client side;</li>
+     *             <li>or an error message was received from the server side.</li>
+     *             </ul>
+     * <br/>
+     *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+     *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+     */
+    public void deleteLibraryFile(String accessToken, String fileId) throws ConstantContactServiceException;
 }

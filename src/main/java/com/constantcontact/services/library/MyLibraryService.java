@@ -42,13 +42,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
                 throw new ConstantContactServiceException(e);
             }
         }
-        if (response.isError()) {
-            ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                    ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-            response.getInfo().add(new CUrlRequestError("url", url));
-            constantContactException.setErrorInfo(response.getInfo());
-            throw constantContactException;
-        }
+        checkForResponseError(response, url);
 
         return summary;
 
@@ -95,13 +89,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
                 throw new ConstantContactServiceException(e);
             }
         }
-        if (response.isError()) {
-            ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                    ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-            response.getInfo().add(new CUrlRequestError("url", url));
-            constantContactException.setErrorInfo(response.getInfo());
-            throw constantContactException;
-        }
+        checkForResponseError(response, url);
 
         return folders;
     }
@@ -137,13 +125,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
                 newFolder = Component.fromJSON(response.getBody(), MyLibraryFolder.class);
 
             }
-            if (response.isError()) {
-                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-                response.getInfo().add(new CUrlRequestError("url", url));
-                constantContactException.setErrorInfo(response.getInfo());
-                throw constantContactException;
-            }
+            checkForResponseError(response, url);
 
         }
         catch (ConstantContactComponentException e) {
@@ -189,13 +171,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
                 throw new ConstantContactServiceException(e);
             }
         }
-        if (response.isError()) {
-            ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                    ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-            response.getInfo().add(new CUrlRequestError("url", url));
-            constantContactException.setErrorInfo(response.getInfo());
-            throw constantContactException;
-        }
+        checkForResponseError(response, url);
 
         return folder;
     }
@@ -247,13 +223,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
                 throw new ConstantContactServiceException(e);
             }
         }
-        if (response.isError()) {
-            ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                    ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-            response.getInfo().add(new CUrlRequestError("url", url));
-            constantContactException.setErrorInfo(response.getInfo());
-            throw constantContactException;
-        }
+        checkForResponseError(response, url);
 
         if (includePayload == null || includePayload.booleanValue() == true) {
             return updateFolder;
@@ -289,13 +259,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
 
         // Get REST response
         CUrlResponse response = getRestClient().delete(url, accessToken);
-        if (response.isError()) {
-            ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                    ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-            response.getInfo().add(new CUrlRequestError("url", url));
-            constantContactException.setErrorInfo(response.getInfo());
-            throw constantContactException;
-        }
+        checkForResponseError(response, url);
 
         return;
     }
@@ -345,13 +309,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
                 throw new ConstantContactServiceException(e);
             }
           }
-          if (response.isError()) {
-            ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-            response.getInfo().add(new CUrlRequestError("url", url));
-            constantContactException.setErrorInfo(response.getInfo());
-            throw constantContactException;
-          }
+          checkForResponseError(response, url);
 
           return files;        
     }
@@ -375,13 +333,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
 
         // Get REST response
         CUrlResponse response = getRestClient().delete(url, accessToken);
-        if (response.isError()) {
-            ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                    ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-            response.getInfo().add(new CUrlRequestError("url", url));
-            constantContactException.setErrorInfo(response.getInfo());
-            throw constantContactException;
-        }
+        checkForResponseError(response, url);
 
         return;
     }
@@ -435,13 +387,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
               throw new ConstantContactServiceException(e);
           }
         }
-        if (response.isError()) {
-          ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-              ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-          response.getInfo().add(new CUrlRequestError("url", url));
-          constantContactException.setErrorInfo(response.getInfo());
-          throw constantContactException;
-        }
+        checkForResponseError(response, url);
 
         return files;           
     }
@@ -496,13 +442,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
               throw new ConstantContactServiceException(e);
           }
         }
-        if (response.isError()) {
-          ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-              ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-          response.getInfo().add(new CUrlRequestError("url", url));
-          constantContactException.setErrorInfo(response.getInfo());
-          throw constantContactException;
-        }
+        checkForResponseError(response, url);
 
         return files;           
     }
@@ -538,13 +478,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
                 throw new ConstantContactServiceException(e);
             }
         }
-        if (response.isError()) {
-            ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                    ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-            response.getInfo().add(new CUrlRequestError("url", url));
-            constantContactException.setErrorInfo(response.getInfo());
-            throw constantContactException;
-        }
+        checkForResponseError(response, url);
 
         return file;
     }
@@ -587,13 +521,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
                 throw new ConstantContactServiceException(e);
             }
         }
-        if (response.isError()) {
-            ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                    ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-            response.getInfo().add(new CUrlRequestError("url", url));
-            constantContactException.setErrorInfo(response.getInfo());
-            throw constantContactException;
-        }
+        checkForResponseError(response, url);
 
         if (includePayload == null || includePayload.booleanValue() == true) {
             return updateFile;
@@ -603,4 +531,39 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
         }
     }
     
+    /**
+     * Delete Library File API.<br/>
+     * 
+     * @param accessToken The Access Token for your user
+     * @param fileId The ID for the Folder to delete.
+     * @return Void. Exceptions are raised on failures.
+     * @throws ConstantContactServiceException Thrown when :
+     *             <ul>
+     *             <li>something went wrong either on the client side;</li>
+     *             <li>or an error message was received from the server side.</li>
+     *             </ul>
+     * <br/>
+     *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+     *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+     */
+    public void deleteLibraryFile(String accessToken, String fileId) throws ConstantContactServiceException {
+        String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+                String.format(Config.Endpoints.LIBRARY_FILE, fileId));
+
+        // Get REST response
+        CUrlResponse response = getRestClient().delete(url, accessToken);
+        checkForResponseError(response, url);
+
+        return;   
+    }
+    
+    private static void checkForResponseError(CUrlResponse response, String url) throws ConstantContactServiceException{
+        if (response.isError()) {
+            ConstantContactServiceException constantContactException = new ConstantContactServiceException(
+                    ConstantContactServiceException.RESPONSE_ERR_SERVICE);
+            response.getInfo().add(new CUrlRequestError("url", url));
+            constantContactException.setErrorInfo(response.getInfo());
+            throw constantContactException;
+        }
+    }
 }
