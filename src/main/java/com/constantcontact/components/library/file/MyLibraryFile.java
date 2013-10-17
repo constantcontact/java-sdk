@@ -30,7 +30,7 @@ public class MyLibraryFile extends Component implements Serializable {
     private Integer width;
     
     @JsonIgnore
-    private String fileName;
+    private String name;
     
     @JsonIgnore
     private String url;
@@ -85,9 +85,9 @@ public class MyLibraryFile extends Component implements Serializable {
         return width;
     }
 
-    @JsonProperty("file_name")
-    public String getFileName() {
-        return fileName;
+    @JsonProperty("name")
+    public String getName() {
+        return name;
     }
 
     @JsonProperty("url")
@@ -161,8 +161,8 @@ public class MyLibraryFile extends Component implements Serializable {
         this.width = width;
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setUrl(String url) {
@@ -219,7 +219,7 @@ public class MyLibraryFile extends Component implements Serializable {
         builder.append(", status=").append(status);
         builder.append(", modifiedDate=").append(modifiedDate);
         builder.append(", width=").append(width);
-        builder.append(", fileName=").append(fileName);
+        builder.append(", name=").append(name);
         builder.append(", url=").append(url);
         builder.append(", fileType=").append(fileType);
         builder.append(", size=").append(size);

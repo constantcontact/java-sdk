@@ -194,4 +194,22 @@ public interface IMyLibraryService extends IBaseService {
      *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
      */
     public MyLibraryFile getLibraryFile(String accessToken, String fileId) throws ConstantContactServiceException;
+    
+    /**
+     * Update Library File API.<br/>
+     * 
+     * @param accessToken The Access Token for your user
+     * @param file The Folder to update.
+     * @param includePayload If the result should be the updated File or NULL (defaults to true if left null)
+     * @return The added {@link MyLibraryFile}, or Null if includePayload was false.
+     * @throws ConstantContactServiceException Thrown when :
+     *             <ul>
+     *             <li>something went wrong either on the client side;</li>
+     *             <li>or an error message was received from the server side.</li>
+     *             </ul>
+     * <br/>
+     *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+     *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+     */ 
+    public MyLibraryFile updateLibraryFile(String accessToken, MyLibraryFile file, Boolean includePayload) throws ConstantContactServiceException;
 }

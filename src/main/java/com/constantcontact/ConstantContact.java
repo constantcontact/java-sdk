@@ -2742,7 +2742,32 @@ public class ConstantContact {
         return myLibraryService.getLibraryFile(this.getAccessToken(), fileId);
     }
     
-    public void updateLibraryFile(){
+    /**
+     * Update Library File API.<br/>
+     * Details in : {@link MyLibraryService#updateLibraryFile(String, String, Boolean)}
+     * 
+     * @param folderId The ID for the Folder to return.
+     * @param includePayload If the result should be the updated Folder or NULL (defaults to true if left null)
+     * @return The added {@link MyLibraryFile}, or Null if includePayload was false.
+     * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+     *             The exception also contains a description of the cause.<br/>
+     *             Error message is taken from one of the members of {@link Errors}
+     * @throws ConstantContactServiceException Thrown when :
+     *             <ul>
+     *             <li>something went wrong either on the client side;</li>
+     *             <li>or an error message was received from the server side.</li>
+     *             </ul>
+     * <br/>
+     *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+     *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+     */ 
+    public MyLibraryFile updateLibraryFile(MyLibraryFile file, Boolean includePayload) throws ConstantContactServiceException, IllegalArgumentException {
+        
+        if (file == null || file.getId() == null || file.getId().trim().equals("")){
+            throw new IllegalArgumentException(Config.Errors.FILE_ID_NULL);
+        }
+        
+        return myLibraryService.updateLibraryFile(this.getAccessToken(), file, includePayload);
         
     }
     

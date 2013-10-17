@@ -548,4 +548,59 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
 
         return file;
     }
+    
+    /**
+     * Update Library File API.<br/>
+     * 
+     * @param accessToken The Access Token for your user
+     * @param file The Folder to update.
+     * @param includePayload If the result should be the updated File or NULL (defaults to true if left null)
+     * @return The added {@link MyLibraryFile}, or Null if includePayload was false.
+     * @throws ConstantContactServiceException Thrown when :
+     *             <ul>
+     *             <li>something went wrong either on the client side;</li>
+     *             <li>or an error message was received from the server side.</li>
+     *             </ul>
+     * <br/>
+     *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+     *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+     */ 
+    public MyLibraryFile updateLibraryFile(String accessToken, MyLibraryFile file, Boolean includePayload) throws ConstantContactServiceException {
+        MyLibraryFile updateFile = null;
+
+        String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+                String.format(Config.Endpoints.LIBRARY_FILE, file.getId()));
+        String json;
+        try {
+            json = file.toJSON();
+        }
+        catch (ConstantContactComponentException e) {
+            throw new ConstantContactServiceException(e);
+        }
+
+        CUrlResponse response = getRestClient().put(url, accessToken, json);
+        if (response.hasData()) {
+            try {
+                updateFile = Component.fromJSON(response.getBody(), MyLibraryFile.class);
+            }
+            catch (ConstantContactComponentException e) {
+                throw new ConstantContactServiceException(e);
+            }
+        }
+        if (response.isError()) {
+            ConstantContactServiceException constantContactException = new ConstantContactServiceException(
+                    ConstantContactServiceException.RESPONSE_ERR_SERVICE);
+            response.getInfo().add(new CUrlRequestError("url", url));
+            constantContactException.setErrorInfo(response.getInfo());
+            throw constantContactException;
+        }
+
+        if (includePayload == null || includePayload.booleanValue() == true) {
+            return updateFile;
+        }
+        else {
+            return null;
+        }
+    }
+    
 }
