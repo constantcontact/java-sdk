@@ -445,4 +445,65 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
 
         return files;           
     }
+    
+    /**
+     * Retrieve Library Files By Folder API.<br/>
+     * 
+     * @param accessToken The Access Token for your user
+     * @param folderId - The library Folder Id
+     * @param type - The type of files to return. Null for default.
+     * @param source - The source of the files. Null for default.
+     * @param sortBy - The way to sort results. Null for default
+     * @param limit - The number of results to return per page.
+     * @return A {@link ResultSet} of {@link MyLibraryFile} in case of success; an exception is thrown otherwise.
+     * @throws ConstantContactServiceException Thrown when :
+     *             <ul>
+     *             <li>something went wrong either on the client side;</li>
+     *             <li>or an error message was received from the server side.</li>
+     *             </ul>
+     * <br/>
+     *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+     *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+     */
+    public ResultSet<MyLibraryFile> getLibraryFilesByFolder(String accessToken, String folderId, MyLibraryFile.Type type, MyLibraryFile.Source source, MyLibraryFile.SortBy sortBy, Integer limit) throws ConstantContactServiceException{
+        ResultSet<MyLibraryFile> files = null;
+        
+        // Construct access URL
+        String url = paginateUrl(String.format("%1$s%2$s", Config.Endpoints.BASE_URL, String.format(Config.Endpoints.LIBRARY_FILES_BY_FOLDER, folderId)), limit);
+
+        try {
+            if (type != null) {
+               url = appendParam(url, "type", type.toString());
+            }
+            if (source != null) {
+                url = appendParam(url, "source", source.toString());
+            }
+            if (sortBy != null){
+                url = appendParam(url, "sort_by", sortBy.toString());
+            }
+        }
+        catch (UnsupportedEncodingException e) {
+            throw new ConstantContactServiceException(e);
+        }
+  
+        // Get REST response
+        CUrlResponse response = getRestClient().get(url, accessToken);
+        if (response.hasData()) {
+          try {
+              files = Component.resultSetFromJSON(response.getBody(), MyLibraryFile.class);
+          }
+          catch (ConstantContactComponentException e) {
+              throw new ConstantContactServiceException(e);
+          }
+        }
+        if (response.isError()) {
+          ConstantContactServiceException constantContactException = new ConstantContactServiceException(
+              ConstantContactServiceException.RESPONSE_ERR_SERVICE);
+          response.getInfo().add(new CUrlRequestError("url", url));
+          constantContactException.setErrorInfo(response.getInfo());
+          throw constantContactException;
+        }
+
+        return files;           
+    }
 }

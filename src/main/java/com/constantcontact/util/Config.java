@@ -245,6 +245,7 @@ public final class Config {
     
     public static final String LIBRARY_INFO = "library/info";
     public static final String LIBRARY_FILES = "library/files";
+    public static final String LIBRARY_FILES_BY_FOLDER = "library/folders/%1$s/files";
     public static final String LIBRARY_FOLDERS = "library/folders";
     
     public static final String LIBRARY_FOLDER = LIBRARY_FOLDERS + "/%1$s";
