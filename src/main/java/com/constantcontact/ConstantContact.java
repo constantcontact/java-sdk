@@ -2714,13 +2714,32 @@ public class ConstantContact {
         }
         return getPaginationHelperService().getPage(this.getAccessToken(), pagination, MyLibraryFile.class);
     }
-
-    public void addLibraryFile(){
-        
-    }
     
-    public void getLibraryFile(){
+    /**
+     * Get Library File API.<br/>
+     * Details in : {@link MyLibraryService#getLibraryFile(String, String)}
+     * 
+     * @param fileId The ID for the File to return.
+     * @return The added {@link MyLibraryFile}.
+     * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+     *             The exception also contains a description of the cause.<br/>
+     *             Error message is taken from one of the members of {@link Errors}
+     * @throws ConstantContactServiceException Thrown when :
+     *             <ul>
+     *             <li>something went wrong either on the client side;</li>
+     *             <li>or an error message was received from the server side.</li>
+     *             </ul>
+     * <br/>
+     *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+     *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+     */
+    public MyLibraryFile getLibraryFile(String fileId) throws ConstantContactServiceException, IllegalArgumentException{
         
+        if (fileId == null || fileId.trim().equals("")){
+            throw new IllegalArgumentException(Config.Errors.FILE_ID_NULL);
+        }
+        
+        return myLibraryService.getLibraryFile(this.getAccessToken(), fileId);
     }
     
     public void updateLibraryFile(){
@@ -2731,7 +2750,15 @@ public class ConstantContact {
         
     }
     
+    public void addLibraryFile(){
+        
+    }
+    
     public void getLibraryFilesUploadStatus(){
+        
+    }
+    
+    public void moveLibraryFiles() {
         
     }
 }

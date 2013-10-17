@@ -411,6 +411,11 @@ public final class Config {
      * MyLibrary FolderId null error; 
      */
     public static final String FOLDER_ID_NULL = "FolderId parameter must not be null";
+
+    /**
+     * MyLibrary FolderId null error; 
+     */
+    public static final String FILE_ID_NULL = "FileId parameter must not be null";
     
     /**
      * Pagination null error

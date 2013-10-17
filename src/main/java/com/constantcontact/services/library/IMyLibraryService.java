@@ -176,5 +176,22 @@ public interface IMyLibraryService extends IBaseService {
      *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
      *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
      */
-    public ResultSet<MyLibraryFile> getLibraryFilesByFolder(String accessToken, String folderId, MyLibraryFile.Type type, MyLibraryFile.Source source, MyLibraryFile.SortBy sortBy, Integer limit) throws ConstantContactServiceException;    
+    public ResultSet<MyLibraryFile> getLibraryFilesByFolder(String accessToken, String folderId, MyLibraryFile.Type type, MyLibraryFile.Source source, MyLibraryFile.SortBy sortBy, Integer limit) throws ConstantContactServiceException;
+    
+    /**
+     * Get Library File API.<br/>
+     * 
+     * @param accessToken The Access Token for your user
+     * @param fileId The ID for the File to return.
+     * @return The added {@link MyLibraryFile}.
+     * @throws ConstantContactServiceException Thrown when :
+     *             <ul>
+     *             <li>something went wrong either on the client side;</li>
+     *             <li>or an error message was received from the server side.</li>
+     *             </ul>
+     * <br/>
+     *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+     *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+     */
+    public MyLibraryFile getLibraryFile(String accessToken, String fileId) throws ConstantContactServiceException;
 }
