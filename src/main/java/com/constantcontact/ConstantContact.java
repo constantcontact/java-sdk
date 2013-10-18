@@ -2672,9 +2672,6 @@ public class ConstantContact {
      * Details in : {@link MyLibraryService#getLibraryFilesByFolder(String, MyLibraryFile.Type, MyLibrary.Source, MyLibraryFile.SortBy, Integer)}
      * 
      * @param folderId - The library Folder Id
-     * @param type - The type of files to return. Null for default.
-     * @param source - The source of the files. Null for default.
-     * @param sortBy - The way to sort results. Null for default
      * @param limit - The number of results to return per page.
      * @return A {@link ResultSet} of {@link MyLibraryFile} in case of success; an exception is thrown otherwise.
      * @throws ConstantContactServiceException Thrown when :
@@ -2686,8 +2683,8 @@ public class ConstantContact {
      *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
      *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
      */
-    public ResultSet<MyLibraryFile> getLibraryFilesByFolder(String folderId, MyLibraryFile.Type type, MyLibraryFile.Source source, MyLibraryFile.SortBy sortBy, Integer limit)  throws ConstantContactServiceException{
-        return myLibraryService.getLibraryFilesByFolder(this.getAccessToken(), folderId, type, source, sortBy, limit);
+    public ResultSet<MyLibraryFile> getLibraryFilesByFolder(String folderId, Integer limit)  throws ConstantContactServiceException{
+        return myLibraryService.getLibraryFilesByFolder(this.getAccessToken(), folderId, limit);
     }
     
     /**

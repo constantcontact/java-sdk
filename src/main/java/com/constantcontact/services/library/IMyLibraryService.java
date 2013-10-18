@@ -162,9 +162,6 @@ public interface IMyLibraryService extends IBaseService {
      * 
      * @param accessToken The Access Token for your user
      * @param folderId - The library Folder Id
-     * @param type - The type of files to return. Null for default.
-     * @param source - The source of the files. Null for default.
-     * @param sortBy - The way to sort results. Null for default
      * @param limit - The number of results to return per page.
      * @return A {@link ResultSet} of {@link MyLibraryFile} in case of success; an exception is thrown otherwise.
      * @throws ConstantContactServiceException Thrown when :
@@ -176,7 +173,7 @@ public interface IMyLibraryService extends IBaseService {
      *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
      *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
      */
-    public ResultSet<MyLibraryFile> getLibraryFilesByFolder(String accessToken, String folderId, MyLibraryFile.Type type, MyLibraryFile.Source source, MyLibraryFile.SortBy sortBy, Integer limit) throws ConstantContactServiceException;
+    public ResultSet<MyLibraryFile> getLibraryFilesByFolder(String accessToken, String folderId, Integer limit) throws ConstantContactServiceException;
     
     /**
      * Get Library File API.<br/>
