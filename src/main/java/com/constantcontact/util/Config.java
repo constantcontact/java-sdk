@@ -38,7 +38,7 @@ public final class Config {
 	        InputStream in;
 	        String baseUrl = "https://api.constantcontact.com";
 	        
-	        in = Config.class.getClassLoader().getResourceAsStream("dest.properties");
+	        in = Config.class.getClassLoader().getResourceAsStream("ctct_api.properties");
 	        
 	        if (in != null) {
 	            prop.load(in);
