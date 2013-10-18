@@ -14,16 +14,16 @@ public class UsageSummary extends Component implements Serializable {
     private Integer folderCount;
 
     @JsonIgnore
-    private Integer documentBytesUsed;
+    private Long documentBytesUsed;
 
     @JsonIgnore
-    private Integer imageBytesUsed;
+    private Long imageBytesUsed;
 
     @JsonIgnore
-    private Integer totalBytesRemaining;
+    private Long totalBytesRemaining;
 
     @JsonIgnore
-    private Integer totalBytesUsed;
+    private Long totalBytesUsed;
 
     @JsonIgnore
     private Integer imageCount;
@@ -43,22 +43,22 @@ public class UsageSummary extends Component implements Serializable {
     }
 
     @JsonProperty("document_bytes_used")
-    public Integer getDocumentBytesUsed() {
+    public Long getDocumentBytesUsed() {
         return documentBytesUsed;
     }
 
     @JsonProperty("image_bytes_used")
-    public Integer getImageBytesUsed() {
+    public Long getImageBytesUsed() {
         return imageBytesUsed;
     }
 
     @JsonProperty("total_bytes_remaining")
-    public Integer getTotalBytesRemaining() {
+    public Long getTotalBytesRemaining() {
         return totalBytesRemaining;
     }
 
     @JsonProperty("total_byte_used")
-    public Integer getTotalBytesUsed() {
+    public Long getTotalBytesUsed() {
         return totalBytesUsed;
     }
 
@@ -86,19 +86,19 @@ public class UsageSummary extends Component implements Serializable {
         this.folderCount = folderCount;
     }
 
-    public void setDocumentBytesUsed(Integer documentBytesUsed) {
+    public void setDocumentBytesUsed(Long documentBytesUsed) {
         this.documentBytesUsed = documentBytesUsed;
     }
 
-    public void setImageBytesUsed(Integer imageBytesUsed) {
+    public void setImageBytesUsed(Long imageBytesUsed) {
         this.imageBytesUsed = imageBytesUsed;
     }
 
-    public void setTotalBytesRemaining(Integer totalBytesRemaining) {
+    public void setTotalBytesRemaining(Long totalBytesRemaining) {
         this.totalBytesRemaining = totalBytesRemaining;
     }
 
-    public void setTotalBytesUsed(Integer totalBytesUsed) {
+    public void setTotalBytesUsed(Long totalBytesUsed) {
         this.totalBytesUsed = totalBytesUsed;
     }
 
