@@ -11,7 +11,7 @@ public class MyLibrarySummary extends Component implements Serializable {
     private static final long serialVersionUID = 453336924148839306L;
 
     @JsonIgnore
-    private Integer maxPremiumSpaceLimit;
+    private Long maxPremiumSpaceLimit;
     
     @JsonIgnore
     private Integer maxFreeFileNum;
@@ -26,7 +26,7 @@ public class MyLibrarySummary extends Component implements Serializable {
     private UsageSummary usageSummary;
 
     @JsonProperty("max_premium_space_limit")
-    public Integer getMaxPremiumSpaceLimit() {
+    public Long getMaxPremiumSpaceLimit() {
         return maxPremiumSpaceLimit;
     }
     @JsonProperty("max_free_file_num")
@@ -49,7 +49,7 @@ public class MyLibrarySummary extends Component implements Serializable {
         return usageSummary;
     }
 
-    public void setMaxPremiumSpaceLimit(Integer maxPremiumSpaceLimit) {
+    public void setMaxPremiumSpaceLimit(Long maxPremiumSpaceLimit) {
         this.maxPremiumSpaceLimit = maxPremiumSpaceLimit;
     }
 
