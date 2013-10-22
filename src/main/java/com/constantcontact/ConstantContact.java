@@ -45,7 +45,9 @@ import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.components.library.file.MyLibraryFile;
 import com.constantcontact.components.library.folder.MyLibraryFolder;
 import com.constantcontact.components.library.folder.MyLibraryFolder.FolderSortOptions;
+import com.constantcontact.components.library.info.MoveResults;
 import com.constantcontact.components.library.info.MyLibrarySummary;
+import com.constantcontact.components.library.info.UploadStatus;
 import com.constantcontact.exceptions.ConstantContactException;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.pagination.PaginationHelperService;
@@ -2794,15 +2796,56 @@ public class ConstantContact {
         myLibraryService.deleteLibraryFile(this.getAccessToken(), fileId);
     }
     
+    /**
+     * Retrieves the Status of files uploaded to the Library <br />
+     * Details in : {@link MyLibraryService#getLibraryFilesUploadStatus(String, String...)
+     * 
+     * @param fileId A varargs list of fileIds to return results for.
+     * @throws {@link ConstantContactServiceException} When something went wrong
+     *         in the Constant Contact flow or an error is returned from server.
+     * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+     *         The exception also contains a description of the cause.<br/>
+     *         Error message is taken from one of the members of {@link Errors}
+     * @return The {@link List} of {@link UploadStatus} Data
+     */
+    public List<UploadStatus> getLibraryFilesUploadStatus(String ... fileId) throws ConstantContactServiceException, IllegalArgumentException {
+        
+        if (fileId == null || fileId.length < 1){
+            throw new IllegalArgumentException(Config.Errors.FILE_ID_NULL);
+        }
+        
+        return myLibraryService.getLibraryFilesUploadStatus(this.getAccessToken(), fileId);
+    }
+    
+    /**
+     * Moves files from one folder to another <br />
+     * Details in : {@link MyLibraryService#moveLibraryFiles(String, String, String)
+     * 
+     * @param folderId The folder to put the files in
+     * @param fileIds The list of files to move
+     * @throws {@link ConstantContactServiceException} When something went wrong
+     *         in the Constant Contact flow or an error is returned from server.
+     * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+     *         The exception also contains a description of the cause.<br/>
+     *         Error message is taken from one of the members of {@link Errors}
+     * @return The {@link List} of {@link MoveResults} Data
+     */
+    public List<MoveResults> moveLibraryFiles(String folderId, List<String> fileIds) throws ConstantContactServiceException, IllegalArgumentException {
+        if (fileIds == null || fileIds.size() < 1){
+            throw new IllegalArgumentException(Config.Errors.FILE_ID_NULL);
+        }
+        
+        StringBuilder body = new StringBuilder("[");
+        body.append("\"").append(fileIds.get(0)).append("\"");
+        for (int i=1;i<fileIds.size();i++){
+            body.append(",").append("\"").append(fileIds.get(i)).append("\"");
+        }
+        body.append("]");
+        
+        return myLibraryService.moveLibraryFiles(this.getAccessToken(), folderId, body.toString());
+    }
+
     public void addLibraryFile(){
-        
-    }
-    
-    public void getLibraryFilesUploadStatus(){
-        
-    }
-    
-    public void moveLibraryFiles() {
         
     }
 }

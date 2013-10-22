@@ -1,13 +1,16 @@
 package com.constantcontact.services.library;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 import com.constantcontact.components.Component;
 import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.components.library.file.MyLibraryFile;
 import com.constantcontact.components.library.folder.MyLibraryFolder;
 import com.constantcontact.components.library.folder.MyLibraryFolder.FolderSortOptions;
+import com.constantcontact.components.library.info.MoveResults;
 import com.constantcontact.components.library.info.MyLibrarySummary;
+import com.constantcontact.components.library.info.UploadStatus;
 import com.constantcontact.exceptions.ConstantContactException;
 import com.constantcontact.exceptions.component.ConstantContactComponentException;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
@@ -15,6 +18,7 @@ import com.constantcontact.services.base.BaseService;
 import com.constantcontact.util.CUrlRequestError;
 import com.constantcontact.util.CUrlResponse;
 import com.constantcontact.util.Config;
+import com.constantcontact.util.Config.Errors;
 
 public class MyLibraryService extends BaseService implements IMyLibraryService {
 
@@ -539,7 +543,83 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
         return;   
     }
     
-    private static void checkForResponseError(CUrlResponse response, String url) throws ConstantContactServiceException{
+    /**
+     * Retrieves the Status of files uploaded to the Library <br />
+     * 
+     * @param accessToken The Access Token for your user
+     * @param fileId A varargs list of fileIds to return results for.
+     * @throws {@link ConstantContactServiceException} When something went wrong
+     *         in the Constant Contact flow or an error is returned from server.
+     * @return The {@link List} of {@link UploadStatus} Data
+     */
+    public List<UploadStatus> getLibraryFilesUploadStatus(String accessToken, String ... fileId) throws ConstantContactServiceException {
+        
+        List<UploadStatus> uploadStatuses = null;
+        
+        StringBuffer filesToGet = new StringBuffer();
+        
+        filesToGet.append(fileId[0]);
+        for (int i=1;i<fileId.length;i++){
+            filesToGet.append(",");
+            filesToGet.append(fileId[i]);
+        }
+     
+        String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+                String.format(Config.Endpoints.LIBRARY_FILE_UPLOAD_STATUS, filesToGet));
+        
+        // Get REST response
+        CUrlResponse response = getRestClient().get(url, accessToken);
+        
+        if (response.hasData()) {
+            try {
+                uploadStatuses = Component.listFromJSON(response.getBody(), UploadStatus.class);
+            }
+            catch (ConstantContactComponentException e) {
+                throw new ConstantContactServiceException(e);
+            }
+        }
+        checkForResponseError(response, url);
+
+        return uploadStatuses;
+    }
+    
+    /**
+     * Moves files from one folder to another <br />
+     * 
+     * @param accessToken The Access Token for your user
+     * @param folderId The folder to put the files in
+     * @param body The JSON body [an array of fileIds]
+     * @throws {@link ConstantContactServiceException} When something went wrong
+     *         in the Constant Contact flow or an error is returned from server.
+     * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+     *         The exception also contains a description of the cause.<br/>
+     *         Error message is taken from one of the members of {@link Errors}
+     * @return The {@link List} of {@link MoveResults} Data
+     */
+    public List<MoveResults> moveLibraryFiles(String accessToken, String folderId, String body) throws ConstantContactServiceException {
+
+        List<MoveResults> movedResults = null;
+     
+        String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+                String.format(Config.Endpoints.LIBRARY_FILE_MOVE, folderId));
+        
+        // Get REST response
+        CUrlResponse response = getRestClient().put(url, accessToken, body);
+        
+        if (response.hasData()) {
+            try {
+                movedResults = Component.listFromJSON(response.getBody(), MoveResults.class);
+            }
+            catch (ConstantContactComponentException e) {
+                throw new ConstantContactServiceException(e);
+            }
+        }
+        checkForResponseError(response, url);
+
+        return movedResults;
+    }
+    
+    private static void checkForResponseError(CUrlResponse response, String url) throws ConstantContactServiceException {
         if (response.isError()) {
             ConstantContactServiceException constantContactException = new ConstantContactServiceException(
                     ConstantContactServiceException.RESPONSE_ERR_SERVICE);

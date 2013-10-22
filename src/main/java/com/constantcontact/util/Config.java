@@ -252,7 +252,9 @@ public final class Config {
     public static final String LIBRARY_FOLDER_TRASH = LIBRARY_FOLDERS + "/trash/files";
 
     public static final String LIBRARY_FILE = LIBRARY_FILES + "/%1$s";
-    public static final String LIBRARY_FILE_UPLOAD_STATUS = LIBRARY_FILES + "/uploadStatus/%1$s";
+    public static final String LIBRARY_FILE_UPLOAD_STATUS = LIBRARY_FILES + "/uploadstatus/%1$s";
+    
+    public static final String LIBRARY_FILE_MOVE = "library/folders/%1$s/files"; 
     
     /**
      * Default constructor.<br/>
