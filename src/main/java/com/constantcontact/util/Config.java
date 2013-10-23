@@ -390,19 +390,19 @@ public final class Config {
     public static final String BULK_CONTACTS_REQUEST_NULL = "ContactsRequest parameter must not be null.";
 
     /**
-     * Contacts File Name null error.
-     */
-    public static final String BULK_CONTACTS_FILE_NAME_NULL = "FileName parameter must not be null.";
-    
-    /**
-     * Contacts File null error.
-     */
-    public static final String BULK_CONTACTS_FILE_NULL = "File parameter must not be null.";
-    
-    /**
      * Contacts ListId null error.
      */
     public static final String BULK_CONTACTS_LIST_NULL = "ListIds parameter must not be null.";
+
+    /**
+     * File Name null error.
+     */
+    public static final String FILE_NAME_NULL = "FileName parameter must not be null.";
+    
+    /**
+     * File null error.
+     */
+    public static final String FILE_NULL = "File parameter must not be null.";
     
     /**
      * MyLibrary Folder null error; 
@@ -423,6 +423,12 @@ public final class Config {
      * Pagination null error
      */
     public static final String PAGINATION_NULL = "Pagination parameter must not be null";
+    
+    public static final String MY_LIBRARY_IMAGE_SOURCE_NULL = "Image Source parameter must not be null";
+  
+    public static final String MY_LIBRARY_DESCRIPTION_NULL = "Description must not be null";
+
+    public static final String MY_LIBRARY_FILE_TYPE_NULL = "File type must not be null";
     
     /**
      * Default constructor.<br/>

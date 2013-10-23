@@ -12,8 +12,6 @@ public class MyLibraryFile extends Component implements Serializable {
     
     public enum Type {ALL, IMAGES, DOCUMENTS};
     
-    public enum Source {ALL, MyComputer, StockImage, Facebook, Instagram, Shutterstock, Mobile};
-
     public enum SortBy {ADDED_DATE, ADDED_DATE_DESC, MODIFIED_DATE, MODIFIED_DATE_DESC,
         NAME, NAME_DESC, SIZE, SIZE_DESC, DIMENSION, DIMENSION_DESC};
     
@@ -54,7 +52,7 @@ public class MyLibraryFile extends Component implements Serializable {
     private Integer height;
     
     @JsonIgnore
-    private Source source;
+    private ImageSource source;
     
     @JsonIgnore
     private String description;
@@ -126,7 +124,7 @@ public class MyLibraryFile extends Component implements Serializable {
     }
     
     @JsonProperty("source")
-    public Source getSource(){
+    public ImageSource getSource(){
         return source;
     }
     
@@ -193,7 +191,7 @@ public class MyLibraryFile extends Component implements Serializable {
         this.height = height;
     }
     
-    public void setSource(Source source){
+    public void setSource(ImageSource source){
         this.source = source;
     }
     

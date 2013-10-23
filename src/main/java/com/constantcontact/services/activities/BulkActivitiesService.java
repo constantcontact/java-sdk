@@ -82,8 +82,6 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
                 constantContactException.setErrorInfo(response.getInfo());
                 throw constantContactException;
             }
-        } catch (ConstantContactServiceException e) {
-            throw new ConstantContactServiceException(e);
         } catch (Exception e) {
             throw new ConstantContactServiceException(e);
         }

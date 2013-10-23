@@ -42,6 +42,8 @@ import com.constantcontact.components.emailcampaigns.tracking.sends.EmailCampaig
 import com.constantcontact.components.emailcampaigns.tracking.unsubscribes.EmailCampaignTrackingUnsubscribe;
 import com.constantcontact.components.generic.response.Pagination;
 import com.constantcontact.components.generic.response.ResultSet;
+import com.constantcontact.components.library.file.FileType;
+import com.constantcontact.components.library.file.ImageSource;
 import com.constantcontact.components.library.file.MyLibraryFile;
 import com.constantcontact.components.library.folder.MyLibraryFolder;
 import com.constantcontact.components.library.folder.MyLibraryFolder.FolderSortOptions;
@@ -2199,9 +2201,9 @@ public class ConstantContact {
 	public ContactsResponse addBulkContactsMultipart(String fileName, File file, ArrayList<String> listIds) throws ConstantContactServiceException, IOException{
        
 	    if (fileName == null || "".equals(fileName)){
-	        throw new IllegalArgumentException(Config.Errors.BULK_CONTACTS_FILE_NAME_NULL);
+	        throw new IllegalArgumentException(Config.Errors.FILE_NAME_NULL);
 	    } else if (file == null){
-	        throw new IllegalArgumentException(Config.Errors.BULK_CONTACTS_FILE_NULL);
+	        throw new IllegalArgumentException(Config.Errors.FILE_NULL);
 	    } else if (listIds == null){
             throw new IllegalArgumentException(Config.Errors.BULK_CONTACTS_LIST_NULL);
         }
@@ -2273,10 +2275,10 @@ public class ConstantContact {
             throws ConstantContactServiceException, IOException {
 
         if (fileName == null || "".equals(fileName)) {
-            throw new IllegalArgumentException(Config.Errors.BULK_CONTACTS_FILE_NAME_NULL);
+            throw new IllegalArgumentException(Config.Errors.FILE_NAME_NULL);
         }
         else if (file == null) {
-            throw new IllegalArgumentException(Config.Errors.BULK_CONTACTS_FILE_NULL);
+            throw new IllegalArgumentException(Config.Errors.FILE_NULL);
         }
         else if (listIds == null) {
             throw new IllegalArgumentException(Config.Errors.BULK_CONTACTS_LIST_NULL);
@@ -2640,7 +2642,7 @@ public class ConstantContact {
      *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
      *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
      */
-    public ResultSet<MyLibraryFile> getLibraryFiles(MyLibraryFile.Type type, MyLibraryFile.Source source, MyLibraryFile.SortBy sortBy, Integer limit)  throws ConstantContactServiceException{
+    public ResultSet<MyLibraryFile> getLibraryFiles(MyLibraryFile.Type type, ImageSource source, MyLibraryFile.SortBy sortBy, Integer limit)  throws ConstantContactServiceException{
         return myLibraryService.getLibraryFiles(this.getAccessToken(), type, source, sortBy, limit);
     }
     
@@ -2845,7 +2847,33 @@ public class ConstantContact {
         return myLibraryService.moveLibraryFiles(this.getAccessToken(), folderId, body.toString());
     }
 
-    public void addLibraryFile(){
+    public String addLibraryFile(File file, String fileName, String description, FileType fileType,
+            String folderId, ImageSource imageSource) throws ConstantContactServiceException, IOException {
+        if (fileName == null || "".equals(fileName)){
+            throw new IllegalArgumentException(Config.Errors.FILE_NAME_NULL);
+        } else if (file == null){
+            throw new IllegalArgumentException(Config.Errors.FILE_NULL);
+        } else if (folderId == null){
+            throw new IllegalArgumentException(Config.Errors.FOLDER_ID_NULL);
+        } else if (imageSource == null){
+            throw new IllegalArgumentException(Config.Errors.MY_LIBRARY_IMAGE_SOURCE_NULL);
+        } else if (description == null){
+            throw new IllegalArgumentException(Config.Errors.MY_LIBRARY_DESCRIPTION_NULL);
+        } else if (fileType == null){
+            throw new IllegalArgumentException(Config.Errors.MY_LIBRARY_FILE_TYPE_NULL);
+        }
         
+        Map<String,String> textParts = new HashMap<String,String>(); 
+        
+        textParts.put("description", description);
+        textParts.put("file_type", fileType.toString());
+        textParts.put("folder_id", folderId);
+        textParts.put("source", imageSource.toString());
+        
+        InputStream fileStream = new FileInputStream(file);
+        
+        MultipartBody request = MultipartBuilder.buildMultipartBody(textParts, fileName, fileStream);
+        
+        return myLibraryService.addLibraryFile(this.getAccessToken(), request);
     }
 }

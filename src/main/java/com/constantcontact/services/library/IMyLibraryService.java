@@ -3,6 +3,7 @@ package com.constantcontact.services.library;
 import java.util.List;
 
 import com.constantcontact.components.generic.response.ResultSet;
+import com.constantcontact.components.library.file.ImageSource;
 import com.constantcontact.components.library.file.MyLibraryFile;
 import com.constantcontact.components.library.folder.MyLibraryFolder;
 import com.constantcontact.components.library.folder.MyLibraryFolder.FolderSortOptions;
@@ -13,6 +14,7 @@ import com.constantcontact.exceptions.ConstantContactException;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.base.IBaseService;
 import com.constantcontact.util.Config.Errors;
+import com.constantcontact.util.http.MultipartBody;
 
 public interface IMyLibraryService extends IBaseService {
 
@@ -160,7 +162,7 @@ public interface IMyLibraryService extends IBaseService {
      *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
      *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
      */
-    public ResultSet<MyLibraryFile> getLibraryFiles(String accessToken, MyLibraryFile.Type type, MyLibraryFile.Source source, MyLibraryFile.SortBy sortBy, Integer limit) throws ConstantContactServiceException;
+    public ResultSet<MyLibraryFile> getLibraryFiles(String accessToken, MyLibraryFile.Type type, ImageSource source, MyLibraryFile.SortBy sortBy, Integer limit) throws ConstantContactServiceException;
     
     /**
      * Retrieve Library Files By Folder API.<br/>
@@ -258,4 +260,6 @@ public interface IMyLibraryService extends IBaseService {
      * @return The {@link List} of {@link MoveResults} Data
      */
     public List<MoveResults> moveLibraryFiles(String accessToken, String folderId, String body) throws ConstantContactServiceException;
+    
+    public String addLibraryFile(String accessToken, MultipartBody request) throws ConstantContactServiceException;
 }

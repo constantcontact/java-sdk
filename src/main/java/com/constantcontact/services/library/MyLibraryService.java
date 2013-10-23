@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.constantcontact.components.Component;
 import com.constantcontact.components.generic.response.ResultSet;
+import com.constantcontact.components.library.file.ImageSource;
 import com.constantcontact.components.library.file.MyLibraryFile;
 import com.constantcontact.components.library.folder.MyLibraryFolder;
 import com.constantcontact.components.library.folder.MyLibraryFolder.FolderSortOptions;
@@ -19,6 +20,7 @@ import com.constantcontact.util.CUrlRequestError;
 import com.constantcontact.util.CUrlResponse;
 import com.constantcontact.util.Config;
 import com.constantcontact.util.Config.Errors;
+import com.constantcontact.util.http.MultipartBody;
 
 public class MyLibraryService extends BaseService implements IMyLibraryService {
 
@@ -360,7 +362,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
      *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
      *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
      */
-    public ResultSet<MyLibraryFile> getLibraryFiles(String accessToken, MyLibraryFile.Type type, MyLibraryFile.Source source, MyLibraryFile.SortBy sortBy, Integer limit) throws ConstantContactServiceException{
+    public ResultSet<MyLibraryFile> getLibraryFiles(String accessToken, MyLibraryFile.Type type, ImageSource source, MyLibraryFile.SortBy sortBy, Integer limit) throws ConstantContactServiceException{
         ResultSet<MyLibraryFile> files = null;
         
         // Construct access URL
@@ -617,6 +619,29 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
         checkForResponseError(response, url);
 
         return movedResults;
+    }
+    
+    public String addLibraryFile(String accessToken, MultipartBody request) throws ConstantContactServiceException {
+
+        try {
+            String url = Config.Endpoints.BASE_URL + Config.Endpoints.LIBRARY_FILES;
+            CUrlResponse response = getRestClient().postMultipart(url, accessToken, request);
+
+            if (response.isError()) {
+                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
+                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
+                response.getInfo().add(new CUrlRequestError("url", url));
+                constantContactException.setErrorInfo(response.getInfo());
+                throw constantContactException;
+            }
+
+            // The Header structure supports more than one value for each header. Location only has one.
+            List<String> locationHeaders = response.getHeaders().get("Location");
+            return locationHeaders.get(0);
+        }
+        catch (Exception e) {
+            throw new ConstantContactServiceException(e);
+        }
     }
     
     private static void checkForResponseError(CUrlResponse response, String url) throws ConstantContactServiceException {

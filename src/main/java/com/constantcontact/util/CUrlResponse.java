@@ -3,6 +3,7 @@ package com.constantcontact.util;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A single CURL Response in Constant Contact.
@@ -20,6 +21,7 @@ public class CUrlResponse implements Serializable {
 	private String body;
 	private boolean error;
 	private List<CUrlRequestError> info;
+	private Map<String,List<String>> headers;
 	private int statusCode;
 
 	/**
@@ -112,7 +114,15 @@ public class CUrlResponse implements Serializable {
 		this.statusCode = statusCode;
 	}
 
-	/**
+	public Map<String,List<String>> getHeaders() {
+        return headers;
+    }
+
+    public void setHeaders(Map<String,List<String>> headers) {
+        this.headers = headers;
+    }
+
+    /**
 	 * Custom implementation for {@link Object#toString()}. 
 	 * 
 	 */

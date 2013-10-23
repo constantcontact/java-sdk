@@ -1,21 +1,17 @@
 package com.constantcontact.util.http;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.constantcontact.ConstantContact;
 import com.constantcontact.components.Component;
 import com.constantcontact.exceptions.component.ConstantContactComponentException;
 import com.constantcontact.util.CUrlRequestError;
 import com.constantcontact.util.CUrlResponse;
-import com.constantcontact.util.Config;
 import com.constantcontact.util.http.constants.ProcessorBase;
 
 /**
@@ -80,16 +76,19 @@ public class HttpProcessor implements ProcessorBase {
 			int responseCode = connection.getResponseCode();
 			urlResponse.setStatusCode(responseCode);
 
+			Map<String,List<String>> headers = extractHeaders();
+			urlResponse.setHeaders(headers);
+			
 			if (responseCode == HttpURLConnection.HTTP_NO_CONTENT) {
 				return urlResponse;
 			}
 
-			if (responseCode != HttpURLConnection.HTTP_OK && responseCode != Config.HTTP_CODES.EMAIL_CAMPAIGN_SCHEDULE_CREATED) {
+			if (responseCode >= 300) {
 				errorMessage = "Response with status: " + responseCode;
 				urlResponse.setError(true);
 			}
-
-			if (responseMessage == null || responseMessage.trim() == "") {
+			if ( (responseCode != HttpURLConnection.HTTP_ACCEPTED) && (responseMessage == null || responseMessage.trim() == "") ) {
+			    // ACCEPTED can have no body.
 				errorMessage = "Response was not returned or is null. Status code: " + responseCode;
 			}
 
@@ -134,7 +133,11 @@ public class HttpProcessor implements ProcessorBase {
 		return urlResponse;
 	}
 
-	/**
+	private static Map<String, List<String>> extractHeaders() {
+        return connection.getHeaderFields();
+    }
+
+    /**
 	 * Create the UriRequest to the Constant Contact endpoint.
 	 * 
 	 * @param urlParam
@@ -219,7 +222,7 @@ public class HttpProcessor implements ProcessorBase {
 			//Get the response
 			InputStream is = null;
 			
-			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK || connection.getResponseCode()  == Config.HTTP_CODES.EMAIL_CAMPAIGN_SCHEDULE_CREATED) {
+			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK || connection.getResponseCode()  == HttpURLConnection.HTTP_CREATED) {
 				is = connection.getInputStream();
 			} else {
 				is = connection.getErrorStream();
