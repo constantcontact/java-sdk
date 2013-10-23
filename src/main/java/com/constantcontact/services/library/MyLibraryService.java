@@ -623,25 +623,19 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
     
     public String addLibraryFile(String accessToken, MultipartBody request) throws ConstantContactServiceException {
 
-        try {
-            String url = Config.Endpoints.BASE_URL + Config.Endpoints.LIBRARY_FILES;
-            CUrlResponse response = getRestClient().postMultipart(url, accessToken, request);
+        String url = Config.Endpoints.BASE_URL + Config.Endpoints.LIBRARY_FILES;
+        CUrlResponse response = getRestClient().postMultipart(url, accessToken, request);
 
-            if (response.isError()) {
-                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-                response.getInfo().add(new CUrlRequestError("url", url));
-                constantContactException.setErrorInfo(response.getInfo());
-                throw constantContactException;
-            }
+        checkForResponseError(response, url);
 
-            // The Header structure supports more than one value for each header. Location only has one.
-            List<String> locationHeaders = response.getHeaders().get("Location");
-            return locationHeaders.get(0);
-        }
-        catch (Exception e) {
-            throw new ConstantContactServiceException(e);
-        }
+        // The Header structure supports more than one value for each header.
+        // Location only has one.
+        List<String> locationHeaders = response.getHeaders().get("Location");
+        
+        String folderURI = locationHeaders.get(0);
+        int folderIdStart = folderURI.lastIndexOf("/") + 1;
+        String folderId = folderURI.substring(folderIdStart);
+        return folderId; 
     }
     
     private static void checkForResponseError(CUrlResponse response, String url) throws ConstantContactServiceException {
