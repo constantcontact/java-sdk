@@ -23,7 +23,7 @@ import com.constantcontact.util.http.constants.ProcessorBase;
  */
 public class HttpProcessor implements ProcessorBase {
 
-    static HttpURLConnection connection;
+    private static ThreadLocal<HttpURLConnection> threadConnection = new ThreadLocal<HttpURLConnection>();
     
     /**
      * Convenience method that automatically converts from Strings to bytes before calling makeHttpRequest.
@@ -73,6 +73,7 @@ public class HttpProcessor implements ProcessorBase {
 
 			responseMessage = clientConnection(urlParam, httpMethod, contentType.getStringVal(), accessToken, data);
 
+			HttpURLConnection connection = threadConnection.get();
 			int responseCode = connection.getResponseCode();
 			urlResponse.setStatusCode(responseCode);
 
@@ -129,11 +130,13 @@ public class HttpProcessor implements ProcessorBase {
 		} else {
 			urlResponse.setBody(responseMessage);
 		}
+		HttpURLConnection connection = threadConnection.get();
 		connection.disconnect();
 		return urlResponse;
 	}
 
 	private static Map<String, List<String>> extractHeaders() {
+	    HttpURLConnection connection = threadConnection.get();
         return connection.getHeaderFields();
     }
 
@@ -163,7 +166,8 @@ public class HttpProcessor implements ProcessorBase {
 		
 		System.out.println("URL :" + urlParam);
 
-		connection = (HttpURLConnection) url.openConnection();
+		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		threadConnection.set(connection);
 		connection.setReadTimeout(10000);
 		connection.setUseCaches(false);
 
@@ -209,10 +213,10 @@ public class HttpProcessor implements ProcessorBase {
 	 * @return server response
 	 */
 	public static String executeRequest(byte[] data, String accessToken) {
-
+	    HttpURLConnection connection = threadConnection.get();
 		try {
 			// Send request
-			if (data != null) {				
+			if (data != null) {
 				DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
 				wr.write(data);
 				wr.flush();
