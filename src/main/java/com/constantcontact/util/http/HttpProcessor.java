@@ -23,8 +23,6 @@ import com.constantcontact.util.http.constants.ProcessorBase;
  */
 public class HttpProcessor implements ProcessorBase {
 
-    private static ThreadLocal<HttpURLConnection> threadConnection = new ThreadLocal<HttpURLConnection>();
-    
     /**
      * Convenience method that automatically converts from Strings to bytes before calling makeHttpRequest.
      * @param urlParam
@@ -34,7 +32,7 @@ public class HttpProcessor implements ProcessorBase {
      * @param data
      * @return
      */
-    public static CUrlResponse makeHttpRequest(String urlParam, HttpMethod httpMethod, ContentType contentType, String accessToken, String data) {
+    public CUrlResponse makeHttpRequest(String urlParam, HttpMethod httpMethod, ContentType contentType, String accessToken, String data) {
         byte[] bytes = null;
         
         if (data != null){
@@ -62,22 +60,24 @@ public class HttpProcessor implements ProcessorBase {
 	 * @return A {@link CUrlResponse} containing either the response data, or
 	 *         the error info otherwise.
 	 */
-	public static CUrlResponse makeHttpRequest(String urlParam, HttpMethod httpMethod, ContentType contentType, String accessToken, byte[] data) {
+	public CUrlResponse makeHttpRequest(String urlParam, HttpMethod httpMethod, ContentType contentType, String accessToken, byte[] data) {
 
 		BufferedReader reader = null;
 
 		CUrlResponse urlResponse = new CUrlResponse();
 		String responseMessage = null;
 		String errorMessage = null;
+		HttpURLConnection connection = null;
 		try {
 
-			responseMessage = clientConnection(urlParam, httpMethod, contentType.getStringVal(), accessToken, data);
+			connection = clientConnection(urlParam, httpMethod, contentType.getStringVal(), accessToken, data);
 
-			HttpURLConnection connection = threadConnection.get();
+			responseMessage = executeRequest(connection, data, accessToken);
+			
 			int responseCode = connection.getResponseCode();
 			urlResponse.setStatusCode(responseCode);
 
-			Map<String,List<String>> headers = extractHeaders();
+			Map<String,List<String>> headers = extractHeaders(connection);
 			urlResponse.setHeaders(headers);
 			
 			if (responseCode == HttpURLConnection.HTTP_NO_CONTENT) {
@@ -105,6 +105,10 @@ public class HttpProcessor implements ProcessorBase {
 				}// silently ignore
 				reader = null;
 			}
+			
+			if (connection != null){
+			    connection.disconnect();
+			}
 		}
 		if (urlResponse.isError()) {
 
@@ -130,18 +134,15 @@ public class HttpProcessor implements ProcessorBase {
 		} else {
 			urlResponse.setBody(responseMessage);
 		}
-		HttpURLConnection connection = threadConnection.get();
-		connection.disconnect();
 		return urlResponse;
 	}
 
-	private static Map<String, List<String>> extractHeaders() {
-	    HttpURLConnection connection = threadConnection.get();
+	private Map<String, List<String>> extractHeaders(HttpURLConnection connection) {
         return connection.getHeaderFields();
     }
 
     /**
-	 * Create the UriRequest to the Constant Contact endpoint.
+	 * Create the Connection to the Constant Contact endpoint.
 	 * 
 	 * @param urlParam
 	 *            The exact URL to request.
@@ -152,12 +153,12 @@ public class HttpProcessor implements ProcessorBase {
 	 *             The content type of the request body. Usually application/json
 	 * @param accessToken
 	 *            The Constant Contact OAuth2 access token.
-	 * @return A HttpUriRequest
+	 * @return The Connection object
 	 * @throws Exception
 	 *             When something went wrong.
 	 */
 
-	private static String clientConnection(String urlParam, HttpMethod httpMethod, String contentType, String accessToken, byte[] data) throws Exception {
+	private HttpURLConnection clientConnection(String urlParam, HttpMethod httpMethod, String contentType, String accessToken, byte[] data) throws Exception {
 
 		String bindString = urlParam.contains("=") ? "&" : "?";
 		urlParam = String.format("%1$s%2$sapi_key=%3$s", urlParam, bindString, ConstantContact.API_KEY);
@@ -167,7 +168,6 @@ public class HttpProcessor implements ProcessorBase {
 		System.out.println("URL :" + urlParam);
 
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-		threadConnection.set(connection);
 		connection.setReadTimeout(10000);
 		connection.setUseCaches(false);
 
@@ -186,34 +186,32 @@ public class HttpProcessor implements ProcessorBase {
 			connection.setDoInput(true);
 			connection.setDoOutput(true);
 			connection.setRequestMethod("POST");
-			
-			return executeRequest(data, accessToken);
+			break;
 		case DELETE:
 			connection.setRequestMethod("DELETE");
-			
-			return executeRequest(data, accessToken);
+			break;
  		case PUT:
 			connection.setRequestMethod("PUT");
 			connection.setDoInput(true);
 			connection.setDoOutput(true);
-			
-			return executeRequest(data, accessToken);
+			break;
  		case GET:
 		default:
 			connection.setRequestMethod("GET");
-			return executeRequest(data, accessToken);
 		}
+		
+		return connection;
 	}
 	/**
 	 * Sends the url request to the Constant Contact endpoint.
 	 * Sends the associated data if any, and returns the server response.
 	 * 
+	 * @param connection
 	 * @param data
 	 * @param accessToken
 	 * @return server response
 	 */
-	public static String executeRequest(byte[] data, String accessToken) {
-	    HttpURLConnection connection = threadConnection.get();
+	private String executeRequest(HttpURLConnection connection, byte[] data, String accessToken) {
 		try {
 			// Send request
 			if (data != null) {
@@ -260,13 +258,6 @@ public class HttpProcessor implements ProcessorBase {
 				connection.disconnect();
 			}
 		}
-	}
-
-	/**
-	 * Default constructor.
-	 */
-	public HttpProcessor() {
-		super();
 	}
 
 }
