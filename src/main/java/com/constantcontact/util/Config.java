@@ -245,13 +245,16 @@ public final class Config {
     
     public static final String LIBRARY_INFO = "library/info";
     public static final String LIBRARY_FILES = "library/files";
+    public static final String LIBRARY_FILES_BY_FOLDER = "library/folders/%1$s/files";
     public static final String LIBRARY_FOLDERS = "library/folders";
     
     public static final String LIBRARY_FOLDER = LIBRARY_FOLDERS + "/%1$s";
     public static final String LIBRARY_FOLDER_TRASH = LIBRARY_FOLDERS + "/trash/files";
 
     public static final String LIBRARY_FILE = LIBRARY_FILES + "/%1$s";
-    public static final String LIBRARY_FILE_UPLOAD_STATUS = LIBRARY_FILES + "/uploadStatus/%1$s";
+    public static final String LIBRARY_FILE_UPLOAD_STATUS = LIBRARY_FILES + "/uploadstatus/%1$s";
+    
+    public static final String LIBRARY_FILE_MOVE = "library/folders/%1$s/files"; 
     
     /**
      * Default constructor.<br/>
@@ -387,19 +390,19 @@ public final class Config {
     public static final String BULK_CONTACTS_REQUEST_NULL = "ContactsRequest parameter must not be null.";
 
     /**
-     * Contacts File Name null error.
-     */
-    public static final String BULK_CONTACTS_FILE_NAME_NULL = "FileName parameter must not be null.";
-    
-    /**
-     * Contacts File null error.
-     */
-    public static final String BULK_CONTACTS_FILE_NULL = "File parameter must not be null.";
-    
-    /**
      * Contacts ListId null error.
      */
     public static final String BULK_CONTACTS_LIST_NULL = "ListIds parameter must not be null.";
+
+    /**
+     * File Name null error.
+     */
+    public static final String FILE_NAME_NULL = "FileName parameter must not be null.";
+    
+    /**
+     * File null error.
+     */
+    public static final String FILE_NULL = "File parameter must not be null.";
     
     /**
      * MyLibrary Folder null error; 
@@ -410,11 +413,22 @@ public final class Config {
      * MyLibrary FolderId null error; 
      */
     public static final String FOLDER_ID_NULL = "FolderId parameter must not be null";
+
+    /**
+     * MyLibrary FolderId null error; 
+     */
+    public static final String FILE_ID_NULL = "FileId parameter must not be null";
     
     /**
      * Pagination null error
      */
     public static final String PAGINATION_NULL = "Pagination parameter must not be null";
+    
+    public static final String MY_LIBRARY_IMAGE_SOURCE_NULL = "Image Source parameter must not be null";
+  
+    public static final String MY_LIBRARY_DESCRIPTION_NULL = "Description must not be null";
+
+    public static final String MY_LIBRARY_FILE_TYPE_NULL = "File type must not be null";
     
     /**
      * Default constructor.<br/>

@@ -12,8 +12,6 @@ public class MyLibraryFile extends Component implements Serializable {
     
     public enum Type {ALL, IMAGES, DOCUMENTS};
     
-    public enum Source {ALL, MyComputer, StockImage, Facebook, Instagram, Shutterstock, Mobile};
-
     public enum SortBy {ADDED_DATE, ADDED_DATE_DESC, MODIFIED_DATE, MODIFIED_DATE_DESC,
         NAME, NAME_DESC, SIZE, SIZE_DESC, DIMENSION, DIMENSION_DESC};
     
@@ -30,7 +28,7 @@ public class MyLibraryFile extends Component implements Serializable {
     private Integer width;
     
     @JsonIgnore
-    private String fileName;
+    private String name;
     
     @JsonIgnore
     private String url;
@@ -49,6 +47,18 @@ public class MyLibraryFile extends Component implements Serializable {
     
     @JsonIgnore
     private String folderId;
+    
+    @JsonIgnore
+    private Integer height;
+    
+    @JsonIgnore
+    private ImageSource source;
+    
+    @JsonIgnore
+    private String description;
+    
+    @JsonIgnore
+    private Boolean isImage;
     
     @JsonIgnore
     private MyLibraryThumbnail thumbnail;
@@ -73,9 +83,9 @@ public class MyLibraryFile extends Component implements Serializable {
         return width;
     }
 
-    @JsonProperty("file_name")
-    public String getFileName() {
-        return fileName;
+    @JsonProperty("name")
+    public String getName() {
+        return name;
     }
 
     @JsonProperty("url")
@@ -108,6 +118,26 @@ public class MyLibraryFile extends Component implements Serializable {
         return folderId;
     }
 
+    @JsonProperty("height")
+    public Integer getHeight(){
+        return height;
+    }
+    
+    @JsonProperty("source")
+    public ImageSource getSource(){
+        return source;
+    }
+    
+    @JsonProperty("description")
+    public String getDescription(){
+        return description;
+    }
+    
+    @JsonProperty("is_image")
+    public Boolean getIsImage(){
+        return isImage;
+    }
+
     @JsonProperty("thumbnail")
     public MyLibraryThumbnail getThumbnail() {
         return thumbnail;
@@ -129,8 +159,8 @@ public class MyLibraryFile extends Component implements Serializable {
         this.width = width;
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setUrl(String url) {
@@ -156,6 +186,22 @@ public class MyLibraryFile extends Component implements Serializable {
     public void setFolderId(String folderId) {
         this.folderId = folderId;
     }
+    
+    public void setHeight(Integer height){
+        this.height = height;
+    }
+    
+    public void setSource(ImageSource source){
+        this.source = source;
+    }
+    
+    public void setDescription(String description){
+        this.description = description;
+    }
+    
+    public void setIsImage(Boolean isImage){
+        this.isImage = isImage;
+    }
 
     public void setThumbnail(MyLibraryThumbnail thumbnail) {
         this.thumbnail = thumbnail;
@@ -171,13 +217,16 @@ public class MyLibraryFile extends Component implements Serializable {
         builder.append(", status=").append(status);
         builder.append(", modifiedDate=").append(modifiedDate);
         builder.append(", width=").append(width);
-        builder.append(", fileName=").append(fileName);
+        builder.append(", name=").append(name);
         builder.append(", url=").append(url);
         builder.append(", fileType=").append(fileType);
         builder.append(", size=").append(size);
         builder.append(", id=").append(id);
         builder.append(", folder=").append(folder);
         builder.append(", folderId=").append(folderId);
+        builder.append(", height=").append(height);
+        builder.append(", source=").append(source);
+        builder.append(", description=").append(description);
         builder.append(", thumbnail=").append(thumbnail);
 
         builder.append("]");

@@ -1,13 +1,17 @@
 package com.constantcontact.services.library;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 import com.constantcontact.components.Component;
 import com.constantcontact.components.generic.response.ResultSet;
+import com.constantcontact.components.library.file.ImageSource;
 import com.constantcontact.components.library.file.MyLibraryFile;
 import com.constantcontact.components.library.folder.MyLibraryFolder;
 import com.constantcontact.components.library.folder.MyLibraryFolder.FolderSortOptions;
+import com.constantcontact.components.library.info.MoveResults;
 import com.constantcontact.components.library.info.MyLibrarySummary;
+import com.constantcontact.components.library.info.UploadStatus;
 import com.constantcontact.exceptions.ConstantContactException;
 import com.constantcontact.exceptions.component.ConstantContactComponentException;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
@@ -15,6 +19,8 @@ import com.constantcontact.services.base.BaseService;
 import com.constantcontact.util.CUrlRequestError;
 import com.constantcontact.util.CUrlResponse;
 import com.constantcontact.util.Config;
+import com.constantcontact.util.Config.Errors;
+import com.constantcontact.util.http.MultipartBody;
 
 public class MyLibraryService extends BaseService implements IMyLibraryService {
 
@@ -42,13 +48,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
                 throw new ConstantContactServiceException(e);
             }
         }
-        if (response.isError()) {
-            ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                    ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-            response.getInfo().add(new CUrlRequestError("url", url));
-            constantContactException.setErrorInfo(response.getInfo());
-            throw constantContactException;
-        }
+        checkForResponseError(response, url);
 
         return summary;
 
@@ -95,13 +95,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
                 throw new ConstantContactServiceException(e);
             }
         }
-        if (response.isError()) {
-            ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                    ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-            response.getInfo().add(new CUrlRequestError("url", url));
-            constantContactException.setErrorInfo(response.getInfo());
-            throw constantContactException;
-        }
+        checkForResponseError(response, url);
 
         return folders;
     }
@@ -137,13 +131,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
                 newFolder = Component.fromJSON(response.getBody(), MyLibraryFolder.class);
 
             }
-            if (response.isError()) {
-                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-                response.getInfo().add(new CUrlRequestError("url", url));
-                constantContactException.setErrorInfo(response.getInfo());
-                throw constantContactException;
-            }
+            checkForResponseError(response, url);
 
         }
         catch (ConstantContactComponentException e) {
@@ -189,13 +177,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
                 throw new ConstantContactServiceException(e);
             }
         }
-        if (response.isError()) {
-            ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                    ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-            response.getInfo().add(new CUrlRequestError("url", url));
-            constantContactException.setErrorInfo(response.getInfo());
-            throw constantContactException;
-        }
+        checkForResponseError(response, url);
 
         return folder;
     }
@@ -247,13 +229,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
                 throw new ConstantContactServiceException(e);
             }
         }
-        if (response.isError()) {
-            ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                    ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-            response.getInfo().add(new CUrlRequestError("url", url));
-            constantContactException.setErrorInfo(response.getInfo());
-            throw constantContactException;
-        }
+        checkForResponseError(response, url);
 
         if (includePayload == null || includePayload.booleanValue() == true) {
             return updateFolder;
@@ -289,20 +265,13 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
 
         // Get REST response
         CUrlResponse response = getRestClient().delete(url, accessToken);
-        if (response.isError()) {
-            ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                    ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-            response.getInfo().add(new CUrlRequestError("url", url));
-            constantContactException.setErrorInfo(response.getInfo());
-            throw constantContactException;
-        }
+        checkForResponseError(response, url);
 
         return;
     }
     
     /**
      * Retrieve Library Trash API.<br/>
-     * Details in : {@link MyLibraryService#getLibraryTrash(String, MyLibraryFile.Type, MyLibraryFile.SortBy, Integer)}
      * 
      * @param accessToken The Access Token for your user
      * @param type - The type of files to return. Null for default.
@@ -346,13 +315,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
                 throw new ConstantContactServiceException(e);
             }
           }
-          if (response.isError()) {
-            ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-            response.getInfo().add(new CUrlRequestError("url", url));
-            constantContactException.setErrorInfo(response.getInfo());
-            throw constantContactException;
-          }
+          checkForResponseError(response, url);
 
           return files;        
     }
@@ -376,6 +339,315 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
 
         // Get REST response
         CUrlResponse response = getRestClient().delete(url, accessToken);
+        checkForResponseError(response, url);
+
+        return;
+    }
+    
+    /**
+     * Retrieve Library File API.<br/>
+     * 
+     * @param accessToken The Access Token for your user
+     * @param type - The type of files to return. Null for default.
+     * @param source - The source of the files. Null for default.
+     * @param sortBy - The way to sort results. Null for default
+     * @param limit - The number of results to return per page.
+     * @return A {@link ResultSet} of {@link MyLibraryFile} in case of success; an exception is thrown otherwise.
+     * @throws ConstantContactServiceException Thrown when :
+     *             <ul>
+     *             <li>something went wrong either on the client side;</li>
+     *             <li>or an error message was received from the server side.</li>
+     *             </ul>
+     * <br/>
+     *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+     *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+     */
+    public ResultSet<MyLibraryFile> getLibraryFiles(String accessToken, MyLibraryFile.Type type, ImageSource source, MyLibraryFile.SortBy sortBy, Integer limit) throws ConstantContactServiceException{
+        ResultSet<MyLibraryFile> files = null;
+        
+        // Construct access URL
+        String url = paginateUrl(String.format("%1$s%2$s", Config.Endpoints.BASE_URL, Config.Endpoints.LIBRARY_FILES), limit);
+
+        try {
+            if (type != null) {
+               url = appendParam(url, "type", type.toString());
+            }
+            if (source != null) {
+                url = appendParam(url, "source", source.toString());
+            }
+            if (sortBy != null){
+                url = appendParam(url, "sort_by", sortBy.toString());
+            }
+        }
+        catch (UnsupportedEncodingException e) {
+            throw new ConstantContactServiceException(e);
+        }
+  
+        // Get REST response
+        CUrlResponse response = getRestClient().get(url, accessToken);
+        if (response.hasData()) {
+          try {
+              files = Component.resultSetFromJSON(response.getBody(), MyLibraryFile.class);
+          }
+          catch (ConstantContactComponentException e) {
+              throw new ConstantContactServiceException(e);
+          }
+        }
+        checkForResponseError(response, url);
+
+        return files;           
+    }
+    
+    /**
+     * Retrieve Library Files By Folder API.<br/>
+     * 
+     * @param accessToken The Access Token for your user
+     * @param folderId - The library Folder Id
+     * @param limit - The number of results to return per page.
+     * @return A {@link ResultSet} of {@link MyLibraryFile} in case of success; an exception is thrown otherwise.
+     * @throws ConstantContactServiceException Thrown when :
+     *             <ul>
+     *             <li>something went wrong either on the client side;</li>
+     *             <li>or an error message was received from the server side.</li>
+     *             </ul>
+     * <br/>
+     *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+     *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+     */
+    public ResultSet<MyLibraryFile> getLibraryFilesByFolder(String accessToken, String folderId, Integer limit) throws ConstantContactServiceException{
+        ResultSet<MyLibraryFile> files = null;
+        
+        // Construct access URL
+        String url = paginateUrl(String.format("%1$s%2$s", Config.Endpoints.BASE_URL, String.format(Config.Endpoints.LIBRARY_FILES_BY_FOLDER, folderId)), limit);
+
+        // Get REST response
+        CUrlResponse response = getRestClient().get(url, accessToken);
+        if (response.hasData()) {
+          try {
+              files = Component.resultSetFromJSON(response.getBody(), MyLibraryFile.class);
+          }
+          catch (ConstantContactComponentException e) {
+              throw new ConstantContactServiceException(e);
+          }
+        }
+        checkForResponseError(response, url);
+
+        return files;           
+    }
+    
+    /**
+     * Get Library File API.<br/>
+     * 
+     * @param accessToken The Access Token for your user
+     * @param fileId The ID for the File to return.
+     * @return The added {@link MyLibraryFile}.
+     * @throws ConstantContactServiceException Thrown when :
+     *             <ul>
+     *             <li>something went wrong either on the client side;</li>
+     *             <li>or an error message was received from the server side.</li>
+     *             </ul>
+     * <br/>
+     *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+     *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+     */
+    public MyLibraryFile getLibraryFile(String accessToken, String fileId) throws ConstantContactServiceException{
+        MyLibraryFile file = null;
+
+        String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+                String.format(Config.Endpoints.LIBRARY_FILE, fileId));
+
+        // Get REST response
+        CUrlResponse response = getRestClient().get(url, accessToken);
+        if (response.hasData()) {
+            try {
+                file = Component.fromJSON(response.getBody(), MyLibraryFile.class);
+            }
+            catch (ConstantContactComponentException e) {
+                throw new ConstantContactServiceException(e);
+            }
+        }
+        checkForResponseError(response, url);
+
+        return file;
+    }
+    
+    /**
+     * Update Library File API.<br/>
+     * 
+     * @param accessToken The Access Token for your user
+     * @param file The Folder to update.
+     * @param includePayload If the result should be the updated File or NULL (defaults to true if left null)
+     * @return The added {@link MyLibraryFile}, or Null if includePayload was false.
+     * @throws ConstantContactServiceException Thrown when :
+     *             <ul>
+     *             <li>something went wrong either on the client side;</li>
+     *             <li>or an error message was received from the server side.</li>
+     *             </ul>
+     * <br/>
+     *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+     *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+     */ 
+    public MyLibraryFile updateLibraryFile(String accessToken, MyLibraryFile file, Boolean includePayload) throws ConstantContactServiceException {
+        MyLibraryFile updateFile = null;
+
+        String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+                String.format(Config.Endpoints.LIBRARY_FILE, file.getId()));
+        String json;
+        try {
+            json = file.toJSON();
+        }
+        catch (ConstantContactComponentException e) {
+            throw new ConstantContactServiceException(e);
+        }
+
+        CUrlResponse response = getRestClient().put(url, accessToken, json);
+        if (response.hasData()) {
+            try {
+                updateFile = Component.fromJSON(response.getBody(), MyLibraryFile.class);
+            }
+            catch (ConstantContactComponentException e) {
+                throw new ConstantContactServiceException(e);
+            }
+        }
+        checkForResponseError(response, url);
+
+        if (includePayload == null || includePayload.booleanValue() == true) {
+            return updateFile;
+        }
+        else {
+            return null;
+        }
+    }
+    
+    /**
+     * Delete Library File API.<br/>
+     * 
+     * @param accessToken The Access Token for your user
+     * @param fileId The ID for the Folder to delete.
+     * @return Void. Exceptions are raised on failures.
+     * @throws ConstantContactServiceException Thrown when :
+     *             <ul>
+     *             <li>something went wrong either on the client side;</li>
+     *             <li>or an error message was received from the server side.</li>
+     *             </ul>
+     * <br/>
+     *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+     *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+     */
+    public void deleteLibraryFile(String accessToken, String fileId) throws ConstantContactServiceException {
+        String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+                String.format(Config.Endpoints.LIBRARY_FILE, fileId));
+
+        // Get REST response
+        CUrlResponse response = getRestClient().delete(url, accessToken);
+        checkForResponseError(response, url);
+
+        return;   
+    }
+    
+    /**
+     * Retrieves the Status of files uploaded to the Library <br />
+     * 
+     * @param accessToken The Access Token for your user
+     * @param fileId A varargs list of fileIds to return results for.
+     * @throws {@link ConstantContactServiceException} When something went wrong
+     *         in the Constant Contact flow or an error is returned from server.
+     * @return The {@link List} of {@link UploadStatus} Data
+     */
+    public List<UploadStatus> getLibraryFilesUploadStatus(String accessToken, String ... fileId) throws ConstantContactServiceException {
+        
+        List<UploadStatus> uploadStatuses = null;
+        
+        StringBuffer filesToGet = new StringBuffer();
+        
+        filesToGet.append(fileId[0]);
+        for (int i=1;i<fileId.length;i++){
+            filesToGet.append(",");
+            filesToGet.append(fileId[i]);
+        }
+     
+        String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+                String.format(Config.Endpoints.LIBRARY_FILE_UPLOAD_STATUS, filesToGet));
+        
+        // Get REST response
+        CUrlResponse response = getRestClient().get(url, accessToken);
+        
+        if (response.hasData()) {
+            try {
+                uploadStatuses = Component.listFromJSON(response.getBody(), UploadStatus.class);
+            }
+            catch (ConstantContactComponentException e) {
+                throw new ConstantContactServiceException(e);
+            }
+        }
+        checkForResponseError(response, url);
+
+        return uploadStatuses;
+    }
+    
+    /**
+     * Moves files from one folder to another <br />
+     * 
+     * @param accessToken The Access Token for your user
+     * @param folderId The folder to put the files in
+     * @param body The JSON body [an array of fileIds]
+     * @throws {@link ConstantContactServiceException} When something went wrong
+     *         in the Constant Contact flow or an error is returned from server.
+     * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+     *         The exception also contains a description of the cause.<br/>
+     *         Error message is taken from one of the members of {@link Errors}
+     * @return The {@link List} of {@link MoveResults} Data
+     */
+    public List<MoveResults> moveLibraryFiles(String accessToken, String folderId, String body) throws ConstantContactServiceException {
+
+        List<MoveResults> movedResults = null;
+     
+        String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+                String.format(Config.Endpoints.LIBRARY_FILE_MOVE, folderId));
+        
+        // Get REST response
+        CUrlResponse response = getRestClient().put(url, accessToken, body);
+        
+        if (response.hasData()) {
+            try {
+                movedResults = Component.listFromJSON(response.getBody(), MoveResults.class);
+            }
+            catch (ConstantContactComponentException e) {
+                throw new ConstantContactServiceException(e);
+            }
+        }
+        checkForResponseError(response, url);
+
+        return movedResults;
+    }
+    
+    /**
+     * Adds a file to the library <br />
+     * 
+     * @param accessToken The Access Token for your user
+     * @param  request The {@link MultipartBody} to upload
+     * @return The fileId associated with the uploaded file
+     * @throws {@link ConstantContactServiceException} When something went wrong
+     *         in the Constant Contact flow or an error is returned from server.
+     */
+    public String addLibraryFile(String accessToken, MultipartBody request) throws ConstantContactServiceException {
+
+        String url = Config.Endpoints.BASE_URL + Config.Endpoints.LIBRARY_FILES;
+        CUrlResponse response = getRestClient().postMultipart(url, accessToken, request);
+
+        checkForResponseError(response, url);
+
+        // The Header structure supports more than one value for each header.
+        // Location only has one.
+        List<String> locationHeaders = response.getHeaders().get("Location");
+        
+        String folderURI = locationHeaders.get(0);
+        int folderIdStart = folderURI.lastIndexOf("/") + 1;
+        String folderId = folderURI.substring(folderIdStart);
+        return folderId; 
+    }
+    
+    private static void checkForResponseError(CUrlResponse response, String url) throws ConstantContactServiceException {
         if (response.isError()) {
             ConstantContactServiceException constantContactException = new ConstantContactServiceException(
                     ConstantContactServiceException.RESPONSE_ERR_SERVICE);
@@ -383,7 +655,5 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
             constantContactException.setErrorInfo(response.getInfo());
             throw constantContactException;
         }
-
-        return;
     }
 }

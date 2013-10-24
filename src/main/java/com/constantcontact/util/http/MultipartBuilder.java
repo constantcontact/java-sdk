@@ -20,7 +20,7 @@ public class MultipartBuilder {
 
     /**
      * Creates a {@link MultipartBody} from the provided parts
-     * @param textParts Any textual fields
+     * @param textParts Any textual fields except File Name, as it's treated specially.
      * @param fileName The name of the file being sent
      * @param filePart The file to send
      * @throws IOException
