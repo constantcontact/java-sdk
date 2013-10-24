@@ -2847,8 +2847,25 @@ public class ConstantContact {
         return myLibraryService.moveLibraryFiles(this.getAccessToken(), folderId, body.toString());
     }
 
+    /**
+     * Adds a file to the library <br />
+     * Details in {@link MyLibraryService#addLibraryFile(String, MultipartBody)}
+     * @param file The file to upload
+     * @param fileName The name to associate it with
+     * @param description The description of the file.
+     * @param fileType The {@link FileType} of the file
+     * @param folderId The folder to upload it to
+     * @param imageSource The {@link ImageSource} of the file
+     * @return The fileId associated with the uploaded file
+     * @throws {@link ConstantContactServiceException} When something went wrong
+     *         in the Constant Contact flow or an error is returned from server.
+     * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+     *         The exception also contains a description of the cause.<br/>
+     *         Error message is taken from one of the members of {@link Errors}
+     * @throws IOException if there is an issue with processing the file for upload.
+     */
     public String addLibraryFile(File file, String fileName, String description, FileType fileType,
-            String folderId, ImageSource imageSource) throws ConstantContactServiceException, IOException {
+            String folderId, ImageSource imageSource) throws ConstantContactServiceException, IOException, IllegalArgumentException {
         if (fileName == null || "".equals(fileName)){
             throw new IllegalArgumentException(Config.Errors.FILE_NAME_NULL);
         } else if (file == null){

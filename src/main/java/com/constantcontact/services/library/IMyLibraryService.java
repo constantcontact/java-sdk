@@ -261,5 +261,14 @@ public interface IMyLibraryService extends IBaseService {
      */
     public List<MoveResults> moveLibraryFiles(String accessToken, String folderId, String body) throws ConstantContactServiceException;
     
+    /**
+     * Adds a file to the library <br />
+     * 
+     * @param accessToken The Access Token for your user
+     * @param  request The {@link MultipartBody} to upload
+     * @return The fileId associated with the uploaded file
+     * @throws {@link ConstantContactServiceException} When something went wrong
+     *         in the Constant Contact flow or an error is returned from server.
+     */
     public String addLibraryFile(String accessToken, MultipartBody request) throws ConstantContactServiceException;
 }
