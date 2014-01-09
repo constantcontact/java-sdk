@@ -422,8 +422,17 @@ public class ConstantContact {
 	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
 	 */
-	public ResultSet<Contact> getContactByEmail(String email) throws ConstantContactServiceException, UnsupportedEncodingException {
-		return contactService.getContactByEmail(this.getAccessToken(), URLEncoder.encode(email, "UTF-8"));
+	public ResultSet<Contact> getContactByEmail(String email) throws ConstantContactServiceException {
+                String encodedEmail = null;
+                try
+                {
+                        encodedEmail = URLEncoder.encode(email, "UTF-8");
+                }
+                catch(UnsupportedEncodingException ex)
+                {
+                        throw new IllegalStateException(ex);
+                }
+                return contactService.getContactByEmail(this.getAccessToken(), encodedEmail);
 	}
 
 	/**
