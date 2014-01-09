@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.net.URLEncoder;
 
 import com.constantcontact.components.accounts.VerifiedEmailAddress;
 import com.constantcontact.components.activities.contacts.request.AddContactsRequest;
@@ -75,6 +76,7 @@ import com.constantcontact.util.Config;
 import com.constantcontact.util.Config.Errors;
 import com.constantcontact.util.http.MultipartBody;
 import com.constantcontact.util.http.MultipartBuilder;
+import java.io.UnsupportedEncodingException;
 
 /**
  * Main Constant Contact class.<br/>
@@ -420,8 +422,8 @@ public class ConstantContact {
 	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
 	 */
-	public ResultSet<Contact> getContactByEmail(String email) throws ConstantContactServiceException {
-		return contactService.getContactByEmail(this.getAccessToken(), email);
+	public ResultSet<Contact> getContactByEmail(String email) throws ConstantContactServiceException, UnsupportedEncodingException {
+		return contactService.getContactByEmail(this.getAccessToken(), URLEncoder.encode(email, "UTF-8"));
 	}
 
 	/**
