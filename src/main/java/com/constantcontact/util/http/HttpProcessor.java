@@ -1,12 +1,5 @@
 package com.constantcontact.util.http;
 
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import com.constantcontact.ConstantContact;
 import com.constantcontact.components.Component;
 import com.constantcontact.exceptions.component.ConstantContactComponentException;
@@ -14,10 +7,17 @@ import com.constantcontact.util.CUrlRequestError;
 import com.constantcontact.util.CUrlResponse;
 import com.constantcontact.util.http.constants.ProcessorBase;
 
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Low-level Class responsible with HTTP requests in Constant Contact.<br/>
  * Outside has access only to
- * {@link HttpProcessor#makeHttpRequest(String, HttpMethod, String, String)}
+ * {@link HttpProcessor#makeHttpRequest(String, HttpMethod, ContentType, String, String)}
  * 
  * @author ConstantContact
  */
@@ -73,8 +73,10 @@ public class HttpProcessor implements ProcessorBase {
 			connection = clientConnection(urlParam, httpMethod, contentType.getStringVal(), accessToken, data);
 
 			responseMessage = executeRequest(connection, data, accessToken);
-			
-			int responseCode = connection.getResponseCode();
+
+            System.out.println(responseMessage);
+
+            int responseCode = connection.getResponseCode();
 			urlResponse.setStatusCode(responseCode);
 
 			Map<String,List<String>> headers = extractHeaders(connection);
@@ -195,6 +197,10 @@ public class HttpProcessor implements ProcessorBase {
 			connection.setDoInput(true);
 			connection.setDoOutput(true);
 			break;
+        case PATCH:
+            connection.setRequestMethod("PATCH");
+            connection.setDoInput(true);
+            connection.setDoOutput(true);
  		case GET:
 		default:
 			connection.setRequestMethod("GET");
