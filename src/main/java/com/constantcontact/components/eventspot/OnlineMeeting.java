@@ -21,8 +21,6 @@ public class OnlineMeeting extends Component implements Serializable {
     private String providerType;
     @JsonIgnore
     private String url;
-    @JsonIgnore
-    private String payableTo;
 
     @JsonProperty("instructions")
     public String getInstructions() {
@@ -34,7 +32,7 @@ public class OnlineMeeting extends Component implements Serializable {
         return providerMeetingId;
     }
 
-    @JsonProperty("provider_type")
+   // @JsonProperty("provider_type")
     public String getProviderType() {
         return providerType;
     }
@@ -42,11 +40,6 @@ public class OnlineMeeting extends Component implements Serializable {
     @JsonProperty("url")
     public String getUrl() {
         return url;
-    }
-
-    @JsonProperty("payable_to")
-    public String getPayableTo() {
-        return payableTo;
     }
 
     public void setInstructions(String instructions) {
@@ -65,7 +58,11 @@ public class OnlineMeeting extends Component implements Serializable {
         this.url = url;
     }
 
-    public void setPayableTo(String payableTo) {
-        this.payableTo = payableTo;
+    /**
+     * Default constructor.
+     */
+    public OnlineMeeting() {
+        super();
     }
+
 }

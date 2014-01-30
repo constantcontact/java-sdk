@@ -125,6 +125,14 @@ public class TrackInformation extends Component implements Serializable{
         this.registrationLimitDate = registrationLimitDate;
     }
 
+
+    /**
+     * Default constructor.
+     */
+    public TrackInformation() {
+        super();
+    }
+
     public static final class InformationSections {
         public static final String CONTACT = "CONTACT";
         public static final String TIME = "TIME";

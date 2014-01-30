@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Event extends Component implements Serializable {
@@ -65,6 +64,7 @@ public class Event extends Component implements Serializable {
     private OnlineMeeting onlineMeeting;
     @JsonIgnore
     private String payableTo;
+
     @JsonIgnore
     private PaymentAddress paymentAddress;
     @JsonIgnore
@@ -109,7 +109,8 @@ public class Event extends Component implements Serializable {
 
     @JsonProperty("address")
     public EventAddress getAddress() {
-        return address;
+        //Todo ask if this is the desired workflow
+        return isVirtualEvent() ? null : address;
     }
 
     @JsonProperty("are_registrants_public")
@@ -257,7 +258,7 @@ public class Event extends Component implements Serializable {
         return themeName;
     }
 
-    @JsonProperty("time_zone_description")
+    //@JsonProperty("time_zone_description")
     public String getTimeZoneDescription() {
         return timeZoneDescription;
     }
@@ -463,10 +464,12 @@ public class Event extends Component implements Serializable {
     public String toString() {
         //Todo fill all attributes
         StringBuilder builder = new StringBuilder();
-        builder.append("EmailCampaignBase [id=");
+        builder.append("Event [id=");
         builder.append(id);
         builder.append(", name=");
         builder.append(name);
+        builder.append(", ");
+        builder.append(contact);
         builder.append(", title=");
         builder.append(title);
         builder.append(", status=");
@@ -484,12 +487,6 @@ public class Event extends Component implements Serializable {
      */
     public Event() {
         super();
-        address = new EventAddress();
-        contact = new EventHostContact();
-        notificationOptions = new ArrayList<NotificationOptions>();
-        onlineMeeting = new OnlineMeeting();
-        paymentAddress = new PaymentAddress();
-        trackInformation = new TrackInformation();
     }
 
     //Todo declare all members

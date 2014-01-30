@@ -41,4 +41,46 @@ public class EventHostContact extends Component implements Serializable{
     public String getPhoneNumber() {
         return phoneNumber;
     }
+
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setOrganizationName(String organizationName) {
+        this.organizationName = organizationName;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    /**
+     * Default constructor.
+     */
+    public EventHostContact() {
+        super();
+
+    }
+
+    @Override
+    public String toString() {
+        //Todo fill all attributes
+        StringBuilder builder = new StringBuilder();
+        builder.append("Contact [name=");
+        builder.append(name);
+        builder.append(", emailAddress=");
+        builder.append(emailAddress);
+        builder.append(", organizationName=");
+        builder.append(organizationName);
+        builder.append(", phoneNumber=");
+        builder.append(phoneNumber);
+        builder.append("]");
+
+        return builder.toString();
+
+    }
 }
