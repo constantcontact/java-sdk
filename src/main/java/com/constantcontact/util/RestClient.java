@@ -70,6 +70,11 @@ public class RestClient implements IRestClient {
 		return makeHttpRequest(url, HttpMethod.DELETE, accessToken, null);
 	}
 
+    //todo documention
+    public CUrlResponse patch(String url, String accessToken, String data) {
+        return makeHttpRequest(url, HttpMethod.PATCH, accessToken, data);
+    }
+
 	private CUrlResponse makeHttpRequest(String urlParam, HttpMethod method, String accessToken, String data) {
 		return new HttpProcessor().makeHttpRequest(urlParam, method, ContentType.JSON, accessToken, data);
 	}

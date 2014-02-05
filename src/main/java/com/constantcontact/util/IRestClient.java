@@ -56,4 +56,7 @@ public interface IRestClient {
 	 * @return The response body, http info, and error (if one exists).
 	 */
 	CUrlResponse delete(String url, String accessToken);
+
+    //todo documentation
+    CUrlResponse patch(String url, String accessToken, String data);
 }

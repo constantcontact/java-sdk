@@ -1,47 +1,33 @@
-package com.constantcontact.components.eventspot;
+package com.constantcontact.components.eventspot.Registrant;
 
 import com.constantcontact.components.Component;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * @author Stefan Halus <stefan.halus@osf-global.com>
  */
-public class Promocode extends Component implements Serializable {
+public class PromoCodeInfo extends Component implements Serializable {
 
     //Todo documentation
     private static final long serialVersionUID = -6903564287000317602L;
 
     @JsonIgnore
+    private String discountType;
+    @JsonIgnore
     private String codeName;
     @JsonIgnore
-    private String codeType;
+    private Integer redemptionCount;
+    @JsonIgnore
+    private String discountScope;
     @JsonIgnore
     private Double discountAmount;
     @JsonIgnore
     private Integer discountPercent;
     @JsonIgnore
-    private String discountScope;
-    @JsonIgnore
-    private String discountType;
-    @JsonIgnore
-    private List<String> feeIds;
-    @JsonIgnore
-    private String id;
-    @JsonIgnore
-    private boolean isPaused;
-    @JsonIgnore
-    private Integer quantityAvailable;
-    @JsonIgnore
-    private Integer quantityTotal;
-    @JsonIgnore
-    private Integer quantityUsed;
-    @JsonIgnore
-    private String status;
-
+    private String codeType;
 
     @JsonProperty("code_name")
     public String getCodeName() {
@@ -73,41 +59,6 @@ public class Promocode extends Component implements Serializable {
         return discountType;
     }
 
-    @JsonProperty("fee_ids")
-    public List<String> getFeeIds() {
-        return feeIds;
-    }
-
-    @JsonProperty("id")
-    public String getId() {
-        return id;
-    }
-
-    @JsonProperty("is_paused")
-    public boolean isPaused() {
-        return isPaused;
-    }
-
-    @JsonProperty("quantity_available")
-    public Integer getQuantityAvailable() {
-        return quantityAvailable;
-    }
-
-    @JsonProperty("quantity_total")
-    public Integer getQuantityTotal() {
-        return quantityTotal;
-    }
-
-    @JsonProperty("quantity_used")
-    public Integer getQuantityUsed() {
-        return quantityUsed;
-    }
-
-    @JsonProperty("status")
-    public String getStatus() {
-        return status;
-    }
-
     public void setCodeName(String codeName) {
         this.codeName = codeName;
     }
@@ -130,34 +81,6 @@ public class Promocode extends Component implements Serializable {
 
     public void setDiscountType(String discountType) {
         this.discountType = discountType;
-    }
-
-    public void setFeeIds(List<String> feeIds) {
-        this.feeIds = feeIds;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setPaused(boolean isPaused) {
-        this.isPaused = isPaused;
-    }
-
-    public void setQuantityAvailable(Integer quantityAvailable) {
-        this.quantityAvailable = quantityAvailable;
-    }
-
-    public void setQuantityTotal(Integer quantityTotal) {
-        this.quantityTotal = quantityTotal;
-    }
-
-    public void setQuantityUsed(Integer quantityUsed) {
-        this.quantityUsed = quantityUsed;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public static final class DiscountType {
@@ -185,9 +108,7 @@ public class Promocode extends Component implements Serializable {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("PromoCode [id=");
-        builder.append(id);
-        builder.append(", code_name=");
+        builder.append("PromoCode [code_name=");
         builder.append(codeName);
         builder.append(", code_type=");
         builder.append(codeType);
@@ -199,18 +120,6 @@ public class Promocode extends Component implements Serializable {
         builder.append(discountScope);
         builder.append(", discount_type=");
         builder.append(discountType);
-        builder.append(", fee_ids=");
-        builder.append(feeIds);
-        builder.append(", is_paused=");
-        builder.append(isPaused);
-        builder.append(", quantity_available=");
-        builder.append(quantityAvailable);
-        builder.append(", quantity_total=");
-        builder.append(quantityTotal);
-        builder.append(", quantity_used=");
-        builder.append(quantityUsed);
-        builder.append(", status=");
-        builder.append(status);
         builder.append("]");
 
         return builder.toString();
@@ -219,7 +128,7 @@ public class Promocode extends Component implements Serializable {
     /**
      * Default Constructor
      */
-    public Promocode(){
+    public PromoCodeInfo() {
         super();
     }
 

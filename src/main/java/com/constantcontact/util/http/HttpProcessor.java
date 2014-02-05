@@ -8,7 +8,9 @@ import com.constantcontact.util.CUrlResponse;
 import com.constantcontact.util.http.constants.ProcessorBase;
 
 import java.io.*;
+import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -98,6 +100,7 @@ public class HttpProcessor implements ProcessorBase {
 		} catch (Exception e) {
 			urlResponse.setError(true);
 			errorMessage = e.getMessage();
+            e.printStackTrace();
 		} finally { // we must manually handle release
 
 			if (reader != null) {
@@ -149,7 +152,7 @@ public class HttpProcessor implements ProcessorBase {
 	 * @param urlParam
 	 *            The exact URL to request.
 	 * @param httpMethod
-	 *            The {@link HttpMethod} specifying the HTTP Method to use
+	 *            The {@link com.constantcontact.util.http.constants.ProcessorBase.HttpMethod} specifying the HTTP Method to use
 	 *            (POST, GET, etc)
 	 * @param contentType
 	 *             The content type of the request body. Usually application/json
@@ -198,9 +201,11 @@ public class HttpProcessor implements ProcessorBase {
 			connection.setDoOutput(true);
 			break;
         case PATCH:
-            connection.setRequestMethod("PATCH");
+            //connection.setRequestMethod("PUT");
+            setRequestMethodUsingWorkaroundForJREBug(connection, "PATCH");
             connection.setDoInput(true);
             connection.setDoOutput(true);
+            break;
  		case GET:
 		default:
 			connection.setRequestMethod("GET");
@@ -265,5 +270,46 @@ public class HttpProcessor implements ProcessorBase {
 			}
 		}
 	}
+
+    private final void setRequestMethodUsingWorkaroundForJREBug(final HttpURLConnection httpURLConnection, final String method) {
+        try {
+            httpURLConnection.setRequestMethod(method);
+            // Check whether we are running on a buggy JRE
+        } catch (final ProtocolException pe) {
+            Class<?> connectionClass = httpURLConnection
+                    .getClass();
+            Field delegateField = null;
+            try {
+                delegateField = connectionClass.getDeclaredField("delegate");
+                delegateField.setAccessible(true);
+                HttpURLConnection delegateConnection = (HttpURLConnection) delegateField
+                        .get(httpURLConnection);
+                setRequestMethodUsingWorkaroundForJREBug(delegateConnection, method);
+            } catch (NoSuchFieldException e) {
+                // Ignore for now, keep going
+            } catch (IllegalArgumentException e) {
+                throw new RuntimeException(e);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                Field methodField;
+                while (connectionClass != null) {
+                    try {
+                        methodField = connectionClass
+                                .getDeclaredField("method");
+                    } catch (NoSuchFieldException e) {
+                        connectionClass = connectionClass.getSuperclass();
+                        continue;
+                    }
+                    methodField.setAccessible(true);
+                    methodField.set(httpURLConnection, method);
+                    break;
+                }
+            } catch (final Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 
 }

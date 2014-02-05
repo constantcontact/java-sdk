@@ -64,7 +64,6 @@ public class Event extends Component implements Serializable {
     private OnlineMeeting onlineMeeting;
     @JsonIgnore
     private String payableTo;
-
     @JsonIgnore
     private PaymentAddress paymentAddress;
     @JsonIgnore
@@ -79,8 +78,9 @@ public class Event extends Component implements Serializable {
     private String status;
     @JsonIgnore
     private String themeName;
-    @JsonIgnore
-    private String timeZoneDescription;
+    //todo create extension event class for receiving all params
+//    @JsonIgnore
+//    private String timeZoneDescription;
     @JsonIgnore
     private String timeZoneId;
     @JsonIgnore
@@ -95,6 +95,11 @@ public class Event extends Component implements Serializable {
     private String type;
     @JsonIgnore
     private String updatedDate;
+//todo ask about these
+//    @JsonIgnore
+//    private boolean isRegistrationClosedManually;
+//    @JsonIgnore
+//    private boolean isTicketingLinkDisplayed;
 
 
     @JsonProperty("id")
@@ -258,10 +263,10 @@ public class Event extends Component implements Serializable {
         return themeName;
     }
 
-    //@JsonProperty("time_zone_description")
-    public String getTimeZoneDescription() {
-        return timeZoneDescription;
-    }
+//    @JsonProperty("time_zone_description")
+//    public String getTimeZoneDescription() {
+//        return timeZoneDescription;
+//    }
 
     @JsonProperty("time_zone_id")
     public String getTimeZoneId() {
@@ -297,7 +302,16 @@ public class Event extends Component implements Serializable {
     public String getUpdatedDate() {
         return updatedDate;
     }
-
+//todo ask about these
+//    @JsonProperty("is_registration_closed_manually")
+//    public boolean isRegistrationClosedManually() {
+//        return isRegistrationClosedManually;
+//    }
+//
+//    @JsonProperty("is_ticketing_link_displayed")
+//    public boolean isTicketingLinkDisplayed() {
+//        return isTicketingLinkDisplayed;
+//    }
 
     public void setId(String id) {
         this.id = id;
@@ -427,9 +441,9 @@ public class Event extends Component implements Serializable {
         this.themeName = themeName;
     }
 
-    public void setTimeZoneDescription(String timeZoneDescription) {
-        this.timeZoneDescription = timeZoneDescription;
-    }
+//    public void setTimeZoneDescription(String timeZoneDescription) {
+//        this.timeZoneDescription = timeZoneDescription;
+//    }
 
     public void setTimeZoneId(String timeZoneId) {
         this.timeZoneId = timeZoneId;
@@ -468,16 +482,85 @@ public class Event extends Component implements Serializable {
         builder.append(id);
         builder.append(", name=");
         builder.append(name);
-        builder.append(", ");
-        builder.append(contact);
         builder.append(", title=");
         builder.append(title);
+        builder.append(", description=");
+        builder.append(description);
         builder.append(", status=");
         builder.append(status);
         builder.append(", location=");
         builder.append(location);
-        builder.append("]\n");
+        builder.append(", type=");
+        builder.append(type);
+        builder.append(", contact=");
+        builder.append(contact);
+        builder.append(", location=");
+        builder.append(location);
+        builder.append(", start_date=");
+        builder.append(startDate);
+        builder.append(", end_date=");
+        builder.append(endDate);
+        builder.append(", created_date=");
+        builder.append(createdDate);
+        builder.append(", time_zone_id=");
+        builder.append(timeZoneId);
+        builder.append(", active_date=");
+        builder.append(activeDate);
+        builder.append(", is_checkin_available=");
+        builder.append(isCheckingAvailable);
+        builder.append(", registration_url=");
+        builder.append(registrationUrl);
+        builder.append(", meta_data_tags=");
+        builder.append(metadataTags);
+        builder.append(", theme_name=");
+        builder.append(themeName);
+        builder.append(", payment_address=");
+        builder.append(paymentAddress);
+        builder.append(", payable_to=");
+        builder.append(payableTo);
+        builder.append(", payment_options=");
+        builder.append(paymentOptions);
+        builder.append(", currency_type=");
+        builder.append(currencyType);
+        builder.append(", online_meeting=");
+        builder.append(onlineMeeting);
+        builder.append(", is_virtual_event=");
+        builder.append(isVirtualEvent);
+        builder.append(", twitter_hash_tag=");
+        builder.append(twitterHashTag);
+        builder.append(", notification_options=");
+        builder.append(notificationOptions);
+        builder.append(", is_home_page_displayed=");
+        builder.append(isHomePageDisplayed);
+        builder.append(", is_map_displayed=");
+        builder.append(isMapDisplayed);
+        builder.append(", is_calendar_displayed=");
+        builder.append(isCalendarDisplayed);
+        builder.append(", is_listed_in_external_directory=");
+        builder.append(isListedInExternalDirectory);
+        builder.append(", are_registrants_public=");
+        builder.append(areRegistrantsPublic);
+        builder.append(", track_information=");
+        builder.append(trackInformation);
+        //todo ask about these
+//        builder.append(", time_zone_description=");
+//        builder.append(timeZoneDescription);
+//        builder.append(", is_registration_closed_manually=");
+//        builder.append(isRegistrationClosedManually);
+//        builder.append(", is_ticketing_link_displayed=");
+//        builder.append(isTicketingLinkDisplayed);
+//        builder.append(", guest_limit=");
+//        builder.append(guestLimit);
+//        builder.append(", registration_limit_count=");
+//        builder.append(registrationLimitCount);
+//        builder.append(", guest_display_label=");
+//        builder.append(guestDisplayLabel);
+//        builder.append(", is_guest_name_required=");
+//        builder.append(isGuestNameRequired);
+//        builder.append(", is_guest_anonymous_enabled=");
+//        builder.append(isGuestAnonymousEnabled);
 
+        builder.append("]\n");
         return builder.toString();
 
     }

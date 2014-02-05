@@ -31,8 +31,9 @@ import com.constantcontact.components.emailcampaigns.tracking.opens.EmailCampaig
 import com.constantcontact.components.emailcampaigns.tracking.reports.summary.EmailCampaignTrackingSummary;
 import com.constantcontact.components.emailcampaigns.tracking.sends.EmailCampaignTrackingSend;
 import com.constantcontact.components.emailcampaigns.tracking.unsubscribes.EmailCampaignTrackingUnsubscribe;
-import com.constantcontact.components.eventspot.Event;
-import com.constantcontact.components.eventspot.EventFee;
+import com.constantcontact.components.eventspot.*;
+import com.constantcontact.components.eventspot.Registrant.Registrant;
+import com.constantcontact.components.eventspot.Registrant.RegistrantDetails;
 import com.constantcontact.components.generic.response.Pagination;
 import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.components.library.file.FileType;
@@ -2917,19 +2918,64 @@ public class ConstantContact {
         return myLibraryService.addLibraryFile(this.getAccessToken(), request);
     }
 
-    /**
-     * Event spot API
-     */
+	/**
+	 * Get event API.<br/>
+	 * Details in : {@link EventSpotService#getEvent(String, String)}
+	 *
+	 * @param eventId The the event id.
+	 * @return The event.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
     public Event getEvent(String eventId) throws ConstantContactServiceException,
             IllegalArgumentException {
         return getEventSpotService().getEvent(getAccessToken(), eventId);
     }
-
+	
+	/**
+	 * Get events API. <br/>
+	 * Details in : {@link EventSpotService#getEvents(String, Integer)}
+	 *
+	 * @param limit The maximum number of results to return - can be null.
+	 * @return The result set of events.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
     public ResultSet<Event> getEvents(Integer limit) throws ConstantContactServiceException,
             IllegalArgumentException {
         return getEventSpotService().getEvents(getAccessToken(), limit);
     }
 
+    /**
+     * Get events API.<br/>
+     * Details in : {@link PaginationHelperService#getPage(Pagination)}
+     *
+     * @param pagination {@link Pagination} object.
+     * @return The result set of events.
+     * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+     * The exception also contains a description of the cause.<br/>
+     * Error message is taken from one of the members of {@link Errors}
+     * @throws ConstantContactServiceException Thrown when :
+     *      <ul>
+     *          <li>something went wrong either on the client side;</li>
+     *          <li>or an error message was received from the server side.</li>
+     *      </ul>
+     *      <br/>
+     * To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+     * Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+     */
     public ResultSet<Event> getEvents(Pagination pagination) throws ConstantContactServiceException,
             IllegalArgumentException {
         if (pagination == null) {
@@ -2937,32 +2983,123 @@ public class ConstantContact {
         }
         return getPaginationHelperService().getPage(this.getAccessToken(), pagination, Event.class);
     }
-
-    public Event addEvent(Event event) throws ConstantContactServiceException {
+ 	/**
+ 	 * Add events API.<br/>
+ 	 * Details in : {@link EventSpotService#addEvent(String, Event)}
+ 	 *
+ 	 * @param event The {@link Event} to add.
+ 	 * @return The added event.
+ 	 * @throws ConstantContactServiceException Thrown when :
+ 	 *             <ul>
+ 	 *             <li>something went wrong either on the client side;</li>
+ 	 *             <li>or an error message was received from the server side.</li>
+ 	 *             </ul>
+ 	 * <br/>
+ 	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+ 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+ 	 */
+    public Event addEvent(Event event) throws IllegalArgumentException, ConstantContactServiceException {
+        if (event == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT);
+        }
         return getEventSpotService().addEvent(getAccessToken(), event);
     }
-
-    public List<EventFee> getEventFees(String eventId) throws ConstantContactServiceException {
+	
+	/**
+	 * Get event fees API. <br/>
+	 * Details in : {@link EventSpotService#getEventFees(String, String)}
+	 *
+	 * @eventId The event id.
+	 * @return The list of event fees.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+    public List<EventFee> getEventFees(String eventId) throws IllegalArgumentException, ConstantContactServiceException {
+        if (eventId == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+        }
         return getEventSpotService().getEventFees(getAccessToken(), eventId);
     }
-
+	
+ 	/**
+ 	 * Add Event fee API.<br/>
+ 	 * Details in : {@link EventSpotService#addEventFee(String, String, EventFee)}
+ 	 *
+	 * @param eventId	The event id.
+ 	 * @param eventFee	The {@link EventFee} to add.
+ 	 * @return The added event fee.
+ 	 * @throws ConstantContactServiceException Thrown when :
+ 	 *             <ul>
+ 	 *             <li>something went wrong either on the client side;</li>
+ 	 *             <li>or an error message was received from the server side.</li>
+ 	 *             </ul>
+ 	 * <br/>
+ 	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+ 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+ 	 */
     public EventFee addEventFee(String eventId, EventFee eventFee) throws ConstantContactServiceException {
-        return getEventSpotService().addEventFee(getAccessToken(),eventId, eventFee);
-    }
-
-    public boolean deleteEventFee(String eventId, String eventFeeId) throws IllegalArgumentException,
-            ConstantContactServiceException {
-        if(eventId == null) {
-            throw  new IllegalArgumentException(Config.Errors.EVENT_ID);
+        if (eventId == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
         }
-        if (eventFeeId == null) {
+        if (eventFee == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_FEE);
+        }
+        return getEventSpotService().addEventFee(getAccessToken(), eventId, eventFee);
+    }
+	
+	/**
+	 * Get event fee API.<br/>
+	 * Details in : {@link EventSpotService#getEventFee(String, String, String)}
+	 *
+	 * @param eventId The event id.
+	 * @param feeId The fee id.
+	 * @return The event fee.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+    public EventFee getEventFee(String eventId, String feeId) throws IllegalArgumentException, ConstantContactServiceException {
+        if (eventId == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+        }
+        if (feeId == null) {
             throw new IllegalArgumentException(Config.Errors.EVENT_FEE_ID);
         }
-        return getEventSpotService().deleteEventFee(getAccessToken(), eventId, eventFeeId);
+        return getEventSpotService().getEventFee(getAccessToken(), eventId, feeId);
     }
-
-    public EventFee updateEvenFee(String eventId, EventFee eventFee) throws IllegalArgumentException,
-            ConstantContactServiceException {
+	
+	/**
+	 *
+	 * Update event fee API.<br/>
+	 * Details in : {@link EventSpotService#updateEventFee(String, String, EventFee)}
+	 *	
+	 * @param eventId	The event id.		
+	 * @param eventFee	The {@link EventFee} to update.
+	 * @return The updated {@link EventFee} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+    public EventFee updateEventFee(String eventId, EventFee eventFee) throws IllegalArgumentException, ConstantContactServiceException {
         if (eventId == null) {
             throw new IllegalArgumentException(Config.Errors.EVENT_ID);
         }
@@ -2970,5 +3107,404 @@ public class ConstantContact {
             throw new IllegalArgumentException(Config.Errors.EVENT_FEE_ID);
         }
         return getEventSpotService().updateEventFee(getAccessToken(), eventId, eventFee);
+    }
+	
+ 	/**
+ 	 * Delete event fee API.<br/>
+ 	 * Details in : {@link EventSpotService#deleteEventFee(String, String, String)}
+ 	 * 
+ 	 * @param eventId The event id.
+ 	 * @param eventFee The {@link EventFee} to delete.
+ 	 * @return true in case of success, an exception is thrown otherwise.
+ 	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+ 	 *             The exception also contains a description of the cause.<br/>
+ 	 *             Error message is taken from one of the members of {@link Errors}
+ 	 * @throws ConstantContactServiceException Thrown when :
+ 	 *             <ul>
+ 	 *             <li>something went wrong either on the client side;</li>
+ 	 *             <li>or an error message was received from the server side.</li>
+ 	 *             </ul>
+ 	 * <br/>
+ 	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+ 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+ 	 */
+    public boolean deleteEventFee(String eventId, EventFee eventFee) throws IllegalArgumentException, ConstantContactServiceException {
+        if (eventId == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+        }
+        if (eventFee == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_FEE);
+        }
+        if (eventFee.getId() == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_FEE_ID);
+        }
+        return getEventSpotService().deleteEventFee(getAccessToken(), eventId, eventFee.getId());
+    }
+	
+ 	/**
+ 	 * Delete event fee API.<br/>
+ 	 * Details in : {@link EventSpotService#deleteEventFee(String, String, String)}
+ 	 * 
+ 	 * @param eventId The event id.
+ 	 * @param eventFeeId The event fee id to delete.
+ 	 * @return true in case of success, an exception is thrown otherwise.
+ 	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+ 	 *             The exception also contains a description of the cause.<br/>
+ 	 *             Error message is taken from one of the members of {@link Errors}
+ 	 * @throws ConstantContactServiceException Thrown when :
+ 	 *             <ul>
+ 	 *             <li>something went wrong either on the client side;</li>
+ 	 *             <li>or an error message was received from the server side.</li>
+ 	 *             </ul>
+ 	 * <br/>
+ 	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+ 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+ 	 */
+    public boolean deleteEventFee(String eventId, String eventFeeId) throws IllegalArgumentException, ConstantContactServiceException {
+        if (eventId == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+        }
+        if (eventFeeId == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_FEE_ID);
+        }
+        return getEventSpotService().deleteEventFee(getAccessToken(), eventId, eventFeeId);
+    }
+
+	/**
+	 * Get event promocodes API. <br/>
+	 * Details in : {@link EventSpotService#getEventPromocodes(String, String)}
+	 *
+	 * @eventId The event id.
+	 * @return The list of event promocodes.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+    public List<Promocode> getEventPromocodes(String eventId) throws IllegalArgumentException, ConstantContactServiceException {
+        if (eventId == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+        }
+        return getEventSpotService().getEventPromocodes(getAccessToken(), eventId);
+    }
+
+ 	/**
+ 	 * Add event promocode API.<br/>
+ 	 * Details in : {@link EventSpotService#addEventPromocode(String, String, Promocode)}
+ 	 *
+	 * @param eventId	The event id.
+ 	 * @param promocode	The {@link Promocode} to add.
+ 	 * @return The added event promocode.
+ 	 * @throws ConstantContactServiceException Thrown when :
+ 	 *             <ul>
+ 	 *             <li>something went wrong either on the client side;</li>
+ 	 *             <li>or an error message was received from the server side.</li>
+ 	 *             </ul>
+ 	 * <br/>
+ 	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+ 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+ 	 */
+    public Promocode addEventPromocode(String eventId, Promocode promocode) throws IllegalArgumentException, ConstantContactServiceException {
+        if (eventId == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+        }
+        if (promocode == null) {
+            throw new IllegalArgumentException(Config.Errors.PROMOCODE);
+        }
+        return getEventSpotService().addEventPromocode(getAccessToken(), eventId, promocode);
+    }
+	
+	/**
+	 * Get event promocode API.<br/>
+	 * Details in : {@link EventSpotService#getEventPromocode(String, String, String)}
+	 *
+	 * @param eventId The event id.
+	 * @param promocodeId The promocode id.
+	 * @return The event promocode.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+    public Promocode getEventPromocode(String eventId, String promocodeId) throws IllegalArgumentException, ConstantContactServiceException {
+        if (eventId == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+        }
+        if (promocodeId == null) {
+            throw new IllegalArgumentException(Config.Errors.PROMOCODE_ID);
+        }
+        return getEventSpotService().getEventPromocode(getAccessToken(), eventId, promocodeId);
+    }
+	
+	/**
+	 *
+	 * Update event promocode API.<br/>
+	 * Details in : {@link EventSpotService#updateEventPromocode(String, String, Promocode)}
+	 *	
+	 * @param eventId	The event id.		
+	 * @param promocode	The {@link Promocode} to update.
+	 * @return The updated {@link Promocode} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+    public Promocode updateEventPromocode(String eventId, Promocode promocode) throws IllegalArgumentException, ConstantContactServiceException {
+        if (eventId == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+        }
+        if (promocode == null || promocode.getId() == null) {
+            throw new IllegalArgumentException(Config.Errors.PROMOCODE);
+        }
+        return getEventSpotService().updateEventPromocode(getAccessToken(), eventId, promocode);
+    }
+
+ 	/**
+ 	 * Delete event promocode API.<br/>
+ 	 * Details in : {@link EventSpotService#deleteEventPromocode(String, String, String)}
+ 	 * 
+ 	 * @param eventId The event id.
+ 	 * @param promocodeId The event promocode id to delete.
+ 	 * @return true in case of success, an exception is thrown otherwise.
+ 	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+ 	 *             The exception also contains a description of the cause.<br/>
+ 	 *             Error message is taken from one of the members of {@link Errors}
+ 	 * @throws ConstantContactServiceException Thrown when :
+ 	 *             <ul>
+ 	 *             <li>something went wrong either on the client side;</li>
+ 	 *             <li>or an error message was received from the server side.</li>
+ 	 *             </ul>
+ 	 * <br/>
+ 	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+ 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+ 	 */
+    public boolean deleteEventPromocode(String eventId, String promocodeId) throws  IllegalArgumentException, ConstantContactServiceException {
+        if (eventId == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+        }
+        if (promocodeId == null) {
+            throw new IllegalArgumentException(Config.Errors.PROMOCODE_ID);
+        }
+        return getEventSpotService().deleteEventPromocode(getAccessToken(), eventId, promocodeId);
+    }
+ 	/**
+ 	 * Delete event promocode API.<br/>
+ 	 * Details in : {@link EventSpotService#deleteEventPromocode(String, String, String)}
+ 	 * 
+ 	 * @param eventId The event id.
+ 	 * @param promocode The event promocode id to delete.
+ 	 * @return true in case of success, an exception is thrown otherwise.
+ 	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+ 	 *             The exception also contains a description of the cause.<br/>
+ 	 *             Error message is taken from one of the members of {@link Errors}
+ 	 * @throws ConstantContactServiceException Thrown when :
+ 	 *             <ul>
+ 	 *             <li>something went wrong either on the client side;</li>
+ 	 *             <li>or an error message was received from the server side.</li>
+ 	 *             </ul>
+ 	 * <br/>
+ 	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+ 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+ 	 */
+    public boolean deleteEventPromocode(String eventId, Promocode promocode) throws IllegalArgumentException, ConstantContactServiceException {
+        if (eventId == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+        }
+        if (promocode == null) {
+            throw new IllegalArgumentException(Config.Errors.PROMOCODE);
+        }
+        if (promocode.getId() == null) {
+            throw new IllegalArgumentException(Config.Errors.PROMOCODE_ID);
+        }
+        return getEventSpotService().deleteEventPromocode(getAccessToken(), eventId, promocode.getId());
+    }
+
+	/**
+	 * Get event registrants API. <br/>
+	 * Details in : {@link EventSpotService#getEventRegistrants(String, String, Integer)}
+	 *
+	 * @eventId The event id.
+	 * @return The result set of event registrants.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+    public ResultSet<Registrant> getEventRegistrants(String eventId, Integer limit) throws IllegalArgumentException,
+            ConstantContactServiceException {
+        if (eventId == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+        }
+        return getEventSpotService().getEventRegistrants(getAccessToken(), eventId, limit);
+    }
+
+    public ResultSet<Registrant> getEventRegistrants(String eventId, Pagination pagination) throws IllegalArgumentException,
+            ConstantContactServiceException {
+        if (pagination == null) {
+            throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+        }
+        return getPaginationHelperService().getPage(this.getAccessToken(), pagination, Registrant.class);
+    }
+
+    public RegistrantDetails getEventRegistrant(String eventId, String registrantId) throws IllegalArgumentException, ConstantContactServiceException {
+        if (eventId == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+        }
+        if (registrantId == null) {
+            throw new IllegalArgumentException(Config.Errors.REGISTRANT_ID);
+        }
+        return getEventSpotService().getEventRegistrant(getAccessToken(), eventId, registrantId);
+    }
+
+    public List<EventItem> getEventItems(String eventId) throws IllegalArgumentException, ConstantContactServiceException {
+        if (eventId == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+        }
+        return getEventSpotService().getEventItems(getAccessToken(), eventId);
+    }
+
+    public EventItem getEventItem(String eventId, String itemId) throws IllegalArgumentException, ConstantContactServiceException {
+        if (eventId == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+        }
+        if (itemId == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_ITEM_ID);
+        }
+        return getEventSpotService().getEventItem(getAccessToken(), eventId, itemId);
+    }
+
+    public EventItem addEventItem(String eventId, EventItem eventItem) throws IllegalArgumentException, ConstantContactServiceException {
+        if (eventId == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+        }
+        if (eventItem == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_ITEM);
+        }
+        return getEventSpotService().addEventItem(getAccessToken(), eventId, eventItem);
+
+    }
+
+    public EventItem updateEventItem(String eventId, EventItem item) throws IllegalArgumentException, ConstantContactServiceException {
+        if (eventId == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+        }
+        if (item == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_ITEM);
+        }
+        if (item.getId() == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_ITEM_ID);
+        }
+        return getEventSpotService().updateEventItem(getAccessToken(), eventId, item);
+    }
+
+    public boolean deleteEventItem(String eventId, String itemId) throws IllegalArgumentException, ConstantContactServiceException {
+        if (eventId == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+        }
+        if (itemId == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_ITEM_ID);
+        }
+        return getEventSpotService().deleteEventItem(getAccessToken(), eventId, itemId);
+    }
+
+    public boolean deleteEventItem(String eventId, EventItem item) throws IllegalArgumentException, ConstantContactServiceException {
+        if (eventId == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+        }
+        if (item == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_ITEM);
+        }
+        if (item.getId() == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_ITEM_ID);
+        }
+        return getEventSpotService().deleteEventItem(getAccessToken(), eventId, item.getId());
+    }
+
+    public List<EventItemAttribute> getEventItemAttributes(String eventId, String itemId) throws IllegalArgumentException,
+            ConstantContactServiceException {
+        if (eventId == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+        }
+        if (itemId == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_ITEM_ID);
+        }
+        return getEventSpotService().getEventItemAttributes(getAccessToken(), eventId, itemId);
+    }
+
+    public EventItemAttribute getEventItemAttribute(String eventId, String itemId, String itemAttributeId) throws IllegalArgumentException,
+            ConstantContactServiceException {
+        if (eventId == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+        }
+        if (itemId == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_ITEM_ID);
+        }
+        if (itemAttributeId == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_ITEM_ATTRIBUTE_ID);
+        }
+        return getEventSpotService().getEventItemAttribute(getAccessToken(), eventId, itemId, itemAttributeId);
+    }
+
+    public EventItemAttribute updateEventItemAttribute(String eventId, String itemId, EventItemAttribute itemAttribute) throws
+            IllegalArgumentException,
+            ConstantContactServiceException {
+        if (eventId == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+        }
+        if (itemId == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_ITEM_ID);
+        }
+        if (itemAttribute == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_ITEM_ATTRIBUTE);
+        }
+        return getEventSpotService().updateEventItemAttribute(getAccessToken(), eventId, itemId, itemAttribute);
+    }
+
+    public boolean deleteEventItemAttribute(String eventId, String itemId, String itemAttributeId) throws IllegalArgumentException,
+            ConstantContactServiceException {
+        if (eventId == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+        }
+        if (itemId == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_ITEM_ID);
+        }
+        if (itemAttributeId == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_ITEM_ATTRIBUTE_ID);
+        }
+        return getEventSpotService().deleteEventItemAttribute(getAccessToken(), eventId, itemId, itemAttributeId);
+    }
+
+    public Event updateEvent(Event event) throws IllegalArgumentException, ConstantContactServiceException {
+        if(event == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT);
+        }
+        return getEventSpotService().updateEvent(getAccessToken(), event);
+    }
+
+    public boolean updateEventStatus(String eventId, String status)  throws IllegalArgumentException, ConstantContactServiceException {
+        if(eventId == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+        }
+        return getEventSpotService().updateEventStatus(getAccessToken(), eventId, status);
+
     }
 }

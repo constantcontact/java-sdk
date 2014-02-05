@@ -261,6 +261,14 @@ public final class Config {
     public static final String EVENT_ID = EVENTS + "%1$s";
     public static final String EVENT_FEES = EVENTS + "%1$s/fees";
     public static final String EVENT_FEE_ID = EVENTS + "%1$s/fees/%2$s";
+    public static final String EVENT_PROMOCODES = EVENTS + "%1$s/promocodes/";
+    public static final String EVENT_PROMOCODE_ID = EVENTS + "%1$s/promocodes/%2$s";
+    public static final String EVENT_REGISTRANTS = EVENTS + "%1$s/registrants";
+    public static final String EVENT_REGISTRANT_ID = EVENTS + "%1$s/registrants/%2$s";
+    public static final String EVENT_ITEMS = EVENTS + "%1$s/items/";
+    public static final String EVENT_ITEM_ID = EVENTS + "%1$s/items/%2$s";
+    public static final String EVENT_ITEM_ATTRIBUTES = EVENTS + "%1$s/items/%2$s/attributes";
+    public static final String EVENT_ITEM_ATTRIBUTE_ID = EVENTS + "%1$s/items/%2$s/attributes/%3$s";
 
       /**
      * Default constructor.<br/>
@@ -436,11 +444,32 @@ public final class Config {
 
     public static final String MY_LIBRARY_FILE_TYPE_NULL = "File type must not be null";
 
+
+    //Todo documentation
 	public static final String EVENT_ID = "EventId must not be null";
 
 	public static final String EVENT_FEE_ID = "EventFeeId must not be null";
 
-	  /**
+    public static final String EVENT = "Event must not be null";
+
+    public static final String EVENT_FEE = "Event fee must not be null";
+
+    public static final String PROMOCODE = "Promocode must not be null";
+
+    public static final String PROMOCODE_ID = "PromocodeId must not be null";
+
+    public static final String REGISTRANT_ID = "RegistrantId must not be null";
+
+    public static final String EVENT_ITEM_ID = "ItemId must not be null";
+
+    public static final String EVENT_ITEM = "EventItem must not be null";
+
+    public static final String EVENT_ITEM_ATTRIBUTE_ID =  "AttributeId must not be null";
+
+    public static final String EVENT_ITEM_ATTRIBUTE = "Item Attribute must not be null";
+
+
+      /**
      * Default constructor.<br/>
      * Made private to prevent instantiation.<br/>
      * This is unreachable from the outside, since current class is used only as a repository for constants.
