@@ -3004,12 +3004,65 @@ public class ConstantContact {
         }
         return getEventSpotService().addEvent(getAccessToken(), event);
     }
+
+	/**
+	 *
+	 * Update event API.<br/>
+	 * Details in : {@link EventSpotService#updateEvent(String, Event)}
+	 *	
+	 * @param event	The event to update.
+	 * @return The updated {@link Event} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+    public Event updateEvent(Event event) throws IllegalArgumentException, ConstantContactServiceException {
+        if(event == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT);
+        }
+        return getEventSpotService().updateEvent(getAccessToken(), event);
+    }
+	
+	/**
+	 *
+	 * Update event status API.<br/>
+	 * Details in : {@link EventSpotService#updateEventStatus(String, String,String)}
+	 *	
+	 * @param eventId	The event to update.
+	 * @param status	The event status.
+	 * @return The updated {@link Event} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+    public boolean updateEventStatus(String eventId, String status)  throws IllegalArgumentException, ConstantContactServiceException {
+        if(eventId == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+        }
+        return getEventSpotService().updateEventStatus(getAccessToken(), eventId, status);
+    }
 	
 	/**
 	 * Get event fees API. <br/>
 	 * Details in : {@link EventSpotService#getEventFees(String, String)}
 	 *
-	 * @eventId The event id.
+	 * @param eventId The event id.
 	 * @return The list of event fees.
 	 * @throws ConstantContactServiceException Thrown when :
 	 *             <ul>
@@ -3302,6 +3355,7 @@ public class ConstantContact {
         }
         return getEventSpotService().deleteEventPromocode(getAccessToken(), eventId, promocodeId);
     }
+	
  	/**
  	 * Delete event promocode API.<br/>
  	 * Details in : {@link EventSpotService#deleteEventPromocode(String, String, String)}
@@ -3356,7 +3410,25 @@ public class ConstantContact {
         }
         return getEventSpotService().getEventRegistrants(getAccessToken(), eventId, limit);
     }
-
+	
+    /**
+     * Get event registrants API.<br/>
+     * Details in : {@link PaginationHelperService#getPage(Pagination)}
+     *
+     * @param pagination {@link Pagination} object.
+     * @return The result set of event registrants.
+     * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+     * The exception also contains a description of the cause.<br/>
+     * Error message is taken from one of the members of {@link Errors}
+     * @throws ConstantContactServiceException Thrown when :
+     *      <ul>
+     *          <li>something went wrong either on the client side;</li>
+     *          <li>or an error message was received from the server side.</li>
+     *      </ul>
+     *      <br/>
+     * To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+     * Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+     */
     public ResultSet<Registrant> getEventRegistrants(String eventId, Pagination pagination) throws IllegalArgumentException,
             ConstantContactServiceException {
         if (pagination == null) {
@@ -3364,7 +3436,23 @@ public class ConstantContact {
         }
         return getPaginationHelperService().getPage(this.getAccessToken(), pagination, Registrant.class);
     }
-
+	
+	/**
+	 * Get event registrant API.<br/>
+	 * Details in : {@link EventSpotService#getEventRegistrant(String, String, String)}
+	 *
+	 * @param eventId The event id.
+	 * @param registrantId The event registrant id.
+	 * @return The event registrant {@link Registrant}.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
     public RegistrantDetails getEventRegistrant(String eventId, String registrantId) throws IllegalArgumentException, ConstantContactServiceException {
         if (eventId == null) {
             throw new IllegalArgumentException(Config.Errors.EVENT_ID);
@@ -3374,7 +3462,22 @@ public class ConstantContact {
         }
         return getEventSpotService().getEventRegistrant(getAccessToken(), eventId, registrantId);
     }
-
+	
+	/**
+	 * Get event items API. <br/>
+	 * Details in : {@link EventSpotService#getEventItems(String, String)}
+	 *
+	 * @param eventId The event id.
+	 * @return The list of event items.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
     public List<EventItem> getEventItems(String eventId) throws IllegalArgumentException, ConstantContactServiceException {
         if (eventId == null) {
             throw new IllegalArgumentException(Config.Errors.EVENT_ID);
@@ -3382,6 +3485,22 @@ public class ConstantContact {
         return getEventSpotService().getEventItems(getAccessToken(), eventId);
     }
 
+	/**
+	 * Get event item API.<br/>
+	 * Details in : {@link EventSpotService#getEventItem(String, String, String)}
+	 *
+	 * @param eventId The event id.
+	 * @param itemId The event item id.
+	 * @return The event item {@link EventItem}.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
     public EventItem getEventItem(String eventId, String itemId) throws IllegalArgumentException, ConstantContactServiceException {
         if (eventId == null) {
             throw new IllegalArgumentException(Config.Errors.EVENT_ID);
@@ -3392,17 +3511,52 @@ public class ConstantContact {
         return getEventSpotService().getEventItem(getAccessToken(), eventId, itemId);
     }
 
-    public EventItem addEventItem(String eventId, EventItem eventItem) throws IllegalArgumentException, ConstantContactServiceException {
+ 	/**
+ 	 * Add event item API.<br/>
+ 	 * Details in : {@link EventSpotService#addEventItem(String, String, EventItem)}
+ 	 *
+	 * @param eventId	The event id.
+ 	 * @param item	The {@link EventItem} to add.
+ 	 * @return The added event item.
+ 	 * @throws ConstantContactServiceException Thrown when :
+ 	 *             <ul>
+ 	 *             <li>something went wrong either on the client side;</li>
+ 	 *             <li>or an error message was received from the server side.</li>
+ 	 *             </ul>
+ 	 * <br/>
+ 	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+ 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+ 	 */
+    public EventItem addEventItem(String eventId, EventItem item) throws IllegalArgumentException, ConstantContactServiceException {
         if (eventId == null) {
             throw new IllegalArgumentException(Config.Errors.EVENT_ID);
         }
-        if (eventItem == null) {
+        if (item == null) {
             throw new IllegalArgumentException(Config.Errors.EVENT_ITEM);
         }
-        return getEventSpotService().addEventItem(getAccessToken(), eventId, eventItem);
-
+        return getEventSpotService().addEventItem(getAccessToken(), eventId, item);
     }
 
+	/**
+	 *
+	 * Update event item API.<br/>
+	 * Details in : {@link EventSpotService#updateEventItem(String, String, EventItem)}
+	 *	
+	 * @param eventId	The event id.		
+	 * @param item	The {@link EventItem} to update.
+	 * @return The updated {@link EventItem} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
     public EventItem updateEventItem(String eventId, EventItem item) throws IllegalArgumentException, ConstantContactServiceException {
         if (eventId == null) {
             throw new IllegalArgumentException(Config.Errors.EVENT_ID);
@@ -3416,6 +3570,25 @@ public class ConstantContact {
         return getEventSpotService().updateEventItem(getAccessToken(), eventId, item);
     }
 
+ 	/**
+ 	 * Delete event item API.<br/>
+ 	 * Details in : {@link EventSpotService#deleteEventItem(String, String, String)}
+ 	 * 
+ 	 * @param eventId The event id.
+ 	 * @param itemId The event item id to delete.
+ 	 * @return true in case of success, an exception is thrown otherwise.
+ 	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+ 	 *             The exception also contains a description of the cause.<br/>
+ 	 *             Error message is taken from one of the members of {@link Errors}
+ 	 * @throws ConstantContactServiceException Thrown when :
+ 	 *             <ul>
+ 	 *             <li>something went wrong either on the client side;</li>
+ 	 *             <li>or an error message was received from the server side.</li>
+ 	 *             </ul>
+ 	 * <br/>
+ 	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+ 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+ 	 */
     public boolean deleteEventItem(String eventId, String itemId) throws IllegalArgumentException, ConstantContactServiceException {
         if (eventId == null) {
             throw new IllegalArgumentException(Config.Errors.EVENT_ID);
@@ -3425,7 +3598,26 @@ public class ConstantContact {
         }
         return getEventSpotService().deleteEventItem(getAccessToken(), eventId, itemId);
     }
-
+	
+ 	/**
+ 	 * Delete event item API.<br/>
+ 	 * Details in : {@link EventSpotService#deleteEventItem(String, String, String)}
+ 	 * 
+ 	 * @param eventId The event id.
+ 	 * @param item The event item id to delete.
+ 	 * @return true in case of success, an exception is thrown otherwise.
+ 	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+ 	 *             The exception also contains a description of the cause.<br/>
+ 	 *             Error message is taken from one of the members of {@link Errors}
+ 	 * @throws ConstantContactServiceException Thrown when :
+ 	 *             <ul>
+ 	 *             <li>something went wrong either on the client side;</li>
+ 	 *             <li>or an error message was received from the server side.</li>
+ 	 *             </ul>
+ 	 * <br/>
+ 	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+ 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+ 	 */
     public boolean deleteEventItem(String eventId, EventItem item) throws IllegalArgumentException, ConstantContactServiceException {
         if (eventId == null) {
             throw new IllegalArgumentException(Config.Errors.EVENT_ID);
@@ -3438,7 +3630,23 @@ public class ConstantContact {
         }
         return getEventSpotService().deleteEventItem(getAccessToken(), eventId, item.getId());
     }
-
+	
+	/**
+	 * Get event item attributes API.<br/>
+	 * Details in : {@link EventSpotService#getEventItemAttributes(String, String, String)}
+	 *
+	 * @param eventId The event id.
+	 * @param itemId The event item id.
+	 * @return The list of event item attributes {@link EventItemAttribute}.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
     public List<EventItemAttribute> getEventItemAttributes(String eventId, String itemId) throws IllegalArgumentException,
             ConstantContactServiceException {
         if (eventId == null) {
@@ -3450,7 +3658,24 @@ public class ConstantContact {
         return getEventSpotService().getEventItemAttributes(getAccessToken(), eventId, itemId);
     }
 
-    public EventItemAttribute getEventItemAttribute(String eventId, String itemId, String itemAttributeId) throws IllegalArgumentException,
+	/**
+	 * Get event item attribute API.<br/>
+	 * Details in : {@link EventSpotService#getEventItemAttribute(String, String, String, String)}
+	 *
+	 * @param eventId The event id.
+	 * @param itemId The event item id.
+	 * @param attributeId The event item attribute id.
+	 * @return The event item attribute {@link EventItemAttribute}.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+    public EventItemAttribute getEventItemAttribute(String eventId, String itemId, String attributeId) throws IllegalArgumentException,
             ConstantContactServiceException {
         if (eventId == null) {
             throw new IllegalArgumentException(Config.Errors.EVENT_ID);
@@ -3458,12 +3683,33 @@ public class ConstantContact {
         if (itemId == null) {
             throw new IllegalArgumentException(Config.Errors.EVENT_ITEM_ID);
         }
-        if (itemAttributeId == null) {
+        if (attributeId == null) {
             throw new IllegalArgumentException(Config.Errors.EVENT_ITEM_ATTRIBUTE_ID);
         }
-        return getEventSpotService().getEventItemAttribute(getAccessToken(), eventId, itemId, itemAttributeId);
+        return getEventSpotService().getEventItemAttribute(getAccessToken(), eventId, itemId, attributeId);
     }
 
+	/**
+	 *
+	 * Update event item attribute API.<br/>
+	 * Details in : {@link EventSpotService#updateEventItemAttribute(String, String, String, EventItemAttribute)}
+	 *	
+	 * @param eventId	The event id.
+	 * @param itemId The event item id.
+	 * @param itemAttribute	The {@link EventItemAttribute} to update.
+	 * @return The updated {@link EventItemAttribute} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
     public EventItemAttribute updateEventItemAttribute(String eventId, String itemId, EventItemAttribute itemAttribute) throws
             IllegalArgumentException,
             ConstantContactServiceException {
@@ -3479,6 +3725,26 @@ public class ConstantContact {
         return getEventSpotService().updateEventItemAttribute(getAccessToken(), eventId, itemId, itemAttribute);
     }
 
+ 	/**
+ 	 * Delete event item attribute API.<br/>
+ 	 * Details in : {@link EventSpotService#deleteEventItemAttribute(String, String, String, String)}
+ 	 * 
+ 	 * @param eventId The event id.
+ 	 * @param itemId The event item id.
+ 	 * @param itemAttributeId The event item attribute id to delete.
+ 	 * @return true in case of success, an exception is thrown otherwise.
+ 	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+ 	 *             The exception also contains a description of the cause.<br/>
+ 	 *             Error message is taken from one of the members of {@link Errors}
+ 	 * @throws ConstantContactServiceException Thrown when :
+ 	 *             <ul>
+ 	 *             <li>something went wrong either on the client side;</li>
+ 	 *             <li>or an error message was received from the server side.</li>
+ 	 *             </ul>
+ 	 * <br/>
+ 	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+ 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+ 	 */
     public boolean deleteEventItemAttribute(String eventId, String itemId, String itemAttributeId) throws IllegalArgumentException,
             ConstantContactServiceException {
         if (eventId == null) {
@@ -3491,20 +3757,5 @@ public class ConstantContact {
             throw new IllegalArgumentException(Config.Errors.EVENT_ITEM_ATTRIBUTE_ID);
         }
         return getEventSpotService().deleteEventItemAttribute(getAccessToken(), eventId, itemId, itemAttributeId);
-    }
-
-    public Event updateEvent(Event event) throws IllegalArgumentException, ConstantContactServiceException {
-        if(event == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT);
-        }
-        return getEventSpotService().updateEvent(getAccessToken(), event);
-    }
-
-    public boolean updateEventStatus(String eventId, String status)  throws IllegalArgumentException, ConstantContactServiceException {
-        if(eventId == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
-        }
-        return getEventSpotService().updateEventStatus(getAccessToken(), eventId, status);
-
     }
 }
