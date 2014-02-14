@@ -58,7 +58,7 @@ public interface IEventSpotService extends IBaseService {
 	 * Implements the update Event operation of the EventSpot API by calling the ConstantContact server side.
 	 * 
 	 * @param accessToken Constant Contact OAuth2 access token.
-	 * @param eventId The id of the event to update.
+	 * @param event The event to update.
 	 * @return An {@link Event} containing data as returned by the server on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.

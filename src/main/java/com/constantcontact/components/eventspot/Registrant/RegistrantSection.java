@@ -12,28 +12,57 @@ import java.util.List;
  */
 public class RegistrantSection extends Component implements Serializable {
 
-
+    /**
+     * Serial version unique identifier.
+     */
     private static final long serialVersionUID = 7638781369557796006L;
 
+    /**
+     * The label.
+     */
     @JsonIgnore
     private String label;
+
+    /**
+     * The list of fields displayed.
+     */
     @JsonIgnore
     private List<RegistrantSectionField> fields;
 
+    /**
+     * Get the label.
+     *
+     * @return The {@link #label}
+     */
     @JsonProperty("label")
     public String getLabel() {
         return label;
     }
 
+    /**
+     * Get the fields.
+     *
+     * @return The {@link #fields}
+     */
     @JsonProperty("fields")
     public List<RegistrantSectionField> getFields() {
         return fields;
     }
 
+    /**
+     * Set the label.
+     *
+     * @param label The label.
+     */
     public void setLabel(String label) {
         this.label = label;
     }
 
+    /**
+     * Set the fields.
+     *
+     * @param fields The fields.
+     */
     public void setFields(List<RegistrantSectionField> fields) {
         this.fields = fields;
     }
@@ -55,7 +84,6 @@ public class RegistrantSection extends Component implements Serializable {
     /**
      * Default constructor
      */
-
     public RegistrantSection() {
         super();
     }

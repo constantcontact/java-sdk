@@ -58,7 +58,7 @@ public class TestApi {
             /**
              * Change event status
              */
-            //changeEventStatus("a07e8vyxkn4767eda44");
+            changeEventStatus("a07e8uxb7ph0e2a1ac4");
 
             /**
              * Get event fees

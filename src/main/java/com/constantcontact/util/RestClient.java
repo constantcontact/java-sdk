@@ -70,7 +70,14 @@ public class RestClient implements IRestClient {
 		return makeHttpRequest(url, HttpMethod.DELETE, accessToken, null);
 	}
 
-    //todo documention
+    /**
+     * Make an HTTP PATCH request.
+     *
+     * @param url Request URL.
+     * @param accessToken Constant Contact OAuth2 access token.
+     * @param data Data to send with request.
+     * @return The response body, http info, and error (if one exists).
+     */
     public CUrlResponse patch(String url, String accessToken, String data) {
         return makeHttpRequest(url, HttpMethod.PATCH, accessToken, data);
     }
