@@ -763,7 +763,6 @@ public class EventSpotService extends BaseService implements IEventSpotService {
             throw new ConstantContactServiceException(e);
         }
         return newEventItem;
-
     }
 
 	/**
@@ -914,10 +913,48 @@ public class EventSpotService extends BaseService implements IEventSpotService {
         }
         return eventItemAttribute;
     }
-	
-	//TODO add event item attribute method
 
-	/**
+    /**
+     * Adds a single Event Item Attribute.<br/>
+     * Implements the add Event Item Attribute operation of the EventSpot API by calling the ConstantContact server side.
+     *
+     * @param accessToken Constant Contact OAuth2 access token.
+     * @param eventId The id of the event.
+     * @param itemId The event item id.
+     * @param itemAttribute The event item attribute to add.
+     * @return An {@link EventItemAttribute} containing data as returned by the server on success; <br/>
+     * An exception is thrown otherwise.
+     * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
+     */
+    @Override
+    public EventItemAttribute addEventItemAttribute(String accessToken, String eventId, String itemId, EventItemAttribute itemAttribute) throws
+            ConstantContactServiceException {
+        EventItemAttribute eventItemAttribute = null;
+        try {
+            String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+                    String.format(Config.Endpoints.EVENT_ITEM_ATTRIBUTES, eventId, itemId));
+            String json = itemAttribute.toJSON();
+
+            CUrlResponse response = getRestClient().post(url, accessToken, json);
+            if (response.hasData()) {
+                eventItemAttribute = Component.fromJSON(response.getBody(), EventItemAttribute.class);
+            }
+            if (response.isError()) {
+                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
+                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
+                response.getInfo().add(new CUrlRequestError("url", url));
+                constantContactException.setErrorInfo(response.getInfo());
+                throw constantContactException;
+            }
+        } catch (ConstantContactServiceException e) {
+            throw new ConstantContactServiceException(e);
+        } catch (Exception e) {
+            throw new ConstantContactServiceException(e);
+        }
+        return eventItemAttribute;
+    }
+
+    /**
 	 * Updates a single Event Item Attribute.<br/>
 	 * Implements the update Event Item Attribute operation of the EventSpot API by calling the ConstantContact server side.
 	 * 

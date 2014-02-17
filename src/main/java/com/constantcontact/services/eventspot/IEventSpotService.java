@@ -322,9 +322,22 @@ public interface IEventSpotService extends IBaseService {
 	 */
     public EventItemAttribute getEventItemAttribute(String accessToken, String eventId, String itemId, String itemAttributeId) throws ConstantContactServiceException;
 
-	//TODO add event item attribute method
-	
-	/**
+    /**
+     * Adds a single Event Item Attribute.<br/>
+     * Implements the add Event Item Attribute operation of the EventSpot API by calling the ConstantContact server side.
+     *
+     * @param accessToken Constant Contact OAuth2 access token.
+     * @param eventId The id of the event.
+     * @param itemId The event item id.
+     * @param itemAttribute The event item attribute to add.
+     * @return An {@link EventItemAttribute} containing data as returned by the server on success; <br/>
+     * An exception is thrown otherwise.
+     * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
+     */
+    public EventItemAttribute addEventItemAttribute(String accessToken, String eventId, String itemId, EventItemAttribute itemAttribute) throws
+            ConstantContactServiceException;
+
+    /**
 	 * Updates a single Event Item Attribute.<br/>
 	 * Implements the update Event Item Attribute operation of the EventSpot API by calling the ConstantContact server side.
 	 * 
@@ -351,4 +364,6 @@ public interface IEventSpotService extends IBaseService {
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
     public boolean deleteEventItemAttribute(String accessToken, String eventId, String itemId, String itemAttributeId) throws  ConstantContactServiceException;
+
+
 }

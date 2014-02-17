@@ -1,5 +1,6 @@
 package com.constantcontact;
 
+import com.constantcontact.components.accounts.AccountInfo;
 import com.constantcontact.components.accounts.VerifiedEmailAddress;
 import com.constantcontact.components.activities.contacts.request.AddContactsRequest;
 import com.constantcontact.components.activities.contacts.request.ClearListsRequest;
@@ -312,11 +313,20 @@ public class ConstantContact {
 		return bulkActivitiesService;
 	}
 
-    //Todo documentation
+    /**
+     * Get the {@link EventSpotService}
+     *
+     * @return The {@link EventSpotService}
+     */
     public IEventSpotService getEventSpotService() {
         return eventSpotService;
     }
-    //Todo documentation
+
+    /**
+     * Set the {@link EventSpotService}
+     *
+     * @param eventSpotService The {@link EventSpotService}
+     */
     public void setEventSpotService(IEventSpotService eventSpotService) {
         this.eventSpotService = eventSpotService;
     }
@@ -3690,6 +3700,37 @@ public class ConstantContact {
     }
 
 	/**
+ 	 * Add event item attribute API.<br/>
+ 	 * Details in : {@link EventSpotService#addEventItemAttribute(String, String, String, EventItemAttribute)}
+ 	 *
+	 * @param eventId	The event id.
+	 * @param itemId The event item id.
+ 	 * @param itemAttribute	The {@link EventItemAttribute} to add.
+ 	 * @return The added event item attribute.
+ 	 * @throws ConstantContactServiceException Thrown when :
+ 	 *             <ul>
+ 	 *             <li>something went wrong either on the client side;</li>
+ 	 *             <li>or an error message was received from the server side.</li>
+ 	 *             </ul>
+ 	 * <br/>
+ 	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+ 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+ 	 */
+    public EventItemAttribute addEventItemAttribute(String eventId, String itemId, EventItemAttribute itemAttribute) throws
+            IllegalArgumentException, ConstantContactServiceException {
+        if (eventId == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+        }
+        if (itemId == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_ITEM_ID);
+        }
+        if (itemAttribute == null) {
+            throw new IllegalArgumentException(Config.Errors.EVENT_ITEM_ATTRIBUTE);
+        }
+        return getEventSpotService().addEventItemAttribute(getAccessToken(), eventId, itemId, itemAttribute);
+    }
+	
+	/**
 	 *
 	 * Update event item attribute API.<br/>
 	 * Details in : {@link EventSpotService#updateEventItemAttribute(String, String, String, EventItemAttribute)}
@@ -3758,4 +3799,49 @@ public class ConstantContact {
         }
         return getEventSpotService().deleteEventItemAttribute(getAccessToken(), eventId, itemId, itemAttributeId);
     }
+	
+	/**
+	 * Get account info API.<br/>
+	 * Details in : {@link AccountService#getAccountInfo(String)}
+	 *
+	 * @return The account info.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+    public AccountInfo getAccountInfo() throws  ConstantContactServiceException {
+        return getAccountService().getAccountInfo(getAccessToken());
+    }
+	
+	/**
+	 *
+	 * Update account info.<br/>
+	 * Details in : {@link AccountService#updateAccountInfo(String, AccountInfo)}
+	 *	
+	 * @param accountInfo	The account information.
+	 * @return The updated {@link AccountInfo} in case of success; an exception is thrown otherwise.
+	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+	 *             The exception also contains a description of the cause.<br/>
+	 *             Error message is taken from one of the members of {@link Errors}
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+    public AccountInfo updateAccountInfo(AccountInfo accountInfo) throws IllegalArgumentException, ConstantContactServiceException {
+		if(accountInfo == null) {
+			throw new IllegalArgumentException(Config.Errors.ACCOUNT_INFO); 
+		}
+        return getAccountService().updateAccountInfo(getAccessToken(), accountInfo);
+    }
+
 }

@@ -242,7 +242,6 @@ public final class Config {
      */
     public static final String ACTIVITIES = "activities";
 
-
     public static final String LIBRARY_INFO = "library/info";
     public static final String LIBRARY_FILES = "library/files";
     public static final String LIBRARY_FILES_BY_FOLDER = "library/folders/%1$s/files";
@@ -256,19 +255,70 @@ public final class Config {
 
     public static final String LIBRARY_FILE_MOVE = "library/folders/%1$s/files";
 
-
+    /**
+     * Endpoint for the list of events.
+     */
     public static final String EVENTS = "eventspot/events/";
+	
+    /**
+     * Endpoint for accessing a single event.
+     */
     public static final String EVENT_ID = EVENTS + "%1$s";
+	
+    /**
+     * Endpoint for the list of event fees.
+     */
     public static final String EVENT_FEES = EVENTS + "%1$s/fees";
+	
+    /**
+     * Endpoint for accessing a single event fee.
+     */
     public static final String EVENT_FEE_ID = EVENTS + "%1$s/fees/%2$s";
+	
+    /**
+     * Endpoint for the list of the event's promocodes.
+     */
     public static final String EVENT_PROMOCODES = EVENTS + "%1$s/promocodes/";
+	
+    /**
+     * Endpoint for accessing a single event promocode.
+     */
     public static final String EVENT_PROMOCODE_ID = EVENTS + "%1$s/promocodes/%2$s";
+	
+    /**
+     * Endpoint for the list of event registrants.
+     */
     public static final String EVENT_REGISTRANTS = EVENTS + "%1$s/registrants";
+	
+    /**
+     * Endpoint for accessing a single event registrant.
+     */
     public static final String EVENT_REGISTRANT_ID = EVENTS + "%1$s/registrants/%2$s";
+	
+    /**
+     * Endpoint for the list of event items.
+     */
     public static final String EVENT_ITEMS = EVENTS + "%1$s/items/";
+	
+    /**
+     * Endpoint for accessing a single event item.
+     */
     public static final String EVENT_ITEM_ID = EVENTS + "%1$s/items/%2$s";
+	
+    /**
+     * Endpoint for the list of event item attributes.
+     */
     public static final String EVENT_ITEM_ATTRIBUTES = EVENTS + "%1$s/items/%2$s/attributes";
+	
+    /**
+     * Endpoint for accessing a event item attribute.
+     */
     public static final String EVENT_ITEM_ATTRIBUTE_ID = EVENTS + "%1$s/items/%2$s/attributes/%3$s";
+	
+    /**
+     * Endpoint for accessing the account info.
+     */
+    public static final String ACCOUNT_INFO = "account/info";
 
       /**
      * Default constructor.<br/>
@@ -445,28 +495,65 @@ public final class Config {
     public static final String MY_LIBRARY_FILE_TYPE_NULL = "File type must not be null";
 
 
-    //Todo documentation
+    /**
+     * EventId null error;
+     */
 	public static final String EVENT_ID = "EventId must not be null";
-
+	
+    /**
+     * Event FeeId null error;
+     */
 	public static final String EVENT_FEE_ID = "EventFeeId must not be null";
-
+	
+    /**
+     * Event null error;
+     */
     public static final String EVENT = "Event must not be null";
-
+	
+    /**
+     * Event Fee null error;
+     */
     public static final String EVENT_FEE = "Event fee must not be null";
-
+	
+    /**
+     * Promocode null error;
+     */
     public static final String PROMOCODE = "Promocode must not be null";
-
+	
+    /**
+     * PromocodeId null error;
+     */
     public static final String PROMOCODE_ID = "PromocodeId must not be null";
-
+	
+    /**
+     * Event RegistrantId null error;
+     */
     public static final String REGISTRANT_ID = "RegistrantId must not be null";
-
+	
+    /**
+     * Event ItemId null error;
+     */
     public static final String EVENT_ITEM_ID = "ItemId must not be null";
-
+	
+    /**
+     * Event Item null error;
+     */
     public static final String EVENT_ITEM = "EventItem must not be null";
-
+	
+    /**
+     * Event Item AttributeId null error;
+     */
     public static final String EVENT_ITEM_ATTRIBUTE_ID =  "AttributeId must not be null";
-
+	
+    /**
+     * Event Item Attribute null error;
+     */
     public static final String EVENT_ITEM_ATTRIBUTE = "Item Attribute must not be null";
+	
+    /**
+     * Account Info null error;
+     */
+    public static final String ACCOUNT_INFO = "Account Info must not be null";
 
 
       /**

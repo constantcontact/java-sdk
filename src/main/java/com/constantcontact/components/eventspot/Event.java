@@ -182,7 +182,7 @@ public class Event extends Component implements Serializable {
      */
     @JsonIgnore
     private String themeName;
-    //todo create extension event class for receiving all params
+
 //    /**
 //     * Specify additional text to help describe the event time zone
 //     */
@@ -251,7 +251,6 @@ public class Event extends Component implements Serializable {
      */
     @JsonProperty("address")
     public EventAddress getAddress() {
-        //Todo ask if this is the desired workflow
         return isVirtualEvent() ? null : address;
     }
 
@@ -545,15 +544,6 @@ public class Event extends Component implements Serializable {
     public String getThemeName() {
         return themeName;
     }
-    /**
-     * Get the timezone description.
-     *
-     * @return The {@link #timeZoneDescription}
-     */
-//    @JsonProperty("time_zone_description")
-//    public String getTimeZoneDescription() {
-//        return timeZoneDescription;
-//    }
 
     /**
      * Get the time zone ID.
@@ -914,15 +904,6 @@ public class Event extends Component implements Serializable {
     }
 
     /**
-     * Set the timeZoneDescription.
-     *
-     * @param timeZoneDescription The timeZoneDescription.
-     */
-//    public void setTimeZoneDescription(String timeZoneDescription) {
-//        this.timeZoneDescription = timeZoneDescription;
-//    }
-
-    /**
      * Set the timeZoneId.
      *
      * @param timeZoneId The timeZoneId.
@@ -988,7 +969,6 @@ public class Event extends Component implements Serializable {
 
     @Override
     public String toString() {
-        //Todo fill all attributes
         StringBuilder builder = new StringBuilder();
         builder.append("Event [id=");
         builder.append(id);
@@ -1069,7 +1049,11 @@ public class Event extends Component implements Serializable {
         super();
     }
 
-    //Todo declare all members
+    /**
+     * Payment type constants for the usage of {@link Event} in Constant Contact
+     *
+     * @author ConstantContact
+     */
     public static final class PaymentType {
         public static final String ONLINE_CREDIT_CARD_PROCESSOR = "ONLINE_CREDIT_CARD_PROCESSOR";
         public static final String PAYPAL = "PAYPAL";
@@ -1086,6 +1070,11 @@ public class Event extends Component implements Serializable {
         }
     }
 
+    /**
+     * Status constants for the usage of {@link Event} in Constant Contact
+     *
+     * @author ConstantContact
+     */
     public static final class Status {
         public static final String DRAFT = "DRAFT";
         public static final String ACTIVE = "ACTIVE";
@@ -1102,6 +1091,11 @@ public class Event extends Component implements Serializable {
         }
     }
 
+    /**
+     * Curency type constants for the usage of {@link Event} in Constant Contact
+     *
+     * @author ConstantContact
+     */
     public static final class CurrencyType {
 
         public static final String USD = "USD";
@@ -1134,6 +1128,11 @@ public class Event extends Component implements Serializable {
         }
     }
 
+    /**
+     * Type constants for the usage of {@link Event} in Constant Contact
+     *
+     * @author ConstantContact
+     */
     public static final class Type {
 
         public static final String AUCTION = "AUCTION";
