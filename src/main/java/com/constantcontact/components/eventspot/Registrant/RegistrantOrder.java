@@ -8,7 +8,10 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * @author Stefan Halus <stefan.halus@osf-global.com>
+ * RegistrantOrder for the Events in Constant Contact.
+ *
+ * @author ConstantContact
+ * @see EventSpotService
  */
 public class RegistrantOrder extends Component implements Serializable {
 

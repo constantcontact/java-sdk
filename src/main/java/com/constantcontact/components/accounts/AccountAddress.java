@@ -7,7 +7,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 
 /**
- * @author Stefan Halus <stefan.halus@osf-global.com>
+ * Represents a single Account address for the usage of Account Service in Constant Contact.
+ *
+ * @see AccountService
+ *
+ * @author ConstantContact
  */
 public class AccountAddress extends Component implements Serializable {
 

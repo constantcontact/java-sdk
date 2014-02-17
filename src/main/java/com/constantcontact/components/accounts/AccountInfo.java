@@ -8,7 +8,11 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * @author Stefan Halus <stefan.halus@osf-global.com>
+ * Represents Account Information for the usage of Account Service in Constant Contact.
+ *
+ * @see AccountService
+ *
+ * @author ConstantContact
  */
 public class AccountInfo extends Component implements Serializable {
 

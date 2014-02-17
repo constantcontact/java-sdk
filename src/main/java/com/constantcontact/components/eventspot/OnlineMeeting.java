@@ -7,7 +7,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 
 /**
- * @author Stefan Halus <stefan.halus@osf-global.com>
+ * OnlineMeeting for the Events in Constant Contact.
+ *
+ * @author ConstantContact
+ * @see EventSpotService
  */
 public class OnlineMeeting extends Component implements Serializable {
 

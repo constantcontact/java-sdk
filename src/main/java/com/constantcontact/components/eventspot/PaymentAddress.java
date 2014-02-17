@@ -3,7 +3,10 @@ package com.constantcontact.components.eventspot;
 import java.io.Serializable;
 
 /**
- * @author Stefan Halus <stefan.halus@osf-global.com>
+ * PaymentAddress for the Events in Constant Contact.
+ *
+ * @author ConstantContact
+ * @see EventSpotService
  */
 public class PaymentAddress extends EventAddress implements Serializable {
 

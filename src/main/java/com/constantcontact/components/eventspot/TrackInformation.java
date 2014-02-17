@@ -7,7 +7,10 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * @author Stefan Halus <stefan.halus@osf-global.com>
+ * TrackInformation for the Events in Constant Contact.
+ *
+ * @author ConstantContact
+ * @see EventSpotService
  */
 public class TrackInformation extends Component implements Serializable{
 

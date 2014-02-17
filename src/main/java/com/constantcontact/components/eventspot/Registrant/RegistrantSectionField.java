@@ -8,7 +8,10 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * @author Stefan Halus <stefan.halus@osf-global.com>
+ * RegistrantSectionField for the Events in Constant Contact.
+ *
+ * @author ConstantContact
+ * @see EventSpotService
  */
 public class RegistrantSectionField extends Component implements Serializable {
 

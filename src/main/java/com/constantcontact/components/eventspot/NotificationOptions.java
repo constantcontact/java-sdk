@@ -6,6 +6,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 
+/**
+ * NotificationOptions for the Events in Constant Contact.
+ *
+ * @author ConstantContact
+ * @see EventSpotService
+ */
 public class NotificationOptions extends Component implements Serializable {
 
     /**
