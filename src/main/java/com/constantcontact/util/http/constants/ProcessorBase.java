@@ -100,7 +100,8 @@ public interface ProcessorBase {
 		GET,
 		POST,
 		DELETE,
-		PUT
+		PUT,
+        PATCH
 	}
 	
 	/**

@@ -6,6 +6,7 @@ com.constantcontact.components.activities.contacts.response
 com.constantcontact.components.activities.contacts.types
 com.constantcontact.components.common.tracking
 com.constantcontact.components.contacts
+com.constantcontact.components.contacts.tracking
 com.constantcontact.components.contacts.tracking.bounces
 com.constantcontact.components.contacts.tracking.clicks
 com.constantcontact.components.contacts.tracking.forwards
@@ -23,8 +24,13 @@ com.constantcontact.components.emailcampaigns.tracking.opens
 com.constantcontact.components.emailcampaigns.tracking.reports.summary
 com.constantcontact.components.emailcampaigns.tracking.sends
 com.constantcontact.components.emailcampaigns.tracking.unsubscribes
+com.constantcontact.components.eventspot
+com.constantcontact.components.eventspot.Registrant
 com.constantcontact.components.generic.response
 com.constantcontact.components.generic.sources
+com.constantcontact.components.library.file
+com.constantcontact.components.library.folder
+com.constantcontact.components.library.info
 com.constantcontact.exceptions
 com.constantcontact.exceptions.component
 com.constantcontact.exceptions.service
@@ -38,6 +44,9 @@ com.constantcontact.services.contacts.tracking
 com.constantcontact.services.emailcampaigns
 com.constantcontact.services.emailcampaigns.schedule
 com.constantcontact.services.emailcampaigns.tracking
+com.constantcontact.services.eventspot
+com.constantcontact.services.library
+com.constantcontact.test
 com.constantcontact.util
 com.constantcontact.util.http
 com.constantcontact.util.http.constants

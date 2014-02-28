@@ -56,4 +56,14 @@ public interface IRestClient {
 	 * @return The response body, http info, and error (if one exists).
 	 */
 	CUrlResponse delete(String url, String accessToken);
+
+    /**
+     * Make an HTTP PATCH request.
+     *
+     * @param url Request URL.
+     * @param accessToken Constant Contact OAuth2 access token.
+     * @param data Data to send with request.
+     * @return The response body, http info, and error (if one exists).
+     */
+    CUrlResponse patch(String url, String accessToken, String data);
 }

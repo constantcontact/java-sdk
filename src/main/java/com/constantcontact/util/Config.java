@@ -8,14 +8,14 @@ import java.util.Properties;
 
 /**
  * Main Configuration structure in Constant Contact.
- * 
+ *
  * @author ConstantContact
- * 
+ *
  */
 public final class Config {
   /**
    * Contains a list with all REST endpoints.
-   * 
+   *
    * @author ConstantContact
    */
   public static final class Endpoints {
@@ -23,9 +23,9 @@ public final class Config {
     /**
      * API access URL Host.
      */
-    public static final String BASE_URL_HOST;  
-      
-	static 
+    public static final String BASE_URL_HOST;
+
+	static
 	{
 	    /*
 	     * Configures BASE_URL.  Value can be loaded from property "constantcontact.api.dest.baseurl"
@@ -37,9 +37,9 @@ public final class Config {
 	        Properties prop = new Properties();
 	        InputStream in;
 	        String baseUrl = "https://api.constantcontact.com";
-	        
+
 	        in = Config.class.getClassLoader().getResourceAsStream("ctct_api.properties");
-	        
+
 	        if (in != null) {
 	            prop.load(in);
 	            try {
@@ -53,20 +53,20 @@ public final class Config {
 	                baseUrl = baseUrlConfiguration;
 	            }
 	        }
-	        
+
 	        BASE_URL_HOST = baseUrl;
         }
         catch (IOException e) {
             throw new IllegalStateException("Cannot configure connection to Constant Contact", e);
         }
 	}
-	  
-	
+
+
 	/**
 	* API access URL.
 	*/
 	public static final String BASE_URL = BASE_URL_HOST + "/" + "v2/";
-	  
+
     /**
      * Access a contact.
      */
@@ -181,12 +181,12 @@ public final class Config {
      * Access contact tracking reports summary for a given contact.
      */
     public static final String CONTACTS_TRACKING_REPORTS_BY_CAMPAIGN_SUMMARY = "contacts/%1$s/tracking/reports/summaryByCampaign";
-    
+
     /**
      * Access contact tracking activities for a given contact.
      */
     public static final String CONTACTS_TRACKING_ALL = "contacts/%1$s/tracking/";
-    
+
     /**
      * Access contact tracking bounces for a given contact.
      */
@@ -242,21 +242,85 @@ public final class Config {
      */
     public static final String ACTIVITIES = "activities";
 
-    
     public static final String LIBRARY_INFO = "library/info";
     public static final String LIBRARY_FILES = "library/files";
     public static final String LIBRARY_FILES_BY_FOLDER = "library/folders/%1$s/files";
     public static final String LIBRARY_FOLDERS = "library/folders";
-    
+
     public static final String LIBRARY_FOLDER = LIBRARY_FOLDERS + "/%1$s";
     public static final String LIBRARY_FOLDER_TRASH = LIBRARY_FOLDERS + "/trash/files";
 
     public static final String LIBRARY_FILE = LIBRARY_FILES + "/%1$s";
     public static final String LIBRARY_FILE_UPLOAD_STATUS = LIBRARY_FILES + "/uploadstatus/%1$s";
-    
-    public static final String LIBRARY_FILE_MOVE = "library/folders/%1$s/files"; 
-    
+
+    public static final String LIBRARY_FILE_MOVE = "library/folders/%1$s/files";
+
     /**
+     * Endpoint for the list of events.
+     */
+    public static final String EVENTS = "eventspot/events/";
+	
+    /**
+     * Endpoint for accessing a single event.
+     */
+    public static final String EVENT_ID = EVENTS + "%1$s";
+	
+    /**
+     * Endpoint for the list of event fees.
+     */
+    public static final String EVENT_FEES = EVENTS + "%1$s/fees";
+	
+    /**
+     * Endpoint for accessing a single event fee.
+     */
+    public static final String EVENT_FEE_ID = EVENTS + "%1$s/fees/%2$s";
+	
+    /**
+     * Endpoint for the list of the event's promocodes.
+     */
+    public static final String EVENT_PROMOCODES = EVENTS + "%1$s/promocodes/";
+	
+    /**
+     * Endpoint for accessing a single event promocode.
+     */
+    public static final String EVENT_PROMOCODE_ID = EVENTS + "%1$s/promocodes/%2$s";
+	
+    /**
+     * Endpoint for the list of event registrants.
+     */
+    public static final String EVENT_REGISTRANTS = EVENTS + "%1$s/registrants";
+	
+    /**
+     * Endpoint for accessing a single event registrant.
+     */
+    public static final String EVENT_REGISTRANT_ID = EVENTS + "%1$s/registrants/%2$s";
+	
+    /**
+     * Endpoint for the list of event items.
+     */
+    public static final String EVENT_ITEMS = EVENTS + "%1$s/items/";
+	
+    /**
+     * Endpoint for accessing a single event item.
+     */
+    public static final String EVENT_ITEM_ID = EVENTS + "%1$s/items/%2$s";
+	
+    /**
+     * Endpoint for the list of event item attributes.
+     */
+    public static final String EVENT_ITEM_ATTRIBUTES = EVENTS + "%1$s/items/%2$s/attributes";
+	
+    /**
+     * Endpoint for accessing a event item attribute.
+     */
+    public static final String EVENT_ITEM_ATTRIBUTE_ID = EVENTS + "%1$s/items/%2$s/attributes/%3$s";
+	
+    /**
+     * Endpoint for accessing the account info.
+     */
+    public static final String ACCOUNT_INFO = "account/info";
+
+      /**
      * Default constructor.<br/>
      * Made private to prevent instantiation.<br/>
      * This is unreachable from the outside, since current class is used only as a repository for constants.
@@ -268,7 +332,7 @@ public final class Config {
   /**
    * OAuth2 Authorization related configuration options. <br/>
    * These are used for the authorize part of the authentication flow.
-   * 
+   *
    * @author ConstantContact
    */
   public static final class Auth {
@@ -323,9 +387,9 @@ public final class Config {
   /**
    * Login related configuration options in Constant Contact.<br/>
    * These are used for the login part of the authentication flow.
-   * 
+   *
    * @author ConstantContact
-   * 
+   *
    */
   public static final class Login {
     /**
@@ -354,7 +418,7 @@ public final class Config {
 
   /**
    * Errors to be returned for various exceptions in the Constant Contact flow.
-   * 
+   *
    * @author ConstantContact
    */
   public static final class Errors {
@@ -398,39 +462,101 @@ public final class Config {
      * File Name null error.
      */
     public static final String FILE_NAME_NULL = "FileName parameter must not be null.";
-    
+
     /**
      * File null error.
      */
     public static final String FILE_NULL = "File parameter must not be null.";
-    
+
     /**
-     * MyLibrary Folder null error; 
+     * MyLibrary Folder null error;
      */
-    public static final String FOLDER_NULL = "Folder parameter must not be null"; 
-    
+    public static final String FOLDER_NULL = "Folder parameter must not be null";
+
     /**
-     * MyLibrary FolderId null error; 
+     * MyLibrary FolderId null error;
      */
     public static final String FOLDER_ID_NULL = "FolderId parameter must not be null";
 
     /**
-     * MyLibrary FolderId null error; 
+     * MyLibrary FolderId null error;
      */
     public static final String FILE_ID_NULL = "FileId parameter must not be null";
-    
+
     /**
      * Pagination null error
      */
     public static final String PAGINATION_NULL = "Pagination parameter must not be null";
-    
+
     public static final String MY_LIBRARY_IMAGE_SOURCE_NULL = "Image Source parameter must not be null";
-  
+
     public static final String MY_LIBRARY_DESCRIPTION_NULL = "Description must not be null";
 
     public static final String MY_LIBRARY_FILE_TYPE_NULL = "File type must not be null";
-    
+
+
     /**
+     * EventId null error;
+     */
+	public static final String EVENT_ID = "EventId must not be null";
+	
+    /**
+     * Event FeeId null error;
+     */
+	public static final String EVENT_FEE_ID = "EventFeeId must not be null";
+	
+    /**
+     * Event null error;
+     */
+    public static final String EVENT = "Event must not be null";
+	
+    /**
+     * Event Fee null error;
+     */
+    public static final String EVENT_FEE = "Event fee must not be null";
+	
+    /**
+     * Promocode null error;
+     */
+    public static final String PROMOCODE = "Promocode must not be null";
+	
+    /**
+     * PromocodeId null error;
+     */
+    public static final String PROMOCODE_ID = "PromocodeId must not be null";
+	
+    /**
+     * Event RegistrantId null error;
+     */
+    public static final String REGISTRANT_ID = "RegistrantId must not be null";
+	
+    /**
+     * Event ItemId null error;
+     */
+    public static final String EVENT_ITEM_ID = "ItemId must not be null";
+	
+    /**
+     * Event Item null error;
+     */
+    public static final String EVENT_ITEM = "EventItem must not be null";
+	
+    /**
+     * Event Item AttributeId null error;
+     */
+    public static final String EVENT_ITEM_ATTRIBUTE_ID =  "AttributeId must not be null";
+	
+    /**
+     * Event Item Attribute null error;
+     */
+    public static final String EVENT_ITEM_ATTRIBUTE = "Item Attribute must not be null";
+	
+    /**
+     * Account Info null error;
+     */
+    public static final String ACCOUNT_INFO = "Account Info must not be null";
+
+
+      /**
      * Default constructor.<br/>
      * Made private to prevent instantiation.<br/>
      * This is unreachable from the outside, since current class is used only as a repository for constants.
@@ -441,9 +567,9 @@ public final class Config {
 
   /**
    * HTTP Return Codes in Constant Contact flow.
-   * 
+   *
    * @author ConstantContact
-   * 
+   *
    */
   public static final class HTTP_CODES {
 
@@ -483,9 +609,9 @@ public final class Config {
 
   /**
    * Collumn names in Constant Contact Activities flow.<br/>
-   * 
+   *
    * These are used for {@link com.constantcontact.components.activities.contacts.request.ExportContactsRequest} and {@link com.constantcontact.components.activities.contacts.request.AddContactsRequest} requests in {@link com.constantcontact.services.activities.BulkActivitiesService}.
-   * 
+   *
    * @author ConstantContact
    */
 
@@ -566,7 +692,7 @@ public final class Config {
 
     /**
      * Gets all defined collumn names.
-     * 
+     *
      * @return A List of String representing the list of all collumn names.
      */
     public static final List<String> getAllCollums() {
