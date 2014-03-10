@@ -55,7 +55,7 @@ public class RegistrantSectionField extends Component implements Serializable {
      *
      * @return The {@link #fieldType}
      */
-    @JsonProperty("field_type")
+    @JsonProperty("type")
     public String getFieldType() {
         return fieldType;
     }

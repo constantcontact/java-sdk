@@ -7,12 +7,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 
 /**
- * PromoCodeInfo for the Events in Constant Contact.
+ * PromocodeInfo for the Events in Constant Contact.
  *
  * @author ConstantContact
  * @see EventSpotService
  */
-public class PromoCodeInfo extends Component implements Serializable {
+public class PromocodeInfo extends Component implements Serializable {
 
     /**
      * Serial version unique identifier.
@@ -195,7 +195,7 @@ public class PromoCodeInfo extends Component implements Serializable {
 
 
     /**
-     * Discount type constants for the usage of {@link PromoCodeInfo} in Constant Contact
+     * Discount type constants for the usage of {@link PromocodeInfo} in Constant Contact
      *
      * @author ConstantContact
      */
@@ -222,7 +222,7 @@ public class PromoCodeInfo extends Component implements Serializable {
     }
 
     /**
-     * Discount type constants for the usage of {@link PromoCodeInfo} in Constant Contact
+     * Discount type constants for the usage of {@link PromocodeInfo} in Constant Contact
      *
      * @author ConstantContact
      */
@@ -249,7 +249,7 @@ public class PromoCodeInfo extends Component implements Serializable {
     }
 
     /**
-     * Discount type constants for the usage of {@link PromoCodeInfo} in Constant Contact
+     * Discount type constants for the usage of {@link PromocodeInfo} in Constant Contact
      *
      * @author ConstantContact
      */
@@ -276,7 +276,7 @@ public class PromoCodeInfo extends Component implements Serializable {
     }
 
     /**
-     * Promocode Status constants for the usage of {@link PromoCodeInfo} in Constant Contact
+     * Promocode Status constants for the usage of {@link PromocodeInfo} in Constant Contact
      *
      * @author ConstantContact
      */
@@ -330,7 +330,7 @@ public class PromoCodeInfo extends Component implements Serializable {
     /**
      * Default Constructor
      */
-    public PromoCodeInfo() {
+    public PromocodeInfo() {
         super();
     }
 

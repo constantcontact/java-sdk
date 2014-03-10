@@ -76,8 +76,6 @@ public class HttpProcessor implements ProcessorBase {
 
 			responseMessage = executeRequest(connection, data, accessToken);
 
-            System.out.println(responseMessage);
-
             int responseCode = connection.getResponseCode();
 			urlResponse.setStatusCode(responseCode);
 
@@ -170,7 +168,7 @@ public class HttpProcessor implements ProcessorBase {
 
 		URL url = new URL(urlParam);
 		
-		System.out.println("URL :" + urlParam);
+		//System.out.println("URL :" + urlParam);
 
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 		connection.setReadTimeout(10000);
@@ -201,7 +199,6 @@ public class HttpProcessor implements ProcessorBase {
 			connection.setDoOutput(true);
 			break;
         case PATCH:
-            //connection.setRequestMethod("PUT");
             setRequestMethodUsingWorkaroundForJREBug(connection, "PATCH");
             connection.setDoInput(true);
             connection.setDoOutput(true);

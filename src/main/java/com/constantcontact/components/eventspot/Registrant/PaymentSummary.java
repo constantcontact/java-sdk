@@ -38,6 +38,12 @@ public class PaymentSummary extends Component implements Serializable {
     private RegistrantOrder order;
 
     /**
+     * PromoCode properties
+     */
+    @JsonIgnore
+    private RegistrantPromoCode promoCode;
+
+    /**
      * Get the payment type.
      *
      * @return The {@link #paymentType}
@@ -67,6 +73,17 @@ public class PaymentSummary extends Component implements Serializable {
         return order;
     }
 
+
+    /**
+     * Get the promocode properties.
+     *
+     * @return The {@link #promoCode}
+     */
+    @JsonProperty("promo_code")
+    public RegistrantPromoCode getPromoCode() {
+        return promoCode;
+    }
+
     /**
      * Set the payment type.
      *
@@ -92,6 +109,15 @@ public class PaymentSummary extends Component implements Serializable {
      */
     public void setOrder(RegistrantOrder order) {
         this.order = order;
+    }
+
+    /**
+     * Set the promo code.
+     *
+     * @param promoCode Set the promo code.
+     */
+    public void setPromoCode(RegistrantPromoCode promoCode) {
+        this.promoCode = promoCode;
     }
 
 
@@ -131,6 +157,8 @@ public class PaymentSummary extends Component implements Serializable {
         builder.append(paymentStatus);
         builder.append(", order=");
         builder.append(order);
+        builder.append(", promo_code=");
+        builder.append(promoCode);
         builder.append("]");
 
         return builder.toString();
