@@ -327,7 +327,7 @@ public class Registrant extends Component implements Serializable {
     }
 
     /**
-     * Payment status constants for the usage of {@link PromocodeInfo} in Constant Contact
+     * Payment status constants for the usage of {@link PromoCodeInfo} in Constant Contact
      *
      * @author ConstantContact
      */

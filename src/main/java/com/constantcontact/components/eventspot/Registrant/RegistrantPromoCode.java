@@ -17,7 +17,7 @@ public class RegistrantPromoCode extends Component implements Serializable {
     private Double totalDiscount;
 
     @JsonIgnore
-    private PromocodeInfo promocodeInfo;
+    private PromoCodeInfo promoCodeInfo;
 
 
     /**
@@ -33,11 +33,11 @@ public class RegistrantPromoCode extends Component implements Serializable {
     /**
      * Get the promocode info.
      *
-     * @return The {@link #promocodeInfo}
+     * @return The {@link #promoCodeInfo}
      */
     @JsonProperty("promo_code_info")
-    public PromocodeInfo getPromocodeInfo() {
-        return promocodeInfo;
+    public PromoCodeInfo getPromoCodeInfo() {
+        return promoCodeInfo;
     }
 
     /**
@@ -52,10 +52,10 @@ public class RegistrantPromoCode extends Component implements Serializable {
     /**
      * Set the promocode info.
      *
-     * @param promocodeInfo The promocode info.
+     * @param promoCodeInfo The promocode info.
      */
-    public void setPromocodeInfo(PromocodeInfo promocodeInfo) {
-        this.promocodeInfo = promocodeInfo;
+    public void setPromoCodeInfo(PromoCodeInfo promoCodeInfo) {
+        this.promoCodeInfo = promoCodeInfo;
     }
 
 
@@ -66,7 +66,7 @@ public class RegistrantPromoCode extends Component implements Serializable {
         builder.append("RegistrantPromoCode [total_discount=");
         builder.append(totalDiscount);
         builder.append(", promo_code_info=");
-        builder.append(promocodeInfo);
+        builder.append(promoCodeInfo);
         builder.append("]");
 
         return builder.toString();
