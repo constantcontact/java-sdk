@@ -51,12 +51,6 @@ public class RegistrantDetails extends Component implements Serializable {
     private List<RegistrantSection> sections;
 
     /**
-     * A List of promo code info properties
-     */
-    @JsonIgnore
-    private List<PromoCodeInfo> promoCodeInfoList;
-
-    /**
      *The Registrant's payment summary
      */
     @JsonIgnore
@@ -67,6 +61,7 @@ public class RegistrantDetails extends Component implements Serializable {
      *
      * @return The {@link #id}
      */
+    @JsonProperty("id")
     public String getId() {
         return id;
     }
@@ -76,6 +71,7 @@ public class RegistrantDetails extends Component implements Serializable {
      *
      * @return The {@link #ticketId}
      */
+    @JsonProperty("ticket_id")
     public String getTicketId() {
         return ticketId;
     }
@@ -88,16 +84,6 @@ public class RegistrantDetails extends Component implements Serializable {
     @JsonProperty("sections")
     public List<RegistrantSection> getSections() {
         return sections;
-    }
-
-    /**
-     * Get the promo code info list.
-     *
-     * @return The {@link #promoCodeInfoList}
-     */
-    @JsonProperty("promo_code_info")
-    public List<PromoCodeInfo> getPromoCodeInfoList() {
-        return promoCodeInfoList;
     }
 
     /**
@@ -177,15 +163,6 @@ public class RegistrantDetails extends Component implements Serializable {
     }
 
     /**
-     * Set the promo code info list.
-     *
-     * @param promoCodeInfoList The the promo code info list.
-     */
-    public void setPromoCodeInfoList(List<PromoCodeInfo> promoCodeInfoList) {
-        this.promoCodeInfoList = promoCodeInfoList;
-    }
-
-    /**
      * Set the payment summary.
      *
      * @param paymentSummary The payment summary.
@@ -207,9 +184,6 @@ public class RegistrantDetails extends Component implements Serializable {
         builder.append(attendanceStatus);
         builder.append(", sections=");
         builder.append(sections);
-        builder.append(", promo_code_info=");
-        builder.append(promoCodeInfoList);
-        builder.append(", order=");
         builder.append(", payment_summary=");
         builder.append(paymentSummary);
         builder.append("]");
