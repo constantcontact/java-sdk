@@ -1085,6 +1085,26 @@ public class ConstantContact {
 		}
 		return emailCampaignService.addCampaign(this.getAccessToken(), emailCampaign);
 	}
+	
+    /**
+    *
+    * Delete Email Campaign API.<br/>
+    * Details in : {@link EmailCampaignService#deleteCampaign(String)}
+    *
+    * @param emailCampaignId The Email Campaign to delete
+    * @return True in case of success; an exception is thrown otherwise.
+    * @throws ConstantContactServiceException Thrown when :
+    *             <ul>
+    *             <li>something went wrong either on the client side;</li>
+    *             <li>or an error message was received from the server side.</li>
+    *             </ul>
+    * <br/>
+    *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+    *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+    */
+	public boolean deleteEmailCampaign(String emailCampaignId) throws ConstantContactServiceException {
+	    return emailCampaignService.deleteCampaign(this.getAccessToken(), emailCampaignId);
+	}
 
 	/**
 	 *
