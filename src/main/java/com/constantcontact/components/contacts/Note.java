@@ -36,7 +36,7 @@ public class Note extends Component implements Serializable {
 	 * 
 	 * @return The id.
 	 */
-	@JsonIgnore
+	@JsonProperty("id")
 	public String getId() {
 		return id;
 	}
@@ -66,6 +66,7 @@ public class Note extends Component implements Serializable {
 	 * 
 	 * @param note The note content.
 	 */
+	@JsonProperty("note")
 	public void setNote(String note) {
 		this.note = note;
 	}
@@ -127,6 +128,8 @@ public class Note extends Component implements Serializable {
 		builder.append(note);
 		builder.append(", createdDate=");
 		builder.append(createdDate);
+        builder.append(", modifiedDate=");
+        builder.append(modifiedDate);		
 		builder.append("]");
 		return builder.toString();
 	}
