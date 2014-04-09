@@ -810,6 +810,37 @@ public class ConstantContact {
 			throw new ConstantContactServiceException(e);
 		}
 	}
+	
+	/**
+    *
+    * Update Contact List API.<br/>
+    * Details in : {@link ContactListService#updateList(String, ContactList)}
+    *
+    * @param contact The {@link ContactList} to update.
+    * @return The updated {@link ContactList} in case of success; an exception is thrown otherwise.
+    * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
+    *             The exception also contains a description of the cause.<br/>
+    *             Error message is taken from one of the members of {@link Errors}
+    * @throws ConstantContactServiceException Thrown when :
+    *             <ul>
+    *             <li>something went wrong either on the client side;</li>
+    *             <li>or an error message was received from the server side.</li>
+    *             </ul>
+    * <br/>
+    *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+    *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+    */
+
+   public ContactList updateList(ContactList list) throws IllegalArgumentException, ConstantContactServiceException {
+       if (list == null) {
+           throw new IllegalArgumentException(Config.Errors.LIST_OR_ID);
+       }
+       if (list.getId() == null || !(list.getId().length() > 0)) {
+           throw new IllegalArgumentException(Config.Errors.ID);
+       }
+       return contactListService.updateList(this.getAccessToken(), list);
+   }
+   
 	/**
 	 *
 	 * Get Contacts From List API.<br/>

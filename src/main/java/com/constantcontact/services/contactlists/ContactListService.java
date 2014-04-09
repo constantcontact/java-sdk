@@ -127,6 +127,44 @@ public class ContactListService extends BaseService implements IContactListServi
 		}
 		return list;
 	}
+	
+	 /**
+     * Updates a Contact List identified by its List Id 
+     * 
+     * @param accessToken Constant Contact OAuth2 access token.
+     * @param list The List to update
+     * @return The {@link ContactList} containing values as returned by the server on success; <br/>
+     *         An exception is thrown otherwise.
+     * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
+     */
+
+    public ContactList updateList(String accessToken, ContactList list) throws ConstantContactServiceException {
+
+        ContactList resultingList = null;
+        try {
+            String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, String.format(Config.Endpoints.LIST, list.getId()));
+
+            String json = list.toJSON();
+            
+            CUrlResponse response = getRestClient().put(url, accessToken, json);
+            
+            if (response.hasData()) {
+                resultingList = Component.fromJSON(response.getBody(), ContactList.class);
+            }
+            if (response.isError()) {
+                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
+                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
+                response.getInfo().add(new CUrlRequestError("url", url));
+                constantContactException.setErrorInfo(response.getInfo());
+                throw constantContactException;
+            }
+        } catch (ConstantContactServiceException e) {
+            throw new ConstantContactServiceException(e);
+        } catch (Exception e) {
+            throw new ConstantContactServiceException(e);
+        }
+        return resultingList;
+    }
 
 	/**
 	 * Implements the Get all contacts from an individual list operation by calling the ConstantContact server side.

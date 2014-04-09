@@ -49,6 +49,17 @@ public interface IContactListService extends IBaseService {
 	 */
 	ContactList getList(String accessToken, String listId) throws ConstantContactServiceException;
 
+    /**
+     * Updates a Contact List identified by its List Id 
+     * 
+     * @param accessToken Constant Contact OAuth2 access token.
+     * @param list The List to update
+     * @return The {@link ContactList} containing values as returned by the server on success; <br/>
+     *         An exception is thrown otherwise.
+     * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
+     */
+    ContactList updateList(String accessToken, ContactList list) throws ConstantContactServiceException;
+	
 	/**
 	 * Implements the Get contacts from an individual list operation by calling the ConstantContact server side.
 	 * 
