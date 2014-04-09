@@ -436,7 +436,7 @@ public final class Config {
     /**
      * Id error.
      */
-    public static final String ID = "Only an mumeric String is allowed for this method.";
+    public static final String ID = "Only a numeric String is allowed for this method.";
 
     /**
      * Status error.
