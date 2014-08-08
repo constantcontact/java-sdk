@@ -52,7 +52,6 @@ public class WebHookValidator {
             throw new IllegalStateException("Cannot initialize Mac Generator", e);
         }
         byte[] output = macGenerator.doFinal(body.getBytes());
-        System.out.println(Base64.encodeBase64String(output));
         return Base64.encodeBase64String(output).compareToIgnoreCase(ctctHttpHeader) == 0;
     }
 }
