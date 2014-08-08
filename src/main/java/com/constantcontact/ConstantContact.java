@@ -1,5 +1,6 @@
 package com.constantcontact;
 
+import com.constantcontact.components.Component;
 import com.constantcontact.components.accounts.AccountInfo;
 import com.constantcontact.components.accounts.VerifiedEmailAddress;
 import com.constantcontact.components.activities.contacts.request.AddContactsRequest;
@@ -45,8 +46,10 @@ import com.constantcontact.components.library.folder.MyLibraryFolder.FolderSortO
 import com.constantcontact.components.library.info.MoveResults;
 import com.constantcontact.components.library.info.MyLibrarySummary;
 import com.constantcontact.components.library.info.UploadStatus;
+import com.constantcontact.components.webhook.BillingChangeNotification;
 import com.constantcontact.exceptions.ConstantContactException;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
+import com.constantcontact.exceptions.webhook.ConstantContactWebhookException;
 import com.constantcontact.pagination.PaginationHelperService;
 import com.constantcontact.services.accounts.AccountService;
 import com.constantcontact.services.accounts.IAccountService;
@@ -70,11 +73,13 @@ import com.constantcontact.services.library.IMyLibraryService;
 import com.constantcontact.services.library.MyLibraryService;
 import com.constantcontact.util.Config;
 import com.constantcontact.util.Config.Errors;
+import com.constantcontact.util.WebHookValidator;
 import com.constantcontact.util.http.MultipartBody;
 import com.constantcontact.util.http.MultipartBuilder;
 
 import java.io.*;
 import java.net.URLEncoder;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -99,6 +104,7 @@ import java.util.Map;
 public class ConstantContact {
 
 	private String accessToken;
+    private String clientSecret;
 	public static String API_KEY;
 
 	private IContactService contactService;
@@ -136,6 +142,40 @@ public class ConstantContact {
         this.setEventSpotService(new EventSpotService());
 		this.setPaginationHelperService(new PaginationHelperService());
 	}
+
+    /**
+     * Custom Class constructor.<br/>
+     * Initializes all Services;
+     *
+     * @param apiKey The API key provided by Constant Contact.
+     * @param accessToken The access token provided by Constant Contact Authentication workflow.
+     * @param clientSecret The client secret provided by Constant Contact.
+     */
+
+    public ConstantContact(String apiKey, String accessToken, String clientSecret) {
+        this(apiKey, accessToken);
+        this.setClientSecret(clientSecret);
+    }
+
+
+    /**
+     * Get the client secret.<br/>
+     *
+     * @return The client secret.
+     */
+    public String getClientSecret() {
+        return clientSecret;
+    }
+
+    /**
+     * Set the client secret.
+     *
+     * @param clientSecret The client secret.
+     */
+    public void setClientSecret(String clientSecret) {
+        this.clientSecret = clientSecret;
+    }
+
 
 	/**
 	 * Get the access token.<br/>
@@ -3893,6 +3933,48 @@ public class ConstantContact {
 			throw new IllegalArgumentException(Config.Errors.ACCOUNT_INFO); 
 		}
         return getAccountService().updateAccountInfo(getAccessToken(), accountInfo);
+    }
+
+    /**
+     * Get Billing Change Notification.<br/>
+     *
+     * @param xCtctHmacSHA256 The value in the x-ctct-hmac-sha256 header.
+     * @param bodyMessage The body message from the POST received from ConstantContact in Webhook callback.
+     * @return The {@link BillingChangeNotification} object corresponding to bodyMessage in case of success; an exception is thrown otherwise.
+     * @throws NoSuchAlgorithmException Thrown when the encryption algorithm used for validation is not available. Should not happen. <br/>
+     * @throws ConstantContactException Thrown when :
+     * <ul>
+     * <li>message encryption does not correspond with x-ctct-hmac-sha256 header value;</li>
+     * <li>or an error is raised when parsing the bodyMessage.</li>
+     * </ul>
+     *
+     * Error message is taken from one of the members of {@link Errors}
+     */
+
+    public BillingChangeNotification getBillingChangeNotification(String xCtctHmacSHA256, String bodyMessage) throws
+            ConstantContactException, NoSuchAlgorithmException {
+        if(validateWebHook(xCtctHmacSHA256, bodyMessage)) {
+            return Component.fromJSON(bodyMessage, BillingChangeNotification.class);
+        } else {
+            throw new ConstantContactException(Errors.INVALID_WEBHOOK);
+        }
+    }
+
+    /**
+     * Validates a Webhook message.<br/>
+     *
+     * @param xCtctHmacSHA256 The value in the x-ctct-hmac-sha256 header.
+     * @param bodyMessage The body message from the POST received from ConstantContact in Webhook callback.
+     * @return true if in case of success; false if the Webhook is invalid.
+     * @throws NoSuchAlgorithmException Thrown when the encryption algorithm used for validation is not available. Should not happen. <br/>
+     * @throws ConstantContactException Thrown when: message encryption does not correspond with x-ctct-hmac-sha256 header value. <br/>
+     * Error message is taken from one of the members of {@link Errors}
+     */
+    public boolean validateWebHook(String xCtctHmacSHA256, String bodyMessage) throws ConstantContactException, NoSuchAlgorithmException {
+        if(getClientSecret() == null) {
+            throw new ConstantContactException(Errors.NO_CLIENT_SECRET);
+        }
+        return new WebHookValidator(xCtctHmacSHA256, bodyMessage, getClientSecret()).validatePackage();
     }
 
 }
