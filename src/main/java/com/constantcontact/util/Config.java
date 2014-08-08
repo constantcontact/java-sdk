@@ -555,6 +555,17 @@ public final class Config {
      */
     public static final String ACCOUNT_INFO = "Account Info must not be null";
 
+    /**
+    * Invalid Webhook error;
+    */
+    public static final String INVALID_WEBHOOK = "Invalid Webhook. The x-ctct-hmac-sha256 does not correspond to message encryption.";
+
+    /**
+    * Client Secret null error;
+    */
+    public static final String NO_CLIENT_SECRET = "You must provide the client secret (via constructor or setClientSecret() ) corresponding to " +
+              "your API   from Constant Contact";
+
 
       /**
      * Default constructor.<br/>
