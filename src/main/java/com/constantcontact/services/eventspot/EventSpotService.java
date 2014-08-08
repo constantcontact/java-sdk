@@ -33,7 +33,6 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-    @Override
     public ResultSet<Event> getEvents(String accessToken, Integer limit) throws ConstantContactServiceException {
         ResultSet<Event> events = null;
         try {
@@ -106,7 +105,6 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-    @Override
     public Event addEvent(String accessToken, Event event) throws ConstantContactServiceException {
         Event newEvent = null;
         try {
@@ -142,7 +140,6 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-    @Override
     public Event updateEvent(String accessToken, Event event) throws ConstantContactServiceException {
         Event updatedEvent = null;
         try {
@@ -180,7 +177,6 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-    @Override
     public boolean updateEventStatus(String accessToken, String eventId, String status) throws ConstantContactServiceException {
         try {
             String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
@@ -218,7 +214,6 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */	
-    @Override
     public List<EventFee> getEventFees(String accessToken, String eventId) throws ConstantContactServiceException {
         List<EventFee> eventFees = null;
         try {
@@ -256,7 +251,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-    @Override
+    
     public EventFee getEventFee(String accessToken, String eventId, String feeId) throws ConstantContactServiceException {
         EventFee eventFee = null;
         try {
@@ -294,7 +289,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-    @Override
+    
     public EventFee addEventFee(String accessToken, String eventId, EventFee eventFee) throws ConstantContactServiceException {
         EventFee newEventFee = null;
         try {
@@ -332,7 +327,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-    @Override
+    
     public EventFee updateEventFee(String accessToken, String eventId, EventFee eventFee) throws ConstantContactServiceException {
         EventFee newEventFee = null;
         try {
@@ -370,7 +365,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-    @Override
+    
     public boolean deleteEventFee(String accessToken, String eventId, String eventFeeId) throws ConstantContactServiceException {
         try {
             String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
@@ -402,7 +397,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-    @Override
+    
     public List<Promocode> getEventPromocodes(String accessToken, String eventId) throws ConstantContactServiceException {
         List<Promocode> promocodes = null;
         try {
@@ -440,7 +435,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-    @Override
+    
     public Promocode getEventPromocode(String accessToken, String eventId, String promocodeId) throws ConstantContactServiceException {
         Promocode promocode = null;
         try {
@@ -478,7 +473,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */	
-    @Override
+    
     public Promocode addEventPromocode(String accessToken, String eventId, Promocode promocode) throws ConstantContactServiceException {
         Promocode newPromocode = null;
         try {
@@ -516,7 +511,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-    @Override
+    
     public Promocode updateEventPromocode(String accessToken, String eventId, Promocode promocode) throws ConstantContactServiceException {
         Promocode newPromocode = null;
         try {
@@ -554,7 +549,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-    @Override
+    
     public boolean deleteEventPromocode(String accessToken, String eventId, String promocodeId) throws ConstantContactServiceException {
         try {
             String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
@@ -587,7 +582,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-    @Override
+    
     public ResultSet<Registrant> getEventRegistrants(String accessToken, String eventId, Integer limit) throws ConstantContactServiceException {
         ResultSet<Registrant> eventRegistrants = null;
         try {
@@ -625,7 +620,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-    @Override
+    
     public RegistrantDetails getEventRegistrant(String accessToken,String eventId, String registrantId) throws ConstantContactServiceException {
         RegistrantDetails registrant = null;
         try {
@@ -662,7 +657,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-    @Override
+    
     public List<EventItem> getEventItems(String accessToken, String eventId) throws ConstantContactServiceException {
         List<EventItem> eventItems = null;
         try {
@@ -700,7 +695,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-    @Override
+    
     public EventItem getEventItem(String accessToken, String eventId, String itemId) throws ConstantContactServiceException {
         EventItem eventItem = null;
         try {
@@ -738,7 +733,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-    @Override
+    
     public EventItem addEventItem(String accessToken, String eventId, EventItem eventItem) throws ConstantContactServiceException {
         EventItem newEventItem = null;
         try {
@@ -776,7 +771,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-    @Override
+    
     public EventItem updateEventItem(String accessToken, String eventId, EventItem item) throws ConstantContactServiceException {
         EventItem eventItem = null;
         try {
@@ -814,7 +809,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-    @Override
+    
     public boolean deleteEventItem(String accessToken, String eventId, String itemId) throws ConstantContactServiceException {
         try {
             String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
@@ -847,7 +842,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-    @Override
+    
     public List<EventItemAttribute> getEventItemAttributes(String accessToken, String eventId, String itemId) throws ConstantContactServiceException {
         List<EventItemAttribute> eventItemAttributes = null;
         try {
@@ -886,7 +881,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-    @Override
+    
     public EventItemAttribute getEventItemAttribute(String accessToken, String eventId, String itemId, String itemAttributeId) throws
             ConstantContactServiceException {
         EventItemAttribute eventItemAttribute = null;
@@ -926,7 +921,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
      * An exception is thrown otherwise.
      * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
      */
-    @Override
+    
     public EventItemAttribute addEventItemAttribute(String accessToken, String eventId, String itemId, EventItemAttribute itemAttribute) throws
             ConstantContactServiceException {
         EventItemAttribute eventItemAttribute = null;
@@ -966,7 +961,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-    @Override
+    
     public EventItemAttribute updateEventItemAttribute(String accessToken, String eventId, String itemId, EventItemAttribute itemAttribute) throws
             ConstantContactServiceException {
         EventItemAttribute eventItemAttribute = null;
@@ -1006,7 +1001,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-    @Override
+    
     public boolean deleteEventItemAttribute(String accessToken, String eventId, String itemId, String itemAttributeId) throws
             ConstantContactServiceException {
         try {
