@@ -49,7 +49,6 @@ import com.constantcontact.components.library.info.UploadStatus;
 import com.constantcontact.components.webhook.BillingChangeNotification;
 import com.constantcontact.exceptions.ConstantContactException;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
-import com.constantcontact.exceptions.webhook.ConstantContactWebhookException;
 import com.constantcontact.pagination.PaginationHelperService;
 import com.constantcontact.services.accounts.AccountService;
 import com.constantcontact.services.accounts.IAccountService;
@@ -3953,7 +3952,7 @@ public class ConstantContact {
 
     public BillingChangeNotification getBillingChangeNotification(String xCtctHmacSHA256, String bodyMessage) throws
             ConstantContactException, NoSuchAlgorithmException {
-        if(validateWebHook(xCtctHmacSHA256, bodyMessage)) {
+        if(isValidWebhook(xCtctHmacSHA256, bodyMessage)) {
             return Component.fromJSON(bodyMessage, BillingChangeNotification.class);
         } else {
             throw new ConstantContactException(Errors.INVALID_WEBHOOK);
@@ -3970,11 +3969,11 @@ public class ConstantContact {
      * @throws ConstantContactException Thrown when: message encryption does not correspond with x-ctct-hmac-sha256 header value. <br/>
      * Error message is taken from one of the members of {@link Errors}
      */
-    public boolean validateWebHook(String xCtctHmacSHA256, String bodyMessage) throws ConstantContactException, NoSuchAlgorithmException {
+    public boolean isValidWebhook(String xCtctHmacSHA256, String bodyMessage) throws ConstantContactException, NoSuchAlgorithmException {
         if(getClientSecret() == null) {
             throw new ConstantContactException(Errors.NO_CLIENT_SECRET);
         }
-        return new WebHookValidator(xCtctHmacSHA256, bodyMessage, getClientSecret()).validatePackage();
+        return new WebHookValidator(xCtctHmacSHA256, bodyMessage, getClientSecret()).isValid();
     }
 
 }

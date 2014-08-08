@@ -12,9 +12,21 @@ import java.security.NoSuchAlgorithmException;
  */
 public class WebHookValidator {
 
+    /**
+     * The x-ctct-hmac-sha256 header value
+     */
     private String ctctHttpHeader;
+
+    /**
+     * The body message containg the JSON message
+     */
     private String body;
+
+    /**
+     * The client secret provided by ConstantContact
+     */
     private String sharedSecret;
+
 
     public WebHookValidator(String xCtctHmacSHA256, String body, String sharedSecret) {
         this.ctctHttpHeader = xCtctHmacSHA256;
@@ -22,8 +34,16 @@ public class WebHookValidator {
         this.sharedSecret = sharedSecret;
     }
 
+    /**
+     * To verify that the request came from Constant Contact, compute the HMAC digest and compare it to the value in the x-ctct-hmac-sha256 header.
+     * If they match, you can be sure that the webhook was sent by Constant Contact and the message has not been compromised.
+     *
+     * @return true if webhook is valid; false otherwise.
+     *
+     * @throws NoSuchAlgorithmException Thrown when the encryption algorithm used for validation is not available. (Should not happen.) <br/>
+     */
 
-    public boolean validatePackage() throws NoSuchAlgorithmException {
+    public boolean isValid() throws NoSuchAlgorithmException {
         Mac macGenerator = Mac.getInstance("HmacSHA256");
         SecretKeySpec encryptedKey = new SecretKeySpec(sharedSecret.getBytes(), "SHA-256");
         try {

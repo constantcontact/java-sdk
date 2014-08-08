@@ -1,16 +1,29 @@
 package com.constantcontact.components.webhook;
 
+import com.constantcontact.components.Component;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.io.Serializable;
 
 /**
  * @author Stefan Halus <stefan.halus@osf-global.com>
  */
-public class BillingChangeNotification {
+public class BillingChangeNotification extends Component implements Serializable {
 
+
+    private static final long serialVersionUID = -3368453189086934424L;
+
+    /**
+     * Location of the detailed account billing plan information -
+     * make a GET call to this URL to retrieve the account billing details.
+     */
     @JsonIgnore
     private String url;
 
+    /**
+     * Type of event that triggered the webhook.
+     */
     @JsonIgnore
     private String eventType;
 
@@ -31,6 +44,27 @@ public class BillingChangeNotification {
     public void setEventType(String eventType) {
         this.eventType = eventType;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("BillingChangeNotification [url=");
+        builder.append(url);
+        builder.append(", event_type=");
+        builder.append(eventType);
+        builder.append("]");
+        return builder.toString();
+    }
+
+
+    /**
+     * Default constructor
+     */
+    public BillingChangeNotification() {
+        super();
+    }
+
 
     /**
      * Event type constants for billing change notification.
