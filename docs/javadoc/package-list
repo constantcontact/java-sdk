@@ -31,7 +31,6 @@ com.constantcontact.components.generic.sources
 com.constantcontact.components.library.file
 com.constantcontact.components.library.folder
 com.constantcontact.components.library.info
-com.constantcontact.components.webhook
 com.constantcontact.exceptions
 com.constantcontact.exceptions.component
 com.constantcontact.exceptions.service
@@ -47,6 +46,7 @@ com.constantcontact.services.emailcampaigns.schedule
 com.constantcontact.services.emailcampaigns.tracking
 com.constantcontact.services.eventspot
 com.constantcontact.services.library
+com.constantcontact.test
 com.constantcontact.util
 com.constantcontact.util.http
 com.constantcontact.util.http.constants
