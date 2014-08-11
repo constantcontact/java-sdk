@@ -66,7 +66,6 @@ public class AccountService extends BaseService implements IAccountService {
      * An exception is thrown otherwise.
      * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
      */
-    @Override
     public AccountInfo getAccountInfo(String accessToken) throws ConstantContactServiceException {
         AccountInfo accountInfo = null;
         try {
@@ -102,7 +101,6 @@ public class AccountService extends BaseService implements IAccountService {
      * An exception is thrown otherwise.
      * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
      */
-    @Override
     public AccountInfo updateAccountInfo(String accessToken, AccountInfo accountInfo) throws ConstantContactServiceException {
         AccountInfo updatedAccountInfo = null;
         try {
