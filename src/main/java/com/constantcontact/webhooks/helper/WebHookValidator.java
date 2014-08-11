@@ -8,7 +8,10 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * @author Stefan Halus <stefan.halus@osf-global.com>
+ * Represents a helper class that validates a Webhook.
+ *
+ * @author ConstantContact
+ * @see com.constantcontact.webhooks.CTCTWebhookUtil
  */
 public class WebHookValidator {
 

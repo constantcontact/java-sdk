@@ -9,26 +9,50 @@ import com.constantcontact.webhooks.model.BillingChangeNotification;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * @author Stefan Halus <stefan.halus@osf-global.com>
+ * Main Webhook Utility class.<br/>
+ * This is meant to be used by users to validate and parse Webhooks received from ConstantContact.<br/>
+ *
+ * @author ConstantContact
  */
 public class CTCTWebhookUtil {
 
+
+    /**
+     * The secret key provided by ConstantContact along with the API KEY
+     */
     private String clientSecret;
 
+    /**
+     * Custom Class constructor.
+     *
+     * @param clientSecret The secret key provided by ConstantContact along with the API KEY
+     */
     public CTCTWebhookUtil(String clientSecret) {
         this.setClientSecret(clientSecret);
     }
+
+    /**
+     * Get the clientSecret
+     *
+     * @return The clientSecret
+     */
 
     public String getClientSecret() {
         return clientSecret;
     }
 
+    /**
+     * Set the clientSecret
+     * @param clientSecret The secret key provided by ConstantContact along with the API KEY
+     */
     public void setClientSecret(String clientSecret) {
         this.clientSecret = clientSecret;
     }
 
     /**
      * Get Billing Change Notification.<br/>
+     *
+     * Validates and parses the bodyMessage into {@link com.constantcontact.webhooks.model.BillingChangeNotification}
      *
      * @param xCtctHmacSHA256 The value in the x-ctct-hmac-sha256 header.
      * @param bodyMessage The body message from the POST received from ConstantContact in Webhook callback.
