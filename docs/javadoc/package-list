@@ -46,7 +46,9 @@ com.constantcontact.services.emailcampaigns.schedule
 com.constantcontact.services.emailcampaigns.tracking
 com.constantcontact.services.eventspot
 com.constantcontact.services.library
-com.constantcontact.test
 com.constantcontact.util
 com.constantcontact.util.http
 com.constantcontact.util.http.constants
+com.constantcontact.webhooks
+com.constantcontact.webhooks.helper
+com.constantcontact.webhooks.model
