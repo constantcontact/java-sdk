@@ -1,4 +1,4 @@
-package com.constantcontact.components.webhook;
+package com.constantcontact.webhooks.model;
 
 import com.constantcontact.components.Component;
 import com.fasterxml.jackson.annotation.JsonIgnore;

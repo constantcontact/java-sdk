@@ -1,4 +1,4 @@
-package com.constantcontact.util;
+package com.constantcontact.webhooks.helper;
 
 import org.apache.commons.codec.binary.Base64;
 
