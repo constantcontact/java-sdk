@@ -25,6 +25,13 @@ public abstract class Component implements Serializable {
 	 */
 	private static final long serialVersionUID = -2551086630319838747L;
 
+	private static ObjectMapper mapper;
+	
+	static {
+	    mapper = new ObjectMapper();
+	    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+	}
+	
 	/**
 	 * Get list of objects from a JSON String.
 	 * 
@@ -35,8 +42,7 @@ public abstract class Component implements Serializable {
 	 */
 	public static <T> List<T> listFromJSON(String json, Class<T> objClass) throws ConstantContactComponentException {
 		List<T> obj = null;
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		
 		try {
 			TypeFactory typeFactory = mapper.getTypeFactory();
 			CollectionType collectionType = typeFactory.constructCollectionType(List.class, objClass);
@@ -57,8 +63,6 @@ public abstract class Component implements Serializable {
 	 */
 	public static <T> T fromJSON(String json, Class<T> objClass) throws ConstantContactComponentException {
 		T obj = null;
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		try {
 			obj = mapper.readValue(json, objClass);
 		} catch (Exception e) {
@@ -77,8 +81,6 @@ public abstract class Component implements Serializable {
 	 */
 	public static <T> ResultSet<T> resultSetFromJSON(String json, Class<T> objClass) throws ConstantContactComponentException {
 		ResultSet<T> obj = null;
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		try {
 			TypeFactory typeFactory = mapper.getTypeFactory();
 			JavaType javaType = typeFactory.constructParametricType(ResultSet.class, objClass);
@@ -97,7 +99,6 @@ public abstract class Component implements Serializable {
 	 */
 	public String toJSON() throws ConstantContactComponentException {
 		String json = null;
-		ObjectMapper mapper = new ObjectMapper();
 		try {
 			json = mapper.writeValueAsString(this);
 		} catch (Exception e) {
@@ -105,11 +106,5 @@ public abstract class Component implements Serializable {
 		}
 		return json;
 	}
-
-	/**
-	 * Default constructor.
-	 */
-	public Component() {
-		super();
-	}
+	
 }

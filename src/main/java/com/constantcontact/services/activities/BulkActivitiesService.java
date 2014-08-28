@@ -7,9 +7,9 @@ import com.constantcontact.components.activities.contacts.request.AddContactsReq
 import com.constantcontact.components.activities.contacts.request.ClearListsRequest;
 import com.constantcontact.components.activities.contacts.request.ExportContactsRequest;
 import com.constantcontact.components.activities.contacts.request.RemoveContactsRequest;
+import com.constantcontact.components.activities.contacts.response.ContactsResponse;
 import com.constantcontact.components.activities.contacts.response.DetailedStatusReport;
 import com.constantcontact.components.activities.contacts.response.SummaryReport;
-import com.constantcontact.components.activities.contacts.response.ContactsResponse;
 import com.constantcontact.components.activities.contacts.types.BulkActivityStatus;
 import com.constantcontact.components.activities.contacts.types.BulkActivityType;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
@@ -17,6 +17,7 @@ import com.constantcontact.services.base.BaseService;
 import com.constantcontact.util.CUrlRequestError;
 import com.constantcontact.util.CUrlResponse;
 import com.constantcontact.util.Config;
+import com.constantcontact.util.http.MultipartBody;
 
 /**
  * Service Layer Implementation for the Bulk Activities in Constant Contact.
@@ -63,6 +64,31 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 		return contactsResponse;
 	}
 
+	public ContactsResponse addContacts(String accessToken, MultipartBody multipartRequest)
+            throws ConstantContactServiceException {
+	    
+	    ContactsResponse contactsResponse = null;
+        try {
+            String url = Config.Endpoints.BASE_URL + Config.Endpoints.ACTIVITIES_ADD_CONTACTS;
+            CUrlResponse response = getRestClient().postMultipart(url, accessToken, multipartRequest);
+            if (response.hasData()) {
+                contactsResponse = Component.fromJSON(response.getBody(), ContactsResponse.class);
+            }
+
+            if (response.isError()) {
+                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
+                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
+                response.getInfo().add(new CUrlRequestError("url", url));
+                constantContactException.setErrorInfo(response.getInfo());
+                throw constantContactException;
+            }
+        } catch (Exception e) {
+            throw new ConstantContactServiceException(e);
+        }
+        return contactsResponse;
+	    
+    }
+
 	/**
 	 * Implements the bulk remove Contacts From Lists operation by calling the ConstantContact server side.
 	 * 
@@ -96,6 +122,33 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 		}
 		return contactsResponse;
 	}
+
+    public ContactsResponse removeContactsFromLists(String accessToken, MultipartBody multipartRequest)
+            throws ConstantContactServiceException {
+
+        ContactsResponse contactsResponse = null;
+        try {
+            String url = Config.Endpoints.BASE_URL + Config.Endpoints.ACTIVITIES_REMOVE_FROM_LISTS;
+            CUrlResponse response = getRestClient().postMultipart(url, accessToken, multipartRequest);
+            if (response.hasData()) {
+                contactsResponse = Component.fromJSON(response.getBody(), ContactsResponse.class);
+            }
+            if (response.isError()) {
+                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
+                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
+                response.getInfo().add(new CUrlRequestError("url", url));
+                constantContactException.setErrorInfo(response.getInfo());
+                throw constantContactException;
+            }
+        }
+        catch (ConstantContactServiceException e) {
+            throw new ConstantContactServiceException(e);
+        }
+        catch (Exception e) {
+            throw new ConstantContactServiceException(e);
+        }
+        return contactsResponse;
+    }
 
 	/**
 	 * Implements the bulk clear Lists operation by calling the ConstantContact server side.

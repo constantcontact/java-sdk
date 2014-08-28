@@ -768,6 +768,8 @@ public abstract class EmailCampaignBase extends Component implements Serializabl
 		builder.append(sentToContactLists);
 		builder.append(", createdDate=");
 		builder.append(createdDate);
+	    builder.append(", permalinkUrl=");
+	    builder.append(permalinkUrl);
 		builder.append(", archiveStatus=");
 		builder.append(archiveStatus);
 		builder.append(", archiveUrl=");

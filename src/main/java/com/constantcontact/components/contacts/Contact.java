@@ -574,47 +574,12 @@ public class Contact extends Component implements Serializable {
 	}
 
 	/**
-	 * Status constants for the {@link Contact} type in Constant Contact.
+	 * Status enum for the {@link Contact} type in Constant Contact.
 	 * 
 	 * @author ConstantContact
 	 */
-	public static final class Status {
-		/**
-		 * Active Status.
-		 */
-		public static final String ACTIVE = "ACTIVE";
-
-		/**
-		 * Unconfirmed Status.
-		 */
-		public static final String UNCONFIRMED = "UNCONFIRMED";
-
-		/**
-		 * Output Status.
-		 */
-		public static final String OPTOUT = "OPTOUT";
-
-		/**
-		 * Removed Status.
-		 */
-		public static final String REMOVED = "REMOVED";
-
-		/**
-		 * Non Subscriber Status.
-		 */
-		public static final String NON_SUBSCRIBER = "NON_SUBSCRIBER";
-
-		/**
-		 * Visitor Status.
-		 */
-		public static final String VISITOR = "VISITOR";
-
-		/**
-		 * Default constructor.<br/>
-		 * Made private to prevent instantiation.<br/>
-		 * This is unreachable from the outside, since current class is used only as a repository for constants.
-		 */
-		private Status() {
-		}
+	public enum Status {
+		
+		ACTIVE, UNCONFIRMED, OPTOUT, REMOVED, NON_SUBSCRIBER, VISITOR;
 	}
 }

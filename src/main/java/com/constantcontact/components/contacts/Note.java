@@ -20,7 +20,7 @@ public class Note extends Component implements Serializable {
 	private static final long serialVersionUID = 7311187758661669300L;
 
 	@JsonIgnore
-	private int id;
+	private String id;
 
 	@JsonIgnore
 	private String note;
@@ -36,8 +36,8 @@ public class Note extends Component implements Serializable {
 	 * 
 	 * @return The id.
 	 */
-	@JsonIgnore
-	public int getId() {
+	@JsonProperty("id")
+	public String getId() {
 		return id;
 	}
 
@@ -47,7 +47,7 @@ public class Note extends Component implements Serializable {
 	 * @param id The id.
 	 */
 	@JsonProperty("id")
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -66,6 +66,7 @@ public class Note extends Component implements Serializable {
 	 * 
 	 * @param note The note content.
 	 */
+	@JsonProperty("note")
 	public void setNote(String note) {
 		this.note = note;
 	}
@@ -127,6 +128,8 @@ public class Note extends Component implements Serializable {
 		builder.append(note);
 		builder.append(", createdDate=");
 		builder.append(createdDate);
+        builder.append(", modifiedDate=");
+        builder.append(modifiedDate);		
 		builder.append("]");
 		return builder.toString();
 	}

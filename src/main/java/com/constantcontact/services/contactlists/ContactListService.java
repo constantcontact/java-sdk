@@ -127,21 +127,68 @@ public class ContactListService extends BaseService implements IContactListServi
 		}
 		return list;
 	}
+	
+	 /**
+     * Updates a Contact List identified by its List Id 
+     * 
+     * @param accessToken Constant Contact OAuth2 access token.
+     * @param list The List to update
+     * @return The {@link ContactList} containing values as returned by the server on success; <br/>
+     *         An exception is thrown otherwise.
+     * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
+     */
+
+    public ContactList updateList(String accessToken, ContactList list) throws ConstantContactServiceException {
+
+        ContactList resultingList = null;
+        try {
+            String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, String.format(Config.Endpoints.LIST, list.getId()));
+
+            String json = list.toJSON();
+            
+            CUrlResponse response = getRestClient().put(url, accessToken, json);
+            
+            if (response.hasData()) {
+                resultingList = Component.fromJSON(response.getBody(), ContactList.class);
+            }
+            if (response.isError()) {
+                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
+                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
+                response.getInfo().add(new CUrlRequestError("url", url));
+                constantContactException.setErrorInfo(response.getInfo());
+                throw constantContactException;
+            }
+        } catch (ConstantContactServiceException e) {
+            throw new ConstantContactServiceException(e);
+        } catch (Exception e) {
+            throw new ConstantContactServiceException(e);
+        }
+        return resultingList;
+    }
 
 	/**
 	 * Implements the Get all contacts from an individual list operation by calling the ConstantContact server side.
 	 * 
 	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param listId List id to retrieve contacts for.
+	 * @param limit Maximum number of contacts to retrieve. Default is 50.
+	 * @param modifiedSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/>
+	 * 	  	It will return only the contacts modified since the supplied date. <br/>
+	 * 		If you want to bypass this filter set modifiedSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link Contact} containing data as returned by the server on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 
-	public ResultSet<Contact> getContactsFromList(String accessToken, String listId) throws ConstantContactServiceException {
+	public ResultSet<Contact> getContactsFromList(String accessToken, String listId, Integer limit, String modifiedSinceTimestamp) throws ConstantContactServiceException {
 		ResultSet<Contact> contacts = null;
 		try {
 			String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, String.format(Config.Endpoints.LIST_CONTACTS, listId));
+			url = paginateUrl(url, limit);
+			
+			if (modifiedSinceTimestamp != null) {
+		        url = appendParam(url, "modified_since", modifiedSinceTimestamp);
+		      }
 			
 			CUrlResponse response = getRestClient().get(url, accessToken);
 			if (response.hasData()) {
@@ -161,7 +208,7 @@ public class ContactListService extends BaseService implements IContactListServi
 		}
 		return contacts;
 	}
-	
+		
 	/**
 	 * Deletes a single contact list based on contact list unique identifier.<br/>
 	 * Implements the delete ContactList operation of the Contact Lists API by calling the ConstantContact server side.

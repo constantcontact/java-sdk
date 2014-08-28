@@ -1,11 +1,12 @@
 package com.constantcontact.services.accounts;
 
-import java.util.List;
-
+import com.constantcontact.components.accounts.AccountInfo;
 import com.constantcontact.components.accounts.VerifiedEmailAddress;
 import com.constantcontact.components.accounts.VerifiedEmailAddress.Status;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.base.IBaseService;
+
+import java.util.List;
 
 /**
  * Interface for class {@link AccountService} in Constant Contact.
@@ -26,4 +27,27 @@ public interface IAccountService extends IBaseService {
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 	public List<VerifiedEmailAddress> getVerifiedEmailAddresses(String accessToken, String status) throws ConstantContactServiceException;
+
+    /**
+     * Get Account Summary Info call.<br/>
+     * Implements the Get Account Summary Info operation from the Accounts API by calling the ConstantContact server side.
+     *
+     * @param accessToken Constant Contact OAuth2 access token.
+     * @return A {@link AccountInfo} containing values returned from the server on success; <br/>
+     * An exception is thrown otherwise.
+     * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
+     */
+    public AccountInfo getAccountInfo(String accessToken) throws ConstantContactServiceException;
+
+    /**
+     * Updates the Account Info.<br/>
+     * Implements the update Account Info operation of the Account Summary Info API by calling the ConstantContact server side.
+     *
+     * @param accessToken Constant Contact OAuth2 access token.
+     * @param accountInfo The account information.
+     * @return An {@link AccountInfo} containing data as returned by the server on success; <br/>
+     * An exception is thrown otherwise.
+     * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
+     */
+    public AccountInfo updateAccountInfo(String accessToken, AccountInfo accountInfo) throws ConstantContactServiceException;
 }
