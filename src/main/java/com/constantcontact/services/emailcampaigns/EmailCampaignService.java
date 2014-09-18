@@ -1,16 +1,16 @@
 package com.constantcontact.services.emailcampaigns;
 
-import java.net.HttpURLConnection;
-
 import com.constantcontact.components.Component;
 import com.constantcontact.components.emailcampaigns.EmailCampaignRequest;
 import com.constantcontact.components.emailcampaigns.EmailCampaignResponse;
 import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.base.BaseService;
-import com.constantcontact.util.CUrlRequestError;
 import com.constantcontact.util.CUrlResponse;
 import com.constantcontact.util.Config;
+import com.constantcontact.util.ConstantContactExceptionFactory;
+
+import java.net.HttpURLConnection;
 
 /**
  * Service Layer Implementation for the Email Campaign operations in Constant Contact.
@@ -48,11 +48,7 @@ public class EmailCampaignService extends BaseService implements IEmailCampaignS
 				campaigns = Component.resultSetFromJSON(response.getBody(), EmailCampaignResponse.class);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (ConstantContactServiceException e) {
 			throw new ConstantContactServiceException(e);
@@ -83,11 +79,7 @@ public class EmailCampaignService extends BaseService implements IEmailCampaignS
 				campaign = Component.fromJSON(response.getBody(), EmailCampaignResponse.class);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (ConstantContactServiceException e) {
 			throw new ConstantContactServiceException(e);
@@ -119,11 +111,7 @@ public class EmailCampaignService extends BaseService implements IEmailCampaignS
 				newEmailCampaign = Component.fromJSON(response.getBody(), EmailCampaignResponse.class);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (ConstantContactServiceException e) {
 			throw new ConstantContactServiceException(e);
@@ -155,11 +143,7 @@ public class EmailCampaignService extends BaseService implements IEmailCampaignS
 				updateEmailCampaign = Component.fromJSON(response.getBody(), EmailCampaignResponse.class);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (ConstantContactServiceException e) {
 			throw new ConstantContactServiceException(e);
@@ -187,11 +171,7 @@ public class EmailCampaignService extends BaseService implements IEmailCampaignS
 			CUrlResponse response = getRestClient().delete(url, accessToken);
 			
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 			return response.getStatusCode() == HttpURLConnection.HTTP_NO_CONTENT;
 		} catch (ConstantContactServiceException e) {

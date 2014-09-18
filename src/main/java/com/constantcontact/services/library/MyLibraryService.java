@@ -1,8 +1,5 @@
 package com.constantcontact.services.library;
 
-import java.io.UnsupportedEncodingException;
-import java.util.List;
-
 import com.constantcontact.components.Component;
 import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.components.library.file.ImageSource;
@@ -16,11 +13,14 @@ import com.constantcontact.exceptions.ConstantContactException;
 import com.constantcontact.exceptions.component.ConstantContactComponentException;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.base.BaseService;
-import com.constantcontact.util.CUrlRequestError;
 import com.constantcontact.util.CUrlResponse;
 import com.constantcontact.util.Config;
 import com.constantcontact.util.Config.Errors;
+import com.constantcontact.util.ConstantContactExceptionFactory;
 import com.constantcontact.util.http.MultipartBody;
+
+import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 public class MyLibraryService extends BaseService implements IMyLibraryService {
 
@@ -649,11 +649,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
     
     private static void checkForResponseError(CUrlResponse response, String url) throws ConstantContactServiceException {
         if (response.isError()) {
-            ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                    ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-            response.getInfo().add(new CUrlRequestError("url", url));
-            constantContactException.setErrorInfo(response.getInfo());
-            throw constantContactException;
+            throw ConstantContactExceptionFactory.createServiceException(response, url);
         }
     }
 }
