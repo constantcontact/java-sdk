@@ -1,9 +1,9 @@
 package com.constantcontact.exceptions;
 
+import com.constantcontact.util.CUrlRequestError;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.constantcontact.util.CUrlRequestError;
 
 /**
  * Base class for custom exceptions in ConstantContact.<br/>
@@ -24,7 +24,12 @@ public class ConstantContactException extends Exception {
 	 */
 	private List<CUrlRequestError> errorInfo;
 
-	/**
+    /**
+     * HTTP status code retrieved from Constant Contact.
+     */
+    private int httpStatusCode;
+
+    /**
 	 * Default constructor.<br/>
 	 * Sets the Error Info to an empty ArrayList.
 	 */
@@ -71,6 +76,7 @@ public class ConstantContactException extends Exception {
 	public ConstantContactException( ConstantContactException constantContactException) {
 		super(constantContactException);
 		this.setErrorInfo(constantContactException.getErrorInfo());
+        this.setHttpStatusCode(constantContactException.getHttpStatusCode());
 	}
 
 	/**
@@ -100,4 +106,21 @@ public class ConstantContactException extends Exception {
 	public boolean hasErrorInfo() {
 		return errorInfo != null && errorInfo.size() > 0;
 	}
+
+
+    /**
+     * Get the HTTP status code.
+     * @return httpsStatusCode
+     */
+    public int getHttpStatusCode() {
+        return httpStatusCode;
+    }
+
+    /**
+     * Set the HTTP status code.
+     * @param httpStatusCode
+     */
+    public void setHttpStatusCode(int httpStatusCode) {
+        this.httpStatusCode = httpStatusCode;
+    }
 }

@@ -5,9 +5,9 @@ import com.constantcontact.components.generic.response.Pagination;
 import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.base.BaseService;
-import com.constantcontact.util.CUrlRequestError;
 import com.constantcontact.util.CUrlResponse;
 import com.constantcontact.util.Config;
+import com.constantcontact.util.ConstantContactExceptionFactory;
 
 /**
  * Service Layer Implementation for pagination in Constant Contact.
@@ -46,11 +46,7 @@ public class PaginationHelperService extends BaseService {
 				pageResultSet = Component.resultSetFromJSON(response.getBody(), objectClass);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (ConstantContactServiceException e) {
 			throw new ConstantContactServiceException(e);

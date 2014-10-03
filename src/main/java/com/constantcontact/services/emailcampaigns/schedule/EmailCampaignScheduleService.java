@@ -1,15 +1,15 @@
 package com.constantcontact.services.emailcampaigns.schedule;
 
-import java.net.HttpURLConnection;
-import java.util.List;
-
 import com.constantcontact.components.Component;
 import com.constantcontact.components.emailcampaigns.schedules.EmailCampaignSchedule;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.base.BaseService;
-import com.constantcontact.util.CUrlRequestError;
 import com.constantcontact.util.CUrlResponse;
 import com.constantcontact.util.Config;
+import com.constantcontact.util.ConstantContactExceptionFactory;
+
+import java.net.HttpURLConnection;
+import java.util.List;
 
 /**
  * Service Layer Implementation for the Email Campaign Schedule operations in Constant Contact.
@@ -41,11 +41,7 @@ public class EmailCampaignScheduleService extends BaseService implements IEmailC
 				schedule = Component.fromJSON(response.getBody(), EmailCampaignSchedule.class);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (ConstantContactServiceException e) {
 			throw new ConstantContactServiceException(e);
@@ -80,11 +76,7 @@ public class EmailCampaignScheduleService extends BaseService implements IEmailC
 				updatedEmailCampaignSchedule = Component.fromJSON(response.getBody(), EmailCampaignSchedule.class);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (ConstantContactServiceException e) {
 			throw new ConstantContactServiceException(e);
@@ -110,11 +102,7 @@ public class EmailCampaignScheduleService extends BaseService implements IEmailC
 			String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, String.format(Config.Endpoints.EMAILCAMPAIGNS_SCHEDULES_ID, campaignId, scheduleId));
 			CUrlResponse response = getRestClient().delete(url, accessToken);
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 			return response.getStatusCode() == HttpURLConnection.HTTP_NO_CONTENT;
 		} catch (ConstantContactServiceException e) {
@@ -146,11 +134,7 @@ public class EmailCampaignScheduleService extends BaseService implements IEmailC
 				schedules = Component.listFromJSON(response.getBody(), EmailCampaignSchedule.class);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 			return schedules;
 		} catch (ConstantContactServiceException e) {
@@ -183,11 +167,7 @@ public class EmailCampaignScheduleService extends BaseService implements IEmailC
 				newSchedule = Component.fromJSON(response.getBody(), EmailCampaignSchedule.class);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (ConstantContactServiceException e) {
 			throw new ConstantContactServiceException(e);

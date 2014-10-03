@@ -6,9 +6,9 @@ import com.constantcontact.components.accounts.VerifiedEmailAddress;
 import com.constantcontact.components.accounts.VerifiedEmailAddress.Status;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.base.BaseService;
-import com.constantcontact.util.CUrlRequestError;
 import com.constantcontact.util.CUrlResponse;
 import com.constantcontact.util.Config;
+import com.constantcontact.util.ConstantContactExceptionFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,11 +42,7 @@ public class AccountService extends BaseService implements IAccountService {
 				addresses = Component.listFromJSON(response.getBody(), VerifiedEmailAddress.class);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (ConstantContactServiceException e) {
 			throw new ConstantContactServiceException(e);
@@ -77,11 +73,7 @@ public class AccountService extends BaseService implements IAccountService {
                 accountInfo = Component.fromJSON(response.getBody(), AccountInfo.class);
             }
             if (response.isError()) {
-                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-                response.getInfo().add(new CUrlRequestError("url", url));
-                constantContactException.setErrorInfo(response.getInfo());
-                throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
             }
         } catch (ConstantContactServiceException e) {
             throw new ConstantContactServiceException(e);
@@ -112,11 +104,7 @@ public class AccountService extends BaseService implements IAccountService {
                 updatedAccountInfo = Component.fromJSON(response.getBody(), AccountInfo.class);
             }
             if (response.isError()) {
-                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-                response.getInfo().add(new CUrlRequestError("url", url));
-                constantContactException.setErrorInfo(response.getInfo());
-                throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
             }
         } catch (ConstantContactServiceException e) {
             throw new ConstantContactServiceException(e);

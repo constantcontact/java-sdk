@@ -1,17 +1,17 @@
 package com.constantcontact.services.contactlists;
 
-import java.net.HttpURLConnection;
-import java.util.List;
-
 import com.constantcontact.components.Component;
 import com.constantcontact.components.contacts.Contact;
 import com.constantcontact.components.contacts.ContactList;
 import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.base.BaseService;
-import com.constantcontact.util.CUrlRequestError;
 import com.constantcontact.util.CUrlResponse;
 import com.constantcontact.util.Config;
+import com.constantcontact.util.ConstantContactExceptionFactory;
+
+import java.net.HttpURLConnection;
+import java.util.List;
 
 /**
  * Service Layer Implementation for the Contact Lists operations in Constant Contact.
@@ -45,11 +45,7 @@ public class ContactListService extends BaseService implements IContactListServi
 				lists = Component.listFromJSON(response.getBody(), ContactList.class);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (ConstantContactServiceException e) {
 			throw new ConstantContactServiceException(e);
@@ -80,11 +76,7 @@ public class ContactListService extends BaseService implements IContactListServi
 				newList = Component.fromJSON(response.getBody(), ContactList.class);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (ConstantContactServiceException e) {
 			throw new ConstantContactServiceException(e);
@@ -114,11 +106,7 @@ public class ContactListService extends BaseService implements IContactListServi
 				list = Component.fromJSON(response.getBody(), ContactList.class);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (ConstantContactServiceException e) {
 			throw new ConstantContactServiceException(e);
@@ -152,11 +140,7 @@ public class ContactListService extends BaseService implements IContactListServi
                 resultingList = Component.fromJSON(response.getBody(), ContactList.class);
             }
             if (response.isError()) {
-                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-                response.getInfo().add(new CUrlRequestError("url", url));
-                constantContactException.setErrorInfo(response.getInfo());
-                throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
             }
         } catch (ConstantContactServiceException e) {
             throw new ConstantContactServiceException(e);
@@ -195,11 +179,7 @@ public class ContactListService extends BaseService implements IContactListServi
 				contacts = Component.resultSetFromJSON(response.getBody(), Contact.class);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (ConstantContactServiceException e) {
 			throw new ConstantContactServiceException(e);
@@ -225,11 +205,7 @@ public class ContactListService extends BaseService implements IContactListServi
 			
 			CUrlResponse response = getRestClient().delete(url, accessToken);
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 			return response.getStatusCode() == HttpURLConnection.HTTP_NO_CONTENT;
 		} catch (ConstantContactServiceException e) {

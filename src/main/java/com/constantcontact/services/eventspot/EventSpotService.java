@@ -7,9 +7,9 @@ import com.constantcontact.components.eventspot.Registrant.RegistrantDetails;
 import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.base.BaseService;
-import com.constantcontact.util.CUrlRequestError;
 import com.constantcontact.util.CUrlResponse;
 import com.constantcontact.util.Config;
+import com.constantcontact.util.ConstantContactExceptionFactory;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
@@ -45,11 +45,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
                 events = Component.resultSetFromJSON(response.getBody(), Event.class);
             }
             if (response.isError()) {
-                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-                response.getInfo().add(new CUrlRequestError("url", url));
-                constantContactException.setErrorInfo(response.getInfo());
-                throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
             }
         } catch (ConstantContactServiceException e) {
             throw new ConstantContactServiceException(e);
@@ -82,11 +78,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
                 event = Component.fromJSON(response.getBody(), Event.class);
             }
             if (response.isError()) {
-                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-                response.getInfo().add(new CUrlRequestError("url", url));
-                constantContactException.setErrorInfo(response.getInfo());
-                throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
             }
         } catch (ConstantContactServiceException e) {
             throw new ConstantContactServiceException(e);
@@ -116,11 +108,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
                 newEvent = Component.fromJSON(response.getBody(), Event.class);
             }
             if (response.isError()) {
-                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-                response.getInfo().add(new CUrlRequestError("url", url));
-                constantContactException.setErrorInfo(response.getInfo());
-                throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
             }
         } catch (ConstantContactServiceException e) {
             throw new ConstantContactServiceException(e);
@@ -152,11 +140,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
                 updatedEvent = Component.fromJSON(response.getBody(), Event.class);
             }
             if (response.isError()) {
-                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-                response.getInfo().add(new CUrlRequestError("url", url));
-                constantContactException.setErrorInfo(response.getInfo());
-                throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
             }
         } catch (ConstantContactServiceException e) {
             throw new ConstantContactServiceException(e);
@@ -190,11 +174,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 
             CUrlResponse response = getRestClient().patch(url, accessToken, json);
             if (response.isError()) {
-                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-                response.getInfo().add(new CUrlRequestError("url", url));
-                constantContactException.setErrorInfo(response.getInfo());
-                throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
             }
             return response.getStatusCode() == HttpURLConnection.HTTP_NO_CONTENT;
         } catch (ConstantContactServiceException e) {
@@ -226,11 +206,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
                 eventFees = Component.listFromJSON(response.getBody(), EventFee.class);
             }
             if (response.isError()) {
-                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-                response.getInfo().add(new CUrlRequestError("url", url));
-                constantContactException.setErrorInfo(response.getInfo());
-                throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
             }
         } catch (ConstantContactServiceException e) {
             throw new ConstantContactServiceException(e);
@@ -264,11 +240,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
                 eventFee = Component.fromJSON(response.getBody(), EventFee.class);
             }
             if (response.isError()) {
-                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-                response.getInfo().add(new CUrlRequestError("url", url));
-                constantContactException.setErrorInfo(response.getInfo());
-                throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
             }
         } catch (ConstantContactServiceException e) {
             throw new ConstantContactServiceException(e);
@@ -302,11 +274,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
                 newEventFee = Component.fromJSON(response.getBody(), EventFee.class);
             }
             if (response.isError()) {
-                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-                response.getInfo().add(new CUrlRequestError("url", url));
-                constantContactException.setErrorInfo(response.getInfo());
-                throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
             }
         } catch (ConstantContactServiceException e) {
             throw new ConstantContactServiceException(e);
@@ -340,11 +308,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
                 newEventFee = Component.fromJSON(response.getBody(), EventFee.class);
             }
             if (response.isError()) {
-                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-                response.getInfo().add(new CUrlRequestError("url", url));
-                constantContactException.setErrorInfo(response.getInfo());
-                throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
             }
         } catch (ConstantContactServiceException e) {
             throw new ConstantContactServiceException(e);
@@ -373,11 +337,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 
             CUrlResponse response = getRestClient().delete(url, accessToken);
             if (response.isError()) {
-                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-                response.getInfo().add(new CUrlRequestError("url", url));
-                constantContactException.setErrorInfo(response.getInfo());
-                throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
             }
             return response.getStatusCode() == HttpURLConnection.HTTP_NO_CONTENT;
         } catch (ConstantContactServiceException e) {
@@ -410,11 +370,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
                 promocodes = Component.listFromJSON(response.getBody(), Promocode.class);
             }
             if (response.isError()) {
-                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-                response.getInfo().add(new CUrlRequestError("url", url));
-                constantContactException.setErrorInfo(response.getInfo());
-                throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
             }
         } catch (ConstantContactServiceException e) {
             throw new ConstantContactServiceException(e);
@@ -427,15 +383,15 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	/**
 	 * Gets a single Event Promocode.<br/>
 	 * Implements the get Event Promocode operation of the EventSpot API by calling the ConstantContact server side.
-	 * 
+	 *
 	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param eventId The id of the event.
-	 * @param promocodeId The id of the event promocode. 
+	 * @param promocodeId The id of the event promocode.
 	 * @return An {@link Promocode} containing data as returned by the server on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-    
+
     public Promocode getEventPromocode(String accessToken, String eventId, String promocodeId) throws ConstantContactServiceException {
         Promocode promocode = null;
         try {
@@ -448,11 +404,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
                 promocode = Component.fromJSON(response.getBody(), Promocode.class);
             }
             if (response.isError()) {
-                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-                response.getInfo().add(new CUrlRequestError("url", url));
-                constantContactException.setErrorInfo(response.getInfo());
-                throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
             }
         } catch (ConstantContactServiceException e) {
             throw new ConstantContactServiceException(e);
@@ -486,11 +438,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
                 newPromocode = Component.fromJSON(response.getBody(), Promocode.class);
             }
             if (response.isError()) {
-                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-                response.getInfo().add(new CUrlRequestError("url", url));
-                constantContactException.setErrorInfo(response.getInfo());
-                throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
             }
         } catch (ConstantContactServiceException e) {
             throw new ConstantContactServiceException(e);
@@ -524,11 +472,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
                 newPromocode = Component.fromJSON(response.getBody(), Promocode.class);
             }
             if (response.isError()) {
-                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-                response.getInfo().add(new CUrlRequestError("url", url));
-                constantContactException.setErrorInfo(response.getInfo());
-                throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
             }
         } catch (ConstantContactServiceException e) {
             throw new ConstantContactServiceException(e);
@@ -557,11 +501,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 
             CUrlResponse response = getRestClient().delete(url, accessToken);
             if (response.isError()) {
-                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-                response.getInfo().add(new CUrlRequestError("url", url));
-                constantContactException.setErrorInfo(response.getInfo());
-                throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
             }
             return response.getStatusCode() == HttpURLConnection.HTTP_NO_CONTENT;
         } catch (ConstantContactServiceException e) {
@@ -595,11 +535,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
                 eventRegistrants = Component.resultSetFromJSON(response.getBody(), Registrant.class);
             }
             if (response.isError()) {
-                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-                response.getInfo().add(new CUrlRequestError("url", url));
-                constantContactException.setErrorInfo(response.getInfo());
-                throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
             }
         } catch (ConstantContactServiceException e) {
             throw new ConstantContactServiceException(e);
@@ -633,11 +569,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
                 registrant = Component.fromJSON(response.getBody(), RegistrantDetails.class);
             }
             if (response.isError()) {
-                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-                response.getInfo().add(new CUrlRequestError("url", url));
-                constantContactException.setErrorInfo(response.getInfo());
-                throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
             }
         } catch (ConstantContactServiceException e) {
             throw new ConstantContactServiceException(e);
@@ -670,11 +602,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
                 eventItems = Component.listFromJSON(response.getBody(), EventItem.class);
             }
             if (response.isError()) {
-                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-                response.getInfo().add(new CUrlRequestError("url", url));
-                constantContactException.setErrorInfo(response.getInfo());
-                throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
             }
         } catch (ConstantContactServiceException e) {
             throw new ConstantContactServiceException(e);
@@ -708,11 +636,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
                 eventItem = Component.fromJSON(response.getBody(), EventItem.class);
             }
             if (response.isError()) {
-                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-                response.getInfo().add(new CUrlRequestError("url", url));
-                constantContactException.setErrorInfo(response.getInfo());
-                throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
             }
         } catch (ConstantContactServiceException e) {
             throw new ConstantContactServiceException(e);
@@ -746,11 +670,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
                 newEventItem = Component.fromJSON(response.getBody(), EventItem.class);
             }
             if (response.isError()) {
-                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-                response.getInfo().add(new CUrlRequestError("url", url));
-                constantContactException.setErrorInfo(response.getInfo());
-                throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
             }
         } catch (ConstantContactServiceException e) {
             throw new ConstantContactServiceException(e);
@@ -784,11 +704,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
                 eventItem = Component.fromJSON(response.getBody(), EventItem.class);
             }
             if (response.isError()) {
-                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-                response.getInfo().add(new CUrlRequestError("url", url));
-                constantContactException.setErrorInfo(response.getInfo());
-                throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
             }
         } catch (ConstantContactServiceException e) {
             throw new ConstantContactServiceException(e);
@@ -817,11 +733,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 
             CUrlResponse response = getRestClient().delete(url, accessToken);
             if (response.isError()) {
-                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-                response.getInfo().add(new CUrlRequestError("url", url));
-                constantContactException.setErrorInfo(response.getInfo());
-                throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
             }
             return response.getStatusCode() == HttpURLConnection.HTTP_NO_CONTENT;
         } catch (ConstantContactServiceException e) {
@@ -855,11 +767,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
                 eventItemAttributes = Component.listFromJSON(response.getBody(), EventItemAttribute.class);
             }
             if (response.isError()) {
-                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-                response.getInfo().add(new CUrlRequestError("url", url));
-                constantContactException.setErrorInfo(response.getInfo());
-                throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
             }
         } catch (ConstantContactServiceException e) {
             throw new ConstantContactServiceException(e);
@@ -872,16 +780,16 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	/**
 	 * Gets a single Event Item Attribute.<br/>
 	 * Implements the get Event Item Attribute operation of the EventSpot API by calling the ConstantContact server side.
-	 * 
+	 *
 	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param eventId The id of the event.
-	 * @param itemId The id of the event item. 
-	 * @param itemAttributeId The id of the event item attribute. 
+	 * @param itemId The id of the event item.
+	 * @param itemAttributeId The id of the event item attribute.
 	 * @return An {@link EventItemAttribute} containing data as returned by the server on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-    
+
     public EventItemAttribute getEventItemAttribute(String accessToken, String eventId, String itemId, String itemAttributeId) throws
             ConstantContactServiceException {
         EventItemAttribute eventItemAttribute = null;
@@ -895,11 +803,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
                 eventItemAttribute = Component.fromJSON(response.getBody(), EventItemAttribute.class);
             }
             if (response.isError()) {
-                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-                response.getInfo().add(new CUrlRequestError("url", url));
-                constantContactException.setErrorInfo(response.getInfo());
-                throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
             }
         } catch (ConstantContactServiceException e) {
             throw new ConstantContactServiceException(e);
@@ -935,11 +839,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
                 eventItemAttribute = Component.fromJSON(response.getBody(), EventItemAttribute.class);
             }
             if (response.isError()) {
-                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-                response.getInfo().add(new CUrlRequestError("url", url));
-                constantContactException.setErrorInfo(response.getInfo());
-                throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
             }
         } catch (ConstantContactServiceException e) {
             throw new ConstantContactServiceException(e);
@@ -952,7 +852,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
     /**
 	 * Updates a single Event Item Attribute.<br/>
 	 * Implements the update Event Item Attribute operation of the EventSpot API by calling the ConstantContact server side.
-	 * 
+	 *
 	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param eventId The id of the event.
 	 * @param itemId The id of the event item.
@@ -961,7 +861,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-    
+
     public EventItemAttribute updateEventItemAttribute(String accessToken, String eventId, String itemId, EventItemAttribute itemAttribute) throws
             ConstantContactServiceException {
         EventItemAttribute eventItemAttribute = null;
@@ -975,11 +875,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
                 eventItemAttribute = Component.fromJSON(response.getBody(), EventItemAttribute.class);
             }
             if (response.isError()) {
-                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-                response.getInfo().add(new CUrlRequestError("url", url));
-                constantContactException.setErrorInfo(response.getInfo());
-                throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
             }
         } catch (ConstantContactServiceException e) {
             throw new ConstantContactServiceException(e);
@@ -1010,11 +906,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 
             CUrlResponse response = getRestClient().delete(url, accessToken);
             if (response.isError()) {
-                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-                response.getInfo().add(new CUrlRequestError("url", url));
-                constantContactException.setErrorInfo(response.getInfo());
-                throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
             }
             return response.getStatusCode() == HttpURLConnection.HTTP_NO_CONTENT;
         } catch (ConstantContactServiceException e) {

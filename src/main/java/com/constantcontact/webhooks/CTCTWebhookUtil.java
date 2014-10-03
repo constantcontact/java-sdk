@@ -18,14 +18,14 @@ public class CTCTWebhookUtil {
 
 
     /**
-     * The secret key provided by ConstantContact along with the API KEY
+     * The client secret associated with the api key
      */
     private String clientSecret;
 
     /**
      * Custom Class constructor.
      *
-     * @param clientSecret The secret key provided by ConstantContact along with the API KEY
+     * @param clientSecret The client secret associated with the api key
      */
     public CTCTWebhookUtil(String clientSecret) {
         this.setClientSecret(clientSecret);
@@ -43,7 +43,7 @@ public class CTCTWebhookUtil {
 
     /**
      * Set the clientSecret
-     * @param clientSecret The secret key provided by ConstantContact along with the API KEY
+     * @param clientSecret The client secret associated with the api key
      */
     public void setClientSecret(String clientSecret) {
         this.clientSecret = clientSecret;

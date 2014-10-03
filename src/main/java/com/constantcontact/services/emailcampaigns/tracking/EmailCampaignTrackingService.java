@@ -11,9 +11,9 @@ import com.constantcontact.components.emailcampaigns.tracking.unsubscribes.Email
 import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.base.BaseService;
-import com.constantcontact.util.CUrlRequestError;
 import com.constantcontact.util.CUrlResponse;
 import com.constantcontact.util.Config;
+import com.constantcontact.util.ConstantContactExceptionFactory;
 
 /**
  * Service Layer Implementation for the Email Campaign Tracking operations in Constant Contact.
@@ -52,11 +52,7 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 				summary = Component.fromJSON(response.getBody(), EmailCampaignTrackingSummary.class);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (ConstantContactServiceException e) {
 			throw new ConstantContactServiceException(e);
@@ -93,11 +89,7 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 				bounces = Component.resultSetFromJSON(response.getBody(), EmailCampaignTrackingBounce.class);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (ConstantContactServiceException e) {
 			throw new ConstantContactServiceException(e);
@@ -144,11 +136,7 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 				clicks = Component.resultSetFromJSON(response.getBody(), EmailCampaignTrackingClick.class);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (ConstantContactServiceException e) {
 			throw new ConstantContactServiceException(e);
@@ -195,11 +183,7 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 				forwards = Component.resultSetFromJSON(response.getBody(), EmailCampaignTrackingForward.class);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (ConstantContactServiceException e) {
 			throw new ConstantContactServiceException(e);
@@ -245,11 +229,7 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 				opens = Component.resultSetFromJSON(response.getBody(), EmailCampaignTrackingOpen.class);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (ConstantContactServiceException e) {
 			throw new ConstantContactServiceException(e);
@@ -295,11 +275,7 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 				sends = Component.resultSetFromJSON(response.getBody(), EmailCampaignTrackingSend.class);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (ConstantContactServiceException e) {
 			throw new ConstantContactServiceException(e);
@@ -312,11 +288,11 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 	/**
 	 * Gets the Email Campaign Tracking Unsubscribes based on the id of the email campaign.<br/>
 	 * Implements the get Unsubscribes operation of the Email Campaign Tracking API by calling the ConstantContact server side.
-	 * 
+	 *
 	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param emailCampaignId The id field in Email Campaign
 	 * @param limit The limit
-	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
+	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/>
 	 * 		   It will return only the unsubscribes performed since the supplied date. <br/>
 	 * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
 	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingUnsubscribe} containing the unsubscribes - values returned by the server side - on success; <br/>
@@ -332,12 +308,12 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 			if (limit != null) {
 				sb.append("?limit=").append(limit);
 			}
-			
+
 			if (createdSinceTimestamp != null) {
 				sb.append(limit != null ? "&" : "?");
 				sb.append("created_since=").append(createdSinceTimestamp);
 			}
-			
+
 			String url = sb.toString();
 
 			CUrlResponse response = getRestClient().get(url, accessToken);
@@ -346,11 +322,7 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 				unsubscribes = Component.resultSetFromJSON(response.getBody(), EmailCampaignTrackingUnsubscribe.class);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (ConstantContactServiceException e) {
 			throw new ConstantContactServiceException(e);
@@ -400,11 +372,7 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 				clicks = Component.resultSetFromJSON(response.getBody(), EmailCampaignTrackingClick.class);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (ConstantContactServiceException e) {
 			throw new ConstantContactServiceException(e);

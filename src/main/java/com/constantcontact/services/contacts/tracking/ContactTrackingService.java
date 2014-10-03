@@ -1,7 +1,5 @@
 package com.constantcontact.services.contacts.tracking;
 
-import java.util.List;
-
 import com.constantcontact.components.Component;
 import com.constantcontact.components.contacts.tracking.TrackingContactsBase;
 import com.constantcontact.components.contacts.tracking.bounces.ContactTrackingBounce;
@@ -15,9 +13,11 @@ import com.constantcontact.components.contacts.tracking.unsubscribes.ContactTrac
 import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.base.BaseService;
-import com.constantcontact.util.CUrlRequestError;
 import com.constantcontact.util.CUrlResponse;
 import com.constantcontact.util.Config;
+import com.constantcontact.util.ConstantContactExceptionFactory;
+
+import java.util.List;
 
 /**
  * Service Layer Implementation for the Contact Tracking operations in Constant Contact.
@@ -55,11 +55,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 				summary = Component.fromJSON(response.getBody(), ContactTrackingSummaryReport.class);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (Exception e) {
 			throw new ConstantContactServiceException(e);
@@ -92,11 +88,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
                 summary = Component.listFromJSON(response.getBody(), ContactTrackingSummaryByCampaignReport.class);
             }
             if (response.isError()) {
-                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-                response.getInfo().add(new CUrlRequestError("url", url));
-                constantContactException.setErrorInfo(response.getInfo());
-                throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
             }
         } catch (Exception e) {
             throw new ConstantContactServiceException(e);
@@ -141,11 +133,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
                 activities = Component.resultSetFromJSON(response.getBody(), TrackingContactsBase.class);
             }
             if (response.isError()) {
-                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-                response.getInfo().add(new CUrlRequestError("url", url));
-                constantContactException.setErrorInfo(response.getInfo());
-                throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
             }
         } catch (Exception e) {
             throw new ConstantContactServiceException(e);
@@ -183,11 +171,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 				bounces = Component.resultSetFromJSON(response.getBody(), ContactTrackingBounce.class);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (Exception e) {
 			throw new ConstantContactServiceException(e);
@@ -232,11 +216,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 				clicks = Component.resultSetFromJSON(response.getBody(), ContactTrackingClick.class);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (Exception e) {
 			throw new ConstantContactServiceException(e);
@@ -280,11 +260,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 				forwards = Component.resultSetFromJSON(response.getBody(), ContactTrackingForward.class);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (Exception e) {
 			throw new ConstantContactServiceException(e);
@@ -329,11 +305,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 				opens = Component.resultSetFromJSON(response.getBody(), ContactTrackingOpen.class);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (Exception e) {
 			throw new ConstantContactServiceException(e);
@@ -378,11 +350,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 				sends = Component.resultSetFromJSON(response.getBody(), ContactTrackingSend.class);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (Exception e) {
 			throw new ConstantContactServiceException(e);
@@ -428,11 +396,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 				unsubscribes = Component.resultSetFromJSON(response.getBody(), ContactTrackingUnsubscribe.class);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (Exception e) {
 			throw new ConstantContactServiceException(e);

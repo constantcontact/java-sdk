@@ -1,7 +1,5 @@
 package com.constantcontact.services.activities;
 
-import java.util.List;
-
 import com.constantcontact.components.Component;
 import com.constantcontact.components.activities.contacts.request.AddContactsRequest;
 import com.constantcontact.components.activities.contacts.request.ClearListsRequest;
@@ -14,10 +12,12 @@ import com.constantcontact.components.activities.contacts.types.BulkActivityStat
 import com.constantcontact.components.activities.contacts.types.BulkActivityType;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.base.BaseService;
-import com.constantcontact.util.CUrlRequestError;
 import com.constantcontact.util.CUrlResponse;
 import com.constantcontact.util.Config;
+import com.constantcontact.util.ConstantContactExceptionFactory;
 import com.constantcontact.util.http.MultipartBody;
+
+import java.util.List;
 
 /**
  * Service Layer Implementation for the Bulk Activities in Constant Contact.
@@ -50,11 +50,7 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 			}
 
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (ConstantContactServiceException e) {
 			throw new ConstantContactServiceException(e);
@@ -76,11 +72,7 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
             }
 
             if (response.isError()) {
-                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-                response.getInfo().add(new CUrlRequestError("url", url));
-                constantContactException.setErrorInfo(response.getInfo());
-                throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
             }
         } catch (Exception e) {
             throw new ConstantContactServiceException(e);
@@ -109,11 +101,7 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 				contactsResponse = Component.fromJSON(response.getBody(), ContactsResponse.class);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+               throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (ConstantContactServiceException e) {
 			throw new ConstantContactServiceException(e);
@@ -134,11 +122,7 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
                 contactsResponse = Component.fromJSON(response.getBody(), ContactsResponse.class);
             }
             if (response.isError()) {
-                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-                response.getInfo().add(new CUrlRequestError("url", url));
-                constantContactException.setErrorInfo(response.getInfo());
-                throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
             }
         }
         catch (ConstantContactServiceException e) {
@@ -170,11 +154,7 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 				contactsResponse = Component.fromJSON(response.getBody(), ContactsResponse.class);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (ConstantContactServiceException e) {
 			throw new ConstantContactServiceException(e);
@@ -204,11 +184,7 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 				contactsResponse = Component.fromJSON(response.getBody(), ContactsResponse.class);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (ConstantContactServiceException e) {
 			throw new ConstantContactServiceException(e);
@@ -237,11 +213,7 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 				activitiesResponse = Component.listFromJSON(response.getBody(), SummaryReport.class);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (ConstantContactServiceException e) {
 			throw new ConstantContactServiceException(e);
@@ -284,11 +256,7 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 				detailedStatusReports = Component.listFromJSON(response.getBody(), DetailedStatusReport.class);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (ConstantContactServiceException e) {
 			throw new ConstantContactServiceException(e);
