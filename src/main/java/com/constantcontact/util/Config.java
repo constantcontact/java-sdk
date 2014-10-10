@@ -12,6 +12,41 @@ import java.util.Properties;
  * @author ConstantContact
  */
 public final class Config {
+
+    public static final String CTCT_SDK_VERSION;
+
+    static {
+        /*
+	     * Configures CTCT_SDK_VERSION.  Value can be loaded from property "sdk.version"
+	     * in properties file "ctct_api.properties".  Method will defer to default value
+	     * if file or property is not present.
+	      * Throws an IOException if the file is not readable.
+	     */
+        try {
+            Properties prop = new Properties();
+            InputStream in;
+            String version = "";
+
+            in = Config.class.getClassLoader().getResourceAsStream("ctct_api.properties");
+
+            if (in != null) {
+                prop.load(in);
+                try {
+                    in.close();
+                } catch (IOException ignoreMe) {
+                }
+
+                String baseUrlConfiguration = prop.getProperty("sdk.version");
+                if (baseUrlConfiguration != null) {
+                    version = baseUrlConfiguration;
+                }
+            }
+            CTCT_SDK_VERSION = version;
+        } catch (IOException e) {
+            throw new IllegalStateException("Cannot configure connection to Constant Contact", e);
+        }
+    }
+
     /**
      * Contains a list with all REST endpoints.
      *
@@ -22,40 +57,7 @@ public final class Config {
         /**
          * API access URL Host.
          */
-        public static final String BASE_URL_HOST;
-
-        static {
-        /*
-	     * Configures BASE_URL.  Value can be loaded from property "constantcontact.api.dest.baseurl"
-	     * in properties file "dest.properties".  Method will defer to default value
-	     * if file or property is not present.
-	      * Throws an IOException if the file is not readable.
-	     */
-            try {
-                Properties prop = new Properties();
-                InputStream in;
-                String baseUrl = "https://api.constantcontact.com";
-
-                in = Config.class.getClassLoader().getResourceAsStream("ctct_api.properties");
-
-                if (in != null) {
-                    prop.load(in);
-                    try {
-                        in.close();
-                    } catch (IOException ignoreMe) {
-                    }
-
-                    String baseUrlConfiguration = prop.getProperty("constantcontact.api.dest.baseurl");
-                    if (baseUrlConfiguration != null) {
-                        baseUrl = baseUrlConfiguration;
-                    }
-                }
-
-                BASE_URL_HOST = baseUrl;
-            } catch (IOException e) {
-                throw new IllegalStateException("Cannot configure connection to Constant Contact", e);
-            }
-        }
+        public static final String BASE_URL_HOST = "https://api.constantcontact.com";
 
 
         /**

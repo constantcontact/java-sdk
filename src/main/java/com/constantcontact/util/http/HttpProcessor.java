@@ -5,6 +5,7 @@ import com.constantcontact.components.Component;
 import com.constantcontact.exceptions.component.ConstantContactComponentException;
 import com.constantcontact.util.CUrlRequestError;
 import com.constantcontact.util.CUrlResponse;
+import com.constantcontact.util.Config;
 import com.constantcontact.util.http.constants.ProcessorBase;
 
 import java.io.*;
@@ -177,6 +178,7 @@ public class HttpProcessor implements ProcessorBase {
 		connection.setRequestProperty(CONTENT_TYPE_HEADER, contentType);
 		connection.addRequestProperty(ACCEPT_HEADER, JSON_CONTENT_TYPE);
 		connection.addRequestProperty(AUTHORIZATION_HEADER, "Bearer " + accessToken);
+        connection.addRequestProperty(X_CTCT_REQUEST_SOURCE_HEADER, String.format("sdk.java.%1s", Config.CTCT_SDK_VERSION));
 		connection.addRequestProperty("Connection", "Keep-Alive");
 		connection.addRequestProperty("Keep-Alive", "header");
 
