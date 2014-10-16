@@ -1,10 +1,9 @@
 package com.constantcontact.util;
 
-import java.io.IOException;
-import java.io.InputStream;
+import com.constantcontact.ConstantContact;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 /**
  * Main Configuration structure in Constant Contact.
@@ -17,34 +16,10 @@ public final class Config {
 
     static {
         /*
-	     * Configures CTCT_SDK_VERSION.  Value can be loaded from property "sdk.version"
-	     * in properties file "ctct_api.properties".  Method will defer to default value
-	     * if file or property is not present.
-	      * Throws an IOException if the file is not readable.
+	     * Configures CTCT_SDK_VERSION
 	     */
-        try {
-            Properties prop = new Properties();
-            InputStream in;
-            String version = "";
-
-            in = Config.class.getClassLoader().getResourceAsStream("ctct_api.properties");
-
-            if (in != null) {
-                prop.load(in);
-                try {
-                    in.close();
-                } catch (IOException ignoreMe) {
-                }
-
-                String baseUrlConfiguration = prop.getProperty("sdk.version");
-                if (baseUrlConfiguration != null) {
-                    version = baseUrlConfiguration;
-                }
-            }
-            CTCT_SDK_VERSION = version;
-        } catch (IOException e) {
-            throw new IllegalStateException("Cannot configure connection to Constant Contact", e);
-        }
+        Package aPackage = ConstantContact.class.getPackage();
+        CTCT_SDK_VERSION = aPackage.getImplementationVersion();
     }
 
     /**
