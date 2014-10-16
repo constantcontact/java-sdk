@@ -31,6 +31,11 @@ public interface ProcessorBase {
 	 */
 	public final static String AUTHORIZATION_HEADER = "Authorization";
 
+    /**
+     * Constant Contact request source header
+     */
+
+    public  final static String X_CTCT_REQUEST_SOURCE_HEADER = "x-ctct-request-source";
 	/**
 	 * constant for "application/json" content type
 	 */
