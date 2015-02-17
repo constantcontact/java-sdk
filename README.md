@@ -5,23 +5,7 @@ Constant Contact JAVA SDK
 
 In order to use the Constant Contact SDK please follow these steps:
 
-1) Add the following libraries to the classpath of your project:
-
-	constantcontact-2.0.jar
-	jackson-annotations-2.1.1.jar
-	jackson-core-2.1.1.jar
-	jackson-databind-2.1.3.jar
-
-2) Installation for Android projects
-
-In order to use the Constant Contact SDK for Android you have to include
- constantcontact-2.0.jar and jackson dependencies presented at 1) in your Android Project.
-
-3) For Eclipse Android development if NoDefClassFoundError is raised then:
-	
-	a) make sure that the dependency libraries are located in libs/ directory;
-	b) Go to Project Properties -> Java Build Path -> Order and Export, and move the 
-	dependency jar libraries to the top of the list.
+1) This project builds with Apache Maven. Running maven clean install will build and test the source and install its artifacts and dependencies into your maven repository. At this point, you can add the Constant Contact SDK as a dependency to other projects. If you do not wish to build with Maven, consult the pom.xml file to examine the dependencies the Constant Contact SDK has. For example, it requires Jackson for JSON processing.
 
 ## Usage
 
