@@ -7,6 +7,10 @@ In order to use the Constant Contact SDK please follow these steps:
 
 1) This project builds with Apache Maven. Running maven clean install will build and test the source and install its artifacts and dependencies into your maven repository. At this point, you can add the Constant Contact SDK as a dependency to other projects. If you do not wish to build with Maven, consult the pom.xml file to examine the dependencies the Constant Contact SDK has. For example, it requires Jackson for JSON processing.
 
+## Documentation
+
+The Javadoc is hosted at http://constantcontact.github.io/java-sdk
+
 ## Usage
 
 1) In the file you wish to use the SDK include the following code:
