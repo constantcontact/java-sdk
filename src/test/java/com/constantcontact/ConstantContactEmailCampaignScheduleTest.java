@@ -123,7 +123,7 @@ public class ConstantContactEmailCampaignScheduleTest {
     @Test
     public void updateEmailCampaignScheduleTest() {
         String campaignId = "1";
-        String campaignScheduleId = "1";
+        String campaignScheduleId = "2";
         EmailCampaignSchedule emailCampaignSchedule = mock(EmailCampaignSchedule.class);
         try {
 
@@ -165,7 +165,7 @@ public class ConstantContactEmailCampaignScheduleTest {
     @Test
     public void deleteEmailCampaignScheduleTest() {
         String campaignId = "1";
-        String scheduleId = "1";
+        String scheduleId = "2";
         try {
 
             boolean deleted = constantContact.deleteEmailCampaignSchedule(campaignId, scheduleId);
@@ -205,7 +205,7 @@ public class ConstantContactEmailCampaignScheduleTest {
     @Test
     public void getEmailCampaignScheduleTest() {
         String campaignId = "1";
-        String campaignScheduleId = "1";
+        String campaignScheduleId = "2";
         try {
 
             EmailCampaignSchedule emailCampaignSchedule = constantContact.getEmailCampaignSchedule(campaignId, campaignScheduleId);
