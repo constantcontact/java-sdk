@@ -82,11 +82,11 @@ public class RestClient implements IRestClient {
         return makeHttpRequest(url, HttpMethod.PATCH, accessToken, data);
     }
 
-	private CUrlResponse makeHttpRequest(String urlParam, HttpMethod method, String accessToken, String data) {
+	protected CUrlResponse makeHttpRequest(String urlParam, HttpMethod method, String accessToken, String data) {
 		return new HttpProcessor().makeHttpRequest(urlParam, method, ContentType.JSON, accessToken, data);
 	}
 	
-	private CUrlResponse makeMultipartRequest(String urlParam, String accessToken, MultipartBody data) {
+	protected CUrlResponse makeMultipartRequest(String urlParam, String accessToken, MultipartBody data) {
 	    
 	    byte[] bodyBytes = data.getBytes();
 	    
