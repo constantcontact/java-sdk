@@ -50,6 +50,10 @@ public class EmailCampaignScheduleServiceUnitTest {
      
         Assert.assertTrue(svc.deleteSchedule("foo", "12345", "67890"));
         
+    }
+    
+    @Test (expected=ConstantContactServiceException.class)
+    public void testDeleteFail() throws ConstantContactServiceException {
         RestClient rc2 = new RestClient(){
             @Override
             protected CUrlResponse makeHttpRequest(String urlParam, HttpMethod method, String accessToken, String data) {
@@ -58,6 +62,7 @@ public class EmailCampaignScheduleServiceUnitTest {
                 
                 if (method == HttpMethod.DELETE) {
                     response.setStatusCode(HttpURLConnection.HTTP_INTERNAL_ERROR);
+                    response.setError(true);
                 }
                 
                 return response;
@@ -66,8 +71,7 @@ public class EmailCampaignScheduleServiceUnitTest {
         };
         svc.setRestClient(rc2);
      
-        Assert.assertFalse(svc.deleteSchedule("foo", "12345", "67890"));
-        
+        svc.deleteSchedule("foo", "12345", "67890");
     }
     
     

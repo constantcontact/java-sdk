@@ -95,8 +95,8 @@
                     <skip>${maven.test.skip}</skip>
                     <check>
                         <haltOnFailure>true</haltOnFailure>
-                        <totalBranchRate>25</totalBranchRate>
-                        <totalLineRate>25</totalLineRate>
+                        <totalBranchRate>26</totalBranchRate>
+                        <totalLineRate>28</totalLineRate>
                     </check>
                     <aggregate>true</aggregate>
                 </configuration>
