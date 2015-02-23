@@ -87,7 +87,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>cobertura-maven-plugin</artifactId>
-                <version>2.5.1</version>
+                <version>2.5.2</version>
                 <configuration>
                     <formats>
                         <format>HTML</format>
@@ -95,10 +95,20 @@
                     <skip>${maven.test.skip}</skip>
                     <check>
                         <haltOnFailure>true</haltOnFailure>
-                        <totalBranchRate>26</totalBranchRate>
-                        <totalLineRate>28</totalLineRate>
+                        <totalBranchRate>25</totalBranchRate>
+                        <totalLineRate>25</totalLineRate>
                     </check>
                     <aggregate>true</aggregate>
+                    <instrumentation>
+                        <ignores>
+                            <ignore>com.constantcontact.components.*</ignore>
+                            <ignore>com.constantcontact.exceptions.*</ignore>
+                        </ignores>
+                        <excludes>
+                            <exclude>com/constantcontact/components/**/*.class</exclude>
+                            <exclude>com/constantcontact/exceptions/**/*.class</exclude>
+                        </excludes>
+                    </instrumentation>
                 </configuration>
                 <executions>
                     <execution>
