@@ -35,7 +35,7 @@ public class ContactListService extends BaseService implements IContactListServi
 	public List<ContactList> getLists(String accessToken, String modifiedSinceTimestamp) throws ConstantContactServiceException {
 		List<ContactList> lists = null;
 		try {
-			String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, Config.Endpoints.LISTS);
+			String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), Config.Endpoints.LISTS);
 						
 			if(modifiedSinceTimestamp != null)
 				url = appendParam(url, "modified_since", modifiedSinceTimestamp);
@@ -68,7 +68,7 @@ public class ContactListService extends BaseService implements IContactListServi
 	public ContactList addList(String accessToken, ContactList list) throws ConstantContactServiceException {
 		ContactList newList = null;
 		try {
-			String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, Config.Endpoints.LISTS);
+			String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), Config.Endpoints.LISTS);
 			
 			String json = list.toJSON();
 			CUrlResponse response = getRestClient().post(url, accessToken, json);
@@ -99,7 +99,7 @@ public class ContactListService extends BaseService implements IContactListServi
 	public ContactList getList(String accessToken, String listId) throws ConstantContactServiceException {
 		ContactList list = null;
 		try {
-			String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, String.format(Config.Endpoints.LIST, listId));
+			String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.Endpoints.LIST, listId));
 			
 			CUrlResponse response = getRestClient().get(url, accessToken);
 			if (response.hasData()) {
@@ -130,7 +130,7 @@ public class ContactListService extends BaseService implements IContactListServi
 
         ContactList resultingList = null;
         try {
-            String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, String.format(Config.Endpoints.LIST, list.getId()));
+            String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.Endpoints.LIST, list.getId()));
 
             String json = list.toJSON();
             
@@ -167,7 +167,7 @@ public class ContactListService extends BaseService implements IContactListServi
 	public ResultSet<Contact> getContactsFromList(String accessToken, String listId, Integer limit, String modifiedSinceTimestamp) throws ConstantContactServiceException {
 		ResultSet<Contact> contacts = null;
 		try {
-			String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, String.format(Config.Endpoints.LIST_CONTACTS, listId));
+			String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.Endpoints.LIST_CONTACTS, listId));
 			url = paginateUrl(url, limit);
 			
 			if (modifiedSinceTimestamp != null) {
@@ -201,7 +201,7 @@ public class ContactListService extends BaseService implements IContactListServi
 
 	public boolean deleteList(String accessToken, String listId) throws ConstantContactServiceException {
 		try {
-			String url = String.format("%1$s%2$s",Config.Endpoints.BASE_URL, String.format(Config.Endpoints.LIST, listId));
+			String url = String.format("%1$s%2$s",Config.instance().getBaseUrl(), String.format(Config.Endpoints.LIST, listId));
 			
 			CUrlResponse response = getRestClient().delete(url, accessToken);
 			if (response.isError()) {

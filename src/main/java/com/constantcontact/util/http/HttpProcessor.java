@@ -178,7 +178,7 @@ public class HttpProcessor implements ProcessorBase {
 		connection.setRequestProperty(CONTENT_TYPE_HEADER, contentType);
 		connection.addRequestProperty(ACCEPT_HEADER, JSON_CONTENT_TYPE);
 		connection.addRequestProperty(AUTHORIZATION_HEADER, "Bearer " + accessToken);
-        connection.addRequestProperty(X_CTCT_REQUEST_SOURCE_HEADER, String.format("sdk.java.%1s", Config.CTCT_SDK_VERSION));
+        connection.addRequestProperty(X_CTCT_REQUEST_SOURCE_HEADER, String.format("sdk.java.%1s", Config.instance().getCtctSdkVersion()));
 		connection.addRequestProperty("Connection", "Keep-Alive");
 		connection.addRequestProperty("Keep-Alive", "header");
 

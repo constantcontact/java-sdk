@@ -175,7 +175,7 @@ public class BulkActivitiesServiceMock extends BulkActivitiesService{
 
 		List<DetailedStatusReport> detailedStatusReports = null;
 
-		String url = Config.Endpoints.BASE_URL + Config.Endpoints.ACTIVITIES;
+		String url = Config.instance().getBaseUrl() + Config.Endpoints.ACTIVITIES;
 		try {
 				detailedStatusReports = Component.listFromJSON(MockedServerResponses.getDetailedStatusReportBulkActivitiesData, DetailedStatusReport.class);
 		} catch (Exception e) {

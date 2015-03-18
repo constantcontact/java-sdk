@@ -37,7 +37,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
         ResultSet<Event> events = null;
         try {
             String url = paginateUrl(
-                    String.format("%1$s%2$s", Config.Endpoints.BASE_URL, Config.Endpoints.EVENTS), limit);
+                    String.format("%1$s%2$s", Config.instance().getBaseUrl(), Config.Endpoints.EVENTS), limit);
 
             CUrlResponse response = getRestClient().get(url, accessToken);
 
@@ -69,7 +69,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
             ConstantContactServiceException {
         Event event = null;
         try {
-            String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+            String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                     String.format(Config.Endpoints.EVENT_ID, eventId));
 
             CUrlResponse response = getRestClient().get(url, accessToken);
@@ -100,7 +100,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
     public Event addEvent(String accessToken, Event event) throws ConstantContactServiceException {
         Event newEvent = null;
         try {
-            String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, Config.Endpoints.EVENTS);
+            String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), Config.Endpoints.EVENTS);
             String json = event.toJSON();
 
             CUrlResponse response = getRestClient().post(url, accessToken, json);
@@ -131,7 +131,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
     public Event updateEvent(String accessToken, Event event) throws ConstantContactServiceException {
         Event updatedEvent = null;
         try {
-            String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+            String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                     String.format(Config.Endpoints.EVENT_ID, event.getId()));
             String json = event.toJSON();
 
@@ -163,7 +163,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	 */
     public boolean updateEventStatus(String accessToken, String eventId, String status) throws ConstantContactServiceException {
         try {
-            String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+            String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                     String.format(Config.Endpoints.EVENT_ID, eventId));
 
             EventUpdateStatus eventUpdateStatus = new EventUpdateStatus(status);
@@ -197,7 +197,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
     public List<EventFee> getEventFees(String accessToken, String eventId) throws ConstantContactServiceException {
         List<EventFee> eventFees = null;
         try {
-            String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+            String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                     String.format(Config.Endpoints.EVENT_FEES, eventId));
 
             CUrlResponse response = getRestClient().get(url, accessToken);
@@ -231,7 +231,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
     public EventFee getEventFee(String accessToken, String eventId, String feeId) throws ConstantContactServiceException {
         EventFee eventFee = null;
         try {
-            String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+            String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                     String.format(Config.Endpoints.EVENT_FEE_ID, eventId, feeId));
 
             CUrlResponse response = getRestClient().get(url, accessToken);
@@ -265,7 +265,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
     public EventFee addEventFee(String accessToken, String eventId, EventFee eventFee) throws ConstantContactServiceException {
         EventFee newEventFee = null;
         try {
-            String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+            String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                     String.format(Config.Endpoints.EVENT_FEES, eventId));
             String json = eventFee.toJSON();
 
@@ -299,7 +299,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
     public EventFee updateEventFee(String accessToken, String eventId, EventFee eventFee) throws ConstantContactServiceException {
         EventFee newEventFee = null;
         try {
-            String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+            String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                     String.format(Config.Endpoints.EVENT_FEE_ID, eventId, eventFee.getId()));
             String json = eventFee.toJSON();
 
@@ -332,7 +332,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
     
     public boolean deleteEventFee(String accessToken, String eventId, String eventFeeId) throws ConstantContactServiceException {
         try {
-            String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+            String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                     String.format(Config.Endpoints.EVENT_FEE_ID, eventId, eventFeeId));
 
             CUrlResponse response = getRestClient().delete(url, accessToken);
@@ -361,7 +361,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
     public List<Promocode> getEventPromocodes(String accessToken, String eventId) throws ConstantContactServiceException {
         List<Promocode> promocodes = null;
         try {
-            String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+            String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                     String.format(Config.Endpoints.EVENT_PROMOCODES, eventId));
 
             CUrlResponse response = getRestClient().get(url, accessToken);
@@ -395,7 +395,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
     public Promocode getEventPromocode(String accessToken, String eventId, String promocodeId) throws ConstantContactServiceException {
         Promocode promocode = null;
         try {
-            String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+            String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                     String.format(Config.Endpoints.EVENT_PROMOCODE_ID, eventId, promocodeId));
 
             CUrlResponse response = getRestClient().get(url, accessToken);
@@ -429,7 +429,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
     public Promocode addEventPromocode(String accessToken, String eventId, Promocode promocode) throws ConstantContactServiceException {
         Promocode newPromocode = null;
         try {
-            String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+            String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                     String.format(Config.Endpoints.EVENT_PROMOCODES, eventId));
             String json = promocode.toJSON();
 
@@ -463,7 +463,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
     public Promocode updateEventPromocode(String accessToken, String eventId, Promocode promocode) throws ConstantContactServiceException {
         Promocode newPromocode = null;
         try {
-            String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+            String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                     String.format(Config.Endpoints.EVENT_PROMOCODE_ID, eventId, promocode.getId()));
             String json = promocode.toJSON();
 
@@ -496,7 +496,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
     
     public boolean deleteEventPromocode(String accessToken, String eventId, String promocodeId) throws ConstantContactServiceException {
         try {
-            String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+            String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                     String.format(Config.Endpoints.EVENT_PROMOCODE_ID, eventId, promocodeId));
 
             CUrlResponse response = getRestClient().delete(url, accessToken);
@@ -527,7 +527,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
         ResultSet<Registrant> eventRegistrants = null;
         try {
             String url = paginateUrl(
-                    String.format("%1$s%2$s", Config.Endpoints.BASE_URL, String.format(Config.Endpoints.EVENT_REGISTRANTS, eventId)), limit);
+                    String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.Endpoints.EVENT_REGISTRANTS, eventId)), limit);
 
             CUrlResponse response = getRestClient().get(url, accessToken);
 
@@ -560,7 +560,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
     public RegistrantDetails getEventRegistrant(String accessToken,String eventId, String registrantId) throws ConstantContactServiceException {
         RegistrantDetails registrant = null;
         try {
-            String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+            String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                     String.format(Config.Endpoints.EVENT_REGISTRANT_ID, eventId, registrantId));
 
             CUrlResponse response = getRestClient().get(url, accessToken);
@@ -593,7 +593,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
     public List<EventItem> getEventItems(String accessToken, String eventId) throws ConstantContactServiceException {
         List<EventItem> eventItems = null;
         try {
-            String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+            String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                     String.format(Config.Endpoints.EVENT_ITEMS, eventId));
 
             CUrlResponse response = getRestClient().get(url, accessToken);
@@ -627,7 +627,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
     public EventItem getEventItem(String accessToken, String eventId, String itemId) throws ConstantContactServiceException {
         EventItem eventItem = null;
         try {
-            String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+            String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                     String.format(Config.Endpoints.EVENT_ITEM_ID, eventId, itemId));
 
             CUrlResponse response = getRestClient().get(url, accessToken);
@@ -661,7 +661,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
     public EventItem addEventItem(String accessToken, String eventId, EventItem eventItem) throws ConstantContactServiceException {
         EventItem newEventItem = null;
         try {
-            String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+            String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                     String.format(Config.Endpoints.EVENT_ITEMS, eventId));
             String json = eventItem.toJSON();
 
@@ -695,7 +695,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
     public EventItem updateEventItem(String accessToken, String eventId, EventItem item) throws ConstantContactServiceException {
         EventItem eventItem = null;
         try {
-            String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+            String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                     String.format(Config.Endpoints.EVENT_ITEM_ID, eventId, item.getId()));
             String json = item.toJSON();
 
@@ -728,7 +728,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
     
     public boolean deleteEventItem(String accessToken, String eventId, String itemId) throws ConstantContactServiceException {
         try {
-            String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+            String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                     String.format(Config.Endpoints.EVENT_ITEM_ID, eventId, itemId));
 
             CUrlResponse response = getRestClient().delete(url, accessToken);
@@ -758,7 +758,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
     public List<EventItemAttribute> getEventItemAttributes(String accessToken, String eventId, String itemId) throws ConstantContactServiceException {
         List<EventItemAttribute> eventItemAttributes = null;
         try {
-            String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+            String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                     String.format(Config.Endpoints.EVENT_ITEM_ATTRIBUTES, eventId, itemId));
 
             CUrlResponse response = getRestClient().get(url, accessToken);
@@ -794,7 +794,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
             ConstantContactServiceException {
         EventItemAttribute eventItemAttribute = null;
         try {
-            String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+            String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                     String.format(Config.Endpoints.EVENT_ITEM_ATTRIBUTE_ID, eventId, itemId, itemAttributeId));
 
             CUrlResponse response = getRestClient().get(url, accessToken);
@@ -830,7 +830,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
             ConstantContactServiceException {
         EventItemAttribute eventItemAttribute = null;
         try {
-            String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+            String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                     String.format(Config.Endpoints.EVENT_ITEM_ATTRIBUTES, eventId, itemId));
             String json = itemAttribute.toJSON();
 
@@ -866,7 +866,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
             ConstantContactServiceException {
         EventItemAttribute eventItemAttribute = null;
         try {
-            String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+            String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                     String.format(Config.Endpoints.EVENT_ITEM_ATTRIBUTE_ID, eventId, itemId, itemAttribute.getId()));
             String json = itemAttribute.toJSON();
 
@@ -901,7 +901,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
     public boolean deleteEventItemAttribute(String accessToken, String eventId, String itemId, String itemAttributeId) throws
             ConstantContactServiceException {
         try {
-            String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+            String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                     String.format(Config.Endpoints.EVENT_ITEM_ATTRIBUTE_ID, eventId, itemId, itemAttributeId));
 
             CUrlResponse response = getRestClient().delete(url, accessToken);
