@@ -40,7 +40,7 @@ public class ContactService extends BaseService implements IContactService {
     
     try {
       // Construct access URL
-      String url = paginateUrl(String.format("%1$s%2$s", Config.Endpoints.BASE_URL, Config.Endpoints.CONTACTS), limit);
+      String url = paginateUrl(String.format("%1$s%2$s", Config.instance().getBaseUrl(), Config.Endpoints.CONTACTS), limit);
 
       if(modifiedSinceTimestamp != null) {
         url = appendParam(url, "modified_since", modifiedSinceTimestamp);
@@ -79,7 +79,7 @@ public class ContactService extends BaseService implements IContactService {
   public Contact getContact(String accessToken, String contactId) throws ConstantContactServiceException {
     Contact contact = null;
     try {
-      String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, String.format(Config.Endpoints.CONTACT, contactId));
+      String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.Endpoints.CONTACT, contactId));
 
       CUrlResponse response = getRestClient().get(url, accessToken);
       if (response.hasData()) {
@@ -110,7 +110,7 @@ public class ContactService extends BaseService implements IContactService {
   public ResultSet<Contact> getContactByEmail(String accessToken, String email) throws ConstantContactServiceException {
     ResultSet<Contact> contacts = null;
     try {
-      String url = String.format("%1$s%2$s?email=%3$s", Config.Endpoints.BASE_URL, Config.Endpoints.CONTACTS, email);
+      String url = String.format("%1$s%2$s?email=%3$s", Config.instance().getBaseUrl(), Config.Endpoints.CONTACTS, email);
 
       CUrlResponse response = getRestClient().get(url, accessToken);
 
@@ -141,7 +141,7 @@ public class ContactService extends BaseService implements IContactService {
   public Contact addContact(String accessToken, Contact contact, Boolean actionByVisitor) throws ConstantContactServiceException {
     Contact newContact = null;
     try {
-      String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, Config.Endpoints.CONTACTS);
+      String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), Config.Endpoints.CONTACTS);
       String json = contact.toJSON();
 
       if(actionByVisitor == true) {
@@ -176,7 +176,7 @@ public class ContactService extends BaseService implements IContactService {
 
   public boolean deleteContact(String accessToken, String contactId) throws ConstantContactServiceException {
     try {
-      String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, String.format(Config.Endpoints.CONTACT, contactId));
+      String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.Endpoints.CONTACT, contactId));
 
       CUrlResponse response = getRestClient().delete(url, accessToken);
       if (response.isError()) {
@@ -204,7 +204,7 @@ public class ContactService extends BaseService implements IContactService {
 
   public boolean deleteContactFromLists(String accessToken, String contactId) throws ConstantContactServiceException {
     try {
-      String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, String.format(Config.Endpoints.CONTACT_LISTS, contactId));
+      String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.Endpoints.CONTACT_LISTS, contactId));
       CUrlResponse response = getRestClient().delete(url, accessToken);
       if (response.isError()) {
           throw ConstantContactExceptionFactory.createServiceException(response, url);
@@ -232,7 +232,7 @@ public class ContactService extends BaseService implements IContactService {
 
   public boolean deleteContactFromList(String accessToken, String contactId, String listId) throws ConstantContactServiceException {
     try {
-      String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, String.format(Config.Endpoints.CONTACT_LIST, contactId, listId));
+      String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.Endpoints.CONTACT_LIST, contactId, listId));
 
       CUrlResponse response = getRestClient().delete(url, accessToken);
       if (response.isError()) {
@@ -260,7 +260,7 @@ public class ContactService extends BaseService implements IContactService {
   public Contact updateContact(String accessToken, Contact contact, Boolean actionByVisitor) throws ConstantContactServiceException {
     Contact updateContact = null;
     try {
-      String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, String.format(Config.Endpoints.CONTACT, contact.getId()));
+      String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.Endpoints.CONTACT, contact.getId()));
       String json = contact.toJSON();
 
       if(actionByVisitor == true) {

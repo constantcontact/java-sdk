@@ -35,7 +35,7 @@ public class PaginationHelperService extends BaseService {
 			return null;
 		}
 		try {			
-			String url = paginateUrl(Config.Endpoints.BASE_URL_HOST, pagination.getNextLink(), null);
+			String url = paginateUrl(Config.instance().getBaseUrl(), pagination.getNextLink(), null);
 			if(pagination.getNextLink() == null) {
 				return null;
 			}

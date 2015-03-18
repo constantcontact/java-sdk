@@ -37,7 +37,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
 
         MyLibrarySummary summary = null;
 
-        String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, Config.Endpoints.LIBRARY_INFO);
+        String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), Config.Endpoints.LIBRARY_INFO);
         CUrlResponse response = getRestClient().get(url, accessToken);
 
         if (response.hasData()) {
@@ -74,7 +74,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
 
         // Construct access URL
         String url = paginateUrl(
-                String.format("%1$s%2$s", Config.Endpoints.BASE_URL, Config.Endpoints.LIBRARY_FOLDERS), limit);
+                String.format("%1$s%2$s", Config.instance().getBaseUrl(), Config.Endpoints.LIBRARY_FOLDERS), limit);
 
         if (sortBy != null) {
             try {
@@ -123,7 +123,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
     public MyLibraryFolder addLibraryFolder(String accessToken, MyLibraryFolder folder) throws ConstantContactServiceException {
         MyLibraryFolder newFolder = null;
         try {
-            String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, Config.Endpoints.LIBRARY_FOLDERS);
+            String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), Config.Endpoints.LIBRARY_FOLDERS);
             String json = folder.toJSON();
 
             CUrlResponse response = getRestClient().post(url, accessToken, json);
@@ -164,7 +164,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
     public MyLibraryFolder getLibraryFolder(String accessToken, String folderId) throws ConstantContactServiceException {
         MyLibraryFolder folder = null;
 
-        String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+        String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                 String.format(Config.Endpoints.LIBRARY_FOLDER, folderId));
 
         // Get REST response
@@ -210,7 +210,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
 
         MyLibraryFolder updateFolder = null;
 
-        String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+        String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                 String.format(Config.Endpoints.LIBRARY_FOLDER, folder.getId()));
         String json;
         try {
@@ -260,7 +260,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
      *             {@link ConstantContactException#getErrorInfo()}
      */
     public void deleteLibraryFolder(String accessToken, String folderId) throws ConstantContactServiceException {
-        String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+        String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                 String.format(Config.Endpoints.LIBRARY_FOLDER, folderId));
 
         // Get REST response
@@ -291,7 +291,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
         ResultSet<MyLibraryFile> files = null;
         
           // Construct access URL
-          String url = paginateUrl(String.format("%1$s%2$s", Config.Endpoints.BASE_URL, Config.Endpoints.LIBRARY_FOLDER_TRASH), limit);
+          String url = paginateUrl(String.format("%1$s%2$s", Config.instance().getBaseUrl(), Config.Endpoints.LIBRARY_FOLDER_TRASH), limit);
 
           try {
               if (type != null) {
@@ -335,7 +335,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
      *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
      */
     public void deleteLibraryTrash(String accessToken) throws ConstantContactServiceException{
-        String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, Config.Endpoints.LIBRARY_FOLDER_TRASH);
+        String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), Config.Endpoints.LIBRARY_FOLDER_TRASH);
 
         // Get REST response
         CUrlResponse response = getRestClient().delete(url, accessToken);
@@ -366,7 +366,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
         ResultSet<MyLibraryFile> files = null;
         
         // Construct access URL
-        String url = paginateUrl(String.format("%1$s%2$s", Config.Endpoints.BASE_URL, Config.Endpoints.LIBRARY_FILES), limit);
+        String url = paginateUrl(String.format("%1$s%2$s", Config.instance().getBaseUrl(), Config.Endpoints.LIBRARY_FILES), limit);
 
         try {
             if (type != null) {
@@ -418,7 +418,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
         ResultSet<MyLibraryFile> files = null;
         
         // Construct access URL
-        String url = paginateUrl(String.format("%1$s%2$s", Config.Endpoints.BASE_URL, String.format(Config.Endpoints.LIBRARY_FILES_BY_FOLDER, folderId)), limit);
+        String url = paginateUrl(String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.Endpoints.LIBRARY_FILES_BY_FOLDER, folderId)), limit);
 
         // Get REST response
         CUrlResponse response = getRestClient().get(url, accessToken);
@@ -453,7 +453,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
     public MyLibraryFile getLibraryFile(String accessToken, String fileId) throws ConstantContactServiceException{
         MyLibraryFile file = null;
 
-        String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+        String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                 String.format(Config.Endpoints.LIBRARY_FILE, fileId));
 
         // Get REST response
@@ -490,7 +490,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
     public MyLibraryFile updateLibraryFile(String accessToken, MyLibraryFile file, Boolean includePayload) throws ConstantContactServiceException {
         MyLibraryFile updateFile = null;
 
-        String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+        String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                 String.format(Config.Endpoints.LIBRARY_FILE, file.getId()));
         String json;
         try {
@@ -535,7 +535,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
      *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
      */
     public void deleteLibraryFile(String accessToken, String fileId) throws ConstantContactServiceException {
-        String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+        String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                 String.format(Config.Endpoints.LIBRARY_FILE, fileId));
 
         // Get REST response
@@ -566,7 +566,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
             filesToGet.append(fileId[i]);
         }
      
-        String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+        String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                 String.format(Config.Endpoints.LIBRARY_FILE_UPLOAD_STATUS, filesToGet));
         
         // Get REST response
@@ -602,7 +602,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
 
         List<MoveResults> movedResults = null;
      
-        String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL,
+        String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                 String.format(Config.Endpoints.LIBRARY_FILE_MOVE, folderId));
         
         // Get REST response
@@ -632,7 +632,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
      */
     public String addLibraryFile(String accessToken, MultipartBody request) throws ConstantContactServiceException {
 
-        String url = Config.Endpoints.BASE_URL + Config.Endpoints.LIBRARY_FILES;
+        String url = Config.instance().getBaseUrl() + Config.Endpoints.LIBRARY_FILES;
         CUrlResponse response = getRestClient().postMultipart(url, accessToken, request);
 
         checkForResponseError(response, url);
