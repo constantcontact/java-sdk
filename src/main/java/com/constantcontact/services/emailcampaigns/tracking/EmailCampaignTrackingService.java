@@ -11,7 +11,7 @@ import com.constantcontact.components.emailcampaigns.tracking.unsubscribes.Email
 import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.base.BaseService;
-import com.constantcontact.util.CUrlResponse;
+import com.constantcontact.util.RawApiResponse;
 import com.constantcontact.util.Config;
 import com.constantcontact.util.ConstantContactExceptionFactory;
 
@@ -46,7 +46,7 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 				url = appendParam(url,"created_since", createdSinceTimestamp);
 			}			
 			
-			CUrlResponse response = getRestClient().get(url, accessToken);
+			RawApiResponse response = getRestClient().get(url, accessToken);
 
 			if (response.hasData()) {
 				summary = Component.fromJSON(response.getBody(), EmailCampaignTrackingSummary.class);
@@ -83,7 +83,7 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 			}
 			String url = sb.toString();
 
-			CUrlResponse response = getRestClient().get(url, accessToken);
+			RawApiResponse response = getRestClient().get(url, accessToken);
 
 			if (response.hasData()) {
 				bounces = Component.resultSetFromJSON(response.getBody(), EmailCampaignTrackingBounce.class);
@@ -130,7 +130,7 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 			
 			String url = sb.toString();
 
-			CUrlResponse response = getRestClient().get(url, accessToken);
+			RawApiResponse response = getRestClient().get(url, accessToken);
 
 			if (response.hasData()) {
 				clicks = Component.resultSetFromJSON(response.getBody(), EmailCampaignTrackingClick.class);
@@ -177,7 +177,7 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 			
 			String url = sb.toString();
 
-			CUrlResponse response = getRestClient().get(url, accessToken);
+			RawApiResponse response = getRestClient().get(url, accessToken);
 
 			if (response.hasData()) {
 				forwards = Component.resultSetFromJSON(response.getBody(), EmailCampaignTrackingForward.class);
@@ -223,7 +223,7 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 			
 			String url = sb.toString();
 
-			CUrlResponse response = getRestClient().get(url, accessToken);
+			RawApiResponse response = getRestClient().get(url, accessToken);
 
 			if (response.hasData()) {
 				opens = Component.resultSetFromJSON(response.getBody(), EmailCampaignTrackingOpen.class);
@@ -269,7 +269,7 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 			
 			String url = sb.toString();
 
-			CUrlResponse response = getRestClient().get(url, accessToken);
+			RawApiResponse response = getRestClient().get(url, accessToken);
 
 			if (response.hasData()) {
 				sends = Component.resultSetFromJSON(response.getBody(), EmailCampaignTrackingSend.class);
@@ -316,7 +316,7 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 
 			String url = sb.toString();
 
-			CUrlResponse response = getRestClient().get(url, accessToken);
+			RawApiResponse response = getRestClient().get(url, accessToken);
 
 			if (response.hasData()) {
 				unsubscribes = Component.resultSetFromJSON(response.getBody(), EmailCampaignTrackingUnsubscribe.class);
@@ -366,7 +366,7 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 			
 			String url = sb.toString();
 
-			CUrlResponse response = getRestClient().get(url, accessToken);
+			RawApiResponse response = getRestClient().get(url, accessToken);
 
 			if (response.hasData()) {
 				clicks = Component.resultSetFromJSON(response.getBody(), EmailCampaignTrackingClick.class);

@@ -3,8 +3,8 @@ package com.constantcontact.util.http;
 import com.constantcontact.ConstantContact;
 import com.constantcontact.components.Component;
 import com.constantcontact.exceptions.component.ConstantContactComponentException;
-import com.constantcontact.util.CUrlRequestError;
-import com.constantcontact.util.CUrlResponse;
+import com.constantcontact.util.RawApiRequestError;
+import com.constantcontact.util.RawApiResponse;
 import com.constantcontact.util.Config;
 import com.constantcontact.util.http.constants.ProcessorBase;
 
@@ -35,7 +35,7 @@ public class HttpProcessor implements ProcessorBase {
      * @param data
      * @return
      */
-    public CUrlResponse makeHttpRequest(String urlParam, HttpMethod httpMethod, ContentType contentType, String accessToken, String data) {
+    public RawApiResponse makeHttpRequest(String urlParam, HttpMethod httpMethod, ContentType contentType, String accessToken, String data) {
         byte[] bytes = null;
         
         if (data != null){
@@ -60,14 +60,14 @@ public class HttpProcessor implements ProcessorBase {
 	 * @param data
 	 *            A {@link String} containing the data or NULL when there is no
 	 *            data to send (eg. in GET call).
-	 * @return A {@link CUrlResponse} containing either the response data, or
+	 * @return A {@link RawApiResponse} containing either the response data, or
 	 *         the error info otherwise.
 	 */
-	public CUrlResponse makeHttpRequest(String urlParam, HttpMethod httpMethod, ContentType contentType, String accessToken, byte[] data) {
+	public RawApiResponse makeHttpRequest(String urlParam, HttpMethod httpMethod, ContentType contentType, String accessToken, byte[] data) {
 
 		BufferedReader reader = null;
 
-		CUrlResponse urlResponse = new CUrlResponse();
+		RawApiResponse urlResponse = new RawApiResponse();
 		String responseMessage = null;
 		String errorMessage = null;
 		HttpURLConnection connection = null;
@@ -116,24 +116,24 @@ public class HttpProcessor implements ProcessorBase {
 		}
 		if (urlResponse.isError()) {
 
-			List<CUrlRequestError> cUrlRequestErrors = new ArrayList<CUrlRequestError>();
+			List<RawApiRequestError> rawApiRequestErrors = new ArrayList<RawApiRequestError>();
 
 			// if there is an error and response message is not empty capture server errors
 
 			if (responseMessage != null) {
 				try {
-					List<CUrlRequestError> cUrlRequestErrors2 = Component.listFromJSON(responseMessage, CUrlRequestError.class);
-					cUrlRequestErrors.addAll(cUrlRequestErrors2);
+					List<RawApiRequestError> rawApiRequestErrors2 = Component.listFromJSON(responseMessage, RawApiRequestError.class);
+					rawApiRequestErrors.addAll(rawApiRequestErrors2);
 
 				} catch (ConstantContactComponentException e) {
-					CUrlRequestError cUrlRequestError = new CUrlRequestError("error", errorMessage);
-					cUrlRequestErrors.add(cUrlRequestError);
+					RawApiRequestError rawApiRequestError = new RawApiRequestError("error", errorMessage);
+					rawApiRequestErrors.add(rawApiRequestError);
 				}
 			} else {
-				CUrlRequestError cUrlRequestError = new CUrlRequestError("error", errorMessage);
-				cUrlRequestErrors.add(cUrlRequestError);
+				RawApiRequestError rawApiRequestError = new RawApiRequestError("error", errorMessage);
+				rawApiRequestErrors.add(rawApiRequestError);
 			}
-			urlResponse.setInfo(cUrlRequestErrors);
+			urlResponse.setRawApiRequestError(rawApiRequestErrors);
 
 		} else {
 			urlResponse.setBody(responseMessage);

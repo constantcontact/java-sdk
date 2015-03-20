@@ -6,12 +6,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A single CURL Response in Constant Contact.
+ * A single Raw Api Response in Constant Contact.
  * 
  * @author ConstantContact
  * 
  */
-public class CUrlResponse implements Serializable {
+public class RawApiResponse implements Serializable {
 
 	/**
 	 * Serial version unique identifier.
@@ -20,17 +20,17 @@ public class CUrlResponse implements Serializable {
 
 	private String body;
 	private boolean error;
-	private List<CUrlRequestError> info;
+	private List<RawApiRequestError> rawApiRequestError;
 	private Map<String,List<String>> headers;
 	private int statusCode;
 
 	/**
 	 * Default constructor.
 	 */
-	public CUrlResponse() {
+	public RawApiResponse() {
 		super();
 		error = false;
-		info = new ArrayList<CUrlRequestError>();
+		rawApiRequestError = new ArrayList<RawApiRequestError>();
 	}
 
 	/**
@@ -74,17 +74,17 @@ public class CUrlResponse implements Serializable {
 	 * 
 	 * @return List of errors.
 	 */
-	public List<CUrlRequestError> getInfo() {
-		return info;
+	public List<RawApiRequestError> getRawApiRequestError() {
+		return rawApiRequestError;
 	}
 
 	/**
 	 * Sets list of errors.
 	 * 
-	 * @param info List of errors.
+	 * @param rawApiRequestError List of errors.
 	 */
-	public void setInfo(List<CUrlRequestError> info) {
-		this.info = info;
+	public void setRawApiRequestError(List<RawApiRequestError> rawApiRequestError) {
+		this.rawApiRequestError = rawApiRequestError;
 	}
 
 	/**
@@ -129,12 +129,12 @@ public class CUrlResponse implements Serializable {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("CUrlResponse [body=");
+		builder.append("RawApiResponse [body=");
 		builder.append(body);
 		builder.append(", error=");
 		builder.append(error);
-		builder.append(", info=");
-		builder.append(info);
+		builder.append(", rawApiRequestError=");
+		builder.append(rawApiRequestError);
 		builder.append(", statusCode=");
 		builder.append(statusCode);
 		builder.append("]");

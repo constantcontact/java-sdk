@@ -19,7 +19,7 @@ public class RestClient implements IRestClient {
 	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @return The response body, http info, and error (if one exists).
 	 */
-	public CUrlResponse get(String url, String accessToken) {
+	public RawApiResponse get(String url, String accessToken) {
 		return makeHttpRequest(url, HttpMethod.GET, accessToken, null);
 	}
 
@@ -31,7 +31,7 @@ public class RestClient implements IRestClient {
 	 * @param data Data to send with request.
 	 * @return The response body, http info, and error (if one exists).
 	 */
-	public CUrlResponse post(String url, String accessToken, String data) {
+	public RawApiResponse post(String url, String accessToken, String data) {
 		return makeHttpRequest(url, HttpMethod.POST, accessToken, data);
 	}
 	
@@ -43,7 +43,7 @@ public class RestClient implements IRestClient {
      * @param data Data to send with request.
      * @return The response body, http info, and error (if one exists).
      */
-    public CUrlResponse postMultipart(String url, String accessToken, MultipartBody data) {
+    public RawApiResponse postMultipart(String url, String accessToken, MultipartBody data) {
         return makeMultipartRequest(url, accessToken, data);
     }
 
@@ -55,7 +55,7 @@ public class RestClient implements IRestClient {
 	 * @param data Data to send with request.
 	 * @return The response body, http info, and error (if one exists).
 	 */
-	public CUrlResponse put(String url, String accessToken, String data) {
+	public RawApiResponse put(String url, String accessToken, String data) {
 		return makeHttpRequest(url, HttpMethod.PUT, accessToken, data);
 	}
 
@@ -66,7 +66,7 @@ public class RestClient implements IRestClient {
 	 * @param accessToken Constant Contact OAuth2 access token
 	 * @return The response body, http info, and error (if one exists).
 	 */
-	public CUrlResponse delete(String url, String accessToken) {
+	public RawApiResponse delete(String url, String accessToken) {
 		return makeHttpRequest(url, HttpMethod.DELETE, accessToken, null);
 	}
 
@@ -78,15 +78,15 @@ public class RestClient implements IRestClient {
      * @param data Data to send with request.
      * @return The response body, http info, and error (if one exists).
      */
-    public CUrlResponse patch(String url, String accessToken, String data) {
+    public RawApiResponse patch(String url, String accessToken, String data) {
         return makeHttpRequest(url, HttpMethod.PATCH, accessToken, data);
     }
 
-	protected CUrlResponse makeHttpRequest(String urlParam, HttpMethod method, String accessToken, String data) {
+	protected RawApiResponse makeHttpRequest(String urlParam, HttpMethod method, String accessToken, String data) {
 		return new HttpProcessor().makeHttpRequest(urlParam, method, ContentType.JSON, accessToken, data);
 	}
 	
-	protected CUrlResponse makeMultipartRequest(String urlParam, String accessToken, MultipartBody data) {
+	protected RawApiResponse makeMultipartRequest(String urlParam, String accessToken, MultipartBody data) {
 	    
 	    byte[] bodyBytes = data.getBytes();
 	    

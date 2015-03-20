@@ -1,6 +1,6 @@
 package com.constantcontact.exceptions;
 
-import com.constantcontact.util.CUrlRequestError;
+import com.constantcontact.util.RawApiRequestError;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Base class for custom exceptions in ConstantContact.<br/>
  * Each layer will extend this to add needed extras.<br/>
- * It stores the regular stuff from {@link Exception} and a customized list of {@link CUrlRequestError} which is populated only when needed.
+ * It stores the regular stuff from {@link Exception} and a customized list of {@link RawApiRequestError} which is populated only when needed.
  * 
  * @author ConstantContact
  */
@@ -20,9 +20,9 @@ public class ConstantContactException extends Exception {
 	private static final long serialVersionUID = -1948722619574065731L;
 
 	/**
-	 * Custom list of {@link CUrlRequestError}
+	 * Custom list of {@link RawApiRequestError}
 	 */
-	private List<CUrlRequestError> errorInfo;
+	private List<RawApiRequestError> rawApiRequestErrorInfo;
 
     /**
      * HTTP status code retrieved from Constant Contact.
@@ -35,7 +35,7 @@ public class ConstantContactException extends Exception {
 	 */
 	public ConstantContactException() {
 		super();
-		this.errorInfo = new ArrayList<CUrlRequestError>();
+		this.rawApiRequestErrorInfo = new ArrayList<RawApiRequestError>();
 	}
 
 	/**
@@ -45,7 +45,7 @@ public class ConstantContactException extends Exception {
 	 */
 	public ConstantContactException(String msg) {
 		super(msg);
-		this.errorInfo = null;
+		this.rawApiRequestErrorInfo = null;
 	}
 
 	/**
@@ -56,7 +56,7 @@ public class ConstantContactException extends Exception {
 	 */
 	public ConstantContactException(String msg, Throwable cause) {
 		super(msg, cause);
-		this.errorInfo = null;
+		this.rawApiRequestErrorInfo = null;
 	}
 
 	/**
@@ -66,7 +66,7 @@ public class ConstantContactException extends Exception {
 	 */
 	public ConstantContactException(Throwable cause) {
 		super(cause);
-		this.errorInfo = null;
+		this.rawApiRequestErrorInfo = null;
 	}
 	
 	/**
@@ -85,8 +85,8 @@ public class ConstantContactException extends Exception {
 	 * 
 	 * @param errorInfo The Error info.
 	 */
-	public void setErrorInfo(List<CUrlRequestError> errorInfo) {
-		this.errorInfo = errorInfo;
+	public void setErrorInfo(List<RawApiRequestError> errorInfo) {
+		this.rawApiRequestErrorInfo = errorInfo;
 	}
 
 	/**
@@ -94,8 +94,8 @@ public class ConstantContactException extends Exception {
 	 * 
 	 * @return The error info
 	 */
-	public List<CUrlRequestError> getErrorInfo() {
-		return errorInfo;
+	public List<RawApiRequestError> getErrorInfo() {
+		return rawApiRequestErrorInfo;
 	}
 
 	/**
@@ -104,7 +104,7 @@ public class ConstantContactException extends Exception {
 	 * @return True if current instance of {@link ConstantContactException} has error info attached to it.
 	 */
 	public boolean hasErrorInfo() {
-		return errorInfo != null && errorInfo.size() > 0;
+		return rawApiRequestErrorInfo != null && rawApiRequestErrorInfo.size() > 0;
 	}
 
 

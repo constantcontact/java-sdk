@@ -12,7 +12,7 @@ import com.constantcontact.components.activities.contacts.types.BulkActivityStat
 import com.constantcontact.components.activities.contacts.types.BulkActivityType;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.base.BaseService;
-import com.constantcontact.util.CUrlResponse;
+import com.constantcontact.util.RawApiResponse;
 import com.constantcontact.util.Config;
 import com.constantcontact.util.ConstantContactExceptionFactory;
 import com.constantcontact.util.http.MultipartBody;
@@ -44,7 +44,7 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 		try {
 			String url = Config.instance().getBaseUrl() + Config.Endpoints.ACTIVITIES_ADD_CONTACTS;
 			String json = request.toJSON();
-			CUrlResponse response = getRestClient().post(url, accessToken, json);
+			RawApiResponse response = getRestClient().post(url, accessToken, json);
 			if (response.hasData()) {
 				contactsResponse = Component.fromJSON(response.getBody(), ContactsResponse.class);
 			}
@@ -66,7 +66,7 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 	    ContactsResponse contactsResponse = null;
         try {
             String url = Config.instance().getBaseUrl() + Config.Endpoints.ACTIVITIES_ADD_CONTACTS;
-            CUrlResponse response = getRestClient().postMultipart(url, accessToken, multipartRequest);
+            RawApiResponse response = getRestClient().postMultipart(url, accessToken, multipartRequest);
             if (response.hasData()) {
                 contactsResponse = Component.fromJSON(response.getBody(), ContactsResponse.class);
             }
@@ -96,7 +96,7 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 		try {
 			String url = Config.instance().getBaseUrl() + Config.Endpoints.ACTIVITIES_REMOVE_FROM_LISTS;
 			String json = request.toJSON();
-			CUrlResponse response = getRestClient().post(url, accessToken, json);
+			RawApiResponse response = getRestClient().post(url, accessToken, json);
 			if (response.hasData()) {
 				contactsResponse = Component.fromJSON(response.getBody(), ContactsResponse.class);
 			}
@@ -117,7 +117,7 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
         ContactsResponse contactsResponse = null;
         try {
             String url = Config.instance().getBaseUrl() + Config.Endpoints.ACTIVITIES_REMOVE_FROM_LISTS;
-            CUrlResponse response = getRestClient().postMultipart(url, accessToken, multipartRequest);
+            RawApiResponse response = getRestClient().postMultipart(url, accessToken, multipartRequest);
             if (response.hasData()) {
                 contactsResponse = Component.fromJSON(response.getBody(), ContactsResponse.class);
             }
@@ -149,7 +149,7 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 		try {
 			String url = Config.instance().getBaseUrl() + Config.Endpoints.ACTIVITIES_CLEAR_LISTS;
 			String json = request.toJSON();
-			CUrlResponse response = getRestClient().post(url, accessToken, json);
+			RawApiResponse response = getRestClient().post(url, accessToken, json);
 			if (response.hasData()) {
 				contactsResponse = Component.fromJSON(response.getBody(), ContactsResponse.class);
 			}
@@ -179,7 +179,7 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 		try {
 			String url = Config.instance().getBaseUrl() + Config.Endpoints.ACTIVITIES_EXPORT_CONTACTS;
 			String json = request.toJSON();
-			CUrlResponse response = getRestClient().post(url, accessToken, json);
+			RawApiResponse response = getRestClient().post(url, accessToken, json);
 			if (response.hasData()) {
 				contactsResponse = Component.fromJSON(response.getBody(), ContactsResponse.class);
 			}
@@ -208,7 +208,7 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 		try {
 			String url = Config.instance().getBaseUrl() + Config.Endpoints.ACTIVITIES;
 
-			CUrlResponse response = getRestClient().get(url, accessToken);
+			RawApiResponse response = getRestClient().get(url, accessToken);
 			if (response.hasData()) {
 				activitiesResponse = Component.listFromJSON(response.getBody(), SummaryReport.class);
 			}
@@ -251,7 +251,7 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 				url = appendParam(url, "id", id);
 			}
 
-			CUrlResponse response = getRestClient().get(url, accessToken);
+			RawApiResponse response = getRestClient().get(url, accessToken);
 			if (response.hasData()) {
 				detailedStatusReports = Component.listFromJSON(response.getBody(), DetailedStatusReport.class);
 			}

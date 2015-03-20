@@ -5,7 +5,7 @@ import com.constantcontact.components.contacts.Contact;
 import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.base.BaseService;
-import com.constantcontact.util.CUrlResponse;
+import com.constantcontact.util.RawApiResponse;
 import com.constantcontact.util.Config;
 import com.constantcontact.util.ConstantContactExceptionFactory;
 
@@ -50,7 +50,7 @@ public class ContactService extends BaseService implements IContactService {
       }
 
       // Get REST response
-      CUrlResponse response = getRestClient().get(url, accessToken);
+      RawApiResponse response = getRestClient().get(url, accessToken);
       if (response.hasData()) {
         contacts = Component.resultSetFromJSON(response.getBody(), Contact.class);
       }
@@ -81,7 +81,7 @@ public class ContactService extends BaseService implements IContactService {
     try {
       String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.Endpoints.CONTACT, contactId));
 
-      CUrlResponse response = getRestClient().get(url, accessToken);
+      RawApiResponse response = getRestClient().get(url, accessToken);
       if (response.hasData()) {
         contact = Component.fromJSON(response.getBody(), Contact.class);
       }
@@ -112,7 +112,7 @@ public class ContactService extends BaseService implements IContactService {
     try {
       String url = String.format("%1$s%2$s?email=%3$s", Config.instance().getBaseUrl(), Config.Endpoints.CONTACTS, email);
 
-      CUrlResponse response = getRestClient().get(url, accessToken);
+      RawApiResponse response = getRestClient().get(url, accessToken);
 
       if (response.hasData()) {
         contacts = Component.resultSetFromJSON(response.getBody(), Contact.class);
@@ -148,7 +148,7 @@ public class ContactService extends BaseService implements IContactService {
         url = appendParam(url, "action_by", "ACTION_BY_VISITOR");
       }
 
-      CUrlResponse response = getRestClient().post(url, accessToken, json);
+      RawApiResponse response = getRestClient().post(url, accessToken, json);
       if (response.hasData()) {
         newContact = Component.fromJSON(response.getBody(), Contact.class);
       }
@@ -178,7 +178,7 @@ public class ContactService extends BaseService implements IContactService {
     try {
       String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.Endpoints.CONTACT, contactId));
 
-      CUrlResponse response = getRestClient().delete(url, accessToken);
+      RawApiResponse response = getRestClient().delete(url, accessToken);
       if (response.isError()) {
           throw ConstantContactExceptionFactory.createServiceException(response, url);
       }
@@ -205,7 +205,7 @@ public class ContactService extends BaseService implements IContactService {
   public boolean deleteContactFromLists(String accessToken, String contactId) throws ConstantContactServiceException {
     try {
       String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.Endpoints.CONTACT_LISTS, contactId));
-      CUrlResponse response = getRestClient().delete(url, accessToken);
+      RawApiResponse response = getRestClient().delete(url, accessToken);
       if (response.isError()) {
           throw ConstantContactExceptionFactory.createServiceException(response, url);
       }
@@ -234,7 +234,7 @@ public class ContactService extends BaseService implements IContactService {
     try {
       String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.Endpoints.CONTACT_LIST, contactId, listId));
 
-      CUrlResponse response = getRestClient().delete(url, accessToken);
+      RawApiResponse response = getRestClient().delete(url, accessToken);
       if (response.isError()) {
           throw ConstantContactExceptionFactory.createServiceException(response, url);
       }
@@ -267,7 +267,7 @@ public class ContactService extends BaseService implements IContactService {
         url = appendParam(url, "action_by", "ACTION_BY_VISITOR");
       }
 
-      CUrlResponse response = getRestClient().put(url, accessToken, json);
+      RawApiResponse response = getRestClient().put(url, accessToken, json);
       if (response.hasData()) {
         updateContact = Component.fromJSON(response.getBody(), Contact.class);
       }

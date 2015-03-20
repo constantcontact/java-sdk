@@ -12,7 +12,7 @@ import com.constantcontact.components.library.info.UploadStatus;
 import com.constantcontact.exceptions.component.ConstantContactComponentException;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.library.MyLibraryService;
-import com.constantcontact.util.CUrlResponse;
+import com.constantcontact.util.RawApiResponse;
 import com.constantcontact.util.ConstantContactExceptionFactory;
 import com.constantcontact.util.http.MultipartBody;
 
@@ -481,7 +481,7 @@ public class MyLibraryServiceMock extends MyLibraryService {
         return MockedServerResponses.addLibraryFileMyLibraryServiceData;
     }
     
-    private static void checkForResponseError(CUrlResponse response, String url) throws ConstantContactServiceException {
+    private static void checkForResponseError(RawApiResponse response, String url) throws ConstantContactServiceException {
         if (response.isError()) {
             throw ConstantContactExceptionFactory.createServiceException(response, url);
         }

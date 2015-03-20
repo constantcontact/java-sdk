@@ -8,13 +8,13 @@ import com.constantcontact.exceptions.service.ConstantContactServiceException;
 public class ConstantContactExceptionFactory {
 
 
-    public static ConstantContactServiceException createServiceException(CUrlResponse response, String url)
+    public static ConstantContactServiceException createServiceException(RawApiResponse response, String url)
     {
         ConstantContactServiceException constantContactException = new ConstantContactServiceException(
                 ConstantContactServiceException.RESPONSE_ERR_SERVICE);
 
-        response.getInfo().add(new CUrlRequestError("url", url));
-        constantContactException.setErrorInfo(response.getInfo());
+        response.getRawApiRequestError().add(new RawApiRequestError("url", url));
+        constantContactException.setErrorInfo(response.getRawApiRequestError());
         constantContactException.setHttpStatusCode(response.getStatusCode());
 
         return constantContactException;

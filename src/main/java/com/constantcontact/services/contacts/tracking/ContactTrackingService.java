@@ -13,7 +13,7 @@ import com.constantcontact.components.contacts.tracking.unsubscribes.ContactTrac
 import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.base.BaseService;
-import com.constantcontact.util.CUrlResponse;
+import com.constantcontact.util.RawApiResponse;
 import com.constantcontact.util.Config;
 import com.constantcontact.util.ConstantContactExceptionFactory;
 
@@ -49,7 +49,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 				url = appendParam(url,"created_since", createdSinceTimestamp);
 			}
 			
-			CUrlResponse response = getRestClient().get(url, accessToken);
+			RawApiResponse response = getRestClient().get(url, accessToken);
 
 			if (response.hasData()) {
 				summary = Component.fromJSON(response.getBody(), ContactTrackingSummaryReport.class);
@@ -82,7 +82,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
             
             String url = sb.toString();
 
-            CUrlResponse response = getRestClient().get(url, accessToken);
+            RawApiResponse response = getRestClient().get(url, accessToken);
 
             if (response.hasData()) {
                 summary = Component.listFromJSON(response.getBody(), ContactTrackingSummaryByCampaignReport.class);
@@ -127,7 +127,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
             
             String url = sb.toString();
 
-            CUrlResponse response = getRestClient().get(url, accessToken);
+            RawApiResponse response = getRestClient().get(url, accessToken);
 
             if (response.hasData()) {
                 activities = Component.resultSetFromJSON(response.getBody(), TrackingContactsBase.class);
@@ -165,7 +165,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 			
 			String url = sb.toString();
 
-			CUrlResponse response = getRestClient().get(url, accessToken);
+			RawApiResponse response = getRestClient().get(url, accessToken);
 
 			if (response.hasData()) {
 				bounces = Component.resultSetFromJSON(response.getBody(), ContactTrackingBounce.class);
@@ -210,7 +210,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 						
 			String url = sb.toString();
 
-			CUrlResponse response = getRestClient().get(url, accessToken);
+			RawApiResponse response = getRestClient().get(url, accessToken);
 
 			if (response.hasData()) {
 				clicks = Component.resultSetFromJSON(response.getBody(), ContactTrackingClick.class);
@@ -254,7 +254,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 			
 			String url = sb.toString();
 
-			CUrlResponse response = getRestClient().get(url, accessToken);
+			RawApiResponse response = getRestClient().get(url, accessToken);
 
 			if (response.hasData()) {
 				forwards = Component.resultSetFromJSON(response.getBody(), ContactTrackingForward.class);
@@ -299,7 +299,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 			
 			String url = sb.toString();
 
-			CUrlResponse response = getRestClient().get(url, accessToken);
+			RawApiResponse response = getRestClient().get(url, accessToken);
 
 			if (response.hasData()) {
 				opens = Component.resultSetFromJSON(response.getBody(), ContactTrackingOpen.class);
@@ -344,7 +344,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 			
 			String url = sb.toString();
 
-			CUrlResponse response = getRestClient().get(url, accessToken);
+			RawApiResponse response = getRestClient().get(url, accessToken);
 
 			if (response.hasData()) {
 				sends = Component.resultSetFromJSON(response.getBody(), ContactTrackingSend.class);
@@ -390,7 +390,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 			
 			String url = sb.toString();
 
-			CUrlResponse response = getRestClient().get(url, accessToken);
+			RawApiResponse response = getRestClient().get(url, accessToken);
 
 			if (response.hasData()) {
 				unsubscribes = Component.resultSetFromJSON(response.getBody(), ContactTrackingUnsubscribe.class);

@@ -13,7 +13,7 @@ import com.constantcontact.exceptions.ConstantContactException;
 import com.constantcontact.exceptions.component.ConstantContactComponentException;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.base.BaseService;
-import com.constantcontact.util.CUrlResponse;
+import com.constantcontact.util.RawApiResponse;
 import com.constantcontact.util.Config;
 import com.constantcontact.util.Config.Errors;
 import com.constantcontact.util.ConstantContactExceptionFactory;
@@ -38,7 +38,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
         MyLibrarySummary summary = null;
 
         String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), Config.Endpoints.LIBRARY_INFO);
-        CUrlResponse response = getRestClient().get(url, accessToken);
+        RawApiResponse response = getRestClient().get(url, accessToken);
 
         if (response.hasData()) {
             try {
@@ -86,7 +86,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
         }
 
         // Get REST response
-        CUrlResponse response = getRestClient().get(url, accessToken);
+        RawApiResponse response = getRestClient().get(url, accessToken);
         if (response.hasData()) {
             try {
                 folders = Component.resultSetFromJSON(response.getBody(), MyLibraryFolder.class);
@@ -126,7 +126,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
             String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), Config.Endpoints.LIBRARY_FOLDERS);
             String json = folder.toJSON();
 
-            CUrlResponse response = getRestClient().post(url, accessToken, json);
+            RawApiResponse response = getRestClient().post(url, accessToken, json);
             if (response.hasData()) {
                 newFolder = Component.fromJSON(response.getBody(), MyLibraryFolder.class);
 
@@ -168,7 +168,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
                 String.format(Config.Endpoints.LIBRARY_FOLDER, folderId));
 
         // Get REST response
-        CUrlResponse response = getRestClient().get(url, accessToken);
+        RawApiResponse response = getRestClient().get(url, accessToken);
         if (response.hasData()) {
             try {
                 folder = Component.fromJSON(response.getBody(), MyLibraryFolder.class);
@@ -220,7 +220,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
             throw new ConstantContactServiceException(e);
         }
 
-        CUrlResponse response = getRestClient().put(url, accessToken, json);
+        RawApiResponse response = getRestClient().put(url, accessToken, json);
         if (response.hasData()) {
             try {
                 updateFolder = Component.fromJSON(response.getBody(), MyLibraryFolder.class);
@@ -264,7 +264,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
                 String.format(Config.Endpoints.LIBRARY_FOLDER, folderId));
 
         // Get REST response
-        CUrlResponse response = getRestClient().delete(url, accessToken);
+        RawApiResponse response = getRestClient().delete(url, accessToken);
         checkForResponseError(response, url);
 
         return;
@@ -306,7 +306,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
           }
     
           // Get REST response
-          CUrlResponse response = getRestClient().get(url, accessToken);
+          RawApiResponse response = getRestClient().get(url, accessToken);
           if (response.hasData()) {
             try {
                 files = Component.resultSetFromJSON(response.getBody(), MyLibraryFile.class);
@@ -338,7 +338,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
         String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), Config.Endpoints.LIBRARY_FOLDER_TRASH);
 
         // Get REST response
-        CUrlResponse response = getRestClient().delete(url, accessToken);
+        RawApiResponse response = getRestClient().delete(url, accessToken);
         checkForResponseError(response, url);
 
         return;
@@ -384,7 +384,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
         }
   
         // Get REST response
-        CUrlResponse response = getRestClient().get(url, accessToken);
+        RawApiResponse response = getRestClient().get(url, accessToken);
         if (response.hasData()) {
           try {
               files = Component.resultSetFromJSON(response.getBody(), MyLibraryFile.class);
@@ -421,7 +421,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
         String url = paginateUrl(String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.Endpoints.LIBRARY_FILES_BY_FOLDER, folderId)), limit);
 
         // Get REST response
-        CUrlResponse response = getRestClient().get(url, accessToken);
+        RawApiResponse response = getRestClient().get(url, accessToken);
         if (response.hasData()) {
           try {
               files = Component.resultSetFromJSON(response.getBody(), MyLibraryFile.class);
@@ -457,7 +457,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
                 String.format(Config.Endpoints.LIBRARY_FILE, fileId));
 
         // Get REST response
-        CUrlResponse response = getRestClient().get(url, accessToken);
+        RawApiResponse response = getRestClient().get(url, accessToken);
         if (response.hasData()) {
             try {
                 file = Component.fromJSON(response.getBody(), MyLibraryFile.class);
@@ -500,7 +500,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
             throw new ConstantContactServiceException(e);
         }
 
-        CUrlResponse response = getRestClient().put(url, accessToken, json);
+        RawApiResponse response = getRestClient().put(url, accessToken, json);
         if (response.hasData()) {
             try {
                 updateFile = Component.fromJSON(response.getBody(), MyLibraryFile.class);
@@ -539,7 +539,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
                 String.format(Config.Endpoints.LIBRARY_FILE, fileId));
 
         // Get REST response
-        CUrlResponse response = getRestClient().delete(url, accessToken);
+        RawApiResponse response = getRestClient().delete(url, accessToken);
         checkForResponseError(response, url);
 
         return;   
@@ -570,7 +570,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
                 String.format(Config.Endpoints.LIBRARY_FILE_UPLOAD_STATUS, filesToGet));
         
         // Get REST response
-        CUrlResponse response = getRestClient().get(url, accessToken);
+        RawApiResponse response = getRestClient().get(url, accessToken);
         
         if (response.hasData()) {
             try {
@@ -606,7 +606,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
                 String.format(Config.Endpoints.LIBRARY_FILE_MOVE, folderId));
         
         // Get REST response
-        CUrlResponse response = getRestClient().put(url, accessToken, body);
+        RawApiResponse response = getRestClient().put(url, accessToken, body);
         
         if (response.hasData()) {
             try {
@@ -633,7 +633,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
     public String addLibraryFile(String accessToken, MultipartBody request) throws ConstantContactServiceException {
 
         String url = Config.instance().getBaseUrl() + Config.Endpoints.LIBRARY_FILES;
-        CUrlResponse response = getRestClient().postMultipart(url, accessToken, request);
+        RawApiResponse response = getRestClient().postMultipart(url, accessToken, request);
 
         checkForResponseError(response, url);
 
@@ -647,7 +647,7 @@ public class MyLibraryService extends BaseService implements IMyLibraryService {
         return folderId; 
     }
     
-    private static void checkForResponseError(CUrlResponse response, String url) throws ConstantContactServiceException {
+    private static void checkForResponseError(RawApiResponse response, String url) throws ConstantContactServiceException {
         if (response.isError()) {
             throw ConstantContactExceptionFactory.createServiceException(response, url);
         }

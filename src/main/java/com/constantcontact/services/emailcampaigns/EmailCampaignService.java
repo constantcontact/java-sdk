@@ -6,7 +6,7 @@ import com.constantcontact.components.emailcampaigns.EmailCampaignResponse;
 import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.base.BaseService;
-import com.constantcontact.util.CUrlResponse;
+import com.constantcontact.util.RawApiResponse;
 import com.constantcontact.util.Config;
 import com.constantcontact.util.ConstantContactExceptionFactory;
 
@@ -42,7 +42,7 @@ public class EmailCampaignService extends BaseService implements IEmailCampaignS
 			if(modifiedSinceTimestamp != null)
 				url = appendParam(url, "modified_since", modifiedSinceTimestamp);
 			
-			CUrlResponse response = getRestClient().get(url, accessToken);
+			RawApiResponse response = getRestClient().get(url, accessToken);
 			
 			if (response.hasData()) {
 				campaigns = Component.resultSetFromJSON(response.getBody(), EmailCampaignResponse.class);
@@ -73,7 +73,7 @@ public class EmailCampaignService extends BaseService implements IEmailCampaignS
 		try {
 			String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.Endpoints.EMAILCAMPAIGNS_ID, campaignId));
 			
-			CUrlResponse response = getRestClient().get(url, accessToken);
+			RawApiResponse response = getRestClient().get(url, accessToken);
 
 			if (response.hasData()) {
 				campaign = Component.fromJSON(response.getBody(), EmailCampaignResponse.class);
@@ -106,7 +106,7 @@ public class EmailCampaignService extends BaseService implements IEmailCampaignS
 			String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), Config.Endpoints.EMAILCAMPAIGNS);
 			String json = emailCampaign.toJSON();
 			
-			CUrlResponse response = getRestClient().post(url, accessToken, json);
+			RawApiResponse response = getRestClient().post(url, accessToken, json);
 			if (response.hasData()) {
 				newEmailCampaign = Component.fromJSON(response.getBody(), EmailCampaignResponse.class);
 			}
@@ -138,7 +138,7 @@ public class EmailCampaignService extends BaseService implements IEmailCampaignS
 			String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.Endpoints.EMAILCAMPAIGNS_ID, emailCampaign.getId()));
 			String json = emailCampaign.toJSON();
 
-			CUrlResponse response = getRestClient().put(url, accessToken, json);
+			RawApiResponse response = getRestClient().put(url, accessToken, json);
 			if (response.hasData()) {
 				updateEmailCampaign = Component.fromJSON(response.getBody(), EmailCampaignResponse.class);
 			}
@@ -168,7 +168,7 @@ public class EmailCampaignService extends BaseService implements IEmailCampaignS
 		try {
 			String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.Endpoints.EMAILCAMPAIGNS_ID, emailCampaignId));
 			
-			CUrlResponse response = getRestClient().delete(url, accessToken);
+			RawApiResponse response = getRestClient().delete(url, accessToken);
 			
 			if (response.isError()) {
                 throw ConstantContactExceptionFactory.createServiceException(response, url);

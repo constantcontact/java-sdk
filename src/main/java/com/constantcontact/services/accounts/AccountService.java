@@ -6,7 +6,7 @@ import com.constantcontact.components.accounts.VerifiedEmailAddress;
 import com.constantcontact.components.accounts.VerifiedEmailAddress.Status;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.base.BaseService;
-import com.constantcontact.util.CUrlResponse;
+import com.constantcontact.util.RawApiResponse;
 import com.constantcontact.util.Config;
 import com.constantcontact.util.ConstantContactExceptionFactory;
 
@@ -37,7 +37,7 @@ public class AccountService extends BaseService implements IAccountService {
 
 			String url = appendParam(Config.instance().getBaseUrl() + String.format(Config.Endpoints.VERIFIEDEMAILADDRESSES), "status", status);
 			// Get REST response
-			CUrlResponse response = getRestClient().get(url, accessToken);
+			RawApiResponse response = getRestClient().get(url, accessToken);
 			if (response.hasData()) {
 				addresses = Component.listFromJSON(response.getBody(), VerifiedEmailAddress.class);
 			}
@@ -67,7 +67,7 @@ public class AccountService extends BaseService implements IAccountService {
         try {
             String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), Config.Endpoints.ACCOUNT_INFO);
 
-            CUrlResponse response = getRestClient().get(url, accessToken);
+            RawApiResponse response = getRestClient().get(url, accessToken);
 
             if (response.hasData()) {
                 accountInfo = Component.fromJSON(response.getBody(), AccountInfo.class);
@@ -99,7 +99,7 @@ public class AccountService extends BaseService implements IAccountService {
             String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), Config.Endpoints.ACCOUNT_INFO);
             String json = accountInfo.toJSON();
 
-            CUrlResponse response = getRestClient().put(url, accessToken, json);
+            RawApiResponse response = getRestClient().put(url, accessToken, json);
             if (response.hasData()) {
                 updatedAccountInfo = Component.fromJSON(response.getBody(), AccountInfo.class);
             }

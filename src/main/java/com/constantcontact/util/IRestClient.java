@@ -16,7 +16,7 @@ public interface IRestClient {
 	 * @param accessToken Constant Contact OAuth2 access token
 	 * @return The response body, http info, and error (if one exists).
 	 */
-	CUrlResponse get(String url, String accessToken);
+	RawApiResponse get(String url, String accessToken);
 
 	/**
 	 * Make an HTTP POST request.
@@ -26,7 +26,7 @@ public interface IRestClient {
 	 * @param data Data to send with request.
 	 * @return The response body, http info, and error (if one exists).
 	 */
-	CUrlResponse post(String url, String accessToken, String data);
+	RawApiResponse post(String url, String accessToken, String data);
 
     /**
      * Make an HTTP POST request with a multipart body.
@@ -36,7 +36,7 @@ public interface IRestClient {
      * @param data Data to send with request.
      * @return The response body, http info, and error (if one exists).
      */	
-	public CUrlResponse postMultipart(String url, String accessToken, MultipartBody data);
+	public RawApiResponse postMultipart(String url, String accessToken, MultipartBody data);
 	
 	/**
 	 * Make an HTTP PUT request.
@@ -46,7 +46,7 @@ public interface IRestClient {
 	 * @param data Data to send with request.
 	 * @return The response body, http info, and error (if one exists).
 	 */
-	CUrlResponse put(String url, String accessToken, String data);
+	RawApiResponse put(String url, String accessToken, String data);
 
 	/**
 	 * Make an HTTP DELETE request.
@@ -55,7 +55,7 @@ public interface IRestClient {
 	 * @param accessToken Constant Contact OAuth2 access token
 	 * @return The response body, http info, and error (if one exists).
 	 */
-	CUrlResponse delete(String url, String accessToken);
+	RawApiResponse delete(String url, String accessToken);
 
     /**
      * Make an HTTP PATCH request.
@@ -65,5 +65,5 @@ public interface IRestClient {
      * @param data Data to send with request.
      * @return The response body, http info, and error (if one exists).
      */
-    CUrlResponse patch(String url, String accessToken, String data);
+    RawApiResponse patch(String url, String accessToken, String data);
 }

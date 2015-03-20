@@ -5,7 +5,7 @@ import com.constantcontact.components.generic.response.Pagination;
 import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.base.BaseService;
-import com.constantcontact.util.CUrlResponse;
+import com.constantcontact.util.RawApiResponse;
 import com.constantcontact.util.Config;
 import com.constantcontact.util.ConstantContactExceptionFactory;
 
@@ -41,7 +41,7 @@ public class PaginationHelperService extends BaseService {
 			}
 			
 			// Get REST response
-			CUrlResponse response = getRestClient().get(url, accessToken);
+			RawApiResponse response = getRestClient().get(url, accessToken);
 			if (response.hasData()) {
 				pageResultSet = Component.resultSetFromJSON(response.getBody(), objectClass);
 			}

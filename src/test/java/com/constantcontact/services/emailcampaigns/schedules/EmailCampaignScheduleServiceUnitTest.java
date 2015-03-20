@@ -10,7 +10,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.emailcampaigns.schedule.EmailCampaignScheduleService;
-import com.constantcontact.util.CUrlResponse;
+import com.constantcontact.util.RawApiResponse;
 import com.constantcontact.util.RestClient;
 import com.constantcontact.util.http.constants.ProcessorBase.HttpMethod;
 
@@ -34,9 +34,9 @@ public class EmailCampaignScheduleServiceUnitTest {
         
         RestClient rc = new RestClient(){
             @Override
-            protected CUrlResponse makeHttpRequest(String urlParam, HttpMethod method, String accessToken, String data) {
+            protected RawApiResponse makeHttpRequest(String urlParam, HttpMethod method, String accessToken, String data) {
                 
-                CUrlResponse response = new CUrlResponse();
+                RawApiResponse response = new RawApiResponse();
                 
                 if (method == HttpMethod.DELETE) {
                     response.setStatusCode(HttpURLConnection.HTTP_NO_CONTENT);
@@ -56,9 +56,9 @@ public class EmailCampaignScheduleServiceUnitTest {
     public void testDeleteFail() throws ConstantContactServiceException {
         RestClient rc2 = new RestClient(){
             @Override
-            protected CUrlResponse makeHttpRequest(String urlParam, HttpMethod method, String accessToken, String data) {
+            protected RawApiResponse makeHttpRequest(String urlParam, HttpMethod method, String accessToken, String data) {
                 
-                CUrlResponse response = new CUrlResponse();
+                RawApiResponse response = new RawApiResponse();
                 
                 if (method == HttpMethod.DELETE) {
                     response.setStatusCode(HttpURLConnection.HTTP_INTERNAL_ERROR);

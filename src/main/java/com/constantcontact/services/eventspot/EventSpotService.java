@@ -7,7 +7,7 @@ import com.constantcontact.components.eventspot.Registrant.RegistrantDetails;
 import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.base.BaseService;
-import com.constantcontact.util.CUrlResponse;
+import com.constantcontact.util.RawApiResponse;
 import com.constantcontact.util.Config;
 import com.constantcontact.util.ConstantContactExceptionFactory;
 
@@ -39,7 +39,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
             String url = paginateUrl(
                     String.format("%1$s%2$s", Config.instance().getBaseUrl(), Config.Endpoints.EVENTS), limit);
 
-            CUrlResponse response = getRestClient().get(url, accessToken);
+            RawApiResponse response = getRestClient().get(url, accessToken);
 
             if (response.hasData()) {
                 events = Component.resultSetFromJSON(response.getBody(), Event.class);
@@ -72,7 +72,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
             String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                     String.format(Config.Endpoints.EVENT_ID, eventId));
 
-            CUrlResponse response = getRestClient().get(url, accessToken);
+            RawApiResponse response = getRestClient().get(url, accessToken);
 
             if (response.hasData()) {
                 event = Component.fromJSON(response.getBody(), Event.class);
@@ -103,7 +103,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
             String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), Config.Endpoints.EVENTS);
             String json = event.toJSON();
 
-            CUrlResponse response = getRestClient().post(url, accessToken, json);
+            RawApiResponse response = getRestClient().post(url, accessToken, json);
             if (response.hasData()) {
                 newEvent = Component.fromJSON(response.getBody(), Event.class);
             }
@@ -135,7 +135,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
                     String.format(Config.Endpoints.EVENT_ID, event.getId()));
             String json = event.toJSON();
 
-            CUrlResponse response = getRestClient().put(url, accessToken, json);
+            RawApiResponse response = getRestClient().put(url, accessToken, json);
             if (response.hasData()) {
                 updatedEvent = Component.fromJSON(response.getBody(), Event.class);
             }
@@ -172,7 +172,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
             EventUpdateStatusRequest eventUpdateStatusRequest = new EventUpdateStatusRequest(eventUpdateStatusRequestList);
             String json = eventUpdateStatusRequest.toJSON();
 
-            CUrlResponse response = getRestClient().patch(url, accessToken, json);
+            RawApiResponse response = getRestClient().patch(url, accessToken, json);
             if (response.isError()) {
                 throw ConstantContactExceptionFactory.createServiceException(response, url);
             }
@@ -200,7 +200,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
             String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                     String.format(Config.Endpoints.EVENT_FEES, eventId));
 
-            CUrlResponse response = getRestClient().get(url, accessToken);
+            RawApiResponse response = getRestClient().get(url, accessToken);
 
             if (response.hasData()) {
                 eventFees = Component.listFromJSON(response.getBody(), EventFee.class);
@@ -234,7 +234,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
             String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                     String.format(Config.Endpoints.EVENT_FEE_ID, eventId, feeId));
 
-            CUrlResponse response = getRestClient().get(url, accessToken);
+            RawApiResponse response = getRestClient().get(url, accessToken);
 
             if (response.hasData()) {
                 eventFee = Component.fromJSON(response.getBody(), EventFee.class);
@@ -269,7 +269,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
                     String.format(Config.Endpoints.EVENT_FEES, eventId));
             String json = eventFee.toJSON();
 
-            CUrlResponse response = getRestClient().post(url, accessToken, json);
+            RawApiResponse response = getRestClient().post(url, accessToken, json);
             if (response.hasData()) {
                 newEventFee = Component.fromJSON(response.getBody(), EventFee.class);
             }
@@ -303,7 +303,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
                     String.format(Config.Endpoints.EVENT_FEE_ID, eventId, eventFee.getId()));
             String json = eventFee.toJSON();
 
-            CUrlResponse response = getRestClient().put(url, accessToken, json);
+            RawApiResponse response = getRestClient().put(url, accessToken, json);
             if (response.hasData()) {
                 newEventFee = Component.fromJSON(response.getBody(), EventFee.class);
             }
@@ -335,7 +335,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
             String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                     String.format(Config.Endpoints.EVENT_FEE_ID, eventId, eventFeeId));
 
-            CUrlResponse response = getRestClient().delete(url, accessToken);
+            RawApiResponse response = getRestClient().delete(url, accessToken);
             if (response.isError()) {
                 throw ConstantContactExceptionFactory.createServiceException(response, url);
             }
@@ -364,7 +364,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
             String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                     String.format(Config.Endpoints.EVENT_PROMOCODES, eventId));
 
-            CUrlResponse response = getRestClient().get(url, accessToken);
+            RawApiResponse response = getRestClient().get(url, accessToken);
 
             if (response.hasData()) {
                 promocodes = Component.listFromJSON(response.getBody(), Promocode.class);
@@ -398,7 +398,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
             String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                     String.format(Config.Endpoints.EVENT_PROMOCODE_ID, eventId, promocodeId));
 
-            CUrlResponse response = getRestClient().get(url, accessToken);
+            RawApiResponse response = getRestClient().get(url, accessToken);
 
             if (response.hasData()) {
                 promocode = Component.fromJSON(response.getBody(), Promocode.class);
@@ -433,7 +433,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
                     String.format(Config.Endpoints.EVENT_PROMOCODES, eventId));
             String json = promocode.toJSON();
 
-            CUrlResponse response = getRestClient().post(url, accessToken, json);
+            RawApiResponse response = getRestClient().post(url, accessToken, json);
             if (response.hasData()) {
                 newPromocode = Component.fromJSON(response.getBody(), Promocode.class);
             }
@@ -467,7 +467,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
                     String.format(Config.Endpoints.EVENT_PROMOCODE_ID, eventId, promocode.getId()));
             String json = promocode.toJSON();
 
-            CUrlResponse response = getRestClient().put(url, accessToken, json);
+            RawApiResponse response = getRestClient().put(url, accessToken, json);
             if (response.hasData()) {
                 newPromocode = Component.fromJSON(response.getBody(), Promocode.class);
             }
@@ -499,7 +499,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
             String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                     String.format(Config.Endpoints.EVENT_PROMOCODE_ID, eventId, promocodeId));
 
-            CUrlResponse response = getRestClient().delete(url, accessToken);
+            RawApiResponse response = getRestClient().delete(url, accessToken);
             if (response.isError()) {
                 throw ConstantContactExceptionFactory.createServiceException(response, url);
             }
@@ -529,7 +529,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
             String url = paginateUrl(
                     String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.Endpoints.EVENT_REGISTRANTS, eventId)), limit);
 
-            CUrlResponse response = getRestClient().get(url, accessToken);
+            RawApiResponse response = getRestClient().get(url, accessToken);
 
             if (response.hasData()) {
                 eventRegistrants = Component.resultSetFromJSON(response.getBody(), Registrant.class);
@@ -563,7 +563,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
             String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                     String.format(Config.Endpoints.EVENT_REGISTRANT_ID, eventId, registrantId));
 
-            CUrlResponse response = getRestClient().get(url, accessToken);
+            RawApiResponse response = getRestClient().get(url, accessToken);
 
             if (response.hasData()) {
                 registrant = Component.fromJSON(response.getBody(), RegistrantDetails.class);
@@ -596,7 +596,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
             String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                     String.format(Config.Endpoints.EVENT_ITEMS, eventId));
 
-            CUrlResponse response = getRestClient().get(url, accessToken);
+            RawApiResponse response = getRestClient().get(url, accessToken);
 
             if (response.hasData()) {
                 eventItems = Component.listFromJSON(response.getBody(), EventItem.class);
@@ -630,7 +630,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
             String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                     String.format(Config.Endpoints.EVENT_ITEM_ID, eventId, itemId));
 
-            CUrlResponse response = getRestClient().get(url, accessToken);
+            RawApiResponse response = getRestClient().get(url, accessToken);
 
             if (response.hasData()) {
                 eventItem = Component.fromJSON(response.getBody(), EventItem.class);
@@ -665,7 +665,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
                     String.format(Config.Endpoints.EVENT_ITEMS, eventId));
             String json = eventItem.toJSON();
 
-            CUrlResponse response = getRestClient().post(url, accessToken, json);
+            RawApiResponse response = getRestClient().post(url, accessToken, json);
             if (response.hasData()) {
                 newEventItem = Component.fromJSON(response.getBody(), EventItem.class);
             }
@@ -699,7 +699,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
                     String.format(Config.Endpoints.EVENT_ITEM_ID, eventId, item.getId()));
             String json = item.toJSON();
 
-            CUrlResponse response = getRestClient().put(url, accessToken, json);
+            RawApiResponse response = getRestClient().put(url, accessToken, json);
             if (response.hasData()) {
                 eventItem = Component.fromJSON(response.getBody(), EventItem.class);
             }
@@ -731,7 +731,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
             String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                     String.format(Config.Endpoints.EVENT_ITEM_ID, eventId, itemId));
 
-            CUrlResponse response = getRestClient().delete(url, accessToken);
+            RawApiResponse response = getRestClient().delete(url, accessToken);
             if (response.isError()) {
                 throw ConstantContactExceptionFactory.createServiceException(response, url);
             }
@@ -761,7 +761,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
             String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                     String.format(Config.Endpoints.EVENT_ITEM_ATTRIBUTES, eventId, itemId));
 
-            CUrlResponse response = getRestClient().get(url, accessToken);
+            RawApiResponse response = getRestClient().get(url, accessToken);
 
             if (response.hasData()) {
                 eventItemAttributes = Component.listFromJSON(response.getBody(), EventItemAttribute.class);
@@ -797,7 +797,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
             String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                     String.format(Config.Endpoints.EVENT_ITEM_ATTRIBUTE_ID, eventId, itemId, itemAttributeId));
 
-            CUrlResponse response = getRestClient().get(url, accessToken);
+            RawApiResponse response = getRestClient().get(url, accessToken);
 
             if (response.hasData()) {
                 eventItemAttribute = Component.fromJSON(response.getBody(), EventItemAttribute.class);
@@ -834,7 +834,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
                     String.format(Config.Endpoints.EVENT_ITEM_ATTRIBUTES, eventId, itemId));
             String json = itemAttribute.toJSON();
 
-            CUrlResponse response = getRestClient().post(url, accessToken, json);
+            RawApiResponse response = getRestClient().post(url, accessToken, json);
             if (response.hasData()) {
                 eventItemAttribute = Component.fromJSON(response.getBody(), EventItemAttribute.class);
             }
@@ -870,7 +870,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
                     String.format(Config.Endpoints.EVENT_ITEM_ATTRIBUTE_ID, eventId, itemId, itemAttribute.getId()));
             String json = itemAttribute.toJSON();
 
-            CUrlResponse response = getRestClient().put(url, accessToken, json);
+            RawApiResponse response = getRestClient().put(url, accessToken, json);
             if (response.hasData()) {
                 eventItemAttribute = Component.fromJSON(response.getBody(), EventItemAttribute.class);
             }
@@ -904,7 +904,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
             String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                     String.format(Config.Endpoints.EVENT_ITEM_ATTRIBUTE_ID, eventId, itemId, itemAttributeId));
 
-            CUrlResponse response = getRestClient().delete(url, accessToken);
+            RawApiResponse response = getRestClient().delete(url, accessToken);
             if (response.isError()) {
                 throw ConstantContactExceptionFactory.createServiceException(response, url);
             }
