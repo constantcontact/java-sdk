@@ -75,7 +75,7 @@ public class HttpProcessor implements ProcessorBase {
 
 			connection = clientConnection(urlParam, httpMethod, contentType.getStringVal(), accessToken, data);
 
-			responseMessage = executeRequest(connection, data, accessToken);
+			responseMessage = executeRequest(connection, data);
 
             int responseCode = connection.getResponseCode();
 			urlResponse.setStatusCode(responseCode);
@@ -221,7 +221,7 @@ public class HttpProcessor implements ProcessorBase {
 	 * @param accessToken
 	 * @return server response
 	 */
-	protected String executeRequest(HttpURLConnection connection, byte[] data, String accessToken) {
+	protected String executeRequest(HttpURLConnection connection, byte[] data) {
 		try {
 			// Send request
 			if (data != null) {
@@ -270,7 +270,7 @@ public class HttpProcessor implements ProcessorBase {
 		}
 	}
 
-    protected final void setRequestMethodUsingWorkaroundForJREBug(final HttpURLConnection httpURLConnection, final String method) {
+    private final void setRequestMethodUsingWorkaroundForJREBug(final HttpURLConnection httpURLConnection, final String method) {
         try {
             httpURLConnection.setRequestMethod(method);
             // Check whether we are running on a buggy JRE
