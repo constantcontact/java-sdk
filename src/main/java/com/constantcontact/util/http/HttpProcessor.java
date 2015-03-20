@@ -141,7 +141,7 @@ public class HttpProcessor implements ProcessorBase {
 		return urlResponse;
 	}
 
-	private Map<String, List<String>> extractHeaders(HttpURLConnection connection) {
+	protected Map<String, List<String>> extractHeaders(HttpURLConnection connection) {
         return connection.getHeaderFields();
     }
 
@@ -162,7 +162,7 @@ public class HttpProcessor implements ProcessorBase {
 	 *             When something went wrong.
 	 */
 
-	private HttpURLConnection clientConnection(String urlParam, HttpMethod httpMethod, String contentType, String accessToken, byte[] data) throws Exception {
+	protected HttpURLConnection clientConnection(String urlParam, HttpMethod httpMethod, String contentType, String accessToken, byte[] data) throws Exception {
 
 		String bindString = urlParam.contains("=") ? "&" : "?";
 		urlParam = String.format("%1$s%2$sapi_key=%3$s", urlParam, bindString, ConstantContact.API_KEY);
@@ -221,7 +221,7 @@ public class HttpProcessor implements ProcessorBase {
 	 * @param accessToken
 	 * @return server response
 	 */
-	private String executeRequest(HttpURLConnection connection, byte[] data, String accessToken) {
+	protected String executeRequest(HttpURLConnection connection, byte[] data, String accessToken) {
 		try {
 			// Send request
 			if (data != null) {
@@ -270,7 +270,7 @@ public class HttpProcessor implements ProcessorBase {
 		}
 	}
 
-    private final void setRequestMethodUsingWorkaroundForJREBug(final HttpURLConnection httpURLConnection, final String method) {
+    protected final void setRequestMethodUsingWorkaroundForJREBug(final HttpURLConnection httpURLConnection, final String method) {
         try {
             httpURLConnection.setRequestMethod(method);
             // Check whether we are running on a buggy JRE
