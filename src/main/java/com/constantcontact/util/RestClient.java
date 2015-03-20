@@ -12,6 +12,23 @@ import com.constantcontact.util.http.constants.ProcessorBase.HttpMethod;
  * 
  */
 public class RestClient implements IRestClient {
+
+	private HttpProcessor httpProcessor;
+
+	/**
+	 * @return the httpProcessor
+	 */
+	public HttpProcessor getHttpProcessor() {
+		return httpProcessor;
+	}
+
+	/**
+	 * @param httpProcessor the httpProcessor to set
+	 */
+	public void setHttpProcessor(HttpProcessor httpProcessor) {
+		this.httpProcessor = httpProcessor;
+	}
+
 	/**
 	 * Make HTTP GET request.
 	 * 
@@ -83,14 +100,14 @@ public class RestClient implements IRestClient {
     }
 
 	protected RawApiResponse makeHttpRequest(String urlParam, HttpMethod method, String accessToken, String data) {
-		return new HttpProcessor().makeHttpRequest(urlParam, method, ContentType.JSON, accessToken, data);
+		return this.getHttpProcessor().makeHttpRequest(urlParam, method, ContentType.JSON, accessToken, data);
 	}
 	
 	protected RawApiResponse makeMultipartRequest(String urlParam, String accessToken, MultipartBody data) {
 	    
 	    byte[] bodyBytes = data.getBytes();
 	    
-	    return new HttpProcessor().makeHttpRequest(urlParam, HttpMethod.POST, ContentType.FORM_DATA, accessToken, bodyBytes);
+	    return this.getHttpProcessor().makeHttpRequest(urlParam, HttpMethod.POST, ContentType.FORM_DATA, accessToken, bodyBytes);
     }
 	
 	/**
@@ -98,5 +115,6 @@ public class RestClient implements IRestClient {
 	 */
 	public RestClient() {
 		super();
+		this.setHttpProcessor(new HttpProcessor());
 	}
 }
