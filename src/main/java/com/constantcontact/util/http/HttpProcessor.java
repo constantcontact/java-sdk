@@ -6,6 +6,7 @@ import com.constantcontact.exceptions.component.ConstantContactComponentExceptio
 import com.constantcontact.util.RawApiRequestError;
 import com.constantcontact.util.RawApiResponse;
 import com.constantcontact.util.Config;
+import com.constantcontact.util.SdkVersion;
 import com.constantcontact.util.http.constants.ProcessorBase;
 
 import java.io.*;
@@ -178,7 +179,7 @@ public class HttpProcessor implements ProcessorBase {
 		connection.setRequestProperty(CONTENT_TYPE_HEADER, contentType);
 		connection.addRequestProperty(ACCEPT_HEADER, JSON_CONTENT_TYPE);
 		connection.addRequestProperty(AUTHORIZATION_HEADER, "Bearer " + accessToken);
-        connection.addRequestProperty(X_CTCT_REQUEST_SOURCE_HEADER, String.format("sdk.java.%1s", Config.instance().getCtctSdkVersion()));
+        connection.addRequestProperty(X_CTCT_REQUEST_SOURCE_HEADER, String.format("sdk.java.%1s", SdkVersion.instance().getCtctSdkVersion()));
 		connection.addRequestProperty("Connection", "Keep-Alive");
 		connection.addRequestProperty("Keep-Alive", "header");
 

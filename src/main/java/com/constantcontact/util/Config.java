@@ -1,7 +1,5 @@
 package com.constantcontact.util;
 
-import com.constantcontact.ConstantContact;
-
 /**
  * Main Configuration structure in Constant Contact.
  *
@@ -12,22 +10,9 @@ public final class Config {
     private static Config instance;
     
     /**
-     * SDK Version
-     */
-    private String ctctSdkVersion;
-    
-    /**
      * API access URL Host.
      */
     private String baseUrl = "https://api.constantcontact.com";
-
-    public String getCtctSdkVersion() {
-        return ctctSdkVersion;
-    }
-
-    public void setCtctSdkVersion(String ctctSdkVersion) {
-        this.ctctSdkVersion = ctctSdkVersion;
-    }
 
     public String getBaseUrl() {
         return baseUrl;
@@ -37,9 +22,11 @@ public final class Config {
         this.baseUrl = baseUrl;
     }
 
+    /**
+     * Private Constructor
+     */
     private Config() {
-        Package aPackage = ConstantContact.class.getPackage();
-        ctctSdkVersion = aPackage.getImplementationVersion();
+    	
     }
 
     /**
