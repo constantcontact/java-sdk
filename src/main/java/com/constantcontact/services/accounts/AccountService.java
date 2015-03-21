@@ -35,7 +35,7 @@ public class AccountService extends BaseService implements IAccountService {
 		List<VerifiedEmailAddress> addresses = new ArrayList<VerifiedEmailAddress>();
 		try {
 
-			String url = appendParam(Config.instance().getBaseUrl() + String.format(Config.Endpoints.VERIFIEDEMAILADDRESSES), "status", status);
+			String url = appendParam(Config.instance().getBaseUrl() + String.format(Config.instance().getVerifiedEmailAddresses()), "status", status);
 			// Get REST response
 			RawApiResponse response = getRestClient().get(url, accessToken);
 			if (response.hasData()) {
@@ -65,7 +65,7 @@ public class AccountService extends BaseService implements IAccountService {
     public AccountInfo getAccountInfo(String accessToken) throws ConstantContactServiceException {
         AccountInfo accountInfo = null;
         try {
-            String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), Config.Endpoints.ACCOUNT_INFO);
+            String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), Config.instance().getAccountInfo());
 
             RawApiResponse response = getRestClient().get(url, accessToken);
 
@@ -96,7 +96,7 @@ public class AccountService extends BaseService implements IAccountService {
     public AccountInfo updateAccountInfo(String accessToken, AccountInfo accountInfo) throws ConstantContactServiceException {
         AccountInfo updatedAccountInfo = null;
         try {
-            String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), Config.Endpoints.ACCOUNT_INFO);
+            String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), Config.instance().getAccountInfo());
             String json = accountInfo.toJSON();
 
             RawApiResponse response = getRestClient().put(url, accessToken, json);

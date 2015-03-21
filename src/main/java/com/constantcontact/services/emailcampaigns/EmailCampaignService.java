@@ -37,7 +37,7 @@ public class EmailCampaignService extends BaseService implements IEmailCampaignS
 	public ResultSet<EmailCampaignResponse> getCampaigns(String accessToken, Integer limit, String modifiedSinceTimestamp) throws ConstantContactServiceException {
 		ResultSet<EmailCampaignResponse> campaigns = null;
 		try {
-			String url = paginateUrl(String.format("%1$s%2$s", Config.instance().getBaseUrl(), Config.Endpoints.EMAILCAMPAIGNS), limit);
+			String url = paginateUrl(String.format("%1$s%2$s", Config.instance().getBaseUrl(), Config.instance().getEmailCampaigns()), limit);
 			
 			if(modifiedSinceTimestamp != null)
 				url = appendParam(url, "modified_since", modifiedSinceTimestamp);
@@ -71,7 +71,7 @@ public class EmailCampaignService extends BaseService implements IEmailCampaignS
 	public EmailCampaignResponse getCampaign(String accessToken, String campaignId) throws ConstantContactServiceException {
 		EmailCampaignResponse campaign = null;
 		try {
-			String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.Endpoints.EMAILCAMPAIGNS_ID, campaignId));
+			String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.instance().getEmailCampaignsId(), campaignId));
 			
 			RawApiResponse response = getRestClient().get(url, accessToken);
 
@@ -103,7 +103,7 @@ public class EmailCampaignService extends BaseService implements IEmailCampaignS
 	public EmailCampaignResponse addCampaign(String accessToken, EmailCampaignRequest emailCampaign) throws ConstantContactServiceException {
 		EmailCampaignResponse newEmailCampaign = null;
 		try {
-			String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), Config.Endpoints.EMAILCAMPAIGNS);
+			String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), Config.instance().getEmailCampaigns());
 			String json = emailCampaign.toJSON();
 			
 			RawApiResponse response = getRestClient().post(url, accessToken, json);
@@ -135,7 +135,7 @@ public class EmailCampaignService extends BaseService implements IEmailCampaignS
 	public EmailCampaignResponse updateCampaign(String accessToken, EmailCampaignRequest emailCampaign) throws ConstantContactServiceException {
 		EmailCampaignResponse updateEmailCampaign = null;
 		try {
-			String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.Endpoints.EMAILCAMPAIGNS_ID, emailCampaign.getId()));
+			String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.instance().getEmailCampaignsId(), emailCampaign.getId()));
 			String json = emailCampaign.toJSON();
 
 			RawApiResponse response = getRestClient().put(url, accessToken, json);
@@ -166,7 +166,7 @@ public class EmailCampaignService extends BaseService implements IEmailCampaignS
 
 	public boolean deleteCampaign(String accessToken, String emailCampaignId) throws ConstantContactServiceException {
 		try {
-			String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.Endpoints.EMAILCAMPAIGNS_ID, emailCampaignId));
+			String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.instance().getEmailCampaignsId(), emailCampaignId));
 			
 			RawApiResponse response = getRestClient().delete(url, accessToken);
 			

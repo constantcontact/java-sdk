@@ -34,7 +34,7 @@ public class EmailCampaignScheduleService extends BaseService implements IEmailC
 	public EmailCampaignSchedule getSchedule(String accessToken, String campaignId, String scheduleId) throws ConstantContactServiceException {
 		EmailCampaignSchedule schedule = null;
 		try {
-			String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.Endpoints.EMAILCAMPAIGNS_SCHEDULES_ID, campaignId, scheduleId));
+			String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.instance().getEmailCampaignsSchedulesId(), campaignId, scheduleId));
 			RawApiResponse response = getRestClient().get(url, accessToken);
 
 			if (response.hasData()) {
@@ -69,7 +69,7 @@ public class EmailCampaignScheduleService extends BaseService implements IEmailC
 
 		EmailCampaignSchedule updatedEmailCampaignSchedule = null;
 		try {
-			String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.Endpoints.EMAILCAMPAIGNS_SCHEDULES_ID, campaignId, scheduleId));
+			String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.instance().getEmailCampaignsSchedulesId(), campaignId, scheduleId));
 			String json = emailCampaignSchedule.toJSON();
 			RawApiResponse response = getRestClient().put(url, accessToken, json);
 			if (response.hasData()) {
@@ -99,7 +99,7 @@ public class EmailCampaignScheduleService extends BaseService implements IEmailC
 
 	public boolean deleteSchedule(String accessToken, String campaignId, String scheduleId) throws ConstantContactServiceException {
 		try {
-			String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.Endpoints.EMAILCAMPAIGNS_SCHEDULES_ID, campaignId, scheduleId));
+			String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.instance().getEmailCampaignsSchedulesId(), campaignId, scheduleId));
 			RawApiResponse response = getRestClient().delete(url, accessToken);
 			if (response.isError()) {
                 throw ConstantContactExceptionFactory.createServiceException(response, url);
@@ -127,7 +127,7 @@ public class EmailCampaignScheduleService extends BaseService implements IEmailC
 	public List<EmailCampaignSchedule> getSchedules(String accessToken, String campaignId) throws ConstantContactServiceException {
 		List<EmailCampaignSchedule> schedules = null;
 		try {
-			String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.Endpoints.EMAILCAMPAIGNS_SCHEDULES_ID_ALL, campaignId));
+			String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.instance().getEmailCampaignsSchedulesIdAll(), campaignId));
 			RawApiResponse response = getRestClient().get(url, accessToken);
 
 			if (response.hasData()) {
@@ -160,7 +160,7 @@ public class EmailCampaignScheduleService extends BaseService implements IEmailC
 			throws ConstantContactServiceException {
 		EmailCampaignSchedule newSchedule = null;
 		try {
-			String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.Endpoints.EMAILCAMPAIGNS_SCHEDULES_ID_ALL, campaignId));
+			String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.instance().getEmailCampaignsSchedulesIdAll(), campaignId));
 			String json = emailCampaignSchedule.toJSON();
 			RawApiResponse response = getRestClient().post(url, accessToken, json);
 			if (response.hasData()) {

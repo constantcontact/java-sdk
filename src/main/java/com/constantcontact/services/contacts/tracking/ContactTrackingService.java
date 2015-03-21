@@ -43,7 +43,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 	public ContactTrackingSummaryReport getSummary(String accessToken, String contactId, String createdSinceTimestamp) throws ConstantContactServiceException {
 		ContactTrackingSummaryReport summary = null;
 		try {
-			String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.Endpoints.CONTACTS_TRACKING_REPORTS_SUMMARY, contactId));
+			String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.instance().getContactsTrackingReportsSummary(), contactId));
 			
 			if (createdSinceTimestamp != null) {
 				url = appendParam(url,"created_since", createdSinceTimestamp);
@@ -78,7 +78,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
         
         try {
             StringBuilder sb = new StringBuilder();
-            sb.append(Config.instance().getBaseUrl()).append(String.format(Config.Endpoints.CONTACTS_TRACKING_REPORTS_BY_CAMPAIGN_SUMMARY, contactId));
+            sb.append(Config.instance().getBaseUrl()).append(String.format(Config.instance().getContactsTrackingReportsByCampaignSummary(), contactId));
             
             String url = sb.toString();
 
@@ -114,7 +114,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
         
         try {
             StringBuilder sb = new StringBuilder();
-            sb.append(Config.instance().getBaseUrl()).append(String.format(Config.Endpoints.CONTACTS_TRACKING_ALL, contactId));
+            sb.append(Config.instance().getBaseUrl()).append(String.format(Config.instance().getContactsTrackingAll(), contactId));
             
             if (limit != null) {
                 sb.append("?limit=").append(limit);
@@ -157,7 +157,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 		ResultSet<ContactTrackingBounce> bounces = null;
 		try {
 			StringBuilder sb = new StringBuilder();
-			sb.append(Config.instance().getBaseUrl()).append(String.format(Config.Endpoints.CONTACTS_TRACKING_BOUNCES, contactId));
+			sb.append(Config.instance().getBaseUrl()).append(String.format(Config.instance().getContactsTrackingBounces(), contactId));
 			
 			if (limit != null) {
 				sb.append("?limit=").append(limit);
@@ -197,7 +197,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 		ResultSet<ContactTrackingClick> clicks = null;
 		try {
 			StringBuilder sb = new StringBuilder();
-			sb.append(Config.instance().getBaseUrl()).append(String.format(Config.Endpoints.CONTACTS_TRACKING_CLICKS, contactId));
+			sb.append(Config.instance().getBaseUrl()).append(String.format(Config.instance().getContactsTrackingClicks(), contactId));
 			
 			if (limit != null) {
 				sb.append("?limit=").append(limit);
@@ -241,7 +241,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 		ResultSet<ContactTrackingForward> forwards = null;
 		try {
 			StringBuilder sb = new StringBuilder();
-			sb.append(Config.instance().getBaseUrl()).append(String.format(Config.Endpoints.CONTACTS_TRACKING_FORWARDS, contactId));
+			sb.append(Config.instance().getBaseUrl()).append(String.format(Config.instance().getContactsTrackingForwards(), contactId));
 			
 			if (limit != null) {
 				sb.append("?limit=").append(limit);
@@ -286,7 +286,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 		ResultSet<ContactTrackingOpen> opens = null;
 		try {
 			StringBuilder sb = new StringBuilder();
-			sb.append(Config.instance().getBaseUrl()).append(String.format(Config.Endpoints.CONTACTS_TRACKING_OPENS, contactId));
+			sb.append(Config.instance().getBaseUrl()).append(String.format(Config.instance().getContactsTrackingOpens(), contactId));
 			
 			if (limit != null) {
 				sb.append("?limit=").append(limit);
@@ -331,7 +331,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 		ResultSet<ContactTrackingSend> sends = null;
 		try {
 			StringBuilder sb = new StringBuilder();
-			sb.append(Config.instance().getBaseUrl()).append(String.format(Config.Endpoints.CONTACTS_TRACKING_SENDS, contactId));
+			sb.append(Config.instance().getBaseUrl()).append(String.format(Config.instance().getContactsTrackingSends(), contactId));
 			
 			if (limit != null) {
 				sb.append("?limit=").append(limit);
@@ -377,7 +377,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 		ResultSet<ContactTrackingUnsubscribe> unsubscribes = null;
 		try {
 			StringBuilder sb = new StringBuilder();
-			sb.append(Config.instance().getBaseUrl()).append(String.format(Config.Endpoints.CONTACTS_TRACKING_UNSUBSCRIBES, contactId));
+			sb.append(Config.instance().getBaseUrl()).append(String.format(Config.instance().getContactsTrackingUnsubscribes(), contactId));
 			
 			if (limit != null) {
 				sb.append("?limit=").append(limit);

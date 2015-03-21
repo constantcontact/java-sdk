@@ -42,7 +42,7 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 
 		ContactsResponse contactsResponse = null;
 		try {
-			String url = Config.instance().getBaseUrl() + Config.Endpoints.ACTIVITIES_ADD_CONTACTS;
+			String url = Config.instance().getBaseUrl() + Config.instance().getActivitiesAddContacts();
 			String json = request.toJSON();
 			RawApiResponse response = getRestClient().post(url, accessToken, json);
 			if (response.hasData()) {
@@ -65,7 +65,7 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 	    
 	    ContactsResponse contactsResponse = null;
         try {
-            String url = Config.instance().getBaseUrl() + Config.Endpoints.ACTIVITIES_ADD_CONTACTS;
+            String url = Config.instance().getBaseUrl() + Config.instance().getActivitiesAddContacts();
             RawApiResponse response = getRestClient().postMultipart(url, accessToken, multipartRequest);
             if (response.hasData()) {
                 contactsResponse = Component.fromJSON(response.getBody(), ContactsResponse.class);
@@ -94,7 +94,7 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 	public ContactsResponse removeContactsFromLists(String accessToken, RemoveContactsRequest request) throws ConstantContactServiceException {
 		ContactsResponse contactsResponse = null;
 		try {
-			String url = Config.instance().getBaseUrl() + Config.Endpoints.ACTIVITIES_REMOVE_FROM_LISTS;
+			String url = Config.instance().getBaseUrl() + Config.instance().getActivitiesRemoveFromLists();
 			String json = request.toJSON();
 			RawApiResponse response = getRestClient().post(url, accessToken, json);
 			if (response.hasData()) {
@@ -116,7 +116,7 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 
         ContactsResponse contactsResponse = null;
         try {
-            String url = Config.instance().getBaseUrl() + Config.Endpoints.ACTIVITIES_REMOVE_FROM_LISTS;
+            String url = Config.instance().getBaseUrl() + Config.instance().getActivitiesRemoveFromLists();
             RawApiResponse response = getRestClient().postMultipart(url, accessToken, multipartRequest);
             if (response.hasData()) {
                 contactsResponse = Component.fromJSON(response.getBody(), ContactsResponse.class);
@@ -147,7 +147,7 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 	public ContactsResponse clearLists(String accessToken, ClearListsRequest request) throws ConstantContactServiceException {
 		ContactsResponse contactsResponse = null;
 		try {
-			String url = Config.instance().getBaseUrl() + Config.Endpoints.ACTIVITIES_CLEAR_LISTS;
+			String url = Config.instance().getBaseUrl() + Config.instance().getActivitiesClearLists();
 			String json = request.toJSON();
 			RawApiResponse response = getRestClient().post(url, accessToken, json);
 			if (response.hasData()) {
@@ -177,7 +177,7 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 	public ContactsResponse exportContacts(String accessToken, ExportContactsRequest request) throws ConstantContactServiceException {
 		ContactsResponse contactsResponse = null;
 		try {
-			String url = Config.instance().getBaseUrl() + Config.Endpoints.ACTIVITIES_EXPORT_CONTACTS;
+			String url = Config.instance().getBaseUrl() + Config.instance().getActivitiesExportContacts();
 			String json = request.toJSON();
 			RawApiResponse response = getRestClient().post(url, accessToken, json);
 			if (response.hasData()) {
@@ -206,7 +206,7 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 	public List<SummaryReport> getSummaryReport(String accessToken) throws ConstantContactServiceException {
 		List<SummaryReport> activitiesResponse = null;
 		try {
-			String url = Config.instance().getBaseUrl() + Config.Endpoints.ACTIVITIES;
+			String url = Config.instance().getBaseUrl() + Config.instance().getActivities();
 
 			RawApiResponse response = getRestClient().get(url, accessToken);
 			if (response.hasData()) {
@@ -239,7 +239,7 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 
 		List<DetailedStatusReport> detailedStatusReports = null;
 
-		String url = Config.instance().getBaseUrl() + Config.Endpoints.ACTIVITIES;
+		String url = Config.instance().getBaseUrl() + Config.instance().getActivities();
 		try {
 			if (status != null && status.length() > 0) {
 				url = appendParam(url, "status", status);

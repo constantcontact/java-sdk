@@ -40,7 +40,7 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 
 		EmailCampaignTrackingSummary summary = null;
 		try {
-			String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.Endpoints.EMAILCAMPAIGNS_TRACKING_REPORTS_SUMMARY, emailCampaignId));
+			String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.instance().getEmailCampaignsTrackingReportsSummary(), emailCampaignId));
 			
 			if (createdSinceTimestamp != null) {
 				url = appendParam(url,"created_since", createdSinceTimestamp);
@@ -77,7 +77,7 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 		ResultSet<EmailCampaignTrackingBounce> bounces = null;
 		try {
 			StringBuilder sb = new StringBuilder();
-			sb.append(Config.instance().getBaseUrl()).append(String.format(Config.Endpoints.EMAILCAMPAIGNS_TRACKING_BOUNCES, emailCampaignId));
+			sb.append(Config.instance().getBaseUrl()).append(String.format(Config.instance().getEmailCampaignsTrackingBounces(), emailCampaignId));
 			if (limit != null) {
 				sb.append("?limit=").append(limit);
 			}
@@ -118,7 +118,7 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 		ResultSet<EmailCampaignTrackingClick> clicks = null;
 		try {
 			StringBuilder sb = new StringBuilder();
-			sb.append(Config.instance().getBaseUrl()).append(String.format(Config.Endpoints.EMAILCAMPAIGNS_TRACKING_CLICKS, emailCampaignId));
+			sb.append(Config.instance().getBaseUrl()).append(String.format(Config.instance().getEmailCampaignsTrackingClicks(), emailCampaignId));
 			if (limit != null) {
 				sb.append("?limit=").append(limit);
 			}
@@ -165,7 +165,7 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 		ResultSet<EmailCampaignTrackingForward> forwards = null;
 		try {
 			StringBuilder sb = new StringBuilder();
-			sb.append(Config.instance().getBaseUrl()).append(String.format(Config.Endpoints.EMAILCAMPAIGNS_TRACKING_FORWARDS, emailCampaignId));
+			sb.append(Config.instance().getBaseUrl()).append(String.format(Config.instance().getEmailCampaignsTrackingForwards(), emailCampaignId));
 			if (limit != null) {
 				sb.append("?limit=").append(limit);
 			}
@@ -211,7 +211,7 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 		ResultSet<EmailCampaignTrackingOpen> opens = null;
 		try {
 			StringBuilder sb = new StringBuilder();
-			sb.append(Config.instance().getBaseUrl()).append(String.format(Config.Endpoints.EMAILCAMPAIGNS_TRACKING_OPENS, emailCampaignId));
+			sb.append(Config.instance().getBaseUrl()).append(String.format(Config.instance().getEmailCampaignsTrackingOpens(), emailCampaignId));
 			if (limit != null) {
 				sb.append("?limit=").append(limit);
 			}
@@ -257,7 +257,7 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 		ResultSet<EmailCampaignTrackingSend> sends = null;
 		try {
 			StringBuilder sb = new StringBuilder();
-			sb.append(Config.instance().getBaseUrl()).append(String.format(Config.Endpoints.EMAILCAMPAIGNS_TRACKING_SENDS, emailCampaignId));
+			sb.append(Config.instance().getBaseUrl()).append(String.format(Config.instance().getEmailCampaignsTrackingSends(), emailCampaignId));
 			if (limit != null) {
 				sb.append("?limit=").append(limit);
 			}
@@ -304,7 +304,7 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 		ResultSet<EmailCampaignTrackingUnsubscribe> unsubscribes = null;
 		try {
 			StringBuilder sb = new StringBuilder();
-			sb.append(Config.instance().getBaseUrl()).append(String.format(Config.Endpoints.EMAILCAMPAIGNS_TRACKING_UNSUBSCRIBES, emailCampaignId));
+			sb.append(Config.instance().getBaseUrl()).append(String.format(Config.instance().getEmailCampaignsTrackingUnsubscribes(), emailCampaignId));
 			if (limit != null) {
 				sb.append("?limit=").append(limit);
 			}
@@ -353,7 +353,7 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 		ResultSet<EmailCampaignTrackingClick> clicks = null;
 		try {
 			StringBuilder sb = new StringBuilder();
-			sb.append(Config.instance().getBaseUrl()).append(String.format(Config.Endpoints.EMAILCAMPAIGNS_TRACKING_CLICKS_BY_LINK, emailCampaignId, linkId));
+			sb.append(Config.instance().getBaseUrl()).append(String.format(Config.instance().getEmailCampaignsTrackingClicksByLink(), emailCampaignId, linkId));
 
 			if (limit != null) {
 				sb.append("?limit=").append(limit);
