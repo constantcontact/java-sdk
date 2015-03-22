@@ -15,7 +15,6 @@ import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.base.BaseService;
 import com.constantcontact.util.RawApiResponse;
 import com.constantcontact.util.Config;
-import com.constantcontact.util.Config.Errors;
 import com.constantcontact.util.ConstantContactExceptionFactory;
 import com.constantcontact.util.http.MultipartBody;
 

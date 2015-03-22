@@ -69,7 +69,6 @@ import com.constantcontact.services.eventspot.IEventSpotService;
 import com.constantcontact.services.library.IMyLibraryService;
 import com.constantcontact.services.library.MyLibraryService;
 import com.constantcontact.util.Config;
-import com.constantcontact.util.Config.Errors;
 import com.constantcontact.util.http.MultipartBody;
 import com.constantcontact.util.http.MultipartBuilder;
 
@@ -375,7 +374,7 @@ public class ConstantContact {
 	public ResultSet<Contact> getContacts(Integer limit, String modifiedSinceTimestamp, Contact.Status status) throws ConstantContactServiceException {
 
 	    if (status != null && (status.equals(Contact.Status.VISITOR) || status.equals(Contact.Status.NON_SUBSCRIBER))){
-	        throw new IllegalArgumentException(Config.Errors.STATUS + " ACTIVE, OPTOUT, REMOVED, UNCONFIRMED.");
+	        throw new IllegalArgumentException(Config.instance().getErrorStatus() + " ACTIVE, OPTOUT, REMOVED, UNCONFIRMED.");
 	    }
 
 		return contactService.getContacts(this.getAccessToken(), limit, modifiedSinceTimestamp, status);
@@ -404,7 +403,7 @@ public class ConstantContact {
 	public ResultSet<Contact> getContacts(Pagination pagination) throws ConstantContactServiceException,
 	IllegalArgumentException {
 		if(pagination == null) {
-			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+			throw new IllegalArgumentException(Config.instance().getErrorPaginationNull());
 		}
 		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, Contact.class);
 	}
@@ -516,7 +515,7 @@ public class ConstantContact {
 	 */
 	public boolean deleteContact(Contact contact) throws IllegalArgumentException, ConstantContactServiceException {
 		if (contact == null) {
-			throw new IllegalArgumentException(Config.Errors.CONTACT_OR_ID);
+			throw new IllegalArgumentException(Config.instance().getErrorContactOrId());
 		}
 		return deleteContact(contact.getId());
 	}
@@ -546,7 +545,7 @@ public class ConstantContact {
 				throw new NumberFormatException();
 			}
 		} catch (NumberFormatException e) {
-			throw new IllegalArgumentException(Config.Errors.CONTACT_OR_ID);
+			throw new IllegalArgumentException(Config.instance().getErrorContactOrId());
 		}
 		return contactService.deleteContact(this.getAccessToken(), contactId);
 	}
@@ -576,7 +575,7 @@ public class ConstantContact {
 				throw new NumberFormatException();
 			}
 		} catch (NumberFormatException e) {
-			throw new IllegalArgumentException(Config.Errors.CONTACT_OR_ID);
+			throw new IllegalArgumentException(Config.instance().getErrorContactOrId());
 		}
 		return contactService.deleteContactFromLists(this.getAccessToken(), contactId);
 	}
@@ -598,7 +597,7 @@ public class ConstantContact {
 	 */
 	public boolean deleteContactFromLists(Contact contact) throws ConstantContactServiceException {
 		if (contact == null) {
-			throw new IllegalArgumentException(Config.Errors.CONTACT_OR_ID);
+			throw new IllegalArgumentException(Config.instance().getErrorContactOrId());
 		}
 		return contactService.deleteContactFromLists(this.getAccessToken(), contact.getId());
 	}
@@ -624,10 +623,10 @@ public class ConstantContact {
 	 */
 	public boolean deleteContactFromList(Contact contact, ContactList list) throws IllegalArgumentException, ConstantContactServiceException {
 		if (contact == null) {
-			throw new IllegalArgumentException(Config.Errors.CONTACT_OR_ID);
+			throw new IllegalArgumentException(Config.instance().getErrorContactOrId());
 		}
 		if (list == null) {
-			throw new IllegalArgumentException(Config.Errors.LIST_OR_ID);
+			throw new IllegalArgumentException(Config.instance().getErrorListOrId());
 		}
 		return contactService.deleteContactFromList(this.getAccessToken(), contact.getId(), list.getId());
 	}
@@ -658,7 +657,7 @@ public class ConstantContact {
 				throw new NumberFormatException();
 			}
 		} catch (NumberFormatException e) {
-			throw new IllegalArgumentException(Config.Errors.CONTACT_OR_ID);
+			throw new IllegalArgumentException(Config.instance().getErrorContactOrId());
 		}
 		try {
 			int nListId = Integer.parseInt(listId);
@@ -666,7 +665,7 @@ public class ConstantContact {
 				throw new NumberFormatException();
 			}
 		} catch (Exception e) {
-			throw new IllegalArgumentException(Config.Errors.LIST_OR_ID);
+			throw new IllegalArgumentException(Config.instance().getErrorListOrId());
 		}
 
 		return contactService.deleteContactFromList(this.getAccessToken(), contactId, listId);
@@ -693,10 +692,10 @@ public class ConstantContact {
 	 */
 	public Contact updateContact(Contact contact) throws IllegalArgumentException, ConstantContactServiceException {
 		if (contact == null) {
-			throw new IllegalArgumentException(Config.Errors.CONTACT_OR_ID);
+			throw new IllegalArgumentException(Config.instance().getErrorContactOrId());
 		}
 		if (contact.getId() == null || !(contact.getId().length() > 0)) {
-			throw new IllegalArgumentException(Config.Errors.ID);
+			throw new IllegalArgumentException(Config.instance().getErrorId());
 		}
 		return contactService.updateContact(this.getAccessToken(), contact, false);
 	}
@@ -723,10 +722,10 @@ public class ConstantContact {
 
 	public Contact updateContact(Contact contact, Boolean actionByVisitor) throws IllegalArgumentException, ConstantContactServiceException {
 		if (contact == null) {
-			throw new IllegalArgumentException(Config.Errors.CONTACT_OR_ID);
+			throw new IllegalArgumentException(Config.instance().getErrorContactOrId());
 		}
 		if (contact.getId() == null || !(contact.getId().length() > 0)) {
-			throw new IllegalArgumentException(Config.Errors.ID);
+			throw new IllegalArgumentException(Config.instance().getErrorId());
 		}
 		return contactService.updateContact(this.getAccessToken(), contact, actionByVisitor.booleanValue());
 	}
@@ -779,7 +778,7 @@ public class ConstantContact {
 				throw new NumberFormatException();
 			}
 		} catch (Exception e) {
-			throw new IllegalArgumentException(Config.Errors.LIST_OR_ID);
+			throw new IllegalArgumentException(Config.instance().getErrorListOrId());
 		}
 
 		return contactListService.getList(this.getAccessToken(), listId);
@@ -833,10 +832,10 @@ public class ConstantContact {
 
    public ContactList updateList(ContactList list) throws IllegalArgumentException, ConstantContactServiceException {
        if (list == null) {
-           throw new IllegalArgumentException(Config.Errors.LIST_OR_ID);
+           throw new IllegalArgumentException(Config.instance().getErrorListOrId());
        }
        if (list.getId() == null || !(list.getId().length() > 0)) {
-           throw new IllegalArgumentException(Config.Errors.ID);
+           throw new IllegalArgumentException(Config.instance().getErrorId());
        }
        return contactListService.updateList(this.getAccessToken(), list);
    }
@@ -862,7 +861,7 @@ public class ConstantContact {
 	 */
 	public ResultSet<Contact> getContactsFromList(ContactList list) throws IllegalArgumentException, ConstantContactServiceException {
 		if (list == null) {
-			throw new IllegalArgumentException(Config.Errors.LIST_OR_ID);
+			throw new IllegalArgumentException(Config.instance().getErrorListOrId());
 		}
 		return contactListService.getContactsFromList(this.getAccessToken(), list.getId(), null, null);
 	}
@@ -893,7 +892,7 @@ public class ConstantContact {
 				throw new NumberFormatException();
 			}
 		} catch (Exception e) {
-			throw new IllegalArgumentException(Config.Errors.LIST_OR_ID);
+			throw new IllegalArgumentException(Config.instance().getErrorListOrId());
 		}
 
 		try {
@@ -927,7 +926,7 @@ public class ConstantContact {
 	public ResultSet<Contact> getContactsFromList(ContactList list, Integer limit, String modifiedSinceTimestamp) throws IllegalArgumentException,
 	ConstantContactServiceException {
 		if (list == null) {
-			throw new IllegalArgumentException(Config.Errors.LIST_OR_ID);
+			throw new IllegalArgumentException(Config.instance().getErrorListOrId());
 		}
 		return contactListService.getContactsFromList(this.getAccessToken(), list.getId(), limit, modifiedSinceTimestamp);
 	}
@@ -955,7 +954,7 @@ public class ConstantContact {
 	public ResultSet<Contact> getContactsFromList(Pagination pagination)
 			throws IllegalArgumentException, ConstantContactServiceException {
 		if (pagination == null) {
-			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+			throw new IllegalArgumentException(Config.instance().getErrorPaginationNull());
 		}
 		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, Contact.class);
 	}
@@ -1033,7 +1032,7 @@ public class ConstantContact {
 	public ResultSet<EmailCampaignResponse> getEmailCampaigns(Pagination pagination) throws IllegalArgumentException,
 			ConstantContactServiceException, IllegalArgumentException {
 		if(pagination == null) {
-			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+			throw new IllegalArgumentException(Config.instance().getErrorPaginationNull());
 		}
 		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, EmailCampaignResponse.class);
 	}
@@ -1059,7 +1058,7 @@ public class ConstantContact {
 	 */
 	public EmailCampaignResponse getEmailCampaign(String campaignId) throws IllegalArgumentException, ConstantContactServiceException {
 		if (campaignId == null || !(campaignId.length() > 0)) {
-			throw new IllegalArgumentException(Config.Errors.ID);
+			throw new IllegalArgumentException(Config.instance().getErrorId());
 		}
 		return emailCampaignService.getCampaign(this.getAccessToken(), campaignId);
 
@@ -1086,7 +1085,7 @@ public class ConstantContact {
 	 */
 	public EmailCampaignResponse updateEmailCampaign(EmailCampaignRequest emailCampaign) throws IllegalArgumentException, ConstantContactServiceException {
 		if (emailCampaign == null || !(emailCampaign.getId().length() > 0)) {
-			throw new IllegalArgumentException(Config.Errors.ID);
+			throw new IllegalArgumentException(Config.instance().getErrorId());
 		}
 		return emailCampaignService.updateCampaign(this.getAccessToken(), emailCampaign);
 	}
@@ -1112,7 +1111,7 @@ public class ConstantContact {
 	 */
 	public EmailCampaignResponse addEmailCampaign(EmailCampaignRequest emailCampaign) throws IllegalArgumentException, ConstantContactServiceException {
 		if (emailCampaign == null) {
-			throw new IllegalArgumentException(Config.Errors.ID);
+			throw new IllegalArgumentException(Config.instance().getErrorId());
 		}
 		return emailCampaignService.addCampaign(this.getAccessToken(), emailCampaign);
 	}
@@ -1159,7 +1158,7 @@ public class ConstantContact {
 	public List<VerifiedEmailAddress> getVerifiedEmailAddresses(String status) throws IllegalArgumentException, ConstantContactServiceException {
 		if (status != null && status.length() > 0) {
 			if (!status.equals(VerifiedEmailAddress.Status.CONFIRMED) && !status.equals(VerifiedEmailAddress.Status.UNCONFIRMED))
-				throw new IllegalArgumentException(Config.Errors.STATUS + VerifiedEmailAddress.Status.CONFIRMED + ", " + VerifiedEmailAddress.Status.CONFIRMED);
+				throw new IllegalArgumentException(Config.instance().getErrorStatus() + VerifiedEmailAddress.Status.CONFIRMED + ", " + VerifiedEmailAddress.Status.CONFIRMED);
 		}
 		return accountService.getVerifiedEmailAddresses(this.getAccessToken(), status);
 	}
@@ -1186,7 +1185,7 @@ public class ConstantContact {
 	public List<EmailCampaignSchedule> getEmailCampaignSchedules(String campaignId) throws IllegalArgumentException, ConstantContactServiceException {
 
 		if (campaignId == null || !(campaignId.length() > 0)) {
-			throw new IllegalArgumentException(Config.Errors.ID);
+			throw new IllegalArgumentException(Config.instance().getErrorId());
 		}
 
 		return emailCampaignScheduleService.getSchedules(this.getAccessToken(), campaignId);
@@ -1216,10 +1215,10 @@ public class ConstantContact {
 			ConstantContactServiceException {
 
 		if (campaignId == null || !(campaignId.length() > 0)) {
-			throw new IllegalArgumentException(Config.Errors.ID);
+			throw new IllegalArgumentException(Config.instance().getErrorId());
 		}
 		if (scheduleId == null || !(campaignId.length() > 0)) {
-			throw new IllegalArgumentException(Config.Errors.ID);
+			throw new IllegalArgumentException(Config.instance().getErrorId());
 		}
 
 		return emailCampaignScheduleService.getSchedule(this.getAccessToken(), campaignId, scheduleId);
@@ -1247,10 +1246,10 @@ public class ConstantContact {
 	 */
 	public boolean deleteEmailCampaignSchedule(String campaignId, String scheduleId) throws IllegalArgumentException, ConstantContactServiceException {
 		if (campaignId == null || !(campaignId.length() > 0)) {
-			throw new IllegalArgumentException(Config.Errors.ID);
+			throw new IllegalArgumentException(Config.instance().getErrorId());
 		}
 		if (scheduleId == null || !(campaignId.length() > 0)) {
-			throw new IllegalArgumentException(Config.Errors.ID);
+			throw new IllegalArgumentException(Config.instance().getErrorId());
 		}
 
 		return emailCampaignScheduleService.deleteSchedule(this.getAccessToken(), campaignId, scheduleId);
@@ -1281,10 +1280,10 @@ public class ConstantContact {
 			ConstantContactServiceException {
 
 		if (campaignId == null || !(campaignId.length() > 0)) {
-			throw new IllegalArgumentException(Config.Errors.ID);
+			throw new IllegalArgumentException(Config.instance().getErrorId());
 		}
 		if (emailCampaignSchedule == null) {
-			throw new IllegalArgumentException(Config.Errors.EMAIL_CAMPAIGN_SCHEDULE_NULL);
+			throw new IllegalArgumentException(Config.instance().getErrorEmailCampaignScheduleNull());
 		}
 		return emailCampaignScheduleService.addSchedule(this.getAccessToken(), campaignId, emailCampaignSchedule);
 	}
@@ -1315,10 +1314,10 @@ public class ConstantContact {
 			throws IllegalArgumentException, ConstantContactServiceException {
 
 		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
-			throw new IllegalArgumentException(Config.Errors.ID);
+			throw new IllegalArgumentException(Config.instance().getErrorId());
 		}
 		if (emailCampaignSchedule == null) {
-			throw new IllegalArgumentException(Config.Errors.EMAIL_CAMPAIGN_SCHEDULE_NULL);
+			throw new IllegalArgumentException(Config.instance().getErrorEmailCampaignScheduleNull());
 		}
 		return emailCampaignScheduleService.updateSchedule(this.getAccessToken(), emailCampaignId, scheduleId, emailCampaignSchedule);
 	}
@@ -1349,7 +1348,7 @@ public class ConstantContact {
 			ConstantContactServiceException {
 
 		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
-			throw new IllegalArgumentException(Config.Errors.ID);
+			throw new IllegalArgumentException(Config.instance().getErrorId());
 		}
 		return emailCampaignTrackingService.getSummary(this.getAccessToken(), emailCampaignId, createdSinceTimestamp);
 	}
@@ -1378,7 +1377,7 @@ public class ConstantContact {
 			throws ConstantContactServiceException, IllegalArgumentException {
 
 		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
-			throw new IllegalArgumentException(Config.Errors.ID);
+			throw new IllegalArgumentException(Config.instance().getErrorId());
 		}
 		return emailCampaignTrackingService.getBounces(this.getAccessToken(), emailCampaignId, limit);
 	}
@@ -1406,7 +1405,7 @@ public class ConstantContact {
 	public ResultSet<EmailCampaignTrackingBounce> getEmailCampaignTrackingBounces(Pagination pagination) throws ConstantContactServiceException,
 	IllegalArgumentException {
 		if (pagination == null) {
-			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+			throw new IllegalArgumentException(Config.instance().getErrorPaginationNull());
 		}
 		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, EmailCampaignTrackingBounce.class);
 	}
@@ -1438,7 +1437,7 @@ public class ConstantContact {
 			IllegalArgumentException {
 
 		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
-			throw new IllegalArgumentException(Config.Errors.ID);
+			throw new IllegalArgumentException(Config.instance().getErrorId());
 		}
 		return emailCampaignTrackingService.getClicks(this.getAccessToken(), emailCampaignId, limit, createdSinceTimestamp);
 	}
@@ -1467,7 +1466,7 @@ public class ConstantContact {
 	IllegalArgumentException {
 
 		if (pagination == null) {
-			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+			throw new IllegalArgumentException(Config.instance().getErrorPaginationNull());
 		}
 		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, EmailCampaignTrackingClick.class);
 	}
@@ -1499,7 +1498,7 @@ public class ConstantContact {
 			throws ConstantContactServiceException, IllegalArgumentException {
 
 		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
-			throw new IllegalArgumentException(Config.Errors.ID);
+			throw new IllegalArgumentException(Config.instance().getErrorId());
 		}
 		return emailCampaignTrackingService.getForwards(this.getAccessToken(), emailCampaignId, limit, createdSinceTimestamp);
 	}
@@ -1528,7 +1527,7 @@ public class ConstantContact {
 			throws ConstantContactServiceException, IllegalArgumentException {
 
 		if (pagination == null) {
-			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+			throw new IllegalArgumentException(Config.instance().getErrorPaginationNull());
 		}
 		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, EmailCampaignTrackingForward.class);
 	}
@@ -1560,7 +1559,7 @@ public class ConstantContact {
 			IllegalArgumentException {
 
 		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
-			throw new IllegalArgumentException(Config.Errors.ID);
+			throw new IllegalArgumentException(Config.instance().getErrorId());
 		}
 		return emailCampaignTrackingService.getOpens(this.getAccessToken(), emailCampaignId, limit, createdSinceTimestamp);
 	}
@@ -1589,7 +1588,7 @@ public class ConstantContact {
 	IllegalArgumentException {
 
 		if (pagination == null) {
-			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+			throw new IllegalArgumentException(Config.instance().getErrorPaginationNull());
 		}
 		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, EmailCampaignTrackingOpen.class);
 	}
@@ -1621,7 +1620,7 @@ public class ConstantContact {
 			IllegalArgumentException {
 
 		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
-			throw new IllegalArgumentException(Config.Errors.ID);
+			throw new IllegalArgumentException(Config.instance().getErrorId());
 		}
 		return emailCampaignTrackingService.getSends(this.getAccessToken(), emailCampaignId, limit,
                 createdSinceTimestamp);
@@ -1651,7 +1650,7 @@ public class ConstantContact {
 	IllegalArgumentException {
 
 		if (pagination == null) {
-			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+			throw new IllegalArgumentException(Config.instance().getErrorPaginationNull());
 		}
 		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, EmailCampaignTrackingSend.class);
 	}
@@ -1683,7 +1682,7 @@ public class ConstantContact {
 			throws ConstantContactServiceException, IllegalArgumentException {
 
 		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
-			throw new IllegalArgumentException(Config.Errors.ID);
+			throw new IllegalArgumentException(Config.instance().getErrorId());
 		}
 		return emailCampaignTrackingService.getUnsubscribes(this.getAccessToken(), emailCampaignId, limit, createdSinceTimestamp);
 	}
@@ -1712,7 +1711,7 @@ public class ConstantContact {
 			throws ConstantContactServiceException, IllegalArgumentException {
 
 		if (pagination == null) {
-			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+			throw new IllegalArgumentException(Config.instance().getErrorPaginationNull());
 		}
 		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, EmailCampaignTrackingUnsubscribe.class);
 	}
@@ -1744,7 +1743,7 @@ public class ConstantContact {
 			throws ConstantContactServiceException, IllegalArgumentException {
 
 		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
-			throw new IllegalArgumentException(Config.Errors.ID);
+			throw new IllegalArgumentException(Config.instance().getErrorId());
 		}
 		return emailCampaignTrackingService.getClicksByLinkId(this.getAccessToken(), emailCampaignId, linkId, limit, createdSinceTimestamp);
 	}
@@ -1772,7 +1771,7 @@ public class ConstantContact {
 			throws ConstantContactServiceException, IllegalArgumentException {
 
 		if (pagination == null) {
-			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+			throw new IllegalArgumentException(Config.instance().getErrorPaginationNull());
 		}
 		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, EmailCampaignTrackingClick.class);
 	}
@@ -1801,7 +1800,7 @@ public class ConstantContact {
 	public ContactTrackingSummaryReport getContactTrackingSummary(String contactId, String createdSinceTimestamp) throws IllegalArgumentException, ConstantContactServiceException {
 
 		if (contactId == null || !(contactId.length() > 0)) {
-			throw new IllegalArgumentException(Config.Errors.ID);
+			throw new IllegalArgumentException(Config.instance().getErrorId());
 		}
 		return contactTrackingService.getSummary(this.getAccessToken(), contactId, createdSinceTimestamp);
 	}
@@ -1827,7 +1826,7 @@ public class ConstantContact {
     public List<ContactTrackingSummaryByCampaignReport> getContactTrackingSummaryByCampaign(String contactId) throws IllegalArgumentException, ConstantContactServiceException {
 
         if (contactId == null || !(contactId.length() > 0)) {
-            throw new IllegalArgumentException(Config.Errors.ID);
+            throw new IllegalArgumentException(Config.instance().getErrorId());
         }
         return contactTrackingService.getSummaryByCampaign(this.getAccessToken(), contactId);
     }
@@ -1857,7 +1856,7 @@ public class ConstantContact {
      */
 	public ResultSet<? extends TrackingContactsBase> getContactTrackingActivities(String contactId, Integer limit, String createdSinceTimestamp) throws IllegalArgumentException, ConstantContactServiceException {
 	    if (contactId == null || !(contactId.length() > 0)) {
-	        throw new IllegalArgumentException(Config.Errors.ID);
+	        throw new IllegalArgumentException(Config.instance().getErrorId());
 	    }
 	    return contactTrackingService.getActivities(this.getAccessToken(), contactId, limit, createdSinceTimestamp);
 	}
@@ -1884,7 +1883,7 @@ public class ConstantContact {
      */
     public ResultSet<TrackingContactsBase> getContactTrackingActivities(Pagination pagination) throws IllegalArgumentException, ConstantContactServiceException {
         if(pagination == null) {
-            throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+            throw new IllegalArgumentException(Config.instance().getErrorPaginationNull());
         }
         return getPaginationHelperService().getPage(this.getAccessToken(), pagination, TrackingContactsBase.class);
     }
@@ -1912,7 +1911,7 @@ public class ConstantContact {
 	public ResultSet<ContactTrackingBounce> getContactTrackingBounces(String contactId, Integer limit) throws IllegalArgumentException,
 			ConstantContactServiceException {
 		if (contactId == null || !(contactId.length() > 0)) {
-			throw new IllegalArgumentException(Config.Errors.ID);
+			throw new IllegalArgumentException(Config.instance().getErrorId());
 		}
 		return contactTrackingService.getBounces(this.getAccessToken(), contactId, limit);
 	}
@@ -1939,7 +1938,7 @@ public class ConstantContact {
 	 */
 	public ResultSet<ContactTrackingBounce> getContactTrackingBounces(Pagination pagination) throws IllegalArgumentException, ConstantContactServiceException {
 		if(pagination == null) {
-			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+			throw new IllegalArgumentException(Config.instance().getErrorPaginationNull());
 		}
 		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, ContactTrackingBounce.class);
 	}
@@ -1970,7 +1969,7 @@ public class ConstantContact {
 	public ResultSet<ContactTrackingClick> getContactTrackingClicks(String contactId, Integer limit, String createdSinceTimestamp) throws IllegalArgumentException,
 			ConstantContactServiceException {
 		if (contactId == null || !(contactId.length() > 0)) {
-			throw new IllegalArgumentException(Config.Errors.ID);
+			throw new IllegalArgumentException(Config.instance().getErrorId());
 		}
 		return contactTrackingService.getClicks(this.getAccessToken(), contactId, limit, createdSinceTimestamp);
 	}
@@ -1997,7 +1996,7 @@ public class ConstantContact {
 	 */
 	public ResultSet<ContactTrackingClick> getContactTrackingClicks(Pagination pagination) throws IllegalArgumentException, ConstantContactServiceException {
 		if(pagination == null) {
-			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+			throw new IllegalArgumentException(Config.instance().getErrorPaginationNull());
 		}
 		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, ContactTrackingClick.class);
 	}
@@ -2028,7 +2027,7 @@ public class ConstantContact {
 	public ResultSet<ContactTrackingForward> getContactTrackingForwards(String contactId, Integer limit, String createdSinceTimestamp) throws IllegalArgumentException,
 			ConstantContactServiceException {
 		if (contactId == null || !(contactId.length() > 0)) {
-			throw new IllegalArgumentException(Config.Errors.ID);
+			throw new IllegalArgumentException(Config.instance().getErrorId());
 		}
 		return contactTrackingService.getForwards(this.getAccessToken(), contactId, limit, createdSinceTimestamp);
 	}
@@ -2055,7 +2054,7 @@ public class ConstantContact {
 	 */
 	public ResultSet<ContactTrackingForward> getContactTrackingForwards(Pagination pagination) throws IllegalArgumentException, ConstantContactServiceException {
 		if (pagination == null) {
-			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+			throw new IllegalArgumentException(Config.instance().getErrorPaginationNull());
 		}
 		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, ContactTrackingForward.class);
 	}
@@ -2086,7 +2085,7 @@ public class ConstantContact {
 	public ResultSet<ContactTrackingOpen> getContactTrackingOpens(String contactId, Integer limit, String createdSinceTimestamp) throws IllegalArgumentException,
 			ConstantContactServiceException {
 		if (contactId == null || !(contactId.length() > 0)) {
-			throw new IllegalArgumentException(Config.Errors.ID);
+			throw new IllegalArgumentException(Config.instance().getErrorId());
 		}
 		return contactTrackingService.getOpens(this.getAccessToken(), contactId, limit, createdSinceTimestamp);
 	}
@@ -2113,7 +2112,7 @@ public class ConstantContact {
 	 */
 	public ResultSet<ContactTrackingOpen> getContactTrackingOpens(Pagination pagination) throws IllegalArgumentException, ConstantContactServiceException {
 		if(pagination == null) {
-			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+			throw new IllegalArgumentException(Config.instance().getErrorPaginationNull());
 		}
 		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, ContactTrackingOpen.class);
 	}
@@ -2144,7 +2143,7 @@ public class ConstantContact {
 	public ResultSet<ContactTrackingSend> getContactTrackingSends(String contactId, Integer limit, String createdSinceTimestamp) throws IllegalArgumentException,
 			ConstantContactServiceException {
 		if (contactId == null || !(contactId.length() > 0)) {
-			throw new IllegalArgumentException(Config.Errors.ID);
+			throw new IllegalArgumentException(Config.instance().getErrorId());
 		}
 		return contactTrackingService.getSends(this.getAccessToken(), contactId, limit, createdSinceTimestamp);
 	}
@@ -2171,7 +2170,7 @@ public class ConstantContact {
 	 */
 	public ResultSet<ContactTrackingSend> getContactTrackingSends(Pagination pagination) throws IllegalArgumentException, ConstantContactServiceException {
 		if(pagination == null) {
-			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+			throw new IllegalArgumentException(Config.instance().getErrorPaginationNull());
 		}
 		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, ContactTrackingSend.class);
 	}
@@ -2202,7 +2201,7 @@ public class ConstantContact {
 	public ResultSet<ContactTrackingUnsubscribe> getContactTrackingUnsubscribes(String contactId, Integer limit, String createdSinceTimestamp) throws IllegalArgumentException,
 			ConstantContactServiceException {
 		if (contactId == null || !(contactId.length() > 0)) {
-			throw new IllegalArgumentException(Config.Errors.ID);
+			throw new IllegalArgumentException(Config.instance().getErrorId());
 		}
 		return contactTrackingService.getUnsubscribes(this.getAccessToken(), contactId, limit, createdSinceTimestamp);
 	}
@@ -2233,7 +2232,7 @@ public class ConstantContact {
 	public ResultSet<ContactTrackingUnsubscribe> getContactTrackingUnsubscribes(Pagination pagination) throws IllegalArgumentException,
 		ConstantContactServiceException {
 		if(pagination == null) {
-			throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+			throw new IllegalArgumentException(Config.instance().getErrorPaginationNull());
 		}
 		return getPaginationHelperService().getPage(this.getAccessToken(), pagination, ContactTrackingUnsubscribe.class);
 	}
@@ -2259,7 +2258,7 @@ public class ConstantContact {
 	 */
 	public ContactsResponse addBulkContacts(AddContactsRequest request) throws IllegalArgumentException, ConstantContactServiceException {
 		if (request == null) {
-			throw new IllegalArgumentException(Config.Errors.BULK_CONTACTS_REQUEST_NULL);
+			throw new IllegalArgumentException(Config.instance().getErrorBulkContactsRequestNull());
 		}
 		return bulkActivitiesService.addContacts(this.getAccessToken(), request);
 	}
@@ -2286,11 +2285,11 @@ public class ConstantContact {
 	public ContactsResponse addBulkContactsMultipart(String fileName, File file, ArrayList<String> listIds) throws ConstantContactServiceException, IOException{
 
 	    if (fileName == null || "".equals(fileName)){
-	        throw new IllegalArgumentException(Config.Errors.FILE_NAME_NULL);
+	        throw new IllegalArgumentException(Config.instance().getErrorFileNameNull());
 	    } else if (file == null){
-	        throw new IllegalArgumentException(Config.Errors.FILE_NULL);
+	        throw new IllegalArgumentException(Config.instance().getErrorFileNull());
 	    } else if (listIds == null){
-            throw new IllegalArgumentException(Config.Errors.BULK_CONTACTS_LIST_NULL);
+            throw new IllegalArgumentException(Config.instance().getErrorBulkContactsListNull());
         }
 
 	    Map<String,String> textParts = new HashMap<String,String>();
@@ -2332,7 +2331,7 @@ public class ConstantContact {
 	 */
 	public ContactsResponse removeBulkContactsFromLists(RemoveContactsRequest request) throws IllegalArgumentException, ConstantContactServiceException {
 		if (request == null) {
-			throw new IllegalArgumentException(Config.Errors.BULK_CONTACTS_REQUEST_NULL);
+			throw new IllegalArgumentException(Config.instance().getErrorBulkContactsRequestNull());
 		}
 		return bulkActivitiesService.removeContactsFromLists(this.getAccessToken(), request);
 	}
@@ -2360,13 +2359,13 @@ public class ConstantContact {
             throws ConstantContactServiceException, IOException {
 
         if (fileName == null || "".equals(fileName)) {
-            throw new IllegalArgumentException(Config.Errors.FILE_NAME_NULL);
+            throw new IllegalArgumentException(Config.instance().getErrorFileNameNull());
         }
         else if (file == null) {
-            throw new IllegalArgumentException(Config.Errors.FILE_NULL);
+            throw new IllegalArgumentException(Config.instance().getErrorFileNull());
         }
         else if (listIds == null) {
-            throw new IllegalArgumentException(Config.Errors.BULK_CONTACTS_LIST_NULL);
+            throw new IllegalArgumentException(Config.instance().getErrorBulkContactsListNull());
         }
 
         Map<String, String> textParts = new HashMap<String, String>();
@@ -2408,7 +2407,7 @@ public class ConstantContact {
 	 */
 	public ContactsResponse clearBulkContactsLists(ClearListsRequest request) throws IllegalArgumentException, ConstantContactServiceException {
 		if (request == null) {
-			throw new IllegalArgumentException(Config.Errors.BULK_CONTACTS_REQUEST_NULL);
+			throw new IllegalArgumentException(Config.instance().getErrorBulkContactsRequestNull());
 		}
 		return bulkActivitiesService.clearLists(this.getAccessToken(), request);
 	}
@@ -2434,7 +2433,7 @@ public class ConstantContact {
 	 */
 	public ContactsResponse exportBulkContacts(ExportContactsRequest request) throws IllegalArgumentException, ConstantContactServiceException {
 		if (request == null) {
-			throw new IllegalArgumentException(Config.Errors.BULK_CONTACTS_REQUEST_NULL);
+			throw new IllegalArgumentException(Config.instance().getErrorBulkContactsRequestNull());
 		}
 		return bulkActivitiesService.exportContacts(this.getAccessToken(), request);
 	}
@@ -2531,7 +2530,7 @@ public class ConstantContact {
      */
     public ResultSet<MyLibraryFolder> getLibraryFolders(Pagination pagination) throws ConstantContactServiceException, IllegalArgumentException{
         if (pagination == null) {
-            throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+            throw new IllegalArgumentException(Config.instance().getErrorPaginationNull());
         }
         return getPaginationHelperService().getPage(this.getAccessToken(), pagination, MyLibraryFolder.class);
     }
@@ -2556,7 +2555,7 @@ public class ConstantContact {
      */
 	public MyLibraryFolder addLibraryFolder(MyLibraryFolder folder) throws ConstantContactServiceException, IllegalArgumentException{
 	    if (folder == null){
-	        throw new IllegalArgumentException(Config.Errors.FOLDER_NULL);
+	        throw new IllegalArgumentException(Config.instance().getErrorFolderNull());
 	    }
 
 	    return myLibraryService.addLibraryFolder(this.getAccessToken(),folder);
@@ -2584,7 +2583,7 @@ public class ConstantContact {
 	public MyLibraryFolder getLibraryFolder(String folderId) throws ConstantContactServiceException, IllegalArgumentException{
 
 	    if (folderId == null || folderId.trim().equals("")){
-	        throw new IllegalArgumentException(Config.Errors.FOLDER_ID_NULL);
+	        throw new IllegalArgumentException(Config.instance().getErrorFolderIdNull());
 	    }
 
 	    return myLibraryService.getLibraryFolder(this.getAccessToken(), folderId);
@@ -2612,7 +2611,7 @@ public class ConstantContact {
     public MyLibraryFolder updateLibraryFolder(MyLibraryFolder folder, Boolean includePayload) throws ConstantContactServiceException, IllegalArgumentException {
 
         if (folder == null || folder.getId() == null || folder.getId().trim().equals("")){
-            throw new IllegalArgumentException(Config.Errors.FOLDER_ID_NULL);
+            throw new IllegalArgumentException(Config.instance().getErrorFolderIdNull());
         }
 
         return myLibraryService.updateLibraryFolder(this.getAccessToken(), folder, includePayload);
@@ -2639,7 +2638,7 @@ public class ConstantContact {
      */
     public void deleteLibraryFolder(String folderId) throws ConstantContactServiceException, IllegalArgumentException {
         if (folderId == null || folderId.trim().equals("")){
-            throw new IllegalArgumentException(Config.Errors.FOLDER_ID_NULL);
+            throw new IllegalArgumentException(Config.instance().getErrorFolderIdNull());
         }
 
         myLibraryService.deleteLibraryFolder(this.getAccessToken(), folderId);
@@ -2686,7 +2685,7 @@ public class ConstantContact {
      */
     public ResultSet<MyLibraryFile> getLibraryTrash(Pagination pagination) throws ConstantContactServiceException, IllegalArgumentException {
         if(pagination == null) {
-            throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+            throw new IllegalArgumentException(Config.instance().getErrorPaginationNull());
         }
         return getPaginationHelperService().getPage(this.getAccessToken(), pagination, MyLibraryFile.class);
     }
@@ -2751,7 +2750,7 @@ public class ConstantContact {
      */
     public ResultSet<MyLibraryFile> getLibraryFiles(Pagination pagination) throws ConstantContactServiceException, IllegalArgumentException {
         if(pagination == null) {
-            throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+            throw new IllegalArgumentException(Config.instance().getErrorPaginationNull());
         }
         return getPaginationHelperService().getPage(this.getAccessToken(), pagination, MyLibraryFile.class);
     }
@@ -2796,7 +2795,7 @@ public class ConstantContact {
      */
     public ResultSet<MyLibraryFile> getLibraryFilesByFolder(Pagination pagination) throws ConstantContactServiceException, IllegalArgumentException {
         if(pagination == null) {
-            throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+            throw new IllegalArgumentException(Config.instance().getErrorPaginationNull());
         }
         return getPaginationHelperService().getPage(this.getAccessToken(), pagination, MyLibraryFile.class);
     }
@@ -2822,7 +2821,7 @@ public class ConstantContact {
     public MyLibraryFile getLibraryFile(String fileId) throws ConstantContactServiceException, IllegalArgumentException{
 
         if (fileId == null || fileId.trim().equals("")){
-            throw new IllegalArgumentException(Config.Errors.FILE_ID_NULL);
+            throw new IllegalArgumentException(Config.instance().getErrorFileIdNull());
         }
 
         return myLibraryService.getLibraryFile(this.getAccessToken(), fileId);
@@ -2850,7 +2849,7 @@ public class ConstantContact {
     public MyLibraryFile updateLibraryFile(MyLibraryFile file, Boolean includePayload) throws ConstantContactServiceException, IllegalArgumentException {
 
         if (file == null || file.getId() == null || file.getId().trim().equals("")){
-            throw new IllegalArgumentException(Config.Errors.FILE_ID_NULL);
+            throw new IllegalArgumentException(Config.instance().getErrorFileIdNull());
         }
 
         return myLibraryService.updateLibraryFile(this.getAccessToken(), file, includePayload);
@@ -2877,7 +2876,7 @@ public class ConstantContact {
      */
     public void deleteLibraryFile(String fileId) throws ConstantContactServiceException, IllegalArgumentException {
         if (fileId == null || fileId.trim().equals("")){
-            throw new IllegalArgumentException(Config.Errors.FILE_ID_NULL);
+            throw new IllegalArgumentException(Config.instance().getErrorFileIdNull());
         }
 
         myLibraryService.deleteLibraryFile(this.getAccessToken(), fileId);
@@ -2898,7 +2897,7 @@ public class ConstantContact {
     public List<UploadStatus> getLibraryFilesUploadStatus(String ... fileId) throws ConstantContactServiceException, IllegalArgumentException {
 
         if (fileId == null || fileId.length < 1){
-            throw new IllegalArgumentException(Config.Errors.FILE_ID_NULL);
+            throw new IllegalArgumentException(Config.instance().getErrorFileIdNull());
         }
 
         return myLibraryService.getLibraryFilesUploadStatus(this.getAccessToken(), fileId);
@@ -2919,7 +2918,7 @@ public class ConstantContact {
      */
     public List<MoveResults> moveLibraryFiles(String folderId, List<String> fileIds) throws ConstantContactServiceException, IllegalArgumentException {
         if (fileIds == null || fileIds.size() < 1){
-            throw new IllegalArgumentException(Config.Errors.FILE_ID_NULL);
+            throw new IllegalArgumentException(Config.instance().getErrorFileIdNull());
         }
 
         StringBuilder body = new StringBuilder("[");
@@ -2952,17 +2951,17 @@ public class ConstantContact {
     public String addLibraryFile(File file, String fileName, String description, FileType fileType,
             String folderId, ImageSource imageSource) throws ConstantContactServiceException, IOException, IllegalArgumentException {
         if (fileName == null || "".equals(fileName)){
-            throw new IllegalArgumentException(Config.Errors.FILE_NAME_NULL);
+            throw new IllegalArgumentException(Config.instance().getErrorFileNameNull());
         } else if (file == null){
-            throw new IllegalArgumentException(Config.Errors.FILE_NULL);
+            throw new IllegalArgumentException(Config.instance().getErrorFileNull());
         } else if (folderId == null){
-            throw new IllegalArgumentException(Config.Errors.FOLDER_ID_NULL);
+            throw new IllegalArgumentException(Config.instance().getErrorFolderIdNull());
         } else if (imageSource == null){
-            throw new IllegalArgumentException(Config.Errors.MY_LIBRARY_IMAGE_SOURCE_NULL);
+            throw new IllegalArgumentException(Config.instance().getErrorMyLibraryImageSourceNull());
         } else if (description == null){
-            throw new IllegalArgumentException(Config.Errors.MY_LIBRARY_DESCRIPTION_NULL);
+            throw new IllegalArgumentException(Config.instance().getErrorMyLibraryDescriptionNull());
         } else if (fileType == null){
-            throw new IllegalArgumentException(Config.Errors.MY_LIBRARY_FILE_TYPE_NULL);
+            throw new IllegalArgumentException(Config.instance().getErrorMyLibraryFileTypeNull());
         }
 
         Map<String,String> textParts = new HashMap<String,String>();
@@ -3040,7 +3039,7 @@ public class ConstantContact {
     public ResultSet<Event> getEvents(Pagination pagination) throws ConstantContactServiceException,
             IllegalArgumentException {
         if (pagination == null) {
-            throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+            throw new IllegalArgumentException(Config.instance().getErrorPaginationNull());
         }
         return getPaginationHelperService().getPage(this.getAccessToken(), pagination, Event.class);
     }
@@ -3061,7 +3060,7 @@ public class ConstantContact {
  	 */
     public Event addEvent(Event event) throws IllegalArgumentException, ConstantContactServiceException {
         if (event == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT);
+            throw new IllegalArgumentException(Config.instance().getErrorEvent());
         }
         return getEventSpotService().addEvent(getAccessToken(), event);
     }
@@ -3087,7 +3086,7 @@ public class ConstantContact {
 	 */
     public Event updateEvent(Event event) throws IllegalArgumentException, ConstantContactServiceException {
         if(event == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT);
+            throw new IllegalArgumentException(Config.instance().getErrorEvent());
         }
         return getEventSpotService().updateEvent(getAccessToken(), event);
     }
@@ -3114,7 +3113,7 @@ public class ConstantContact {
 	 */
     public boolean updateEventStatus(String eventId, String status)  throws IllegalArgumentException, ConstantContactServiceException {
         if(eventId == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+            throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
         return getEventSpotService().updateEventStatus(getAccessToken(), eventId, status);
     }
@@ -3136,7 +3135,7 @@ public class ConstantContact {
 	 */
     public List<EventFee> getEventFees(String eventId) throws IllegalArgumentException, ConstantContactServiceException {
         if (eventId == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+            throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
         return getEventSpotService().getEventFees(getAccessToken(), eventId);
     }
@@ -3159,10 +3158,10 @@ public class ConstantContact {
  	 */
     public EventFee addEventFee(String eventId, EventFee eventFee) throws ConstantContactServiceException {
         if (eventId == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+            throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
         if (eventFee == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_FEE);
+            throw new IllegalArgumentException(Config.instance().getErrorEventFee());
         }
         return getEventSpotService().addEventFee(getAccessToken(), eventId, eventFee);
     }
@@ -3185,10 +3184,10 @@ public class ConstantContact {
 	 */
     public EventFee getEventFee(String eventId, String feeId) throws IllegalArgumentException, ConstantContactServiceException {
         if (eventId == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+            throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
         if (feeId == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_FEE_ID);
+            throw new IllegalArgumentException(Config.instance().getErrorEventFeeId());
         }
         return getEventSpotService().getEventFee(getAccessToken(), eventId, feeId);
     }
@@ -3215,10 +3214,10 @@ public class ConstantContact {
 	 */
     public EventFee updateEventFee(String eventId, EventFee eventFee) throws IllegalArgumentException, ConstantContactServiceException {
         if (eventId == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+            throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
         if (eventFee == null || eventFee.getId() == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_FEE_ID);
+            throw new IllegalArgumentException(Config.instance().getErrorEventFeeId());
         }
         return getEventSpotService().updateEventFee(getAccessToken(), eventId, eventFee);
     }
@@ -3244,13 +3243,13 @@ public class ConstantContact {
  	 */
     public boolean deleteEventFee(String eventId, EventFee eventFee) throws IllegalArgumentException, ConstantContactServiceException {
         if (eventId == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+            throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
         if (eventFee == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_FEE);
+            throw new IllegalArgumentException(Config.instance().getErrorEventFee());
         }
         if (eventFee.getId() == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_FEE_ID);
+            throw new IllegalArgumentException(Config.instance().getErrorEventFeeId());
         }
         return getEventSpotService().deleteEventFee(getAccessToken(), eventId, eventFee.getId());
     }
@@ -3276,10 +3275,10 @@ public class ConstantContact {
  	 */
     public boolean deleteEventFee(String eventId, String eventFeeId) throws IllegalArgumentException, ConstantContactServiceException {
         if (eventId == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+            throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
         if (eventFeeId == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_FEE_ID);
+            throw new IllegalArgumentException(Config.instance().getErrorEventFeeId());
         }
         return getEventSpotService().deleteEventFee(getAccessToken(), eventId, eventFeeId);
     }
@@ -3301,7 +3300,7 @@ public class ConstantContact {
 	 */
     public List<Promocode> getEventPromocodes(String eventId) throws IllegalArgumentException, ConstantContactServiceException {
         if (eventId == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+            throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
         return getEventSpotService().getEventPromocodes(getAccessToken(), eventId);
     }
@@ -3324,10 +3323,10 @@ public class ConstantContact {
  	 */
     public Promocode addEventPromocode(String eventId, Promocode promocode) throws IllegalArgumentException, ConstantContactServiceException {
         if (eventId == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+            throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
         if (promocode == null) {
-            throw new IllegalArgumentException(Config.Errors.PROMOCODE);
+            throw new IllegalArgumentException(Config.instance().getErrorPromocode());
         }
         return getEventSpotService().addEventPromocode(getAccessToken(), eventId, promocode);
     }
@@ -3350,10 +3349,10 @@ public class ConstantContact {
 	 */
     public Promocode getEventPromocode(String eventId, String promocodeId) throws IllegalArgumentException, ConstantContactServiceException {
         if (eventId == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+            throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
         if (promocodeId == null) {
-            throw new IllegalArgumentException(Config.Errors.PROMOCODE_ID);
+            throw new IllegalArgumentException(Config.instance().getErrorPromocodeId());
         }
         return getEventSpotService().getEventPromocode(getAccessToken(), eventId, promocodeId);
     }
@@ -3380,10 +3379,10 @@ public class ConstantContact {
 	 */
     public Promocode updateEventPromocode(String eventId, Promocode promocode) throws IllegalArgumentException, ConstantContactServiceException {
         if (eventId == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+            throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
         if (promocode == null || promocode.getId() == null) {
-            throw new IllegalArgumentException(Config.Errors.PROMOCODE);
+            throw new IllegalArgumentException(Config.instance().getErrorPromocode());
         }
         return getEventSpotService().updateEventPromocode(getAccessToken(), eventId, promocode);
     }
@@ -3409,10 +3408,10 @@ public class ConstantContact {
  	 */
     public boolean deleteEventPromocode(String eventId, String promocodeId) throws  IllegalArgumentException, ConstantContactServiceException {
         if (eventId == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+            throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
         if (promocodeId == null) {
-            throw new IllegalArgumentException(Config.Errors.PROMOCODE_ID);
+            throw new IllegalArgumentException(Config.instance().getErrorPromocodeId());
         }
         return getEventSpotService().deleteEventPromocode(getAccessToken(), eventId, promocodeId);
     }
@@ -3438,13 +3437,13 @@ public class ConstantContact {
  	 */
     public boolean deleteEventPromocode(String eventId, Promocode promocode) throws IllegalArgumentException, ConstantContactServiceException {
         if (eventId == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+            throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
         if (promocode == null) {
-            throw new IllegalArgumentException(Config.Errors.PROMOCODE);
+            throw new IllegalArgumentException(Config.instance().getErrorPromocode());
         }
         if (promocode.getId() == null) {
-            throw new IllegalArgumentException(Config.Errors.PROMOCODE_ID);
+            throw new IllegalArgumentException(Config.instance().getErrorPromocodeId());
         }
         return getEventSpotService().deleteEventPromocode(getAccessToken(), eventId, promocode.getId());
     }
@@ -3467,7 +3466,7 @@ public class ConstantContact {
     public ResultSet<Registrant> getEventRegistrants(String eventId, Integer limit) throws IllegalArgumentException,
             ConstantContactServiceException {
         if (eventId == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+            throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
         return getEventSpotService().getEventRegistrants(getAccessToken(), eventId, limit);
     }
@@ -3493,7 +3492,7 @@ public class ConstantContact {
     public ResultSet<Registrant> getEventRegistrants(String eventId, Pagination pagination) throws IllegalArgumentException,
             ConstantContactServiceException {
         if (pagination == null) {
-            throw new IllegalArgumentException(Config.Errors.PAGINATION_NULL);
+            throw new IllegalArgumentException(Config.instance().getErrorPaginationNull());
         }
         return getPaginationHelperService().getPage(this.getAccessToken(), pagination, Registrant.class);
     }
@@ -3516,10 +3515,10 @@ public class ConstantContact {
 	 */
     public RegistrantDetails getEventRegistrant(String eventId, String registrantId) throws IllegalArgumentException, ConstantContactServiceException {
         if (eventId == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+            throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
         if (registrantId == null) {
-            throw new IllegalArgumentException(Config.Errors.REGISTRANT_ID);
+            throw new IllegalArgumentException(Config.instance().getErrorRegistrantId());
         }
         return getEventSpotService().getEventRegistrant(getAccessToken(), eventId, registrantId);
     }
@@ -3541,7 +3540,7 @@ public class ConstantContact {
 	 */
     public List<EventItem> getEventItems(String eventId) throws IllegalArgumentException, ConstantContactServiceException {
         if (eventId == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+            throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
         return getEventSpotService().getEventItems(getAccessToken(), eventId);
     }
@@ -3564,10 +3563,10 @@ public class ConstantContact {
 	 */
     public EventItem getEventItem(String eventId, String itemId) throws IllegalArgumentException, ConstantContactServiceException {
         if (eventId == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+            throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
         if (itemId == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ITEM_ID);
+            throw new IllegalArgumentException(Config.instance().getEventItemId());
         }
         return getEventSpotService().getEventItem(getAccessToken(), eventId, itemId);
     }
@@ -3590,10 +3589,10 @@ public class ConstantContact {
  	 */
     public EventItem addEventItem(String eventId, EventItem item) throws IllegalArgumentException, ConstantContactServiceException {
         if (eventId == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+            throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
         if (item == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ITEM);
+            throw new IllegalArgumentException(Config.instance().getErrorEventItemId());
         }
         return getEventSpotService().addEventItem(getAccessToken(), eventId, item);
     }
@@ -3620,13 +3619,13 @@ public class ConstantContact {
 	 */
     public EventItem updateEventItem(String eventId, EventItem item) throws IllegalArgumentException, ConstantContactServiceException {
         if (eventId == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+            throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
         if (item == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ITEM);
+            throw new IllegalArgumentException(Config.instance().getErrorEventItemId());
         }
         if (item.getId() == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ITEM_ID);
+            throw new IllegalArgumentException(Config.instance().getEventItemId());
         }
         return getEventSpotService().updateEventItem(getAccessToken(), eventId, item);
     }
@@ -3652,10 +3651,10 @@ public class ConstantContact {
  	 */
     public boolean deleteEventItem(String eventId, String itemId) throws IllegalArgumentException, ConstantContactServiceException {
         if (eventId == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+            throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
         if (itemId == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ITEM_ID);
+            throw new IllegalArgumentException(Config.instance().getEventItemId());
         }
         return getEventSpotService().deleteEventItem(getAccessToken(), eventId, itemId);
     }
@@ -3681,13 +3680,13 @@ public class ConstantContact {
  	 */
     public boolean deleteEventItem(String eventId, EventItem item) throws IllegalArgumentException, ConstantContactServiceException {
         if (eventId == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+            throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
         if (item == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ITEM);
+            throw new IllegalArgumentException(Config.instance().getErrorEventItemId());
         }
         if (item.getId() == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ITEM_ID);
+            throw new IllegalArgumentException(Config.instance().getEventItemId());
         }
         return getEventSpotService().deleteEventItem(getAccessToken(), eventId, item.getId());
     }
@@ -3711,10 +3710,10 @@ public class ConstantContact {
     public List<EventItemAttribute> getEventItemAttributes(String eventId, String itemId) throws IllegalArgumentException,
             ConstantContactServiceException {
         if (eventId == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+            throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
         if (itemId == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ITEM_ID);
+            throw new IllegalArgumentException(Config.instance().getEventItemId());
         }
         return getEventSpotService().getEventItemAttributes(getAccessToken(), eventId, itemId);
     }
@@ -3739,13 +3738,13 @@ public class ConstantContact {
     public EventItemAttribute getEventItemAttribute(String eventId, String itemId, String attributeId) throws IllegalArgumentException,
             ConstantContactServiceException {
         if (eventId == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+            throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
         if (itemId == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ITEM_ID);
+            throw new IllegalArgumentException(Config.instance().getEventItemId());
         }
         if (attributeId == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ITEM_ATTRIBUTE_ID);
+            throw new IllegalArgumentException(Config.instance().getErrorEventItemAttributeId());
         }
         return getEventSpotService().getEventItemAttribute(getAccessToken(), eventId, itemId, attributeId);
     }
@@ -3770,13 +3769,13 @@ public class ConstantContact {
     public EventItemAttribute addEventItemAttribute(String eventId, String itemId, EventItemAttribute itemAttribute) throws
             IllegalArgumentException, ConstantContactServiceException {
         if (eventId == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+            throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
         if (itemId == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ITEM_ID);
+            throw new IllegalArgumentException(Config.instance().getEventItemId());
         }
         if (itemAttribute == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ITEM_ATTRIBUTE);
+            throw new IllegalArgumentException(Config.instance().getErrorEventItemAttribute());
         }
         return getEventSpotService().addEventItemAttribute(getAccessToken(), eventId, itemId, itemAttribute);
     }
@@ -3806,13 +3805,13 @@ public class ConstantContact {
             IllegalArgumentException,
             ConstantContactServiceException {
         if (eventId == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+            throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
         if (itemId == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ITEM_ID);
+            throw new IllegalArgumentException(Config.instance().getEventItemId());
         }
         if (itemAttribute == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ITEM_ATTRIBUTE);
+            throw new IllegalArgumentException(Config.instance().getErrorEventItemAttribute());
         }
         return getEventSpotService().updateEventItemAttribute(getAccessToken(), eventId, itemId, itemAttribute);
     }
@@ -3840,13 +3839,13 @@ public class ConstantContact {
     public boolean deleteEventItemAttribute(String eventId, String itemId, String itemAttributeId) throws IllegalArgumentException,
             ConstantContactServiceException {
         if (eventId == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ID);
+            throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
         if (itemId == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ITEM_ID);
+            throw new IllegalArgumentException(Config.instance().getEventItemId());
         }
         if (itemAttributeId == null) {
-            throw new IllegalArgumentException(Config.Errors.EVENT_ITEM_ATTRIBUTE_ID);
+            throw new IllegalArgumentException(Config.instance().getErrorEventItemAttributeId());
         }
         return getEventSpotService().deleteEventItemAttribute(getAccessToken(), eventId, itemId, itemAttributeId);
     }
@@ -3890,7 +3889,7 @@ public class ConstantContact {
 	 */
     public AccountInfo updateAccountInfo(AccountInfo accountInfo) throws IllegalArgumentException, ConstantContactServiceException {
 		if(accountInfo == null) {
-			throw new IllegalArgumentException(Config.Errors.ACCOUNT_INFO); 
+			throw new IllegalArgumentException(Config.instance().getErrorAccountInfo()); 
 		}
         return getAccountService().updateAccountInfo(getAccessToken(), accountInfo);
     }

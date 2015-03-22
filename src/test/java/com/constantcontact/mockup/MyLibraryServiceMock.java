@@ -449,7 +449,7 @@ public class MyLibraryServiceMock extends MyLibraryService {
      *         in the Constant Contact flow or an error is returned from server.
      * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
      *         The exception also contains a description of the cause.<br/>
-     *         Error message is taken from one of the members of {@link com.constantcontact.util.Config.Errors}
+     *         Error message is taken from one of the members of {@link com.constantcontact.util.Config}
      * @return The {@link java.util.List} of {@link com.constantcontact.components.library.info.MoveResults} Data
      */
     @Override

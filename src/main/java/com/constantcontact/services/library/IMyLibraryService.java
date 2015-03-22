@@ -13,7 +13,6 @@ import com.constantcontact.components.library.info.UploadStatus;
 import com.constantcontact.exceptions.ConstantContactException;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.base.IBaseService;
-import com.constantcontact.util.Config.Errors;
 import com.constantcontact.util.http.MultipartBody;
 
 public interface IMyLibraryService extends IBaseService {
