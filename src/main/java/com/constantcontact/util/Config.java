@@ -137,7 +137,7 @@ public final class Config
             errorPromocodeId = prop.getProperty("constantcontact.api.errors.promocodeid");
             errorRegistrantId = prop.getProperty("constantcontact.api.errors.registrantid");
             errorEventItemId = prop.getProperty("constantcontact.api.errors.eventitemid");
-            eventItem = prop.getProperty("constantcontact.api.errors.eventitem");
+            errorEventItem = prop.getProperty("constantcontact.api.errors.eventitem");
             errorEventItemAttributeId = prop.getProperty("constantcontact.api.errors.eventitemattributeid");
             errorEventItemAttribute = prop.getProperty("constantcontact.api.errors.eventitemattribute");
             errorAccountInfo = prop.getProperty("constantcontact.api.errors.accountinfo");
@@ -427,7 +427,7 @@ public final class Config
     /**
      * Endpoint for accessing the account info.
      */
-    private String accountInfo = "/v2/account/info";
+    private String accountInfo;
 
     /**
      * The login base URL.
@@ -558,7 +558,7 @@ public final class Config
     /**
      * Event Item null error;
      */
-    private String eventItem;
+    private String errorEventItem;
 
     /**
      * Event Item AttributeId null error;
@@ -578,7 +578,7 @@ public final class Config
     /**
      * Invalid Webhook error;
      */
-    private String errorInvalidWebhook = "Invalid Webhook. The x-ctct-hmac-sha256 does not correspond to message encryption.";
+    private String errorInvalidWebhook;
 
     /**
      * Client Secret null error;
@@ -605,7 +605,7 @@ public final class Config
     /**
      * UTF-8
      */
-    private String utf8 = "UTF-8";
+    private String utf8;
 
     public String getBaseUrl()
     {
@@ -1464,17 +1464,15 @@ public final class Config
         this.errorEventItemId = errorEventItemId;
     }
 
-    public String getEventItem()
-    {
-        return eventItem;
-    }
+    public String getErrorEventItem() {
+		return errorEventItem;
+	}
 
-    public void setEventItem(String eventItem)
-    {
-        this.eventItem = eventItem;
-    }
+	public void setErrorEventItem(String errorEventItem) {
+		this.errorEventItem = errorEventItem;
+	}
 
-    public String getErrorEventItemAttributeId()
+	public String getErrorEventItemAttributeId()
     {
         return errorEventItemAttributeId;
     }

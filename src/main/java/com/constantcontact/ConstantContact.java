@@ -3566,7 +3566,7 @@ public class ConstantContact {
             throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
         if (itemId == null) {
-            throw new IllegalArgumentException(Config.instance().getEventItemId());
+            throw new IllegalArgumentException(Config.instance().getErrorEventItemId());
         }
         return getEventSpotService().getEventItem(getAccessToken(), eventId, itemId);
     }
@@ -3592,7 +3592,7 @@ public class ConstantContact {
             throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
         if (item == null) {
-            throw new IllegalArgumentException(Config.instance().getErrorEventItemId());
+            throw new IllegalArgumentException(Config.instance().getErrorEventItem());
         }
         return getEventSpotService().addEventItem(getAccessToken(), eventId, item);
     }
@@ -3622,10 +3622,10 @@ public class ConstantContact {
             throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
         if (item == null) {
-            throw new IllegalArgumentException(Config.instance().getErrorEventItemId());
+            throw new IllegalArgumentException(Config.instance().getErrorEventItem());
         }
         if (item.getId() == null) {
-            throw new IllegalArgumentException(Config.instance().getEventItemId());
+            throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
         return getEventSpotService().updateEventItem(getAccessToken(), eventId, item);
     }
@@ -3654,7 +3654,7 @@ public class ConstantContact {
             throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
         if (itemId == null) {
-            throw new IllegalArgumentException(Config.instance().getEventItemId());
+            throw new IllegalArgumentException(Config.instance().getErrorEventItemId());
         }
         return getEventSpotService().deleteEventItem(getAccessToken(), eventId, itemId);
     }
@@ -3683,10 +3683,10 @@ public class ConstantContact {
             throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
         if (item == null) {
-            throw new IllegalArgumentException(Config.instance().getErrorEventItemId());
+            throw new IllegalArgumentException(Config.instance().getErrorEventItem());
         }
         if (item.getId() == null) {
-            throw new IllegalArgumentException(Config.instance().getEventItemId());
+            throw new IllegalArgumentException(Config.instance().getErrorEventItemId());
         }
         return getEventSpotService().deleteEventItem(getAccessToken(), eventId, item.getId());
     }
@@ -3713,7 +3713,7 @@ public class ConstantContact {
             throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
         if (itemId == null) {
-            throw new IllegalArgumentException(Config.instance().getEventItemId());
+            throw new IllegalArgumentException(Config.instance().getErrorEventItemId());
         }
         return getEventSpotService().getEventItemAttributes(getAccessToken(), eventId, itemId);
     }
@@ -3741,7 +3741,7 @@ public class ConstantContact {
             throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
         if (itemId == null) {
-            throw new IllegalArgumentException(Config.instance().getEventItemId());
+            throw new IllegalArgumentException(Config.instance().getErrorEventItemId());
         }
         if (attributeId == null) {
             throw new IllegalArgumentException(Config.instance().getErrorEventItemAttributeId());
@@ -3772,7 +3772,7 @@ public class ConstantContact {
             throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
         if (itemId == null) {
-            throw new IllegalArgumentException(Config.instance().getEventItemId());
+            throw new IllegalArgumentException(Config.instance().getErrorEventItemId());
         }
         if (itemAttribute == null) {
             throw new IllegalArgumentException(Config.instance().getErrorEventItemAttribute());
@@ -3808,7 +3808,7 @@ public class ConstantContact {
             throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
         if (itemId == null) {
-            throw new IllegalArgumentException(Config.instance().getEventItemId());
+            throw new IllegalArgumentException(Config.instance().getErrorEventItemId());
         }
         if (itemAttribute == null) {
             throw new IllegalArgumentException(Config.instance().getErrorEventItemAttribute());
@@ -3842,7 +3842,7 @@ public class ConstantContact {
             throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
         if (itemId == null) {
-            throw new IllegalArgumentException(Config.instance().getEventItemId());
+            throw new IllegalArgumentException(Config.instance().getErrorEventItemId());
         }
         if (itemAttributeId == null) {
             throw new IllegalArgumentException(Config.instance().getErrorEventItemAttributeId());
