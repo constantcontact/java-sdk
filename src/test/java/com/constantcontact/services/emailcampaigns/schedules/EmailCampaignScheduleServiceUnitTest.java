@@ -26,13 +26,13 @@ public class EmailCampaignScheduleServiceUnitTest {
     
     @Before
     public void setup() {
-        svc = new EmailCampaignScheduleService();
+        svc = new EmailCampaignScheduleService("","");
     }
 
     @Test
     public void testDelete() throws ConstantContactServiceException {
         
-        RestClient rc = new RestClient(){
+        RestClient rc = new RestClient("",""){
             @Override
             protected RawApiResponse makeHttpRequest(String urlParam, HttpMethod method, String accessToken, String data) {
                 
@@ -48,13 +48,13 @@ public class EmailCampaignScheduleServiceUnitTest {
         };
         svc.setRestClient(rc);
      
-        Assert.assertTrue(svc.deleteSchedule("foo", "12345", "67890"));
+        Assert.assertTrue(svc.deleteSchedule("12345", "67890"));
         
     }
     
     @Test (expected=ConstantContactServiceException.class)
     public void testDeleteFail() throws ConstantContactServiceException {
-        RestClient rc2 = new RestClient(){
+        RestClient rc2 = new RestClient("",""){
             @Override
             protected RawApiResponse makeHttpRequest(String urlParam, HttpMethod method, String accessToken, String data) {
                 
@@ -71,7 +71,7 @@ public class EmailCampaignScheduleServiceUnitTest {
         };
         svc.setRestClient(rc2);
      
-        svc.deleteSchedule("foo", "12345", "67890");
+        svc.deleteSchedule("12345", "67890");
     }
     
     

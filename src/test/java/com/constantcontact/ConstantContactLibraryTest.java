@@ -1,30 +1,39 @@
 package com.constantcontact;
 
-import com.constantcontact.ConstantContact;
-import com.constantcontact.components.generic.response.ResultSet;
-import com.constantcontact.components.library.file.FileType;
-import com.constantcontact.components.library.file.ImageSource;
-import com.constantcontact.components.library.file.MyLibraryFile;
-import com.constantcontact.components.library.folder.MyLibraryFolder;
-import com.constantcontact.components.library.info.MyLibrarySummary;
-import com.constantcontact.components.library.info.UploadStatus;
-import com.constantcontact.exceptions.service.ConstantContactServiceException;
-import com.constantcontact.mockup.MyLibraryServiceMock;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.imageio.ImageIO;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import com.constantcontact.components.generic.response.ResultSet;
+import com.constantcontact.components.library.file.ImageSource;
+import com.constantcontact.components.library.file.MyLibraryFile;
+import com.constantcontact.components.library.folder.MyLibraryFolder;
+import com.constantcontact.components.library.info.MoveResults;
+import com.constantcontact.components.library.info.MyLibrarySummary;
+import com.constantcontact.components.library.info.UploadStatus;
+import com.constantcontact.exceptions.service.ConstantContactServiceException;
+import com.constantcontact.mockup.ConstantContactFactoryMock;
+import com.constantcontact.services.library.IMyLibraryService;
+import com.constantcontact.util.http.MultipartBody;
+import com.constantcontact.util.http.MultipartBuilder;
 
 /**
  * Constant Contact Library unit test class.<br/>
@@ -34,13 +43,14 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class ConstantContactLibraryTest {
 
-    ConstantContact constantContact;
-
+	private ConstantContactFactoryMock constantContactFactory;
+    private IMyLibraryService myLibraryService;
+    
     @Before
     public void beforeTests(){
-        constantContact = Mockito.spy(new ConstantContact("", ""));
-        constantContact.setMyLibraryService(new MyLibraryServiceMock());
-    }
+    	constantContactFactory = Mockito.spy(new ConstantContactFactoryMock("",""));
+    	myLibraryService = constantContactFactory.createMyLibraryService();
+    } 
 
     /**
      * Tests the methods regarding library folders and files
@@ -52,8 +62,8 @@ public class ConstantContactLibraryTest {
 
             MyLibrarySummary myLibrarySummary = new MyLibrarySummary();
 
-            myLibrarySummary = constantContact.getLibraryInfo();
-            verify(constantContact).getLibraryInfo();
+            myLibrarySummary = myLibraryService.getLibraryInfo();
+            verify(myLibraryService).getLibraryInfo();
 
             assertNotNull(myLibrarySummary);
 
@@ -74,8 +84,8 @@ public class ConstantContactLibraryTest {
 
             ResultSet resultSet = new ResultSet();
 
-            resultSet = constantContact.getLibraryFolders(null, 1);
-            verify(constantContact).getLibraryFolders(null, 1);
+            resultSet = myLibraryService.getLibraryFolders(null, 1);
+            verify(myLibraryService).getLibraryFolders(null, 1);
 
             assertNotNull(resultSet);
 
@@ -93,8 +103,8 @@ public class ConstantContactLibraryTest {
         MyLibraryFolder myLibraryFolder = mock(MyLibraryFolder.class);
         try {
 
-            MyLibraryFolder resultMyLibraryFolder = constantContact.addLibraryFolder(myLibraryFolder);
-            verify(constantContact).addLibraryFolder(myLibraryFolder);
+            MyLibraryFolder resultMyLibraryFolder = myLibraryService.addLibraryFolder(myLibraryFolder);
+            verify(myLibraryService).addLibraryFolder(myLibraryFolder);
 
             assertNotNull(resultMyLibraryFolder);
 
@@ -113,8 +123,8 @@ public class ConstantContactLibraryTest {
         MyLibraryFolder myLibraryFolder = null;
         try {
 
-            MyLibraryFolder resultMyLibraryFolder = constantContact.addLibraryFolder(myLibraryFolder);
-            verify(constantContact).addLibraryFolder(myLibraryFolder);
+            MyLibraryFolder resultMyLibraryFolder = myLibraryService.addLibraryFolder(myLibraryFolder);
+            verify(myLibraryService).addLibraryFolder(myLibraryFolder);
 
         } catch (ConstantContactServiceException e) {
             e.printStackTrace();
@@ -134,8 +144,8 @@ public class ConstantContactLibraryTest {
 
             MyLibraryFolder myLibraryFolder = new MyLibraryFolder();
 
-            myLibraryFolder = constantContact.getLibraryFolder(libraryFolederId);
-            verify(constantContact).getLibraryFolder(libraryFolederId);
+            myLibraryFolder = myLibraryService.getLibraryFolder(libraryFolederId);
+            verify(myLibraryService).getLibraryFolder(libraryFolederId);
 
             assertNotNull(myLibraryFolder);
 
@@ -157,8 +167,8 @@ public class ConstantContactLibraryTest {
 
             MyLibraryFolder myLibraryFolder = new MyLibraryFolder();
 
-            myLibraryFolder = constantContact.getLibraryFolder(libraryFolederId);
-            verify(constantContact).getLibraryFolder(libraryFolederId);
+            myLibraryFolder = myLibraryService.getLibraryFolder(libraryFolederId);
+            verify(myLibraryService).getLibraryFolder(libraryFolederId);
 
         } catch (ConstantContactServiceException e) {
             e.printStackTrace();
@@ -176,10 +186,10 @@ public class ConstantContactLibraryTest {
 
         try {
 
-            MyLibraryFolder myLibraryFolder = constantContact.getLibraryFolder(libraryFolederId);
+            MyLibraryFolder myLibraryFolder = myLibraryService.getLibraryFolder(libraryFolederId);
 
-            MyLibraryFolder resultMyLibraryFolder = constantContact.updateLibraryFolder(myLibraryFolder, true);
-            verify(constantContact).updateLibraryFolder(myLibraryFolder, true);
+            MyLibraryFolder resultMyLibraryFolder = myLibraryService.updateLibraryFolder(myLibraryFolder, true);
+            verify(myLibraryService).updateLibraryFolder(myLibraryFolder, true);
 
             assertNotNull(resultMyLibraryFolder);
 
@@ -200,8 +210,8 @@ public class ConstantContactLibraryTest {
 
             MyLibraryFolder myLibraryFolder = null;
 
-            MyLibraryFolder resultMyLibraryFolder = constantContact.updateLibraryFolder(myLibraryFolder, true);
-            verify(constantContact).updateLibraryFolder(myLibraryFolder, true);
+            MyLibraryFolder resultMyLibraryFolder = myLibraryService.updateLibraryFolder(myLibraryFolder, true);
+            verify(myLibraryService).updateLibraryFolder(myLibraryFolder, true);
 
         } catch (ConstantContactServiceException e) {
             e.printStackTrace();
@@ -217,8 +227,8 @@ public class ConstantContactLibraryTest {
         String libraryFolderId = "1";
         try {
 
-            constantContact.deleteLibraryFolder(libraryFolderId);
-            verify(constantContact).deleteLibraryFolder(libraryFolderId);
+        	myLibraryService.deleteLibraryFolder(libraryFolderId);
+            verify(myLibraryService).deleteLibraryFolder(libraryFolderId);
 
         } catch (ConstantContactServiceException e) {
             e.printStackTrace();
@@ -235,8 +245,8 @@ public class ConstantContactLibraryTest {
         String libraryFolderId = null;
         try {
 
-            constantContact.deleteLibraryFolder(libraryFolderId);
-            verify(constantContact).deleteLibraryFolder(libraryFolderId);
+        	myLibraryService.deleteLibraryFolder(libraryFolderId);
+            verify(myLibraryService).deleteLibraryFolder(libraryFolderId);
 
         } catch (ConstantContactServiceException e) {
             e.printStackTrace();
@@ -263,8 +273,19 @@ public class ConstantContactLibraryTest {
 
             String fileDescription = "File description";
 
-            String resultLibraryFile = constantContact.addLibraryFile(file, fileName, fileDescription, FileType.PNG, folderId, ImageSource.MyComputer);
-            verify(constantContact).addLibraryFile(file, fileName,  fileDescription, FileType.PNG, folderId, ImageSource.MyComputer);
+            Map<String,String> textParts = new HashMap<String,String>();
+            
+            textParts.put("description", fileDescription);
+            textParts.put("file_type", file.toString());
+            textParts.put("folder_id", folderId);
+            textParts.put("source", bf.toString());
+            
+            InputStream fileStream = new FileInputStream(file);
+            
+            MultipartBody request = MultipartBuilder.buildMultipartBody(textParts, fileName, fileStream);
+           
+            String resultLibraryFile = myLibraryService.addLibraryFile(request);
+            verify(myLibraryService).addLibraryFile(request);
 
             assertNotNull(resultLibraryFile);
 
@@ -288,8 +309,8 @@ public class ConstantContactLibraryTest {
 
             MyLibraryFile myLibraryFile = new MyLibraryFile();
 
-            myLibraryFile = constantContact.getLibraryFile(libraryFileId);
-            verify(constantContact).getLibraryFile(libraryFileId);
+            myLibraryFile = myLibraryService.getLibraryFile(libraryFileId);
+            verify(myLibraryService).getLibraryFile(libraryFileId);
 
             assertNotNull(myLibraryFile);
 
@@ -311,8 +332,8 @@ public class ConstantContactLibraryTest {
 
             MyLibraryFile myLibraryFile = new MyLibraryFile();
 
-            myLibraryFile = constantContact.getLibraryFile(libraryFileId);
-            verify(constantContact).getLibraryFile(libraryFileId);
+            myLibraryFile = myLibraryService.getLibraryFile(libraryFileId);
+            verify(myLibraryService).getLibraryFile(libraryFileId);
 
         } catch (ConstantContactServiceException e) {
             e.printStackTrace();
@@ -331,8 +352,8 @@ public class ConstantContactLibraryTest {
 
             ResultSet resultSet = new ResultSet();
 
-            resultSet = constantContact.getLibraryFiles(MyLibraryFile.Type.ALL, ImageSource.MyComputer, null, 1);
-            verify(constantContact).getLibraryFiles(MyLibraryFile.Type.ALL, ImageSource.MyComputer, null, 1);
+            resultSet = myLibraryService.getLibraryFiles(MyLibraryFile.Type.ALL, ImageSource.MyComputer, null, 1);
+            verify(myLibraryService).getLibraryFiles(MyLibraryFile.Type.ALL, ImageSource.MyComputer, null, 1);
 
             assertNotNull(resultSet);
 
@@ -354,8 +375,8 @@ public class ConstantContactLibraryTest {
 
             ResultSet resultLibraryFiles = new ResultSet();
 
-            resultLibraryFiles = constantContact.getLibraryFilesByFolder(folderId, 10);
-            verify(constantContact).getLibraryFilesByFolder(folderId, 10);
+            resultLibraryFiles = myLibraryService.getLibraryFilesByFolder(folderId, 10);
+            verify(myLibraryService).getLibraryFilesByFolder(folderId, 10);
 
             assertNotNull(resultLibraryFiles);
 
@@ -374,8 +395,8 @@ public class ConstantContactLibraryTest {
         String fileId = "1";
         try {
 
-            constantContact.deleteLibraryFile(fileId);
-            verify(constantContact).deleteLibraryFile(fileId);
+        	myLibraryService.deleteLibraryFile(fileId);
+            verify(myLibraryService).deleteLibraryFile(fileId);
 
         } catch (ConstantContactServiceException e) {
             e.printStackTrace();
@@ -392,8 +413,8 @@ public class ConstantContactLibraryTest {
         String fileId = null;
         try {
 
-            constantContact.deleteLibraryFile(fileId);
-            verify(constantContact).deleteLibraryFile(fileId);
+        	myLibraryService.deleteLibraryFile(fileId);
+            verify(myLibraryService).deleteLibraryFile(fileId);
 
         } catch (ConstantContactServiceException e) {
             e.printStackTrace();
@@ -412,8 +433,8 @@ public class ConstantContactLibraryTest {
 
             ResultSet resultSet = mock(ResultSet.class);
 
-            resultSet = constantContact.getLibraryTrash(MyLibraryFile.Type.ALL, null, 10);
-            verify(constantContact).getLibraryTrash(MyLibraryFile.Type.ALL, null, 10);
+            resultSet = myLibraryService.getLibraryTrash(MyLibraryFile.Type.ALL, null, 10);
+            verify(myLibraryService).getLibraryTrash(MyLibraryFile.Type.ALL, null, 10);
 
             assertNotNull(resultSet);
 
@@ -432,8 +453,8 @@ public class ConstantContactLibraryTest {
     public void deleteLibraryTrashTest(){
         try {
 
-            constantContact.deleteLibraryTrash();
-            verify(constantContact).deleteLibraryTrash();
+        	myLibraryService.deleteLibraryTrash();
+            verify(myLibraryService).deleteLibraryTrash();
 
         } catch (ConstantContactServiceException e) {
             e.printStackTrace();
@@ -451,10 +472,10 @@ public class ConstantContactLibraryTest {
 
         try {
 
-            MyLibraryFile myLibraryFile = constantContact.getLibraryFile(libraryFileId);
+            MyLibraryFile myLibraryFile = myLibraryService.getLibraryFile(libraryFileId);
 
-            MyLibraryFile resultMyLibraryFile= constantContact.updateLibraryFile(myLibraryFile, true);
-            verify(constantContact).updateLibraryFile(myLibraryFile, true);
+            MyLibraryFile resultMyLibraryFile= myLibraryService.updateLibraryFile(myLibraryFile, true);
+            verify(myLibraryService).updateLibraryFile(myLibraryFile, true);
 
             assertNotNull(resultMyLibraryFile);
 
@@ -475,8 +496,8 @@ public class ConstantContactLibraryTest {
 
             MyLibraryFile myLibraryFile = null;
 
-            MyLibraryFile resultMyLibraryFile= constantContact.updateLibraryFile(myLibraryFile, true);
-            verify(constantContact).updateLibraryFile(myLibraryFile, true);
+            MyLibraryFile resultMyLibraryFile= myLibraryService.updateLibraryFile(myLibraryFile, true);
+            verify(myLibraryService).updateLibraryFile(myLibraryFile, true);
 
         } catch (ConstantContactServiceException e) {
             e.printStackTrace();
@@ -496,8 +517,8 @@ public class ConstantContactLibraryTest {
 
             List<UploadStatus> list = new ArrayList<UploadStatus>();
 
-            list = constantContact.getLibraryFilesUploadStatus(fileId);
-            verify(constantContact).getLibraryFilesUploadStatus(fileId);
+            list = myLibraryService.getLibraryFilesUploadStatus(fileId);
+            verify(myLibraryService).getLibraryFilesUploadStatus(fileId);
 
             assertNotNull(list);
 
@@ -517,8 +538,8 @@ public class ConstantContactLibraryTest {
 
             List<UploadStatus> list = new ArrayList<UploadStatus>();
 
-            list = constantContact.getLibraryFilesUploadStatus();
-            verify(constantContact).getLibraryFilesUploadStatus();
+            list = myLibraryService.getLibraryFilesUploadStatus();
+            verify(myLibraryService).getLibraryFilesUploadStatus();
 
         } catch (ConstantContactServiceException e) {
             e.printStackTrace();
@@ -532,13 +553,20 @@ public class ConstantContactLibraryTest {
     @Test
     public void moveLibraryFilesTest(){
         String folderId = "1";
-        List list = new ArrayList();
+        List<String> list = new ArrayList<String>();
         list.add("1");
 
+        StringBuilder body = new StringBuilder("[");
+        body.append("\"").append(list.get(0)).append("\"");
+        for (int i=1;i<list.size();i++){
+        	body.append(",").append("\"").append(list.get(i)).append("\"");
+        }
+        body.append("]");
+        
         try {
 
-            List resultList = constantContact.moveLibraryFiles(folderId, list);
-            verify(constantContact).moveLibraryFiles(folderId, list);
+        	List<MoveResults> resultList = myLibraryService.moveLibraryFiles(folderId, body.toString());
+            verify(myLibraryService).moveLibraryFiles(folderId, body.toString());
 
             assertNotNull(resultList);
 

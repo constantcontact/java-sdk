@@ -1,22 +1,24 @@
 package com.constantcontact;
 
-import com.constantcontact.ConstantContact;
-import com.constantcontact.components.contacts.Contact;
-import com.constantcontact.components.generic.response.ResultSet;
-import com.constantcontact.exceptions.service.ConstantContactServiceException;
-import com.constantcontact.mockup.ContactServiceMock;
-import org.junit.*;
-import org.junit.runner.RunWith;
-
-import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
-
-import static org.junit.Assert.*;
-
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import com.constantcontact.components.contacts.Contact;
+import com.constantcontact.components.generic.response.ResultSet;
+import com.constantcontact.exceptions.service.ConstantContactServiceException;
+import com.constantcontact.mockup.ConstantContactFactoryMock;
+import com.constantcontact.services.contacts.IContactService;
 
 /**
  * Constant Contact Contacts unit test class.<br/>
@@ -26,14 +28,19 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class ConstantContactContactsTest {
 
-    private ConstantContact constantContact;
+	private ConstantContactFactoryMock constantContactFactoryMock;
+    private IContactService contactServiceMock;
+    
+    private ConstantContactFactory constantContactFactory;
+    private IContactService contactService;
 
     @Before
     public void beforeTests(){
-
-        constantContact = Mockito.spy(new ConstantContact("",""));
-        constantContact.setContactService(new ContactServiceMock());
-
+    	constantContactFactoryMock = Mockito.spy(new ConstantContactFactoryMock("",""));
+    	contactServiceMock = constantContactFactoryMock.createContactService();
+    	
+    	constantContactFactory = Mockito.spy(new ConstantContactFactory("",""));
+    	contactService = constantContactFactory.createContactService();
     }
 
     /**
@@ -46,13 +53,13 @@ public class ConstantContactContactsTest {
 
         try {
             Contact resultContact = new Contact();
-            resultContact = constantContact.addContact(contact,true);
-            verify(constantContact).addContact(contact, true);
+            resultContact = contactServiceMock.addContact(contact,true);
+            verify(contactServiceMock).addContact(contact, true);
 
             assertNotNull(resultContact);
 
-            resultContact = constantContact.addContact(contact);
-            verify(constantContact).addContact(contact);
+            resultContact = contactServiceMock.addContact(contact, false);
+            verify(contactServiceMock).addContact(contact, false);
 
             assertNotNull(resultContact);
 
@@ -72,8 +79,8 @@ public class ConstantContactContactsTest {
         try {
             Contact resultContact = new Contact();
 
-            resultContact = constantContact.getContact(anyString());
-            verify(constantContact).getContact(anyString());
+            resultContact = contactServiceMock.getContact(anyString());
+            verify(contactServiceMock).getContact(anyString());
 
             assertNotNull(resultContact);
 
@@ -93,8 +100,8 @@ public class ConstantContactContactsTest {
 
             ResultSet resultSet = mock(ResultSet.class);
 
-            resultSet = constantContact.getContactByEmail(anyString());
-            verify(constantContact).getContactByEmail(anyString());
+            resultSet = contactServiceMock.getContactByEmail(anyString());
+            verify(contactServiceMock).getContactByEmail(anyString());
 
             assertNotNull(resultSet);
 
@@ -113,15 +120,15 @@ public class ConstantContactContactsTest {
 
         try {
 
-            Contact contact = constantContact.getContact(anyString());
+            Contact contact = contactServiceMock.getContact(anyString());
 
-            Contact resultContact = constantContact.updateContact(contact, true);
-            verify(constantContact).updateContact(contact, true);
+            Contact resultContact = contactServiceMock.updateContact(contact, true);
+            verify(contactServiceMock).updateContact(contact, true);
 
             assertNotNull(resultContact);
-
-            resultContact = constantContact.updateContact(contact);
-            verify(constantContact).updateContact(contact);
+            
+            resultContact = contactServiceMock.updateContact(contact, false);
+            verify(contactServiceMock).updateContact(contact, false);
 
             assertNotNull(resultContact);
 
@@ -142,13 +149,28 @@ public class ConstantContactContactsTest {
 
             Contact contact = null;
 
-            Contact resultContact = constantContact.updateContact(contact, true);
-            verify(constantContact).updateContact(contact, true);
+            Contact resultContact = contactServiceMock.updateContact(contact, true);
+            verify(contactServiceMock).updateContact(contact, true);
 
         } catch (ConstantContactServiceException e) {
             System.out.println(e.getErrorInfo());
             e.printStackTrace();
         }
+    }
+    
+    /**
+     * Tests that the updateContact method throws the proper exception
+     * @throws ConstantContactServiceException 
+     *
+     */
+    @Test(expected = ConstantContactServiceException.class)
+    public void updateContactServerExceptionTest() throws ConstantContactServiceException{
+
+        Contact contact = new Contact();
+        contact.setId("1");
+        
+        Contact resultContact = contactService.updateContact(contact, true);
+
     }
 
     /**
@@ -158,20 +180,13 @@ public class ConstantContactContactsTest {
     @Test
     public void deleteContactTest(){
         String contactId = "1";
-        Contact contact = new Contact();
-        contact.setId(contactId);
 
         try {
 
-            Boolean deleted = constantContact.deleteContact(contactId);
-            verify(constantContact).deleteContact(anyString());
+            Boolean deleted = contactServiceMock.deleteContact(contactId);
+            verify(contactServiceMock).deleteContact(anyString());
 
             assertTrue(deleted.toString(), deleted);
-
-            deleted = constantContact.deleteContact(contact);
-            verify(constantContact).deleteContact(contact);
-
-            assertTrue(deleted);
 
         } catch (ConstantContactServiceException e) {
             System.out.println(e.getErrorInfo());
@@ -188,8 +203,8 @@ public class ConstantContactContactsTest {
         String contactId = "0";
         try {
 
-            Boolean deleted = constantContact.deleteContact(contactId);
-            verify(constantContact).deleteContact(anyString());
+            Boolean deleted = contactServiceMock.deleteContact(contactId);
+            verify(contactServiceMock).deleteContact(anyString());
 
         } catch (ConstantContactServiceException e) {
             System.out.println(e.getErrorInfo());
@@ -198,6 +213,18 @@ public class ConstantContactContactsTest {
     }
 
     /**
+     * Tests that the deleteContact method throws the proper exception
+     * @throws ConstantContactServiceException 
+     *
+     */
+    @Test(expected = ConstantContactServiceException.class)
+    public void deleteServiceExceptionTest() throws ConstantContactServiceException{
+        String contactId = "1";
+        
+        Boolean deleted = contactService.deleteContact(contactId);
+    }
+    
+    /**
      * Tests the get contacts functionality
      */
     @Test
@@ -205,14 +232,10 @@ public class ConstantContactContactsTest {
         ResultSet contactResultSet = mock(ResultSet.class);
         try {
 
-            contactResultSet = constantContact.getContacts(10, null, Contact.Status.ACTIVE);
-            verify(constantContact).getContacts(anyInt(), anyString(), eq(Contact.Status.ACTIVE));
+            contactResultSet = contactServiceMock.getContacts(10, null, Contact.Status.ACTIVE);
+            verify(contactServiceMock).getContacts(anyInt(), anyString(), eq(Contact.Status.ACTIVE));
 
             assertNotNull(contactResultSet);
-
-//            ResultSet resultContactspagination = constantContact.getContacts(contactResultSet.getMeta().getPagination());
-//
-//            assertNotNull(resultContactspagination);
 
         } catch (ConstantContactServiceException e) {
             System.out.print(e.getErrorInfo());
@@ -228,8 +251,8 @@ public class ConstantContactContactsTest {
         ResultSet contactResultSet = mock(ResultSet.class);
         try {
 
-            contactResultSet = constantContact.getContacts(10, null, Contact.Status.VISITOR);
-            verify(constantContact).getContacts(anyInt(), anyString(), eq(Contact.Status.VISITOR));
+            contactResultSet = contactServiceMock.getContacts(10, null, Contact.Status.VISITOR);
+            verify(contactServiceMock).getContacts(anyInt(), anyString(), eq(Contact.Status.VISITOR));
 
         } catch (ConstantContactServiceException e) {
             System.out.print(e.getErrorInfo());
@@ -238,37 +261,29 @@ public class ConstantContactContactsTest {
     }
 
     /**
+     * Tests that the getContacts method throws the proper exception
+     * @throws ConstantContactServiceException 
+     */
+    @Test(expected = ConstantContactServiceException.class)
+    public void getContactsServiceExceptionTest() throws ConstantContactServiceException{
+        ResultSet contactResultSet = new ResultSet<String>();
+        
+        contactResultSet = contactService.getContacts(10, null, Contact.Status.ACTIVE);
+    }
+    
+    /**
      * Tests the deleteContactFromLists method from ConstantContact.class
      */
     @Test
     public void deleteContactFromListsTest(){
-        Contact contact = mock(Contact.class);
+
         String contactId = "1";
         try {
-            Boolean deleted = constantContact.deleteContactFromLists(contact);
-            verify(constantContact).deleteContactFromLists(contact);
+            
+            Boolean deleted = contactServiceMock.deleteContactFromLists(contactId);
+            verify(contactServiceMock).deleteContactFromLists(contactId);
 
             assertTrue(deleted);
-
-            deleted = constantContact.deleteContactFromLists(contactId);
-            verify(constantContact).deleteContactFromLists(anyString());
-
-            assertTrue(deleted);
-
-        } catch (ConstantContactServiceException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Tests the deleteContactFromLists method from ConstantContact.class
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void deleteContactFromListsExceptionTest(){
-        Contact contact = null;
-        try {
-            Boolean deleted = constantContact.deleteContactFromLists(contact);
-            verify(constantContact).deleteContactFromLists(contact);
 
         } catch (ConstantContactServiceException e) {
             e.printStackTrace();

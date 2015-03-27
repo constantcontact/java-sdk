@@ -1,26 +1,27 @@
 package com.constantcontact;
 
-import com.constantcontact.ConstantContact;
-import com.constantcontact.components.emailcampaigns.EmailCampaignRequest;
-import com.constantcontact.components.emailcampaigns.EmailCampaignResponse;
-import com.constantcontact.components.emailcampaigns.schedules.EmailCampaignSchedule;
-import com.constantcontact.components.generic.response.ResultSet;
-import com.constantcontact.exceptions.service.ConstantContactServiceException;
-import com.constantcontact.mockup.EmailCampaignScheduleServiceMock;
-import com.constantcontact.mockup.EmailCampaignServiceMock;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.*;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import com.constantcontact.components.emailcampaigns.EmailCampaignRequest;
+import com.constantcontact.components.emailcampaigns.EmailCampaignResponse;
+import com.constantcontact.components.emailcampaigns.schedules.EmailCampaignSchedule;
+import com.constantcontact.components.generic.response.ResultSet;
+import com.constantcontact.exceptions.service.ConstantContactServiceException;
+import com.constantcontact.mockup.ConstantContactFactoryMock;
+import com.constantcontact.services.emailcampaigns.IEmailCampaignService;
+import com.constantcontact.services.emailcampaigns.schedule.IEmailCampaignScheduleService;
 
 
 /**
@@ -30,14 +31,16 @@ import static org.mockito.Mockito.verify;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ConstantContactEmailCampaignTest {
-
-    ConstantContact constantContact;
+    
+    private ConstantContactFactoryMock constantContactFactory;
+    private IEmailCampaignService emailCampaignService;
+    private IEmailCampaignScheduleService emailCampaignScheduleService;
 
     @Before
     public void beforeTests(){
-        constantContact = Mockito.spy(new ConstantContact("", ""));
-        constantContact.setEmailCampaignService(new EmailCampaignServiceMock());
-        constantContact.setEmailCampaignScheduleService(new EmailCampaignScheduleServiceMock());
+    	constantContactFactory = Mockito.spy(new ConstantContactFactoryMock("",""));
+    	emailCampaignService = constantContactFactory.createEmailCampaignService();
+    	emailCampaignScheduleService = constantContactFactory.createEmailCampaignScheduleService();
     }
 
     /**
@@ -52,8 +55,8 @@ public class ConstantContactEmailCampaignTest {
 
             EmailCampaignResponse emailCampaignResponse = new EmailCampaignResponse();
 
-            emailCampaignResponse = constantContact.addEmailCampaign(emailCampaignRequest);
-            verify(constantContact).addEmailCampaign(emailCampaignRequest);
+            emailCampaignResponse = emailCampaignService.addCampaign(emailCampaignRequest);
+            verify(emailCampaignService).addCampaign(emailCampaignRequest);
 
             assertNotNull(emailCampaignResponse);
 
@@ -74,8 +77,8 @@ public class ConstantContactEmailCampaignTest {
 
             EmailCampaignResponse emailCampaignResponse = new EmailCampaignResponse();
 
-            emailCampaignResponse = constantContact.addEmailCampaign(emailCampaignRequest);
-            verify(constantContact).addEmailCampaign(emailCampaignRequest);
+            emailCampaignResponse = emailCampaignService.addCampaign(emailCampaignRequest);
+            verify(emailCampaignService).addCampaign(emailCampaignRequest);
 
         } catch (ConstantContactServiceException e) {
             e.printStackTrace();
@@ -92,13 +95,18 @@ public class ConstantContactEmailCampaignTest {
         try {
             ResultSet emailCampaignResponses = mock(ResultSet.class);
 
-            emailCampaignResponses = constantContact.getEmailCampaigns();
-            verify(constantContact).getEmailCampaigns();
+            emailCampaignResponses = emailCampaignService.getCampaigns(null, null);
+            verify(emailCampaignService).getCampaigns(null, null);
 
             assertNotNull(emailCampaignResponses);
 
-            emailCampaignResponses = constantContact.getEmailCampaigns(1, null);
-            verify(constantContact).getEmailCampaigns(1, null);
+            emailCampaignResponses = emailCampaignService.getCampaigns(1, null);
+            verify(emailCampaignService).getCampaigns(1, null);
+            
+            assertNotNull(emailCampaignResponses);
+
+            emailCampaignResponses = emailCampaignService.getCampaigns(null, "1");
+            verify(emailCampaignService).getCampaigns(null, "1");
 
             assertNotNull(emailCampaignResponses);
 
@@ -117,12 +125,12 @@ public class ConstantContactEmailCampaignTest {
     public void updateEmailCampaignTest() {
 
         try {
-            EmailCampaignRequest emailCampaignRequest = constantContact.getEmailCampaign("1").toEmailCampaignRequest();
+            EmailCampaignRequest emailCampaignRequest = emailCampaignService.getCampaign("1").toEmailCampaignRequest();
 
             EmailCampaignResponse emailCampaignResponse = new EmailCampaignResponse();
 
-            emailCampaignResponse = constantContact.updateEmailCampaign(emailCampaignRequest);
-            verify(constantContact).updateEmailCampaign(emailCampaignRequest);
+            emailCampaignResponse = emailCampaignService.updateCampaign(emailCampaignRequest);
+            verify(emailCampaignService).updateCampaign(emailCampaignRequest);
 
             assertNotNull(emailCampaignResponse);
 
@@ -144,8 +152,8 @@ public class ConstantContactEmailCampaignTest {
 
             EmailCampaignResponse emailCampaignResponse = new EmailCampaignResponse();
 
-            emailCampaignResponse = constantContact.updateEmailCampaign(emailCampaignRequest);
-            verify(constantContact).updateEmailCampaign(emailCampaignRequest);
+            emailCampaignResponse = emailCampaignService.updateCampaign(emailCampaignRequest);
+            verify(emailCampaignService).updateCampaign(emailCampaignRequest);
 
         } catch (ConstantContactServiceException e) {
             e.printStackTrace();
@@ -165,8 +173,8 @@ public class ConstantContactEmailCampaignTest {
 
             EmailCampaignResponse emailCampaignResponse = new EmailCampaignResponse();
 
-            emailCampaignResponse = constantContact.getEmailCampaign(emailCampaignId);
-            verify(constantContact).getEmailCampaign(emailCampaignId);
+            emailCampaignResponse = emailCampaignService.getCampaign(emailCampaignId);
+            verify(emailCampaignService).getCampaign(emailCampaignId);
 
             assertNotNull(emailCampaignResponse);
 
@@ -188,8 +196,8 @@ public class ConstantContactEmailCampaignTest {
 
             EmailCampaignResponse emailCampaignResponse = new EmailCampaignResponse();
 
-            emailCampaignResponse = constantContact.getEmailCampaign(emailCampaignId);
-            verify(constantContact).getEmailCampaign(emailCampaignId);
+            emailCampaignResponse = emailCampaignService.getCampaign(emailCampaignId);
+            verify(emailCampaignService).getCampaign(emailCampaignId);
 
         } catch (ConstantContactServiceException e) {
             e.printStackTrace();
@@ -206,8 +214,8 @@ public class ConstantContactEmailCampaignTest {
         String campaignId = "1";
         try {
 
-            boolean deleted = constantContact.deleteEmailCampaign(campaignId);
-            verify(constantContact).deleteEmailCampaign(campaignId);
+            boolean deleted = emailCampaignService.deleteCampaign(campaignId);
+            verify(emailCampaignService).deleteCampaign(campaignId);
 
             assertTrue(deleted);
 
@@ -227,8 +235,8 @@ public class ConstantContactEmailCampaignTest {
         try {
 
             List<EmailCampaignSchedule> emailCampaignSchedules = new ArrayList<EmailCampaignSchedule>();
-            emailCampaignSchedules = constantContact.getEmailCampaignSchedules(campaignId);
-            verify(constantContact).getEmailCampaignSchedules(campaignId);
+            emailCampaignSchedules = emailCampaignScheduleService.getSchedules(campaignId);
+            verify(emailCampaignScheduleService).getSchedules(campaignId);
 
             assertNotNull(emailCampaignSchedules);
 
@@ -248,8 +256,8 @@ public class ConstantContactEmailCampaignTest {
         try {
 
             List<EmailCampaignSchedule> emailCampaignSchedules = new ArrayList<EmailCampaignSchedule>();
-            emailCampaignSchedules = constantContact.getEmailCampaignSchedules(campaignId);
-            verify(constantContact).getEmailCampaignSchedules(campaignId);
+            emailCampaignSchedules = emailCampaignScheduleService.getSchedules(campaignId);
+            verify(emailCampaignScheduleService).getSchedules(campaignId);
 
         } catch (ConstantContactServiceException e) {
             e.printStackTrace();
@@ -270,8 +278,8 @@ public class ConstantContactEmailCampaignTest {
 
             EmailCampaignSchedule resultEmailCampaignSchedule = new EmailCampaignSchedule();
 
-            resultEmailCampaignSchedule = constantContact.addEmailCampaignSchedule(campaignId, emailCampaignSchedule);
-            verify(constantContact).addEmailCampaignSchedule(campaignId, emailCampaignSchedule);
+            resultEmailCampaignSchedule = emailCampaignScheduleService.addSchedule(campaignId, emailCampaignSchedule);
+            verify(emailCampaignScheduleService).addSchedule(campaignId, emailCampaignSchedule);
 
             assertNotNull(emailCampaignSchedule);
 
@@ -293,8 +301,8 @@ public class ConstantContactEmailCampaignTest {
 
             EmailCampaignSchedule resultEmailCampaignSchedule = new EmailCampaignSchedule();
 
-            resultEmailCampaignSchedule = constantContact.addEmailCampaignSchedule(campaignId, emailCampaignSchedule);
-            verify(constantContact).addEmailCampaignSchedule(campaignId, emailCampaignSchedule);
+            resultEmailCampaignSchedule = emailCampaignScheduleService.addSchedule(campaignId, emailCampaignSchedule);
+            verify(emailCampaignScheduleService).addSchedule(campaignId, emailCampaignSchedule);
 
         } catch (ConstantContactServiceException e) {
             e.printStackTrace();
@@ -312,8 +320,8 @@ public class ConstantContactEmailCampaignTest {
         String scheduleId = "1";
         try {
 
-            boolean deleted = constantContact.deleteEmailCampaignSchedule(campaignId, scheduleId);
-            verify(constantContact).deleteEmailCampaignSchedule(campaignId, scheduleId);
+            boolean deleted = emailCampaignScheduleService.deleteSchedule(campaignId, scheduleId);
+            verify(emailCampaignScheduleService).deleteSchedule(campaignId, scheduleId);
 
             assertTrue("The schedule delete encountered an error", deleted);
 
@@ -333,8 +341,8 @@ public class ConstantContactEmailCampaignTest {
         String scheduleId = null;
         try {
 
-            boolean deleted = constantContact.deleteEmailCampaignSchedule(campaignId, scheduleId);
-            verify(constantContact).deleteEmailCampaignSchedule(campaignId, scheduleId);
+            boolean deleted = emailCampaignScheduleService.deleteSchedule(campaignId, scheduleId);
+            verify(emailCampaignScheduleService).deleteSchedule(campaignId, scheduleId);
 
         } catch (ConstantContactServiceException e) {
             e.printStackTrace();

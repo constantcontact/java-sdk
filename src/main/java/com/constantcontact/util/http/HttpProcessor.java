@@ -1,15 +1,10 @@
 package com.constantcontact.util.http;
 
-import com.constantcontact.ConstantContact;
-import com.constantcontact.components.Component;
-import com.constantcontact.exceptions.component.ConstantContactComponentException;
-import com.constantcontact.util.RawApiRequestError;
-import com.constantcontact.util.RawApiResponse;
-import com.constantcontact.util.Config;
-import com.constantcontact.util.SdkVersion;
-import com.constantcontact.util.http.constants.ProcessorBase;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
@@ -17,6 +12,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import com.constantcontact.components.Component;
+import com.constantcontact.exceptions.component.ConstantContactComponentException;
+import com.constantcontact.util.RawApiRequestError;
+import com.constantcontact.util.RawApiResponse;
+import com.constantcontact.util.SdkVersion;
+import com.constantcontact.util.http.constants.ProcessorBase;
 
 /**
  * Low-level Class responsible with HTTP requests in Constant Contact.<br/>
@@ -26,13 +28,43 @@ import java.util.Map;
  * @author ConstantContact
  */
 public class HttpProcessor implements ProcessorBase {
-
+	
+	private String accessToken;
+	private String apiKey;
+	
     /**
+	 * @return the accessToken
+	 */
+	public String getAccessToken() {
+		return accessToken;
+	}
+
+	/**
+	 * @param accessToken the accessToken to set
+	 */
+	public void setAccessToken(String accessToken) {
+		this.accessToken = accessToken;
+	}
+
+	/**
+	 * @return the apiKey
+	 */
+	public String getApiKey() {
+		return apiKey;
+	}
+
+	/**
+	 * @param apiKey the apiKey to set
+	 */
+	public void setApiKey(String apiKey) {
+		this.apiKey = apiKey;
+	}
+
+	/**
      * Convenience method that automatically converts from Strings to bytes before calling makeHttpRequest.
      * @param urlParam
      * @param httpMethod
      * @param contentType
-     * @param accessToken
      * @param data
      * @return
      */
@@ -43,7 +75,7 @@ public class HttpProcessor implements ProcessorBase {
             bytes = data.getBytes();
         }
         
-        return makeHttpRequest(urlParam, httpMethod, contentType, accessToken, bytes);
+        return makeHttpRequest(urlParam, httpMethod, contentType, this.getAccessToken(), bytes);
     }
     
 	/**
@@ -56,8 +88,6 @@ public class HttpProcessor implements ProcessorBase {
 	 *            The {@link HttpMethod}
 	 * @param contentType
 	 *             The request body's content type
-	 * @param accessToken
-	 *            Constant Contact OAuth2 access token.
 	 * @param data
 	 *            A {@link String} containing the data or NULL when there is no
 	 *            data to send (eg. in GET call).
@@ -74,7 +104,7 @@ public class HttpProcessor implements ProcessorBase {
 		HttpURLConnection connection = null;
 		try {
 
-			connection = clientConnection(urlParam, httpMethod, contentType.getStringVal(), accessToken, data);
+			connection = clientConnection(urlParam, httpMethod, contentType.getStringVal(), this.getAccessToken(), data);
 
 			responseMessage = executeRequest(connection, data);
 
@@ -156,8 +186,6 @@ public class HttpProcessor implements ProcessorBase {
 	 *            (POST, GET, etc)
 	 * @param contentType
 	 *             The content type of the request body. Usually application/json
-	 * @param accessToken
-	 *            The Constant Contact OAuth2 access token.
 	 * @return The Connection object
 	 * @throws Exception
 	 *             When something went wrong.
@@ -166,7 +194,7 @@ public class HttpProcessor implements ProcessorBase {
 	protected HttpURLConnection clientConnection(String urlParam, HttpMethod httpMethod, String contentType, String accessToken, byte[] data) throws Exception {
 
 		String bindString = urlParam.contains("=") ? "&" : "?";
-		urlParam = String.format("%1$s%2$sapi_key=%3$s", urlParam, bindString, ConstantContact.API_KEY);
+		urlParam = String.format("%1$s%2$sapi_key=%3$s", urlParam, bindString, this.getApiKey());
 
 		URL url = new URL(urlParam);
 		
@@ -178,7 +206,7 @@ public class HttpProcessor implements ProcessorBase {
 
 		connection.setRequestProperty(CONTENT_TYPE_HEADER, contentType);
 		connection.addRequestProperty(ACCEPT_HEADER, JSON_CONTENT_TYPE);
-		connection.addRequestProperty(AUTHORIZATION_HEADER, "Bearer " + accessToken);
+		connection.addRequestProperty(AUTHORIZATION_HEADER, "Bearer " + this.getAccessToken());
         connection.addRequestProperty(X_CTCT_REQUEST_SOURCE_HEADER, String.format("sdk.java.%1s", SdkVersion.instance().getCtctSdkVersion()));
 		connection.addRequestProperty("Connection", "Keep-Alive");
 		connection.addRequestProperty("Keep-Alive", "header");
@@ -311,5 +339,11 @@ public class HttpProcessor implements ProcessorBase {
             }
         }
     }
+    
+	public HttpProcessor(String accessToken, String apiKey) {
+		super();
+		this.setAccessToken(accessToken);
+		this.setApiKey(apiKey);
+	}
 
 }

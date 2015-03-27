@@ -1,21 +1,22 @@
 package com.constantcontact;
 
-import com.constantcontact.ConstantContact;
-import com.constantcontact.components.contacts.tracking.reports.summary.ContactTrackingSummaryReport;
-import com.constantcontact.components.generic.response.ResultSet;
-import com.constantcontact.exceptions.service.ConstantContactServiceException;
-import com.constantcontact.mockup.ContactTrackingServiceMock;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.List;
-
-import static org.mockito.Mockito.*;
-
-import static org.junit.Assert.*;
+import com.constantcontact.components.contacts.tracking.reports.summary.ContactTrackingSummaryReport;
+import com.constantcontact.components.generic.response.ResultSet;
+import com.constantcontact.exceptions.service.ConstantContactServiceException;
+import com.constantcontact.mockup.ConstantContactFactoryMock;
+import com.constantcontact.services.contacts.tracking.IContactTrackingService;
 
 
 /**
@@ -26,12 +27,13 @@ import static org.junit.Assert.*;
 @RunWith(MockitoJUnitRunner.class)
 public class ConstantContactTrackingTest {
 
-    ConstantContact constantContact;
+	private ConstantContactFactoryMock constantContactFactory;
+    private IContactTrackingService contactTrackingService;
 
     @Before
     public void beforeTests(){
-        constantContact = Mockito.spy(new ConstantContact("", ""));
-        constantContact.setContactTrackingService(new ContactTrackingServiceMock());
+    	constantContactFactory = Mockito.spy(new ConstantContactFactoryMock("",""));
+    	contactTrackingService = constantContactFactory.createContactTrackingService();
     }
 
     /**
@@ -46,8 +48,8 @@ public class ConstantContactTrackingTest {
 
             ContactTrackingSummaryReport trackingSummaryReport = mock(ContactTrackingSummaryReport.class);
 
-            trackingSummaryReport =  constantContact.getContactTrackingSummary(contactId, null);
-            verify(constantContact).getContactTrackingSummary(contactId, null);
+            trackingSummaryReport = contactTrackingService.getSummary(contactId, null);
+            verify(contactTrackingService).getSummary(contactId, null);
 
             assertNotNull(trackingSummaryReport);
 
@@ -69,8 +71,8 @@ public class ConstantContactTrackingTest {
 
             ContactTrackingSummaryReport trackingSummaryReport = mock(ContactTrackingSummaryReport.class);
 
-            trackingSummaryReport =  constantContact.getContactTrackingSummary(contactId, null);
-            verify(constantContact).getContactTrackingSummary(contactId, null);
+            trackingSummaryReport =  contactTrackingService.getSummary(contactId, null);
+            verify(contactTrackingService).getSummary(contactId, null);
 
         } catch (ConstantContactServiceException e) {
             e.printStackTrace();
@@ -90,8 +92,8 @@ public class ConstantContactTrackingTest {
 
             List list = mock(List.class);
 
-            list = constantContact.getContactTrackingSummaryByCampaign(contactId);
-            verify(constantContact).getContactTrackingSummaryByCampaign(contactId);
+            list = contactTrackingService.getSummaryByCampaign(contactId);
+            verify(contactTrackingService).getSummaryByCampaign(contactId);
 
             assertNotNull(list);
 
@@ -112,8 +114,8 @@ public class ConstantContactTrackingTest {
 
             List list = mock(List.class);
 
-            list = constantContact.getContactTrackingSummaryByCampaign(contactId);
-            verify(constantContact).getContactTrackingSummaryByCampaign(contactId);
+            list = contactTrackingService.getSummaryByCampaign(contactId);
+            verify(contactTrackingService).getSummaryByCampaign(contactId);
 
         } catch (ConstantContactServiceException e) {
             e.printStackTrace();
@@ -132,8 +134,8 @@ public class ConstantContactTrackingTest {
 
             ResultSet resultSet = mock(ResultSet.class);
 
-            resultSet = constantContact.getContactTrackingActivities(contactId, 1, null);
-            verify(constantContact).getContactTrackingActivities(contactId, 1, null);
+            resultSet = contactTrackingService.getActivities(contactId, 1, null);
+            verify(contactTrackingService).getActivities(contactId, 1, null);
 
             assertNotNull(resultSet);
 
@@ -154,8 +156,8 @@ public class ConstantContactTrackingTest {
 
             ResultSet resultSet = mock(ResultSet.class);
 
-            resultSet = constantContact.getContactTrackingActivities(contactId, 1, null);
-            verify(constantContact).getContactTrackingActivities(contactId, 1, null);
+            resultSet = contactTrackingService.getActivities(contactId, 1, null);
+            verify(contactTrackingService).getActivities(contactId, 1, null);
 
         } catch (ConstantContactServiceException e) {
             e.printStackTrace();
@@ -174,8 +176,8 @@ public class ConstantContactTrackingTest {
 
             ResultSet contactTrackingBounceResultSet = mock(ResultSet.class);
 
-            contactTrackingBounceResultSet = constantContact.getContactTrackingBounces(contactId, null);
-            verify(constantContact).getContactTrackingBounces(contactId, null);
+            contactTrackingBounceResultSet = contactTrackingService.getBounces(contactId, null);
+            verify(contactTrackingService).getBounces(contactId, null);
 
             assertNotNull(contactTrackingBounceResultSet);
 
@@ -196,8 +198,8 @@ public class ConstantContactTrackingTest {
 
             ResultSet contactTrackingBounceResultSet = mock(ResultSet.class);
 
-            contactTrackingBounceResultSet = constantContact.getContactTrackingBounces(contactId, null);
-            verify(constantContact).getContactTrackingBounces(contactId, null);
+            contactTrackingBounceResultSet = contactTrackingService.getBounces(contactId, null);
+            verify(contactTrackingService).getBounces(contactId, null);
 
         } catch (ConstantContactServiceException e) {
             e.printStackTrace();
@@ -217,8 +219,8 @@ public class ConstantContactTrackingTest {
 
             ResultSet contactTrackingClickResultSet = mock(ResultSet.class);
 
-            contactTrackingClickResultSet = constantContact.getContactTrackingClicks(contactId, limit, null);
-            verify(constantContact).getContactTrackingClicks(contactId, limit, null);
+            contactTrackingClickResultSet = contactTrackingService.getClicks(contactId, limit, null);
+            verify(contactTrackingService).getClicks(contactId, limit, null);
 
             assertNotNull(contactTrackingClickResultSet);
 
@@ -240,8 +242,8 @@ public class ConstantContactTrackingTest {
 
             ResultSet contactTrackingBounceResultSet = mock(ResultSet.class);
 
-            contactTrackingBounceResultSet = constantContact.getContactTrackingClicks(contactId, limit, null);
-            verify(constantContact).getContactTrackingClicks(contactId, limit, null);
+            contactTrackingBounceResultSet = contactTrackingService.getClicks(contactId, limit, null);
+            verify(contactTrackingService).getClicks(contactId, limit, null);
 
         } catch (ConstantContactServiceException e) {
             e.printStackTrace();
@@ -261,8 +263,8 @@ public class ConstantContactTrackingTest {
 
             ResultSet contactTrackingForwardResultSet = mock(ResultSet.class);
 
-            contactTrackingForwardResultSet = constantContact.getContactTrackingForwards(contactId, limit, null);
-            verify(constantContact).getContactTrackingForwards(contactId, limit, null);
+            contactTrackingForwardResultSet = contactTrackingService.getForwards(contactId, limit, null);
+            verify(contactTrackingService).getForwards(contactId, limit, null);
 
             assertNotNull(contactTrackingForwardResultSet);
 
@@ -284,8 +286,8 @@ public class ConstantContactTrackingTest {
 
             ResultSet contactTrackingBounceResultSet = mock(ResultSet.class);
 
-            contactTrackingBounceResultSet = constantContact.getContactTrackingForwards(contactId, limit, null);
-            verify(constantContact).getContactTrackingForwards(contactId, limit, null);
+            contactTrackingBounceResultSet = contactTrackingService.getForwards(contactId, limit, null);
+            verify(contactTrackingService).getForwards(contactId, limit, null);
 
         } catch (ConstantContactServiceException e) {
             e.printStackTrace();
@@ -305,8 +307,8 @@ public class ConstantContactTrackingTest {
 
             ResultSet contactTrackingOpenResultSet = mock(ResultSet.class);
 
-            contactTrackingOpenResultSet = constantContact.getContactTrackingOpens(contactId, limit, null);
-            verify(constantContact).getContactTrackingOpens(contactId, limit, null);
+            contactTrackingOpenResultSet = contactTrackingService.getOpens(contactId, limit, null);
+            verify(contactTrackingService).getOpens(contactId, limit, null);
 
             assertNotNull(contactTrackingOpenResultSet);
 
@@ -328,8 +330,8 @@ public class ConstantContactTrackingTest {
 
             ResultSet contactTrackingBounceResultSet = mock(ResultSet.class);
 
-            contactTrackingBounceResultSet = constantContact.getContactTrackingOpens(contactId, limit, null);
-            verify(constantContact).getContactTrackingOpens(contactId, limit, null);
+            contactTrackingBounceResultSet = contactTrackingService.getOpens(contactId, limit, null);
+            verify(contactTrackingService).getOpens(contactId, limit, null);
 
         } catch (ConstantContactServiceException e) {
             e.printStackTrace();
@@ -349,8 +351,8 @@ public class ConstantContactTrackingTest {
 
             ResultSet contactTrackingSendResultSet = mock(ResultSet.class);
 
-            contactTrackingSendResultSet = constantContact.getContactTrackingSends(contactId, limit, null);
-            verify(constantContact).getContactTrackingSends(contactId, limit, null);
+            contactTrackingSendResultSet = contactTrackingService.getSends(contactId, limit, null);
+            verify(contactTrackingService).getSends(contactId, limit, null);
 
             assertNotNull(contactTrackingSendResultSet);
 
@@ -372,8 +374,8 @@ public class ConstantContactTrackingTest {
 
             ResultSet contactTrackingBounceResultSet = mock(ResultSet.class);
 
-            contactTrackingBounceResultSet = constantContact.getContactTrackingSends(contactId, limit, null);
-            verify(constantContact).getContactTrackingSends(contactId, limit, null);
+            contactTrackingBounceResultSet = contactTrackingService.getSends(contactId, limit, null);
+            verify(contactTrackingService).getSends(contactId, limit, null);
 
         } catch (ConstantContactServiceException e) {
             e.printStackTrace();
@@ -393,8 +395,8 @@ public class ConstantContactTrackingTest {
 
             ResultSet contactTrackingUnsubscribeResultSet = mock(ResultSet.class);
 
-            contactTrackingUnsubscribeResultSet = constantContact.getContactTrackingUnsubscribes(contactId, limit, null);
-            verify(constantContact).getContactTrackingUnsubscribes(contactId, limit, null);
+            contactTrackingUnsubscribeResultSet = contactTrackingService.getUnsubscribes(contactId, limit, null);
+            verify(contactTrackingService).getUnsubscribes(contactId, limit, null);
 
             assertNotNull(contactTrackingUnsubscribeResultSet);
 
@@ -416,8 +418,8 @@ public class ConstantContactTrackingTest {
 
             ResultSet contactTrackingBounceResultSet = mock(ResultSet.class);
 
-            contactTrackingBounceResultSet = constantContact.getContactTrackingUnsubscribes(contactId, limit, null);
-            verify(constantContact).getContactTrackingUnsubscribes(contactId, limit, null);
+            contactTrackingBounceResultSet = contactTrackingService.getUnsubscribes(contactId, limit, null);
+            verify(contactTrackingService).getUnsubscribes(contactId, limit, null);
 
         } catch (ConstantContactServiceException e) {
             e.printStackTrace();

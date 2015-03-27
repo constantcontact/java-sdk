@@ -1,6 +1,7 @@
 package com.constantcontact.util;
 
-import com.constantcontact.ConstantContact;
+import com.constantcontact.ConstantContactFactory;
+
 
 public class SdkVersion {
 
@@ -34,7 +35,7 @@ public class SdkVersion {
     }
     
 	private SdkVersion() {
-		Package aPackage = ConstantContact.class.getPackage();
+		Package aPackage = ConstantContactFactory.class.getPackage();
         ctctSdkVersion = aPackage.getImplementationVersion();
 	}
 	

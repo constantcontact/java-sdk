@@ -27,10 +27,40 @@ import java.util.List;
  */
 public class ContactTrackingService extends BaseService implements IContactTrackingService {
 
+	private String accessToken;
+	private String apiKey;
+	
+	/**
+	 * @return the accessToken
+	 */
+	public String getAccessToken() {
+		return accessToken;
+	}
+
+	/**
+	 * @param accessToken the accessToken to set
+	 */
+	public void setAccessToken(String accessToken) {
+		this.accessToken = accessToken;
+	}
+
+	/**
+	 * @return the apiKey
+	 */
+	public String getApiKey() {
+		return apiKey;
+	}
+
+	/**
+	 * @param apiKey the apiKey to set
+	 */
+	public void setApiKey(String apiKey) {
+		this.apiKey = apiKey;
+	}
+
 	/**
 	 * Implements the get Summary operation of the Contact Tracking API by calling the ConstantContact server side.
 	 * 
-	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param contactId The id of the contact.
 	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
 	 * 		   It will return only the summary since the supplied date. <br/>
@@ -40,7 +70,12 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 
-	public ContactTrackingSummaryReport getSummary(String accessToken, String contactId, String createdSinceTimestamp) throws ConstantContactServiceException {
+	public ContactTrackingSummaryReport getSummary(String contactId, String createdSinceTimestamp) throws ConstantContactServiceException {
+		
+		if (contactId == null || !(contactId.length() > 0)) {
+			throw new IllegalArgumentException(Config.instance().getErrorId());
+		}
+		
 		ContactTrackingSummaryReport summary = null;
 		try {
 			String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.instance().getContactsTrackingReportsSummary(), contactId));
@@ -49,7 +84,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 				url = appendParam(url,"created_since", createdSinceTimestamp);
 			}
 			
-			RawApiResponse response = getRestClient().get(url, accessToken);
+			RawApiResponse response = getRestClient().get(url);
 
 			if (response.hasData()) {
 				summary = Component.fromJSON(response.getBody(), ContactTrackingSummaryReport.class);
@@ -66,14 +101,17 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 	/**
      * Implements the get Summary By Campaign operation of the Contact Tracking API by calling the ConstantContact server side.
      * 
-     * @param accessToken Constant Contact OAuth2 access token.
      * @param contactId The id of the contact.
      * @return The List of {@link ContactTrackingSummaryReport} containing data returned by the server on success; <br/>
      *         An exception is thrown otherwise.
      * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
      */
-    public List<ContactTrackingSummaryByCampaignReport> getSummaryByCampaign(String accessToken, String contactId) throws ConstantContactServiceException{
+    public List<ContactTrackingSummaryByCampaignReport> getSummaryByCampaign(String contactId) throws ConstantContactServiceException{
     
+    	if (contactId == null || !(contactId.length() > 0)) {
+            throw new IllegalArgumentException(Config.instance().getErrorId());
+        }
+    	
         List<ContactTrackingSummaryByCampaignReport> summary = null;
         
         try {
@@ -82,7 +120,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
             
             String url = sb.toString();
 
-            RawApiResponse response = getRestClient().get(url, accessToken);
+            RawApiResponse response = getRestClient().get(url);
 
             if (response.hasData()) {
                 summary = Component.listFromJSON(response.getBody(), ContactTrackingSummaryByCampaignReport.class);
@@ -99,7 +137,6 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 	/**
      * Implements the get All Activity Types operation of the Contact Tracking API by calling the ConstantContact server side.
      * 
-     * @param accessToken Constant Contact OAuth2 access token.
      * @param contactId The id of the contact.
      * @param limit The limit.
      * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
@@ -109,8 +146,13 @@ public class ContactTrackingService extends BaseService implements IContactTrack
      *         An exception is thrown otherwise.
      * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
      */
-    public ResultSet<? extends TrackingContactsBase> getActivities(String accessToken, String contactId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException{
-        ResultSet<? extends TrackingContactsBase> activities = null;
+    public ResultSet<? extends TrackingContactsBase> getActivities(String contactId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException{
+       
+    	if (contactId == null || !(contactId.length() > 0)) {
+	        throw new IllegalArgumentException(Config.instance().getErrorId());
+	    }
+    	
+    	ResultSet<? extends TrackingContactsBase> activities = null;
         
         try {
             StringBuilder sb = new StringBuilder();
@@ -127,7 +169,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
             
             String url = sb.toString();
 
-            RawApiResponse response = getRestClient().get(url, accessToken);
+            RawApiResponse response = getRestClient().get(url);
 
             if (response.hasData()) {
                 activities = Component.resultSetFromJSON(response.getBody(), TrackingContactsBase.class);
@@ -144,7 +186,6 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 	/**
 	 * Implements the get Bounces operation of the Contact Tracking API by calling the ConstantContact server side.
 	 * 
-	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param contactId The id of the contact.
 	 * @param limit The limit.
 	 * @return The {@link ResultSet} of {@link ContactTrackingBounce} containing data returned by the server on success; <br/>
@@ -152,8 +193,12 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 
-	public ResultSet<ContactTrackingBounce> getBounces(String accessToken, String contactId, Integer limit) throws ConstantContactServiceException {
+	public ResultSet<ContactTrackingBounce> getBounces(String contactId, Integer limit) throws ConstantContactServiceException {
 
+		if (contactId == null || !(contactId.length() > 0)) {
+			throw new IllegalArgumentException(Config.instance().getErrorId());
+		}
+		
 		ResultSet<ContactTrackingBounce> bounces = null;
 		try {
 			StringBuilder sb = new StringBuilder();
@@ -165,7 +210,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 			
 			String url = sb.toString();
 
-			RawApiResponse response = getRestClient().get(url, accessToken);
+			RawApiResponse response = getRestClient().get(url);
 
 			if (response.hasData()) {
 				bounces = Component.resultSetFromJSON(response.getBody(), ContactTrackingBounce.class);
@@ -182,7 +227,6 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 	/**
 	 * Implements the get Clicks operation of the Contact Tracking API by calling the ConstantContact server side.
 	 * 
-	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param contactId The id of the contact.
 	 * @param limit The limit.
 	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
@@ -193,7 +237,12 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 
-	public ResultSet<ContactTrackingClick> getClicks(String accessToken, String contactId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException {
+	public ResultSet<ContactTrackingClick> getClicks(String contactId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException {
+		
+		if (contactId == null || !(contactId.length() > 0)) {
+			throw new IllegalArgumentException(Config.instance().getErrorId());
+		}
+		
 		ResultSet<ContactTrackingClick> clicks = null;
 		try {
 			StringBuilder sb = new StringBuilder();
@@ -210,7 +259,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 						
 			String url = sb.toString();
 
-			RawApiResponse response = getRestClient().get(url, accessToken);
+			RawApiResponse response = getRestClient().get(url);
 
 			if (response.hasData()) {
 				clicks = Component.resultSetFromJSON(response.getBody(), ContactTrackingClick.class);
@@ -226,7 +275,6 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 	/**
 	 * Implements the get Forwards operation of the Contact Tracking API by calling the ConstantContact server side.
 	 * 
-	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param contactId The id of the contact.
 	 * @param limit The limit.
 	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
@@ -237,7 +285,12 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 
-	public ResultSet<ContactTrackingForward> getForwards(String accessToken, String contactId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException {
+	public ResultSet<ContactTrackingForward> getForwards(String contactId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException {
+		
+		if (contactId == null || !(contactId.length() > 0)) {
+			throw new IllegalArgumentException(Config.instance().getErrorId());
+		}
+		
 		ResultSet<ContactTrackingForward> forwards = null;
 		try {
 			StringBuilder sb = new StringBuilder();
@@ -254,7 +307,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 			
 			String url = sb.toString();
 
-			RawApiResponse response = getRestClient().get(url, accessToken);
+			RawApiResponse response = getRestClient().get(url);
 
 			if (response.hasData()) {
 				forwards = Component.resultSetFromJSON(response.getBody(), ContactTrackingForward.class);
@@ -271,7 +324,6 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 	/**
 	 * Implements the get Opens operation of the Contact Tracking API by calling the ConstantContact server side.
 	 * 
-	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param contactId The id of the contact.
 	 * @param limit The limit.
 	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
@@ -282,7 +334,12 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 
-	public ResultSet<ContactTrackingOpen> getOpens(String accessToken, String contactId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException {
+	public ResultSet<ContactTrackingOpen> getOpens(String contactId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException {
+		
+		if (contactId == null || !(contactId.length() > 0)) {
+			throw new IllegalArgumentException(Config.instance().getErrorId());
+		}
+		
 		ResultSet<ContactTrackingOpen> opens = null;
 		try {
 			StringBuilder sb = new StringBuilder();
@@ -299,7 +356,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 			
 			String url = sb.toString();
 
-			RawApiResponse response = getRestClient().get(url, accessToken);
+			RawApiResponse response = getRestClient().get(url);
 
 			if (response.hasData()) {
 				opens = Component.resultSetFromJSON(response.getBody(), ContactTrackingOpen.class);
@@ -316,7 +373,6 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 	/**
 	 * Implements the get Sends operation of the Contact Tracking API by calling the ConstantContact server side.
 	 * 
-	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param contactId The id of the contact.
 	 * @param limit The limit.
 	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
@@ -327,7 +383,12 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 
-	public ResultSet<ContactTrackingSend> getSends(String accessToken, String contactId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException {
+	public ResultSet<ContactTrackingSend> getSends(String contactId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException {
+		
+		if (contactId == null || !(contactId.length() > 0)) {
+			throw new IllegalArgumentException(Config.instance().getErrorId());
+		}
+		
 		ResultSet<ContactTrackingSend> sends = null;
 		try {
 			StringBuilder sb = new StringBuilder();
@@ -344,7 +405,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 			
 			String url = sb.toString();
 
-			RawApiResponse response = getRestClient().get(url, accessToken);
+			RawApiResponse response = getRestClient().get(url);
 
 			if (response.hasData()) {
 				sends = Component.resultSetFromJSON(response.getBody(), ContactTrackingSend.class);
@@ -362,7 +423,6 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 	/**
 	 * Implements the get Unsubscribes operation of the Contact Tracking API by calling the ConstantContact server side.
 	 * 
-	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param contactId The id of the contact.
 	 * @param limit The limit.
 	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
@@ -373,7 +433,12 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 
-	public ResultSet<ContactTrackingUnsubscribe> getUnsubscribes(String accessToken, String contactId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException {
+	public ResultSet<ContactTrackingUnsubscribe> getUnsubscribes(String contactId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException {
+		
+		if (contactId == null || !(contactId.length() > 0)) {
+			throw new IllegalArgumentException(Config.instance().getErrorId());
+		}
+		
 		ResultSet<ContactTrackingUnsubscribe> unsubscribes = null;
 		try {
 			StringBuilder sb = new StringBuilder();
@@ -390,7 +455,7 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 			
 			String url = sb.toString();
 
-			RawApiResponse response = getRestClient().get(url, accessToken);
+			RawApiResponse response = getRestClient().get(url);
 
 			if (response.hasData()) {
 				unsubscribes = Component.resultSetFromJSON(response.getBody(), ContactTrackingUnsubscribe.class);
@@ -407,7 +472,9 @@ public class ContactTrackingService extends BaseService implements IContactTrack
 	/**
 	 * Default constructor.
 	 */
-	public ContactTrackingService() {
-		super();
+	public ContactTrackingService(String accessToken, String apiKey) {
+		super(accessToken, apiKey);
+		this.setAccessToken(accessToken);
+		this.setApiKey(apiKey);
 	}
 }

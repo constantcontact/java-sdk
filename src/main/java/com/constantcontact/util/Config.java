@@ -173,7 +173,7 @@ public final class Config
     /**
      * API access URL Host.
      */
-    private String baseUrl = "https://api.constantcontact.com";
+    private String baseUrl;
 
     /**
      * Access a contact.

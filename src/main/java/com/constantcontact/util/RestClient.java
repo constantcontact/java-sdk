@@ -14,7 +14,9 @@ import com.constantcontact.util.http.constants.ProcessorBase.HttpMethod;
 public class RestClient implements IRestClient {
 
 	private HttpProcessor httpProcessor;
-
+	private String accessToken;
+	private String apiKey;
+	
 	/**
 	 * @return the httpProcessor
 	 */
@@ -30,14 +32,42 @@ public class RestClient implements IRestClient {
 	}
 
 	/**
+	 * @return the accessToken
+	 */
+	public String getAccessToken() {
+		return accessToken;
+	}
+
+	/**
+	 * @param accessToken the accessToken to set
+	 */
+	public void setAccessToken(String accessToken) {
+		this.accessToken = accessToken;
+	}
+
+	/**
+	 * @return the apiKey
+	 */
+	public String getApiKey() {
+		return apiKey;
+	}
+
+	/**
+	 * @param apiKey the apiKey to set
+	 */
+	public void setApiKey(String apiKey) {
+		this.apiKey = apiKey;
+	}
+
+	/**
 	 * Make HTTP GET request.
 	 * 
 	 * @param url Request URL.
 	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @return The response body, http info, and error (if one exists).
 	 */
-	public RawApiResponse get(String url, String accessToken) {
-		return makeHttpRequest(url, HttpMethod.GET, accessToken, null);
+	public RawApiResponse get(String url) {
+		return makeHttpRequest(url, HttpMethod.GET, this.getAccessToken(), null);
 	}
 
 	/**
@@ -48,8 +78,8 @@ public class RestClient implements IRestClient {
 	 * @param data Data to send with request.
 	 * @return The response body, http info, and error (if one exists).
 	 */
-	public RawApiResponse post(String url, String accessToken, String data) {
-		return makeHttpRequest(url, HttpMethod.POST, accessToken, data);
+	public RawApiResponse post(String url, String data) {
+		return makeHttpRequest(url, HttpMethod.POST, this.getAccessToken(), data);
 	}
 	
 	/**
@@ -60,8 +90,8 @@ public class RestClient implements IRestClient {
      * @param data Data to send with request.
      * @return The response body, http info, and error (if one exists).
      */
-    public RawApiResponse postMultipart(String url, String accessToken, MultipartBody data) {
-        return makeMultipartRequest(url, accessToken, data);
+    public RawApiResponse postMultipart(String url, MultipartBody data) {
+        return makeMultipartRequest(url, this.getAccessToken(), data);
     }
 
 	/**
@@ -72,8 +102,8 @@ public class RestClient implements IRestClient {
 	 * @param data Data to send with request.
 	 * @return The response body, http info, and error (if one exists).
 	 */
-	public RawApiResponse put(String url, String accessToken, String data) {
-		return makeHttpRequest(url, HttpMethod.PUT, accessToken, data);
+	public RawApiResponse put(String url, String data) {
+		return makeHttpRequest(url, HttpMethod.PUT, this.getAccessToken(), data);
 	}
 
 	/**
@@ -83,8 +113,8 @@ public class RestClient implements IRestClient {
 	 * @param accessToken Constant Contact OAuth2 access token
 	 * @return The response body, http info, and error (if one exists).
 	 */
-	public RawApiResponse delete(String url, String accessToken) {
-		return makeHttpRequest(url, HttpMethod.DELETE, accessToken, null);
+	public RawApiResponse delete(String url) {
+		return makeHttpRequest(url, HttpMethod.DELETE, this.getAccessToken(), null);
 	}
 
     /**
@@ -95,8 +125,8 @@ public class RestClient implements IRestClient {
      * @param data Data to send with request.
      * @return The response body, http info, and error (if one exists).
      */
-    public RawApiResponse patch(String url, String accessToken, String data) {
-        return makeHttpRequest(url, HttpMethod.PATCH, accessToken, data);
+    public RawApiResponse patch(String url, String data) {
+        return makeHttpRequest(url, HttpMethod.PATCH, this.getAccessToken(), data);
     }
 
 	protected RawApiResponse makeHttpRequest(String urlParam, HttpMethod method, String accessToken, String data) {
@@ -113,8 +143,10 @@ public class RestClient implements IRestClient {
 	/**
 	 * Default constructor.
 	 */
-	public RestClient() {
+	public RestClient(String accessToken, String apiKey) {
 		super();
-		this.setHttpProcessor(new HttpProcessor());
+		this.setHttpProcessor(new HttpProcessor(accessToken, apiKey));
+		this.setAccessToken(accessToken);
+		this.setApiKey(apiKey);
 	}
 }
