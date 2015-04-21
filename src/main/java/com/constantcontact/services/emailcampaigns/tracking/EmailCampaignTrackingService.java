@@ -11,7 +11,7 @@ import com.constantcontact.components.emailcampaigns.tracking.unsubscribes.Email
 import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.base.BaseService;
-import com.constantcontact.util.CUrlResponse;
+import com.constantcontact.util.RawApiResponse;
 import com.constantcontact.util.Config;
 import com.constantcontact.util.ConstantContactExceptionFactory;
 
@@ -23,11 +23,41 @@ import com.constantcontact.util.ConstantContactExceptionFactory;
  */
 public class EmailCampaignTrackingService extends BaseService implements IEmailCampaignTrackingService {
 
+	private String accessToken;
+	private String apikey;
+	
+	/**
+	 * @return the accessToken
+	 */
+	public String getAccessToken() {
+		return accessToken;
+	}
+
+	/**
+	 * @param accessToken the accessToken to set
+	 */
+	public void setAccessToken(String accessToken) {
+		this.accessToken = accessToken;
+	}
+
+	/**
+	 * @return the apikey
+	 */
+	public String getApikey() {
+		return apikey;
+	}
+
+	/**
+	 * @param apikey the apikey to set
+	 */
+	public void setApikey(String apikey) {
+		this.apikey = apikey;
+	}
+
 	/**
 	 * Gets the Email Campaign Tracking Summary for a single Email Campaign based on its id.<br/>
 	 * Implements the get Summary operation of the Email Campaign Tracking API by calling the ConstantContact server side.
 	 * 
-	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param emailCampaignId The id field in Email Campaign
 	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
 	 * 		   It will return only the summary since the supplied date. <br/>
@@ -36,17 +66,21 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	public EmailCampaignTrackingSummary getSummary(String accessToken, String emailCampaignId, String createdSinceTimestamp) throws ConstantContactServiceException {
+	public EmailCampaignTrackingSummary getSummary(String emailCampaignId, String createdSinceTimestamp) throws ConstantContactServiceException {
 
+		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
+			throw new IllegalArgumentException(Config.instance().getErrorId());
+		}
+		
 		EmailCampaignTrackingSummary summary = null;
 		try {
-			String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.Endpoints.EMAILCAMPAIGNS_TRACKING_REPORTS_SUMMARY, emailCampaignId));
+			String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.instance().getEmailCampaignsTrackingReportsSummary(), emailCampaignId));
 			
 			if (createdSinceTimestamp != null) {
 				url = appendParam(url,"created_since", createdSinceTimestamp);
 			}			
 			
-			CUrlResponse response = getRestClient().get(url, accessToken);
+			RawApiResponse response = getRestClient().get(url);
 
 			if (response.hasData()) {
 				summary = Component.fromJSON(response.getBody(), EmailCampaignTrackingSummary.class);
@@ -66,24 +100,28 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 	 * Gets the Email Campaign Tracking Bounces based on the id of the email campaign.<br/>
 	 * Implements the get Bounces operation of the Email Campaign Tracking API by calling the ConstantContact server side.
 	 * 
-	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param emailCampaignId The id field in Email Campaign
 	 * @param limit The limit
 	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingBounce} containing the bounces - values returned by the server side - on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	public ResultSet<EmailCampaignTrackingBounce> getBounces(String accessToken, String emailCampaignId, Integer limit) throws ConstantContactServiceException {
+	public ResultSet<EmailCampaignTrackingBounce> getBounces(String emailCampaignId, Integer limit) throws ConstantContactServiceException {
+		
+		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
+			throw new IllegalArgumentException(Config.instance().getErrorId());
+		}
+		
 		ResultSet<EmailCampaignTrackingBounce> bounces = null;
 		try {
 			StringBuilder sb = new StringBuilder();
-			sb.append(Config.instance().getBaseUrl()).append(String.format(Config.Endpoints.EMAILCAMPAIGNS_TRACKING_BOUNCES, emailCampaignId));
+			sb.append(Config.instance().getBaseUrl()).append(String.format(Config.instance().getEmailCampaignsTrackingBounces(), emailCampaignId));
 			if (limit != null) {
 				sb.append("?limit=").append(limit);
 			}
 			String url = sb.toString();
 
-			CUrlResponse response = getRestClient().get(url, accessToken);
+			RawApiResponse response = getRestClient().get(url);
 
 			if (response.hasData()) {
 				bounces = Component.resultSetFromJSON(response.getBody(), EmailCampaignTrackingBounce.class);
@@ -103,7 +141,6 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 	 * Gets the Email Campaign Tracking Clicks based on the id of the email campaign.<br/>
 	 * Implements the get Clicks operation of the Email Campaign Tracking API by calling the ConstantContact server side.
 	 * 
-	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param emailCampaignId The id field in Email Campaign
 	 * @param limit The limit
 	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
@@ -113,12 +150,16 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	public ResultSet<EmailCampaignTrackingClick> getClicks(String accessToken, String emailCampaignId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException {
+	public ResultSet<EmailCampaignTrackingClick> getClicks(String emailCampaignId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException {
 
+		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
+			throw new IllegalArgumentException(Config.instance().getErrorId());
+		}
+		
 		ResultSet<EmailCampaignTrackingClick> clicks = null;
 		try {
 			StringBuilder sb = new StringBuilder();
-			sb.append(Config.instance().getBaseUrl()).append(String.format(Config.Endpoints.EMAILCAMPAIGNS_TRACKING_CLICKS, emailCampaignId));
+			sb.append(Config.instance().getBaseUrl()).append(String.format(Config.instance().getEmailCampaignsTrackingClicks(), emailCampaignId));
 			if (limit != null) {
 				sb.append("?limit=").append(limit);
 			}
@@ -130,7 +171,7 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 			
 			String url = sb.toString();
 
-			CUrlResponse response = getRestClient().get(url, accessToken);
+			RawApiResponse response = getRestClient().get(url);
 
 			if (response.hasData()) {
 				clicks = Component.resultSetFromJSON(response.getBody(), EmailCampaignTrackingClick.class);
@@ -150,7 +191,6 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 	 * Gets the Email Campaign Tracking Forwards based on the id of the email campaign.<br/>
 	 * Implements the get Forwards operation of the Email Campaign Tracking API by calling the ConstantContact server side.
 	 * 
-	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param emailCampaignId The id field in Email Campaign
 	 * @param limit The limit
 	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
@@ -160,12 +200,17 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	public ResultSet<EmailCampaignTrackingForward> getForwards(String accessToken, String emailCampaignId, Integer limit, String createdSinceTimestamp)
+	public ResultSet<EmailCampaignTrackingForward> getForwards(String emailCampaignId, Integer limit, String createdSinceTimestamp)
 			throws ConstantContactServiceException {
+		
+		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
+			throw new IllegalArgumentException(Config.instance().getErrorId());
+		}
+		
 		ResultSet<EmailCampaignTrackingForward> forwards = null;
 		try {
 			StringBuilder sb = new StringBuilder();
-			sb.append(Config.instance().getBaseUrl()).append(String.format(Config.Endpoints.EMAILCAMPAIGNS_TRACKING_FORWARDS, emailCampaignId));
+			sb.append(Config.instance().getBaseUrl()).append(String.format(Config.instance().getEmailCampaignsTrackingForwards(), emailCampaignId));
 			if (limit != null) {
 				sb.append("?limit=").append(limit);
 			}
@@ -177,7 +222,7 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 			
 			String url = sb.toString();
 
-			CUrlResponse response = getRestClient().get(url, accessToken);
+			RawApiResponse response = getRestClient().get(url);
 
 			if (response.hasData()) {
 				forwards = Component.resultSetFromJSON(response.getBody(), EmailCampaignTrackingForward.class);
@@ -197,7 +242,6 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 	 * Gets the Email Campaign Tracking Opens based on the id of the email campaign.<br/>
 	 * Implements the get Opens operation of the Email Campaign Tracking API by calling the ConstantContact server side.
 	 * 
-	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param emailCampaignId The id field in Email Campaign
 	 * @param limit
 	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
@@ -207,11 +251,16 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	public ResultSet<EmailCampaignTrackingOpen> getOpens(String accessToken, String emailCampaignId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException {
+	public ResultSet<EmailCampaignTrackingOpen> getOpens(String emailCampaignId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException {
+		
+		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
+			throw new IllegalArgumentException(Config.instance().getErrorId());
+		}
+		
 		ResultSet<EmailCampaignTrackingOpen> opens = null;
 		try {
 			StringBuilder sb = new StringBuilder();
-			sb.append(Config.instance().getBaseUrl()).append(String.format(Config.Endpoints.EMAILCAMPAIGNS_TRACKING_OPENS, emailCampaignId));
+			sb.append(Config.instance().getBaseUrl()).append(String.format(Config.instance().getEmailCampaignsTrackingOpens(), emailCampaignId));
 			if (limit != null) {
 				sb.append("?limit=").append(limit);
 			}
@@ -223,7 +272,7 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 			
 			String url = sb.toString();
 
-			CUrlResponse response = getRestClient().get(url, accessToken);
+			RawApiResponse response = getRestClient().get(url);
 
 			if (response.hasData()) {
 				opens = Component.resultSetFromJSON(response.getBody(), EmailCampaignTrackingOpen.class);
@@ -243,7 +292,6 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 	 * Gets the Email Campaign Tracking Sends based on the id of the email campaign.<br/>
 	 * Implements the get Sends operation of the Email Campaign Tracking API by calling the ConstantContact server side.
 	 * 
-	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param emailCampaignId The id field in Email Campaign
 	 * @param limit The limit
 	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
@@ -253,11 +301,16 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	public ResultSet<EmailCampaignTrackingSend> getSends(String accessToken, String emailCampaignId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException {
+	public ResultSet<EmailCampaignTrackingSend> getSends(String emailCampaignId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException {
+		
+		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
+			throw new IllegalArgumentException(Config.instance().getErrorId());
+		}
+		
 		ResultSet<EmailCampaignTrackingSend> sends = null;
 		try {
 			StringBuilder sb = new StringBuilder();
-			sb.append(Config.instance().getBaseUrl()).append(String.format(Config.Endpoints.EMAILCAMPAIGNS_TRACKING_SENDS, emailCampaignId));
+			sb.append(Config.instance().getBaseUrl()).append(String.format(Config.instance().getEmailCampaignsTrackingSends(), emailCampaignId));
 			if (limit != null) {
 				sb.append("?limit=").append(limit);
 			}
@@ -269,7 +322,7 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 			
 			String url = sb.toString();
 
-			CUrlResponse response = getRestClient().get(url, accessToken);
+			RawApiResponse response = getRestClient().get(url);
 
 			if (response.hasData()) {
 				sends = Component.resultSetFromJSON(response.getBody(), EmailCampaignTrackingSend.class);
@@ -289,7 +342,6 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 	 * Gets the Email Campaign Tracking Unsubscribes based on the id of the email campaign.<br/>
 	 * Implements the get Unsubscribes operation of the Email Campaign Tracking API by calling the ConstantContact server side.
 	 *
-	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param emailCampaignId The id field in Email Campaign
 	 * @param limit The limit
 	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/>
@@ -299,12 +351,17 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	public ResultSet<EmailCampaignTrackingUnsubscribe> getUnsubscribes(String accessToken, String emailCampaignId, Integer limit, String createdSinceTimestamp)
+	public ResultSet<EmailCampaignTrackingUnsubscribe> getUnsubscribes(String emailCampaignId, Integer limit, String createdSinceTimestamp)
 			throws ConstantContactServiceException {
+		
+		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
+			throw new IllegalArgumentException(Config.instance().getErrorId());
+		}
+		
 		ResultSet<EmailCampaignTrackingUnsubscribe> unsubscribes = null;
 		try {
 			StringBuilder sb = new StringBuilder();
-			sb.append(Config.instance().getBaseUrl()).append(String.format(Config.Endpoints.EMAILCAMPAIGNS_TRACKING_UNSUBSCRIBES, emailCampaignId));
+			sb.append(Config.instance().getBaseUrl()).append(String.format(Config.instance().getEmailCampaignsTrackingUnsubscribes(), emailCampaignId));
 			if (limit != null) {
 				sb.append("?limit=").append(limit);
 			}
@@ -316,7 +373,7 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 
 			String url = sb.toString();
 
-			CUrlResponse response = getRestClient().get(url, accessToken);
+			RawApiResponse response = getRestClient().get(url);
 
 			if (response.hasData()) {
 				unsubscribes = Component.resultSetFromJSON(response.getBody(), EmailCampaignTrackingUnsubscribe.class);
@@ -336,7 +393,6 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 	 * Gets the Email Campaign Tracking Clicks based on the id of the email campaign.<br/>
 	 * Implements the get Clicks By Link Id operation of the Email Campaign Tracking API by calling the ConstantContact server side.
 	 * 
-	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param emailCampaignId The id field in Email Campaign
 	 * @param linkId The link id
 	 * @param limit The limit
@@ -348,12 +404,17 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	public ResultSet<EmailCampaignTrackingClick> getClicksByLinkId(String accessToken, String emailCampaignId, String linkId, Integer limit, String createdSinceTimestamp)
+	public ResultSet<EmailCampaignTrackingClick> getClicksByLinkId(String emailCampaignId, String linkId, Integer limit, String createdSinceTimestamp)
 			throws ConstantContactServiceException {
+		
+		if (emailCampaignId == null || !(emailCampaignId.length() > 0)) {
+			throw new IllegalArgumentException(Config.instance().getErrorId());
+		}
+		
 		ResultSet<EmailCampaignTrackingClick> clicks = null;
 		try {
 			StringBuilder sb = new StringBuilder();
-			sb.append(Config.instance().getBaseUrl()).append(String.format(Config.Endpoints.EMAILCAMPAIGNS_TRACKING_CLICKS_BY_LINK, emailCampaignId, linkId));
+			sb.append(Config.instance().getBaseUrl()).append(String.format(Config.instance().getEmailCampaignsTrackingClicksByLink(), emailCampaignId, linkId));
 
 			if (limit != null) {
 				sb.append("?limit=").append(limit);
@@ -366,7 +427,7 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 			
 			String url = sb.toString();
 
-			CUrlResponse response = getRestClient().get(url, accessToken);
+			RawApiResponse response = getRestClient().get(url);
 
 			if (response.hasData()) {
 				clicks = Component.resultSetFromJSON(response.getBody(), EmailCampaignTrackingClick.class);
@@ -385,7 +446,9 @@ public class EmailCampaignTrackingService extends BaseService implements IEmailC
 	/**
 	 * Default constructor.
 	 */
-	public EmailCampaignTrackingService() {
-		super();
+	public EmailCampaignTrackingService(String accessToken, String apiKey) {
+		super(accessToken, apiKey);
+		this.setAccessToken(accessToken);
+		this.setApikey(apiKey);
 	}
 }

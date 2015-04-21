@@ -10,7 +10,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.emailcampaigns.schedule.EmailCampaignScheduleService;
-import com.constantcontact.util.CUrlResponse;
+import com.constantcontact.util.RawApiResponse;
 import com.constantcontact.util.RestClient;
 import com.constantcontact.util.http.constants.ProcessorBase.HttpMethod;
 
@@ -26,17 +26,17 @@ public class EmailCampaignScheduleServiceUnitTest {
     
     @Before
     public void setup() {
-        svc = new EmailCampaignScheduleService();
+        svc = new EmailCampaignScheduleService("","");
     }
 
     @Test
     public void testDelete() throws ConstantContactServiceException {
         
-        RestClient rc = new RestClient(){
+        RestClient rc = new RestClient("",""){
             @Override
-            protected CUrlResponse makeHttpRequest(String urlParam, HttpMethod method, String accessToken, String data) {
+            protected RawApiResponse makeHttpRequest(String urlParam, HttpMethod method, String accessToken, String data) {
                 
-                CUrlResponse response = new CUrlResponse();
+                RawApiResponse response = new RawApiResponse();
                 
                 if (method == HttpMethod.DELETE) {
                     response.setStatusCode(HttpURLConnection.HTTP_NO_CONTENT);
@@ -48,17 +48,17 @@ public class EmailCampaignScheduleServiceUnitTest {
         };
         svc.setRestClient(rc);
      
-        Assert.assertTrue(svc.deleteSchedule("foo", "12345", "67890"));
+        Assert.assertTrue(svc.deleteSchedule("12345", "67890"));
         
     }
     
     @Test (expected=ConstantContactServiceException.class)
     public void testDeleteFail() throws ConstantContactServiceException {
-        RestClient rc2 = new RestClient(){
+        RestClient rc2 = new RestClient("",""){
             @Override
-            protected CUrlResponse makeHttpRequest(String urlParam, HttpMethod method, String accessToken, String data) {
+            protected RawApiResponse makeHttpRequest(String urlParam, HttpMethod method, String accessToken, String data) {
                 
-                CUrlResponse response = new CUrlResponse();
+                RawApiResponse response = new RawApiResponse();
                 
                 if (method == HttpMethod.DELETE) {
                     response.setStatusCode(HttpURLConnection.HTTP_INTERNAL_ERROR);
@@ -71,7 +71,7 @@ public class EmailCampaignScheduleServiceUnitTest {
         };
         svc.setRestClient(rc2);
      
-        svc.deleteSchedule("foo", "12345", "67890");
+        svc.deleteSchedule("12345", "67890");
     }
     
     

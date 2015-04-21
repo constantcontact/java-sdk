@@ -1,27 +1,40 @@
 package com.constantcontact;
 
-import com.constantcontact.ConstantContact;
-import com.constantcontact.components.activities.contacts.request.*;
-import com.constantcontact.components.activities.contacts.response.ContactsResponse;
-import com.constantcontact.components.activities.contacts.response.DetailedStatusReport;
-import com.constantcontact.components.activities.contacts.response.SummaryReport;
-import com.constantcontact.exceptions.service.ConstantContactServiceException;
-import com.constantcontact.mockup.BulkActivitiesServiceMock;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.junit.Assert.*;
+import com.constantcontact.components.activities.contacts.request.AddContactsRequest;
+import com.constantcontact.components.activities.contacts.request.ClearListsRequest;
+import com.constantcontact.components.activities.contacts.request.ExportContactsRequest;
+import com.constantcontact.components.activities.contacts.request.RemoveContactsRequest;
+import com.constantcontact.components.activities.contacts.response.ContactsResponse;
+import com.constantcontact.components.activities.contacts.response.DetailedStatusReport;
+import com.constantcontact.components.activities.contacts.response.SummaryReport;
+import com.constantcontact.exceptions.service.ConstantContactServiceException;
+import com.constantcontact.mockup.ConstantContactFactoryMock;
+import com.constantcontact.services.activities.IBulkActivitiesService;
+import com.constantcontact.util.http.MultipartBody;
+import com.constantcontact.util.http.MultipartBuilder;
 
 /**
  * Constant Contact Bulk Activity unit test class.<br/>
@@ -31,14 +44,20 @@ import static org.junit.Assert.*;
 @RunWith(MockitoJUnitRunner.class)
 public class ConstantContactActivityTest {
 
-    ConstantContact constantContact;
+    private ConstantContactFactoryMock constantContactFactoryMock;
+    private IBulkActivitiesService bulkActivitiesServiceMock;
 
+    private ConstantContactFactory constantContactFactory;
+    private IBulkActivitiesService bulkActivitiesService;
+    
     @Before
     public void beforeTests(){
-        constantContact = Mockito.spy(new ConstantContact("", ""));
-        constantContact.setBulkActivitiesService(new BulkActivitiesServiceMock());
+    	constantContactFactoryMock = Mockito.spy(new ConstantContactFactoryMock("",""));
+    	bulkActivitiesServiceMock = constantContactFactoryMock.createBulkActivitiesService();
+    	
+    	constantContactFactory = Mockito.spy(new ConstantContactFactory("",""));
+    	bulkActivitiesService = constantContactFactory.createBulkActivitiesService();
     }
-
 
      /**
       * Tests the add bulk contacts functionality
@@ -51,9 +70,9 @@ public class ConstantContactActivityTest {
             AddContactsRequest addContactsRequest = mock(AddContactsRequest.class);
 
             ContactsResponse contactsResponse = new ContactsResponse();
-            //import contacts
-            contactsResponse = constantContact.addBulkContacts(addContactsRequest);
-            verify(constantContact).addBulkContacts(addContactsRequest);
+ 
+            contactsResponse = bulkActivitiesServiceMock.addContacts(addContactsRequest);
+            verify(bulkActivitiesServiceMock).addContacts(addContactsRequest);
 
             assertNotNull(contactsResponse);
 
@@ -74,14 +93,29 @@ public class ConstantContactActivityTest {
             AddContactsRequest addContactsRequest = null;
 
             ContactsResponse contactsResponse = new ContactsResponse();
-            //import contacts
-            contactsResponse = constantContact.addBulkContacts(addContactsRequest);
-            verify(constantContact).addBulkContacts(addContactsRequest);
+
+            contactsResponse = bulkActivitiesServiceMock.addContacts(addContactsRequest);
+            verify(bulkActivitiesServiceMock).addContacts(addContactsRequest);
 
         } catch (ConstantContactServiceException e) {
             e.printStackTrace();
             System.out.println(e.getErrorInfo());
         }
+    }
+    
+    /**
+     * Tests that the addBulkContacts method throws the proper exception
+     * @throws ConstantContactServiceException 
+     *
+     */
+    @Test(expected = ConstantContactServiceException.class)
+    public void addBulkContactsServiceExceptionTest() throws ConstantContactServiceException {
+
+            AddContactsRequest addContactsRequest = new AddContactsRequest();
+
+            ContactsResponse contactsResponse = new ContactsResponse();
+
+            contactsResponse = bulkActivitiesService.addContacts(addContactsRequest);
     }
 
     /**
@@ -96,8 +130,8 @@ public class ConstantContactActivityTest {
 
             ContactsResponse contactsResponse = new ContactsResponse();
 
-            contactsResponse = constantContact.removeBulkContactsFromLists(removeContactsRequest);
-            verify(constantContact).removeBulkContactsFromLists(removeContactsRequest);
+            contactsResponse = bulkActivitiesServiceMock.removeContactsFromLists(removeContactsRequest);
+            verify(bulkActivitiesServiceMock).removeContactsFromLists(removeContactsRequest);
 
             assertNotNull(contactsResponse);
 
@@ -118,12 +152,26 @@ public class ConstantContactActivityTest {
 
             ContactsResponse contactsResponse = new ContactsResponse();
 
-            contactsResponse = constantContact.removeBulkContactsFromLists(removeContactsRequest);
-            verify(constantContact).removeBulkContactsFromLists(removeContactsRequest);
+            contactsResponse = bulkActivitiesServiceMock.removeContactsFromLists(removeContactsRequest);
+            verify(bulkActivitiesServiceMock).removeContactsFromLists(removeContactsRequest);
 
         } catch (ConstantContactServiceException e) {
             e.printStackTrace();
         }
+    }
+    
+    /**
+     * Tests that the removeBulkContactsFromLists methods throws the proper exception
+     * @throws ConstantContactServiceException 
+     *
+     */
+    @Test(expected = ConstantContactServiceException.class)
+    public void removeBulkContactsCommunicationExceptionTest() throws ConstantContactServiceException {
+        	RemoveContactsRequest removeContactsRequest = new RemoveContactsRequest();
+
+        	ContactsResponse contactsResponse = new ContactsResponse();
+
+        	contactsResponse = bulkActivitiesService.removeContactsFromLists(removeContactsRequest);
     }
 
     /**
@@ -137,8 +185,8 @@ public class ConstantContactActivityTest {
 
             ContactsResponse contactsResponse = new ContactsResponse();
 
-            contactsResponse = constantContact.exportBulkContacts(exportContactsRequest);
-            verify(constantContact).exportBulkContacts(exportContactsRequest);
+            contactsResponse = bulkActivitiesServiceMock.exportContacts(exportContactsRequest);
+            verify(bulkActivitiesServiceMock).exportContacts(exportContactsRequest);
 
             assertNotNull(contactsResponse);
 
@@ -158,12 +206,26 @@ public class ConstantContactActivityTest {
 
             ContactsResponse contactsResponse = new ContactsResponse();
 
-            contactsResponse = constantContact.exportBulkContacts(exportContactsRequest);
-            verify(constantContact).exportBulkContacts(exportContactsRequest);
+            contactsResponse = bulkActivitiesServiceMock.exportContacts(exportContactsRequest);
+            verify(bulkActivitiesServiceMock).exportContacts(exportContactsRequest);
 
         } catch (ConstantContactServiceException e) {
             e.printStackTrace();
         }
+    }
+    
+    /**
+     * Tests that the exportBulkContacts method throws the proper exception
+     * @throws ConstantContactServiceException 
+     *
+     */
+    @Test(expected = ConstantContactServiceException.class)
+    public void exportToCVSServerExceptionTest() throws ConstantContactServiceException {
+        ExportContactsRequest exportContactsRequest = new ExportContactsRequest();
+
+        ContactsResponse contactsResponse = new ContactsResponse();
+
+        contactsResponse = bulkActivitiesService.exportContacts(exportContactsRequest);
     }
 
     /**
@@ -178,8 +240,8 @@ public class ConstantContactActivityTest {
 
             ContactsResponse contactsResponse = new ContactsResponse();
 
-            contactsResponse = constantContact.clearBulkContactsLists(clearListsRequest);
-            verify(constantContact).clearBulkContactsLists(clearListsRequest);
+            contactsResponse = bulkActivitiesServiceMock.clearLists(clearListsRequest);
+            verify(bulkActivitiesServiceMock).clearLists(clearListsRequest);
 
             assertNotNull(contactsResponse);
 
@@ -200,12 +262,26 @@ public class ConstantContactActivityTest {
 
             ContactsResponse contactsResponse = new ContactsResponse();
 
-            contactsResponse = constantContact.clearBulkContactsLists(clearListsRequest);
-            verify(constantContact).clearBulkContactsLists(clearListsRequest);
+            contactsResponse = bulkActivitiesServiceMock.clearLists(clearListsRequest);
+            verify(bulkActivitiesServiceMock).clearLists(clearListsRequest);
 
         } catch (ConstantContactServiceException e) {
             e.printStackTrace();
         }
+    }
+    
+    /**
+     * Tests that the clearBulkContactsLists methods throws the proper exception
+     * @throws ConstantContactServiceException 
+     *
+     */
+    @Test(expected = ConstantContactServiceException.class)
+    public void clearBulkContactsServerExceptionTest() throws ConstantContactServiceException {
+        ClearListsRequest clearListsRequest = new ClearListsRequest();
+
+        ContactsResponse contactsResponse = new ContactsResponse();
+
+        contactsResponse = bulkActivitiesService.clearLists(clearListsRequest);
     }
 
     /**
@@ -216,7 +292,6 @@ public class ConstantContactActivityTest {
 
         try {
 
-
             File file = new File("test.txt");
             BufferedWriter output = new BufferedWriter(new FileWriter(file));
             output.write("test");
@@ -224,11 +299,26 @@ public class ConstantContactActivityTest {
 
 
             ContactsResponse contactsResponse = mock(ContactsResponse.class);
-            ArrayList arrayList = new ArrayList();
+            ArrayList<String> arrayList = new ArrayList<String>();
             arrayList.add("1");
 
-            contactsResponse = constantContact.addBulkContactsMultipart(file.getName(), file, arrayList);
-            verify(constantContact).addBulkContactsMultipart(file.getName(), file, arrayList);
+    	    Map<String,String> textParts = new HashMap<String,String>();
+    	    StringBuilder lists = new StringBuilder();
+    
+    	    lists.append(arrayList.remove(0));
+    	    for (String list : arrayList){
+    	        lists.append(",");
+    	        lists.append(list);
+    	    }
+    
+    	    textParts.put("lists", lists.toString());
+    
+    	    InputStream fileStream = new FileInputStream(file);
+    
+    	    MultipartBody request = MultipartBuilder.buildMultipartBody(textParts, file.getName(), fileStream);
+            
+            contactsResponse = bulkActivitiesServiceMock.addContacts(request);
+            verify(bulkActivitiesServiceMock).addContacts(request);
 
             assertNotNull(contactsResponse);
 
@@ -257,12 +347,27 @@ public class ConstantContactActivityTest {
             output.write("test");
             output.close();
 
-            //File file = mock(File.class);
-
             ArrayList<String> arrayList = new ArrayList<String>();
             arrayList.add("1");
-            ContactsResponse contactsResponse = constantContact.removeBulkContactsFromListsMultipart(file.getName(), file, arrayList);
-            verify(constantContact).removeBulkContactsFromListsMultipart(file.getName(), file, arrayList);
+
+  
+	        Map<String, String> textParts = new HashMap<String, String>();
+	        StringBuilder lists = new StringBuilder();
+	  
+	        lists.append(arrayList.remove(0));
+	        for (String list : arrayList) {
+	            lists.append(",");
+	            lists.append(list);
+	        }
+	  
+	        textParts.put("lists", lists.toString());
+	  
+	        InputStream fileStream = new FileInputStream(file);
+	  
+	        MultipartBody request = MultipartBuilder.buildMultipartBody(textParts, file.getName(), fileStream);
+  
+            ContactsResponse contactsResponse = bulkActivitiesServiceMock.removeContactsFromLists(request);
+            verify(bulkActivitiesServiceMock).removeContactsFromLists(request);
 
             assertNotNull(contactsResponse);
 
@@ -288,8 +393,8 @@ public class ConstantContactActivityTest {
 
             List<SummaryReport> summaryReportList = new ArrayList<SummaryReport>();
 
-            summaryReportList = constantContact.getBulkSummaryReport();
-            verify(constantContact).getBulkSummaryReport();
+            summaryReportList = bulkActivitiesServiceMock.getSummaryReport();
+            verify(bulkActivitiesServiceMock).getSummaryReport();
 
             assertNotNull(summaryReportList);
 
@@ -311,8 +416,8 @@ public class ConstantContactActivityTest {
 
             List<DetailedStatusReport> detailedStatusReportList = new ArrayList<DetailedStatusReport>();
 
-            detailedStatusReportList = constantContact.getBulkDetailedStatusReport(status, type, id);
-            verify(constantContact).getBulkDetailedStatusReport(status, type, id);
+            detailedStatusReportList = bulkActivitiesServiceMock.getDetailedStatusReport(status, type, id);
+            verify(bulkActivitiesServiceMock).getDetailedStatusReport(status, type, id);
 
             assertNotNull(detailedStatusReportList);
 

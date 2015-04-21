@@ -23,11 +23,41 @@ import java.util.List;
  */
 public class BulkActivitiesServiceMock extends BulkActivitiesService{
 
+	private String accessToken;
+	private String apiKey;
+	
+	/**
+	 * @return the accessToken
+	 */
+	public String getAccessToken() {
+		return accessToken;
+	}
+
+	/**
+	 * @param accessToken the accessToken to set
+	 */
+	public void setAccessToken(String accessToken) {
+		this.accessToken = accessToken;
+	}
+
+	/**
+	 * @return the apiKey
+	 */
+	public String getApiKey() {
+		return apiKey;
+	}
+
+	/**
+	 * @param apiKey the apiKey to set
+	 */
+	public void setApiKey(String apiKey) {
+		this.apiKey = apiKey;
+	}
+
 	/**
 	 * Add a large number of contacts in a single batch operation.<br>
 	 * Implements the bulk add Contacts operation by calling the ConstantContact server side.
 	 * 
-	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param request The request
 	 * @return A response containing the values returned from the server for the requested operation on success; <br/>
 	 *         An exception is thrown otherwise.
@@ -35,8 +65,12 @@ public class BulkActivitiesServiceMock extends BulkActivitiesService{
 	 */
 
     @Override
-	public ContactsResponse addContacts(String accessToken, AddContactsRequest request) throws ConstantContactServiceException {
+	public ContactsResponse addContacts(AddContactsRequest request) throws ConstantContactServiceException {
 
+    	if (request == null) {
+    		throw new IllegalArgumentException(Config.instance().getErrorBulkContactsRequestNull());
+    	}
+    	
 		ContactsResponse contactsResponse = null;
 		try {
 				contactsResponse = Component.fromJSON(MockedServerResponses.addContactsBulkActivitiesData, ContactsResponse.class);
@@ -47,10 +81,13 @@ public class BulkActivitiesServiceMock extends BulkActivitiesService{
 	}
 
     @Override
-	public ContactsResponse addContacts(String accessToken, MultipartBody multipartRequest)
+	public ContactsResponse addContacts(MultipartBody multipartRequest)
             throws ConstantContactServiceException {
 
-	    
+    	if (multipartRequest == null) {
+    		throw new IllegalArgumentException(Config.instance().getErrorBulkContactsRequestNull());
+    	}	    
+    	
 	    ContactsResponse contactsResponse = null;
         try {
                 contactsResponse = Component.fromJSON(MockedServerResponses.addContactsMultipartBulkActivitiesData, ContactsResponse.class);
@@ -64,7 +101,6 @@ public class BulkActivitiesServiceMock extends BulkActivitiesService{
 	/**
 	 * Implements the bulk remove Contacts From Lists operation by calling the ConstantContact server side.
 	 * 
-	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param request The request
 	 * @return A response containing the values returned from the server for the requested operation on success; <br/>
 	 *         An exception is thrown otherwise.
@@ -72,8 +108,13 @@ public class BulkActivitiesServiceMock extends BulkActivitiesService{
 	 */
 
     @Override
-	public ContactsResponse removeContactsFromLists(String accessToken, RemoveContactsRequest request) throws ConstantContactServiceException {
-		ContactsResponse contactsResponse = null;
+	public ContactsResponse removeContactsFromLists(RemoveContactsRequest request) throws ConstantContactServiceException {
+		
+    	if (request == null) {
+    		throw new IllegalArgumentException(Config.instance().getErrorBulkContactsRequestNull());
+    	}
+    	
+    	ContactsResponse contactsResponse = null;
 		try {
 				contactsResponse = Component.fromJSON(MockedServerResponses.removeContactsFromListsBulkActivitiesData, ContactsResponse.class);
 		} catch (Exception e) {
@@ -83,9 +124,13 @@ public class BulkActivitiesServiceMock extends BulkActivitiesService{
 	}
 
     @Override
-    public ContactsResponse removeContactsFromLists(String accessToken, MultipartBody multipartRequest)
+    public ContactsResponse removeContactsFromLists(MultipartBody multipartRequest)
             throws ConstantContactServiceException {
 
+    	if (multipartRequest == null) {
+    		throw new IllegalArgumentException(Config.instance().getErrorBulkContactsRequestNull());
+    	}
+    	
         ContactsResponse contactsResponse = null;
         try {
                 contactsResponse = Component.fromJSON(MockedServerResponses.removeContactsFromListsMultipartBulkActivitiesData, ContactsResponse.class);
@@ -107,8 +152,13 @@ public class BulkActivitiesServiceMock extends BulkActivitiesService{
 	 */
 
     @Override
-	public ContactsResponse clearLists(String accessToken, ClearListsRequest request) throws ConstantContactServiceException {
-		ContactsResponse contactsResponse = null;
+	public ContactsResponse clearLists(ClearListsRequest request) throws ConstantContactServiceException {
+		
+    	if (request == null) {
+    		throw new IllegalArgumentException(Config.instance().getErrorBulkContactsRequestNull());
+    	}
+    	
+    	ContactsResponse contactsResponse = null;
 		try {
 				contactsResponse = Component.fromJSON(MockedServerResponses.clearListsBulkActivitiesData, ContactsResponse.class);
 		} catch (Exception e) {
@@ -128,8 +178,13 @@ public class BulkActivitiesServiceMock extends BulkActivitiesService{
 	 */
 
     @Override
-	public ContactsResponse exportContacts(String accessToken, ExportContactsRequest request) throws ConstantContactServiceException {
-		ContactsResponse contactsResponse = null;
+	public ContactsResponse exportContacts(ExportContactsRequest request) throws ConstantContactServiceException {
+		
+    	if (request == null) {
+    		throw new IllegalArgumentException(Config.instance().getErrorBulkContactsRequestNull());
+    	}
+    	
+    	ContactsResponse contactsResponse = null;
 		try {
 				contactsResponse = Component.fromJSON(MockedServerResponses.exportContactsBulkActivitiesData, ContactsResponse.class);
 		} catch (Exception e) {
@@ -148,7 +203,7 @@ public class BulkActivitiesServiceMock extends BulkActivitiesService{
 	 */
 
     @Override
-	public List<SummaryReport> getSummaryReport(String accessToken) throws ConstantContactServiceException {
+	public List<SummaryReport> getSummaryReport() throws ConstantContactServiceException {
 		List<SummaryReport> activitiesResponse = null;
 		try {
 				activitiesResponse = Component.listFromJSON(MockedServerResponses.getSummaryReportBulkActivitiesData, SummaryReport.class);
@@ -171,11 +226,11 @@ public class BulkActivitiesServiceMock extends BulkActivitiesService{
 	 */
 
     @Override
-	public List<DetailedStatusReport> getDetailedStatusReport(String accessToken, String status, String type, String id) throws ConstantContactServiceException {
+	public List<DetailedStatusReport> getDetailedStatusReport(String status, String type, String id) throws ConstantContactServiceException {
 
 		List<DetailedStatusReport> detailedStatusReports = null;
 
-		String url = Config.instance().getBaseUrl() + Config.Endpoints.ACTIVITIES;
+		String url = Config.instance().getBaseUrl() + Config.instance().getActivities();
 		try {
 				detailedStatusReports = Component.listFromJSON(MockedServerResponses.getDetailedStatusReportBulkActivitiesData, DetailedStatusReport.class);
 		} catch (Exception e) {
@@ -187,7 +242,9 @@ public class BulkActivitiesServiceMock extends BulkActivitiesService{
 	/**
 	 * Default constructor.
 	 */
-	public BulkActivitiesServiceMock() {
-		super();
+	public BulkActivitiesServiceMock(String accessToken, String apiKey) {
+		super(accessToken, apiKey);
+		this.setAccessToken(accessToken);
+		this.setApiKey(apiKey);
 	}
 }

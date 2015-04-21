@@ -7,12 +7,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * A single CUrl Request Error in Constant Contact.
+ * A single Raw Api Request Error in Constant Contact.
  * 
  * @author ConstantContact
  * 
  */
-public class CUrlRequestError extends Component implements Serializable {
+public class RawApiRequestError extends Component implements Serializable {
 	/**
 	 * Serial version unique identifier.
 	 */
@@ -27,7 +27,7 @@ public class CUrlRequestError extends Component implements Serializable {
 	/**
 	 * Default constructor.
 	 */
-	public CUrlRequestError() {
+	public RawApiRequestError() {
 		super();
 	}
 
@@ -75,7 +75,7 @@ public class CUrlRequestError extends Component implements Serializable {
 	 * @param errorKey
 	 * @param errorMessage
 	 */
-	public CUrlRequestError(String errorKey, String errorMessage) {
+	public RawApiRequestError(String errorKey, String errorMessage) {
 		super();
 		this.errorKey = errorKey;
 		this.errorMessage = errorMessage;
@@ -87,7 +87,7 @@ public class CUrlRequestError extends Component implements Serializable {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("\nCUrlRequestError [errorKey=");
+		builder.append("\nRawApiRequestError [errorKey=");
 		builder.append(errorKey);
 		builder.append(", errorMessage=");
 		builder.append(errorMessage);

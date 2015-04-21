@@ -16,7 +16,6 @@ public interface IContactService extends IBaseService {
   /**
    * Implements the get Contacts operation of the Contacts API by calling the ConstantContact server side.
    * 
-   * @param accessToken Constant Contact OAuth2 access token.
    * @param limit Limit.
    * @param modifiedSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/>
    * 		   It will return only the contacts modified since the supplied date. <br/>
@@ -26,81 +25,74 @@ public interface IContactService extends IBaseService {
    *         An exception is thrown otherwise.
    * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
    */
-  ResultSet<Contact> getContacts(String accessToken, Integer limit, String modifiedSinceTimestamp, Contact.Status status) throws ConstantContactServiceException;
+  ResultSet<Contact> getContacts(Integer limit, String modifiedSinceTimestamp, Contact.Status status) throws ConstantContactServiceException;
 
   /**
    * Implements the get Contact operation of the Contacts API by calling the ConstantContact server side.
    * 
-   * @param accesToken Constant Contact OAuth2 access token.
    * @param contactId Unique contact id.
    * @return Returns a {@link Contact} containing data as returned by the server on success; <br/>
    *         An exception is thrown otherwise.
    * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
    */
-  Contact getContact(String accesToken, String contactId) throws ConstantContactServiceException;
+  Contact getContact(String contactId) throws ConstantContactServiceException;
 
   /**
    * Implements the get Contact By Email operation of the Contacts API by calling the ConstantContact server side.
    * 
-   * @param accessToken Constant Contact OAuth2 access token.
    * @param email Contact email address to search for.
    * @return Returns a {@link ResultSet} of {@link Contact} containing data as returned by the server on success; <br/>
    *         An exception is thrown otherwise.
    * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
    */
-  ResultSet<Contact> getContactByEmail(String accessToken, String email) throws ConstantContactServiceException;
+  ResultSet<Contact> getContactByEmail(String email) throws ConstantContactServiceException;
 
   /**
    * Implements the add Contact operation of the Contacts API by calling the ConstantContact server side.
    * 
-   * @param accessToken Constant Contact OAuth2 access token.
    * @param contact {@link Contact} to add.
    * @return Returns the newly created {@link Contact} containing data as returned by the server on success; <br/>
    *         An exception is thrown otherwise.
    * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
    */
-  Contact addContact(String accessToken, Contact contact, Boolean actionByVisitor) throws ConstantContactServiceException;
+  Contact addContact(Contact contact, Boolean actionByVisitor) throws ConstantContactServiceException;
 
   /**
    * Implements the delete Contact operation of the Contacts API by calling the ConstantContact server side.
    * 
-   * @param accessToken Constant Contact OAuth2 access token.
    * @param contactId Unique contact id of the contact to delete.
    * @return Returns true if operation succeeded; an exception is thrown otherwise.
    * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
    */
-  boolean deleteContact(String accessToken, String contactId) throws ConstantContactServiceException;
+  boolean deleteContact(String contactId) throws ConstantContactServiceException;
 
   /**
    * Implements the delete Contact From Lists (all lists) operation of the Contacts API by calling the ConstantContact server side.
    * 
-   * @param accessToken Constant Contact OAuth2 access token.
    * @param contactId Contact id to be removed from all the lists.
    * @return Returns true if operation succeeded; an exception is thrown otherwise.
    * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
    */
-  boolean deleteContactFromLists(String accessToken, String contactId) throws ConstantContactServiceException;
+  boolean deleteContactFromLists(String contactId) throws ConstantContactServiceException;
 
   /**
    * Implements the delete Contact From List (a specific list) operation of the Contacts API by calling the ConstantContact server side.
    * 
-   * @param accessToken Constant Contact OAuth2 access token.
    * @param contactId Contact id to be removed.
    * @param listId ContactList to remove the contact from.
    * @return Returns true if operation succeeded; an exception is thrown otherwise.
    * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
    */
-  boolean deleteContactFromList(String accessToken, String contactId, String listId) throws ConstantContactServiceException;
+  boolean deleteContactFromList(String contactId, String listId) throws ConstantContactServiceException;
 
   /**
    * Implements the update Contact operation of the Contacts API by calling the ConstantContact server side.<br/>
    * A specific contact is identified by its internal id.
    * 
-   * @param accessToken Constant Contact OAuth2 access token.
    * @param contact {@link Contact} to be updated.
    * @return Returns the updated {@link Contact} containing data as returned by the server on success; <br/>
    *         An exception is thrown otherwise.
    * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
    */
-  Contact updateContact(String accessToken, Contact contact, Boolean actionByVisitor) throws ConstantContactServiceException;
+  Contact updateContact(Contact contact, Boolean actionByVisitor) throws ConstantContactServiceException;
 }

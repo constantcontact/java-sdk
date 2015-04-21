@@ -28,9 +28,9 @@ public abstract class BaseService implements IBaseService {
    * Default constructor.<br/>
    * Creates a new blank {@link RestClient}
    */
-  public BaseService() {
+  public BaseService(String accessToken, String apiKey) {
     super();
-    restClient = new RestClient();
+    restClient = new RestClient(accessToken, apiKey);
   }
 
   /**
