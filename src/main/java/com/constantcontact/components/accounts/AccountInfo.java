@@ -86,6 +86,12 @@ public class AccountInfo extends Component implements Serializable {
     private String website;
 
     /**
+     * Logo of the organization associated with the account
+     */
+    @JsonIgnore
+    private String companyLogo;
+
+    /**
      * Get the email.
      *
      * @return The {@link #email}
@@ -185,6 +191,16 @@ public class AccountInfo extends Component implements Serializable {
         return website;
     }
 
+    /**
+     * Get the company logo.
+     *
+     * @return The {@link #companyLogo}
+     */
+    @JsonProperty("company_logo")
+    public String getCompanyLogo() {
+        return companyLogo;
+    }
+
 
     public void setEmail(String email) {
         this.email = email;
@@ -226,6 +242,10 @@ public class AccountInfo extends Component implements Serializable {
         this.website = website;
     }
 
+    public void setCompanyLogo(String companyLogo) {
+        this.companyLogo = companyLogo;
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -248,6 +268,8 @@ public class AccountInfo extends Component implements Serializable {
         builder.append(timeZone);
         builder.append(", website=");
         builder.append(website);
+        builder.append(", company_logo=");
+        builder.append(companyLogo);
         builder.append("]");
         return builder.toString();
     }
