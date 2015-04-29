@@ -44,8 +44,16 @@ public final class Config
 
         try
         {
-
-            input = Config.class.getClassLoader().getResourceAsStream(CTCT_API_PROPERTIES);
+			
+            Properties systemProperties = System.getProperties();
+			if (systemProperties.containsKey("karaf.etc")) {
+				// Bundle deploy
+				String karafEtc = systemProperties.getProperty("karaf.etc");
+				input = new FileInputStream(new File(karafEtc, CTCT_API_PROPERTIES));
+			}
+			else {
+				input = Config.class.getClassLoader().getResourceAsStream(CTCT_API_PROPERTIES);
+			}
 
             if (input != null)
             {
