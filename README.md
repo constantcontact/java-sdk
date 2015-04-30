@@ -10,6 +10,7 @@ In order to use the Constant Contact SDK please follow these steps:
 ## Documentation
 
 The Javadoc is hosted at http://constantcontact.github.io/java-sdk
+API Documentation is located at http://developer.constantcontact.com/docs/developer-guides/api-documentation-index.html
 
 ## Usage
 
