@@ -23,273 +23,7 @@ public final class Config
         loadProperties();
     }
 
-<<<<<<< HEAD
-        /**
-         * API access URL.
-         */
-        public static final String BASE_URL = BASE_URL_HOST + "/" + "v2/";
 
-        /**
-         * Access a contact.
-         */
-        public static final String CONTACT = "contacts/%1$s";
-
-        /**
-         * Get all contacts.
-         */
-        public static final String CONTACTS = "contacts";
-
-        /**
-         * Get all lists.
-         */
-        public static final String LISTS = "lists";
-
-        /**
-         * Access a specified list.
-         */
-        public static final String LIST = "lists/%1$s";
-
-        /**
-         * Get the list of contacts from a list.
-         */
-        public static final String LIST_CONTACTS = "lists/%1$s/contacts";
-
-        /**
-         * Get contact lists.
-         */
-        public static final String CONTACT_LISTS = "contacts/%1$s/lists";
-
-        /**
-         * Get a list from contact lists.
-         */
-        public static final String CONTACT_LIST = "contacts/%1$s/lists/%2$s";
-
-        /**
-         * Get campaigns.
-         */
-        public static final String EMAILCAMPAIGNS = "emailmarketing/campaigns";
-
-        /**
-         * Access a campaign.
-         */
-        public static final String EMAILCAMPAIGN_ID = "emailmarketing/campaigns/%1$s";
-
-        /**
-         * Access a campaign. This is for PUT operations.
-         */
-        public static final String EMAILCAMPAIGNS_ID = "emailmarketing/campaigns/%1$s";
-
-        /**
-         * Get verified email addresses.
-         */
-        public static final String VERIFIEDEMAILADDRESSES = "account/verifiedemailaddresses";
-
-        /**
-         * Access a campaign schedule.
-         */
-        public static final String EMAILCAMPAIGNS_SCHEDULES_ID = "emailmarketing/campaigns/%1$s/schedules/%2$s";
-
-        /**
-         * Access all campaign schedules.
-         */
-        public static final String EMAILCAMPAIGNS_SCHEDULES_ID_ALL = "emailmarketing/campaigns/%1$s/schedules";
-
-        /**
-         * Access email campaign tracking reports summary for a given email campaign.
-         */
-        public static final String EMAILCAMPAIGNS_TRACKING_REPORTS_SUMMARY = "emailmarketing/campaigns/%1$s/tracking/reports/summary";
-
-        /**
-         * Access email campaign tracking bounces for a given email campaign.
-         */
-        public static final String EMAILCAMPAIGNS_TRACKING_BOUNCES = "emailmarketing/campaigns/%1$s/tracking/bounces";
-
-        /**
-         * Access email campaign tracking clicks for a given email campaign.
-         */
-        public static final String EMAILCAMPAIGNS_TRACKING_CLICKS = "emailmarketing/campaigns/%1$s/tracking/clicks";
-
-        /**
-         * Access email campaign tracking forwards for a given email campaign.
-         */
-        public static final String EMAILCAMPAIGNS_TRACKING_FORWARDS = "emailmarketing/campaigns/%1$s/tracking/forwards";
-
-        /**
-         * Access email campaign tracking opens for a given email campaign.
-         */
-        public static final String EMAILCAMPAIGNS_TRACKING_OPENS = "emailmarketing/campaigns/%1$s/tracking/opens";
-
-        /**
-         * Access email campaign tracking sends for a given email campaign.
-         */
-        public static final String EMAILCAMPAIGNS_TRACKING_SENDS = "emailmarketing/campaigns/%1$s/tracking/sends";
-
-        /**
-         * Access email campaign tracking unsubscribes for a given email campaign.
-         */
-        public static final String EMAILCAMPAIGNS_TRACKING_UNSUBSCRIBES = "emailmarketing/campaigns/%1$s/tracking/unsubscribes";
-
-        /**
-         * Access email campaign tracking clicks by link for a given email campaign.
-         */
-        public static final String EMAILCAMPAIGNS_TRACKING_CLICKS_BY_LINK = "emailmarketing/campaigns/%1$s/tracking/clicks/%2$s";
-
-        /**
-         * Access contact tracking reports summary for a given contact.
-         */
-        public static final String CONTACTS_TRACKING_REPORTS_SUMMARY = "contacts/%1$s/tracking/reports/summary";
-
-        /**
-         * Access contact tracking reports summary for a given contact.
-         */
-        public static final String CONTACTS_TRACKING_REPORTS_BY_CAMPAIGN_SUMMARY = "contacts/%1$s/tracking/reports/summaryByCampaign";
-
-        /**
-         * Access contact tracking activities for a given contact.
-         */
-        public static final String CONTACTS_TRACKING_ALL = "contacts/%1$s/tracking/";
-
-        /**
-         * Access contact tracking bounces for a given contact.
-         */
-        public static final String CONTACTS_TRACKING_BOUNCES = "contacts/%1$s/tracking/bounces";
-
-        /**
-         * Access contact tracking clicks for a given contact.
-         */
-        public static final String CONTACTS_TRACKING_CLICKS = "contacts/%1$s/tracking/clicks";
-
-        /**
-         * Access contact tracking forwards for a given contact.
-         */
-        public static final String CONTACTS_TRACKING_FORWARDS = "contacts/%1$s/tracking/forwards";
-
-        /**
-         * Access contact tracking opens for a given contact.
-         */
-        public static final String CONTACTS_TRACKING_OPENS = "contacts/%1$s/tracking/opens";
-
-        /**
-         * Access contact tracking sends for a given contact.
-         */
-        public static final String CONTACTS_TRACKING_SENDS = "contacts/%1$s/tracking/sends";
-
-        /**
-         * Access contact tracking unsubscribes for a given contact.
-         */
-        public static final String CONTACTS_TRACKING_UNSUBSCRIBES = "contacts/%1$s/tracking/unsubscribes";
-
-        /**
-         * Endpoint for the bulk contacts upload.
-         */
-        public static final String ACTIVITIES_ADD_CONTACTS = "activities/addcontacts";
-
-        /**
-         * Endpoint for the bulk contacts remove from lists.
-         */
-        public static final String ACTIVITIES_REMOVE_FROM_LISTS = "activities/removefromlists";
-
-        /**
-         * Endpoint for the bulk clear lists.
-         */
-        public static final String ACTIVITIES_CLEAR_LISTS = "activities/clearlists";
-
-        /**
-         * Endpoint for the bulk export contacts.
-         */
-        public static final String ACTIVITIES_EXPORT_CONTACTS = "activities/exportcontacts";
-
-        /**
-         * Endpoint for the bulk activities retrieve.
-         */
-        public static final String ACTIVITIES = "activities";
-        public static final String ACTIVITY = "activities/%1$s";
-
-        public static final String LIBRARY_INFO = "library/info";
-        public static final String LIBRARY_FILES = "library/files";
-        public static final String LIBRARY_FILES_BY_FOLDER = "library/folders/%1$s/files";
-        public static final String LIBRARY_FOLDERS = "library/folders";
-
-        public static final String LIBRARY_FOLDER = LIBRARY_FOLDERS + "/%1$s";
-        public static final String LIBRARY_FOLDER_TRASH = LIBRARY_FOLDERS + "/trash/files";
-
-        public static final String LIBRARY_FILE = LIBRARY_FILES + "/%1$s";
-        public static final String LIBRARY_FILE_UPLOAD_STATUS = LIBRARY_FILES + "/uploadstatus/%1$s";
-
-        public static final String LIBRARY_FILE_MOVE = "library/folders/%1$s/files";
-
-        /**
-         * Endpoint for the list of events.
-         */
-        public static final String EVENTS = "eventspot/events/";
-
-        /**
-         * Endpoint for accessing a single event.
-         */
-        public static final String EVENT_ID = EVENTS + "%1$s";
-
-        /**
-         * Endpoint for the list of event fees.
-         */
-        public static final String EVENT_FEES = EVENTS + "%1$s/fees";
-
-        /**
-         * Endpoint for accessing a single event fee.
-         */
-        public static final String EVENT_FEE_ID = EVENTS + "%1$s/fees/%2$s";
-
-        /**
-         * Endpoint for the list of the event's promocodes.
-         */
-        public static final String EVENT_PROMOCODES = EVENTS + "%1$s/promocodes/";
-
-        /**
-         * Endpoint for accessing a single event promocode.
-         */
-        public static final String EVENT_PROMOCODE_ID = EVENTS + "%1$s/promocodes/%2$s";
-
-        /**
-         * Endpoint for the list of event registrants.
-         */
-        public static final String EVENT_REGISTRANTS = EVENTS + "%1$s/registrants";
-
-        /**
-         * Endpoint for accessing a single event registrant.
-         */
-        public static final String EVENT_REGISTRANT_ID = EVENTS + "%1$s/registrants/%2$s";
-
-        /**
-         * Endpoint for the list of event items.
-         */
-        public static final String EVENT_ITEMS = EVENTS + "%1$s/items/";
-
-        /**
-         * Endpoint for accessing a single event item.
-         */
-        public static final String EVENT_ITEM_ID = EVENTS + "%1$s/items/%2$s";
-
-        /**
-         * Endpoint for the list of event item attributes.
-         */
-        public static final String EVENT_ITEM_ATTRIBUTES = EVENTS + "%1$s/items/%2$s/attributes";
-
-        /**
-         * Endpoint for accessing a event item attribute.
-         */
-        public static final String EVENT_ITEM_ATTRIBUTE_ID = EVENTS + "%1$s/items/%2$s/attributes/%3$s";
-
-        /**
-         * Endpoint for accessing the account info.
-         */
-        public static final String ACCOUNT_INFO = "account/info";
-
-        /**
-         * Default constructor.<br/>
-         * Made private to prevent instantiation.<br/>
-         * This is unreachable from the outside, since current class is used only as a repository for constants.
-         */
-        private Endpoints() {
-=======
     /**
      * Singleton
      * 
@@ -300,7 +34,6 @@ public final class Config
         if (instance == null)
         {
             instance = new Config();
->>>>>>> 148a2af3efc1ccdc3b6e30fe3cf343c22cd07b9c
         }
         return instance;
     }
@@ -356,6 +89,7 @@ public final class Config
             activitiesClearLists = prop.getProperty("constantcontact.api.activitiesclearlists");
             activitiesExportContacts = prop.getProperty("constantcontact.api.activitiesexportcontacts");
             activities = prop.getProperty("constantcontact.api.activities");
+            activity = prop.getProperty("constantcontact.api.activity");
             libraryInfo = prop.getProperty("constantcontact.api.libraryinfo");
             libraryFiles = prop.getProperty("constantcontact.api.libraryfiles");
             libraryFilesByFolder = prop.getProperty("constantcontact.api.libraryfilesbyfolder");
@@ -618,6 +352,7 @@ public final class Config
      * Endpoint for the bulk activities retrieve.
      */
     private String activities;
+    private String activity;
 
     private String libraryInfo;
     private String libraryFiles;
@@ -1232,14 +967,21 @@ public final class Config
         this.activitiesExportContacts = activitiesExportContacts;
     }
 
-    public String getActivities()
+    public String getActivities() { return activities; }
+
+    public String getActivity()
     {
-        return activities;
+        return activity;
     }
 
     public void setActivities(String activities)
     {
         this.activities = activities;
+    }
+
+    public void setActivity(String activity)
+    {
+        this.activity = activity;
     }
 
     public String getLibraryInfo()
