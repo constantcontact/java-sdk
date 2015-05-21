@@ -91,24 +91,24 @@ public interface IBulkActivitiesService extends IBaseService {
 
 	/**
 	 * Implements the bulk get Summary Report operation by calling the ConstantContact server side.
-	 * 
-	 * @param accessToken Constant Contact OAuth2 access token.
+	 *
+	 * @param accessToken Constant Contact OAuth2 access token.\
+	 * @param status The status, as seen in {@link BulkActivityStatus}
+	 * @param type The type, as seen in {@link BulkActivityType}
 	 * @return A response containing the values returned from the server for the requested operation on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	public List<SummaryReport> getSummaryReport(String accessToken) throws ConstantContactServiceException;
+	public List<SummaryReport> getSummaryReport(String accessToken, String status, String type) throws ConstantContactServiceException;
 
 	/**
 	 * Implements the bulk get Detailed Status Report operation by calling the ConstantContact server side.
-	 * 
+	 *
 	 * @param accessToken Constant Contact OAuth2 access token.
-	 * @param status The status, as seen in {@link BulkActivityStatus}
-	 * @param type The type, as seen in {@link BulkActivityType}
 	 * @param id The id
 	 * @return A response containing the values returned from the server for the requested operation on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	public List<DetailedStatusReport> getDetailedStatusReport(String accessToken, String status, String type, String id) throws ConstantContactServiceException;
+	public DetailedStatusReport getDetailedStatusReport(String accessToken, String id) throws ConstantContactServiceException;
 }

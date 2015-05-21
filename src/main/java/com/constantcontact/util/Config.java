@@ -237,6 +237,7 @@ public final class Config {
          * Endpoint for the bulk activities retrieve.
          */
         public static final String ACTIVITIES = "activities";
+        public static final String ACTIVITY = "activities/%1$s";
 
         public static final String LIBRARY_INFO = "library/info";
         public static final String LIBRARY_FILES = "library/files";

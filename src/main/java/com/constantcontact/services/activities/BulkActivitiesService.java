@@ -220,17 +220,26 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 
 	/**
 	 * Implements the bulk get Summary Report operation by calling the ConstantContact server side.
-	 * 
+	 *
 	 * @param accessToken Constant Contact OAuth2 access token.
+	 * @param status The status, as seen in {@link BulkActivityStatus}
+	 * @param type The type, as seen in {@link BulkActivityType}
 	 * @return A response containing the values returned from the server for the requested operation on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 
-	public List<SummaryReport> getSummaryReport(String accessToken) throws ConstantContactServiceException {
+	public List<SummaryReport> getSummaryReport(String accessToken, String status, String type) throws ConstantContactServiceException {
 		List<SummaryReport> activitiesResponse = null;
 		try {
 			String url = Config.Endpoints.BASE_URL + Config.Endpoints.ACTIVITIES;
+			if (status != null && status.length() > 0) {
+				url = appendParam(url, "status", status);
+			}
+			if (type != null && type.length() > 0) {
+				url = appendParam(url, "type", type);
+			}
+
 
 			CUrlResponse response = getRestClient().get(url, accessToken);
 			if (response.hasData()) {
@@ -253,35 +262,24 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 
 	/**
 	 * Implements the bulk get Detailed Status Report operation by calling the ConstantContact server side.
-	 * 
+	 *
 	 * @param accessToken Constant Contact OAuth2 access token.
-	 * @param status The status, as seen in {@link BulkActivityStatus}
-	 * @param type The type, as seen in {@link BulkActivityType}
 	 * @param id The id
 	 * @return A response containing the values returned from the server for the requested operation on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 
-	public List<DetailedStatusReport> getDetailedStatusReport(String accessToken, String status, String type, String id) throws ConstantContactServiceException {
+	public DetailedStatusReport getDetailedStatusReport(String accessToken, String id) throws
+																						ConstantContactServiceException {
 
-		List<DetailedStatusReport> detailedStatusReports = null;
+		DetailedStatusReport statusReport = null;
 
-		String url = Config.Endpoints.BASE_URL + Config.Endpoints.ACTIVITIES;
+		String url = Config.Endpoints.BASE_URL + String.format(Config.Endpoints.ACTIVITY,id);
 		try {
-			if (status != null && status.length() > 0) {
-				url = appendParam(url, "status", status);
-			}
-			if (type != null && type.length() > 0) {
-				url = appendParam(url, "type", type);
-			}
-			if (id != null && id.length() > 0) {
-				url = appendParam(url, "id", id);
-			}
-
 			CUrlResponse response = getRestClient().get(url, accessToken);
 			if (response.hasData()) {
-				detailedStatusReports = Component.listFromJSON(response.getBody(), DetailedStatusReport.class);
+				statusReport = Component.fromJSON(response.getBody(), DetailedStatusReport.class);
 			}
 			if (response.isError()) {
 				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
@@ -295,7 +293,7 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 		} catch (Exception e) {
 			throw new ConstantContactServiceException(e);
 		}
-		return detailedStatusReports;
+		return statusReport;
 	}
 
 	/**
