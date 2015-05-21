@@ -2442,7 +2442,7 @@ public class ConstantContact {
 	/**
 	 *
 	 * Get Bulk Summary Report API.<br/>
-	 * Details in : {@link BulkActivitiesService#getSummaryReport(String)}
+	 * Details in : {@link BulkActivitiesService#getSummaryReport(String, String, String)}
 	 *
 	 * @return A {@link List} of {@link SummaryReport} in case of success; an exception is thrown otherwise.
 	 * @throws ConstantContactServiceException Thrown when :
@@ -2456,16 +2456,36 @@ public class ConstantContact {
 	 */
 	public List<SummaryReport> getBulkSummaryReport() throws ConstantContactServiceException {
 
-		return bulkActivitiesService.getSummaryReport(this.getAccessToken());
+		return this.getBulkSummaryReport(null,null);
+	}
+
+	/**
+	 *
+	 * Get Bulk Summary Report API.<br/>
+	 * Details in : {@link BulkActivitiesService#getSummaryReport(String, String, String)}
+	 *
+	 * @param status The status
+	 * @param type The type
+	 * @return A {@link List} of {@link SummaryReport} in case of success; an exception is thrown otherwise.
+	 * @throws ConstantContactServiceException Thrown when :
+	 *             <ul>
+	 *             <li>something went wrong either on the client side;</li>
+	 *             <li>or an error message was received from the server side.</li>
+	 *             </ul>
+	 * <br/>
+	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
+	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
+	 */
+	public List<SummaryReport> getBulkSummaryReport(String status, String type) throws ConstantContactServiceException {
+
+		return bulkActivitiesService.getSummaryReport(this.getAccessToken(),status,type);
 	}
 
 	/**
 	 *
 	 * Get Bulk Detailed Status Report API.<br/>
-	 * Details in : {@link BulkActivitiesService#getDetailedStatusReport(String, String, String, String)}
+	 * Details in : {@link BulkActivitiesService#getDetailedStatusReport(String, String)}
 	 *
-	 * @param status The status
-	 * @param type The type
 	 * @param id The id
 	 * @return A {@link List} of {@link DetailedStatusReport} in case of success; an exception is thrown otherwise.
 	 * @throws IllegalArgumentException Thrown when data validation failed due to incorrect / missing parameter values. <br/>
@@ -2480,9 +2500,9 @@ public class ConstantContact {
 	 *             To check if a detailed error message is present, call {@link ConstantContactException#hasErrorInfo()} <br/>
 	 *             Detailed error message (if present) can be seen by calling {@link ConstantContactException#getErrorInfo()}
 	 */
-	public List<DetailedStatusReport> getBulkDetailedStatusReport(String status, String type, String id) throws IllegalArgumentException,
+	public DetailedStatusReport getBulkDetailedStatusReport(String id) throws IllegalArgumentException,
 			ConstantContactServiceException {
-		return bulkActivitiesService.getDetailedStatusReport(this.getAccessToken(), status, type, id);
+		return bulkActivitiesService.getDetailedStatusReport(this.getAccessToken(), id);
 	}
 
 	/**
