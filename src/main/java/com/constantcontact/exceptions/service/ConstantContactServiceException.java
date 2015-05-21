@@ -65,6 +65,7 @@ public class ConstantContactServiceException extends ConstantContactException {
 	public ConstantContactServiceException(ConstantContactException constantContactException) {
 		super(constantContactException);
 		this.setErrorInfo(constantContactException.getErrorInfo());
+        this.setHttpStatusCode(constantContactException.getHttpStatusCode());
 	}
 
 	/**
