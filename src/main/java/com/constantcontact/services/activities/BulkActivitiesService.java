@@ -1,7 +1,5 @@
 package com.constantcontact.services.activities;
 
-import java.util.List;
-
 import com.constantcontact.components.Component;
 import com.constantcontact.components.activities.contacts.request.AddContactsRequest;
 import com.constantcontact.components.activities.contacts.request.ClearListsRequest;
@@ -14,10 +12,12 @@ import com.constantcontact.components.activities.contacts.types.BulkActivityStat
 import com.constantcontact.components.activities.contacts.types.BulkActivityType;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.base.BaseService;
-import com.constantcontact.util.CUrlRequestError;
-import com.constantcontact.util.CUrlResponse;
+import com.constantcontact.util.RawApiResponse;
 import com.constantcontact.util.Config;
+import com.constantcontact.util.ConstantContactExceptionFactory;
 import com.constantcontact.util.http.MultipartBody;
+
+import java.util.List;
 
 /**
  * Service Layer Implementation for the Bulk Activities in Constant Contact.
@@ -27,34 +27,64 @@ import com.constantcontact.util.http.MultipartBody;
  */
 public class BulkActivitiesService extends BaseService implements IBulkActivitiesService {
 
+	private String accessToken;
+	private String apiKey;
+	
+	/**
+	 * @return the accessToken
+	 */
+	public String getAccessToken() {
+		return accessToken;
+	}
+
+	/**
+	 * @param accessToken the accessToken to set
+	 */
+	public void setAccessToken(String accessToken) {
+		this.accessToken = accessToken;
+	}
+
+	/**
+	 * @return the apiKey
+	 */
+	public String getApiKey() {
+		return apiKey;
+	}
+
+	/**
+	 * @param apiKey the apiKey to set
+	 */
+	public void setApiKey(String apiKey) {
+		this.apiKey = apiKey;
+	}
+
 	/**
 	 * Add a large number of contacts in a single batch operation.<br>
 	 * Implements the bulk add Contacts operation by calling the ConstantContact server side.
 	 * 
-	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param request The request
 	 * @return A response containing the values returned from the server for the requested operation on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 
-	public ContactsResponse addContacts(String accessToken, AddContactsRequest request) throws ConstantContactServiceException {
-
+	public ContactsResponse addContacts(AddContactsRequest request) throws ConstantContactServiceException {
+		System.out.println("Finish");
+		if (request == null) {
+			throw new IllegalArgumentException(Config.instance().getErrorBulkContactsRequestNull());
+		}
+		
 		ContactsResponse contactsResponse = null;
 		try {
-			String url = Config.Endpoints.BASE_URL + Config.Endpoints.ACTIVITIES_ADD_CONTACTS;
+			String url = Config.instance().getBaseUrl() + Config.instance().getActivitiesAddContacts();
 			String json = request.toJSON();
-			CUrlResponse response = getRestClient().post(url, accessToken, json);
+			RawApiResponse response = getRestClient().post(url, json);
 			if (response.hasData()) {
 				contactsResponse = Component.fromJSON(response.getBody(), ContactsResponse.class);
 			}
 
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (ConstantContactServiceException e) {
 			throw new ConstantContactServiceException(e);
@@ -64,23 +94,23 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 		return contactsResponse;
 	}
 
-	public ContactsResponse addContacts(String accessToken, MultipartBody multipartRequest)
+	public ContactsResponse addContacts(MultipartBody multipartRequest)
             throws ConstantContactServiceException {
 	    
+		if (multipartRequest == null) {
+			throw new IllegalArgumentException(Config.instance().getErrorBulkContactsRequestNull());
+		}
+		
 	    ContactsResponse contactsResponse = null;
         try {
-            String url = Config.Endpoints.BASE_URL + Config.Endpoints.ACTIVITIES_ADD_CONTACTS;
-            CUrlResponse response = getRestClient().postMultipart(url, accessToken, multipartRequest);
+            String url = Config.instance().getBaseUrl() + Config.instance().getActivitiesAddContacts();
+            RawApiResponse response = getRestClient().postMultipart(url,  multipartRequest);
             if (response.hasData()) {
                 contactsResponse = Component.fromJSON(response.getBody(), ContactsResponse.class);
             }
 
             if (response.isError()) {
-                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-                response.getInfo().add(new CUrlRequestError("url", url));
-                constantContactException.setErrorInfo(response.getInfo());
-                throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
             }
         } catch (Exception e) {
             throw new ConstantContactServiceException(e);
@@ -92,28 +122,28 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 	/**
 	 * Implements the bulk remove Contacts From Lists operation by calling the ConstantContact server side.
 	 * 
-	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param request The request
 	 * @return A response containing the values returned from the server for the requested operation on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 
-	public ContactsResponse removeContactsFromLists(String accessToken, RemoveContactsRequest request) throws ConstantContactServiceException {
+	public ContactsResponse removeContactsFromLists(RemoveContactsRequest request) throws ConstantContactServiceException {
+		
+		if (request == null) {
+			throw new IllegalArgumentException(Config.instance().getErrorBulkContactsRequestNull());
+		}
+		
 		ContactsResponse contactsResponse = null;
 		try {
-			String url = Config.Endpoints.BASE_URL + Config.Endpoints.ACTIVITIES_REMOVE_FROM_LISTS;
+			String url = Config.instance().getBaseUrl() + Config.instance().getActivitiesRemoveFromLists();
 			String json = request.toJSON();
-			CUrlResponse response = getRestClient().post(url, accessToken, json);
+			RawApiResponse response = getRestClient().post(url, json);
 			if (response.hasData()) {
 				contactsResponse = Component.fromJSON(response.getBody(), ContactsResponse.class);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+               throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (ConstantContactServiceException e) {
 			throw new ConstantContactServiceException(e);
@@ -123,22 +153,22 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 		return contactsResponse;
 	}
 
-    public ContactsResponse removeContactsFromLists(String accessToken, MultipartBody multipartRequest)
+    public ContactsResponse removeContactsFromLists(MultipartBody multipartRequest)
             throws ConstantContactServiceException {
 
+    	if (multipartRequest == null) {
+			throw new IllegalArgumentException(Config.instance().getErrorBulkContactsRequestNull());
+		}
+    	
         ContactsResponse contactsResponse = null;
         try {
-            String url = Config.Endpoints.BASE_URL + Config.Endpoints.ACTIVITIES_REMOVE_FROM_LISTS;
-            CUrlResponse response = getRestClient().postMultipart(url, accessToken, multipartRequest);
+            String url = Config.instance().getBaseUrl() + Config.instance().getActivitiesRemoveFromLists();
+            RawApiResponse response = getRestClient().postMultipart(url, multipartRequest);
             if (response.hasData()) {
                 contactsResponse = Component.fromJSON(response.getBody(), ContactsResponse.class);
             }
             if (response.isError()) {
-                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-                response.getInfo().add(new CUrlRequestError("url", url));
-                constantContactException.setErrorInfo(response.getInfo());
-                throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
             }
         }
         catch (ConstantContactServiceException e) {
@@ -153,28 +183,28 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 	/**
 	 * Implements the bulk clear Lists operation by calling the ConstantContact server side.
 	 * 
-	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param request The request
 	 * @return A response containing the values returned from the server for the requested operation on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 
-	public ContactsResponse clearLists(String accessToken, ClearListsRequest request) throws ConstantContactServiceException {
+	public ContactsResponse clearLists(ClearListsRequest request) throws ConstantContactServiceException {
+		
+		if (request == null) {
+			throw new IllegalArgumentException(Config.instance().getErrorBulkContactsRequestNull());
+		}
+		
 		ContactsResponse contactsResponse = null;
 		try {
-			String url = Config.Endpoints.BASE_URL + Config.Endpoints.ACTIVITIES_CLEAR_LISTS;
+			String url = Config.instance().getBaseUrl() + Config.instance().getActivitiesClearLists();
 			String json = request.toJSON();
-			CUrlResponse response = getRestClient().post(url, accessToken, json);
+			RawApiResponse response = getRestClient().post(url, json);
 			if (response.hasData()) {
 				contactsResponse = Component.fromJSON(response.getBody(), ContactsResponse.class);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (ConstantContactServiceException e) {
 			throw new ConstantContactServiceException(e);
@@ -187,28 +217,29 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 	/**
 	 * Implements the bulk export Contacts operation by calling the ConstantContact server side.
 	 * 
-	 * @param accessToken Constant Contact OAuth2 access token.
+
 	 * @param request The request
 	 * @return A response containing the values returned from the server for the requested operation on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 
-	public ContactsResponse exportContacts(String accessToken, ExportContactsRequest request) throws ConstantContactServiceException {
+	public ContactsResponse exportContacts(ExportContactsRequest request) throws ConstantContactServiceException {
+		
+		if (request == null) {
+			throw new IllegalArgumentException(Config.instance().getErrorBulkContactsRequestNull());
+		}
+		
 		ContactsResponse contactsResponse = null;
 		try {
-			String url = Config.Endpoints.BASE_URL + Config.Endpoints.ACTIVITIES_EXPORT_CONTACTS;
+			String url = Config.instance().getBaseUrl() + Config.instance().getActivitiesExportContacts();
 			String json = request.toJSON();
-			CUrlResponse response = getRestClient().post(url, accessToken, json);
+			RawApiResponse response = getRestClient().post(url, json);
 			if (response.hasData()) {
 				contactsResponse = Component.fromJSON(response.getBody(), ContactsResponse.class);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (ConstantContactServiceException e) {
 			throw new ConstantContactServiceException(e);
@@ -220,15 +251,20 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 
 	/**
 	 * Implements the bulk get Summary Report operation by calling the ConstantContact server side.
+<<<<<<< HEAD
 	 *
 	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param status The status, as seen in {@link BulkActivityStatus}
 	 * @param type The type, as seen in {@link BulkActivityType}
+=======
+	 * 
+>>>>>>> 148a2af3efc1ccdc3b6e30fe3cf343c22cd07b9c
 	 * @return A response containing the values returned from the server for the requested operation on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 
+<<<<<<< HEAD
 	public List<SummaryReport> getSummaryReport(String accessToken, String status, String type) throws ConstantContactServiceException {
 		List<SummaryReport> activitiesResponse = null;
 		try {
@@ -240,17 +276,19 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 				url = appendParam(url, "type", type);
 			}
 
+=======
+	public List<SummaryReport> getSummaryReport() throws ConstantContactServiceException {
+		List<SummaryReport> activitiesResponse = null;
+		try {
+			String url = Config.instance().getBaseUrl() + Config.instance().getActivities();
+>>>>>>> 148a2af3efc1ccdc3b6e30fe3cf343c22cd07b9c
 
-			CUrlResponse response = getRestClient().get(url, accessToken);
+			RawApiResponse response = getRestClient().get(url);
 			if (response.hasData()) {
 				activitiesResponse = Component.listFromJSON(response.getBody(), SummaryReport.class);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (ConstantContactServiceException e) {
 			throw new ConstantContactServiceException(e);
@@ -262,31 +300,53 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 
 	/**
 	 * Implements the bulk get Detailed Status Report operation by calling the ConstantContact server side.
+<<<<<<< HEAD
 	 *
 	 * @param accessToken Constant Contact OAuth2 access token.
+=======
+	 * 
+	 * @param status The status, as seen in {@link BulkActivityStatus}
+	 * @param type The type, as seen in {@link BulkActivityType}
+>>>>>>> 148a2af3efc1ccdc3b6e30fe3cf343c22cd07b9c
 	 * @param id The id
 	 * @return A response containing the values returned from the server for the requested operation on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 
+<<<<<<< HEAD
 	public DetailedStatusReport getDetailedStatusReport(String accessToken, String id) throws
 																						ConstantContactServiceException {
+=======
+	public List<DetailedStatusReport> getDetailedStatusReport(String status, String type, String id) throws ConstantContactServiceException {
+>>>>>>> 148a2af3efc1ccdc3b6e30fe3cf343c22cd07b9c
 
 		DetailedStatusReport statusReport = null;
 
+<<<<<<< HEAD
 		String url = Config.Endpoints.BASE_URL + String.format(Config.Endpoints.ACTIVITY,id);
 		try {
 			CUrlResponse response = getRestClient().get(url, accessToken);
+=======
+		String url = Config.instance().getBaseUrl() + Config.instance().getActivities();
+		try {
+			if (status != null && status.length() > 0) {
+				url = appendParam(url, "status", status);
+			}
+			if (type != null && type.length() > 0) {
+				url = appendParam(url, "type", type);
+			}
+			if (id != null && id.length() > 0) {
+				url = appendParam(url, "id", id);
+			}
+
+			RawApiResponse response = getRestClient().get(url);
+>>>>>>> 148a2af3efc1ccdc3b6e30fe3cf343c22cd07b9c
 			if (response.hasData()) {
 				statusReport = Component.fromJSON(response.getBody(), DetailedStatusReport.class);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (ConstantContactServiceException e) {
 			throw new ConstantContactServiceException(e);
@@ -299,7 +359,9 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 	/**
 	 * Default constructor.
 	 */
-	public BulkActivitiesService() {
-		super();
+	public BulkActivitiesService(String accessToken, String apiKey) {
+		super(accessToken, apiKey);
+		this.setAccessToken(accessToken);
+		this.setApiKey(apiKey);
 	}
 }

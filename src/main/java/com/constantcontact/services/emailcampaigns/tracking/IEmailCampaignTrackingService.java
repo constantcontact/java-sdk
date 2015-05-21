@@ -22,7 +22,6 @@ public interface IEmailCampaignTrackingService extends IBaseService {
 	/**
 	 * Implements the get Summary operation of the Email Campaign Tracking API by calling the ConstantContact server side.
 	 * 
-	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param emailCampaignId The id field in Email Campaign
 	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
 	 * 		   It will return only the summary since the supplied date. <br/>
@@ -31,24 +30,23 @@ public interface IEmailCampaignTrackingService extends IBaseService {
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	public EmailCampaignTrackingSummary getSummary(String accessToken, String emailCampaignId, String createdSinceTimestamp) throws ConstantContactServiceException;
+	public EmailCampaignTrackingSummary getSummary(String emailCampaignId, String createdSinceTimestamp) throws ConstantContactServiceException;
 
 	/**
 	 * Implements the get Bounces operation of the Email Campaign Tracking API by calling the ConstantContact server side.
 	 * 
-	 * @param accessToken Constant Contact OAuth2 access token.
+
 	 * @param emailCampaignId The id field in Email Campaign
 	 * @param limit The limit
 	 * @return A {@link ResultSet} of {@link EmailCampaignTrackingBounce} containing the bounces - values returned by the server side - on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	public ResultSet<EmailCampaignTrackingBounce> getBounces(String accessToken, String emailCampaignId, Integer limit) throws ConstantContactServiceException;
+	public ResultSet<EmailCampaignTrackingBounce> getBounces(String emailCampaignId, Integer limit) throws ConstantContactServiceException;
 
 	/**
 	 * Implements the get Clicks operation of the Email Campaign Tracking API by calling the ConstantContact server side.
 	 * 
-	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param emailCampaignId The id field in Email Campaign
 	 * @param limit The limit
 	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
@@ -58,12 +56,12 @@ public interface IEmailCampaignTrackingService extends IBaseService {
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	public ResultSet<EmailCampaignTrackingClick> getClicks(String accessToken, String emailCampaignId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException;
+	public ResultSet<EmailCampaignTrackingClick> getClicks(String emailCampaignId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException;
 
 	/**
 	 * Implements the get Forwards operation of the Email Campaign Tracking API by calling the ConstantContact server side.
 	 * 
-	 * @param accessToken Constant Contact OAuth2 access token.
+
 	 * @param emailCampaignId The id field in Email Campaign
 	 * @param limit The limit
 	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
@@ -73,13 +71,12 @@ public interface IEmailCampaignTrackingService extends IBaseService {
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	public ResultSet<EmailCampaignTrackingForward> getForwards(String accessToken, String emailCampaignId, Integer limit, String createdSinceTimestamp)
+	public ResultSet<EmailCampaignTrackingForward> getForwards(String emailCampaignId, Integer limit, String createdSinceTimestamp)
 			throws ConstantContactServiceException;
 
 	/**
 	 * Implements the get Opens operation of the Email Campaign Tracking API by calling the ConstantContact server side.
 	 * 
-	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param emailCampaignId The id field in Email Campaign
 	 * @param limit The limit
 	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
@@ -89,12 +86,11 @@ public interface IEmailCampaignTrackingService extends IBaseService {
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	public ResultSet<EmailCampaignTrackingOpen> getOpens(String accessToken, String emailCampaignId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException;
+	public ResultSet<EmailCampaignTrackingOpen> getOpens(String emailCampaignId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException;
 
 	/**
 	 * Implements the get Sends operation of the Email Campaign Tracking API by calling the ConstantContact server side.
 	 * 
-	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param emailCampaignId The id field in Email Campaign
 	 * @param limit The limit
 	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
@@ -104,12 +100,11 @@ public interface IEmailCampaignTrackingService extends IBaseService {
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	public ResultSet<EmailCampaignTrackingSend> getSends(String accessToken, String emailCampaignId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException;
+	public ResultSet<EmailCampaignTrackingSend> getSends(String emailCampaignId, Integer limit, String createdSinceTimestamp) throws ConstantContactServiceException;
 
 	/**
 	 * Implements the get Unsubscribes operation of the Email Campaign Tracking API by calling the ConstantContact server side.
 	 * 
-	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param emailCampaignId The id field in Email Campaign
 	 * @param limit The limit
 	 * @param createdSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
@@ -119,13 +114,12 @@ public interface IEmailCampaignTrackingService extends IBaseService {
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	public ResultSet<EmailCampaignTrackingUnsubscribe> getUnsubscribes(String accessToken, String emailCampaignId, Integer limit, String createdSinceTimestamp)
+	public ResultSet<EmailCampaignTrackingUnsubscribe> getUnsubscribes(String emailCampaignId, Integer limit, String createdSinceTimestamp)
 			throws ConstantContactServiceException;
 
 	/**
 	 * Implements the get Clicks By Link Id operation of the Email Campaign Tracking API by calling the ConstantContact server side.
 	 * 
-	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param emailCampaignId The id field in Email Campaign
 	 * @param linkId The link id
 	 * @param limit The limit
@@ -137,6 +131,6 @@ public interface IEmailCampaignTrackingService extends IBaseService {
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	public ResultSet<EmailCampaignTrackingClick> getClicksByLinkId(String accessToken, String emailCampaignId, String linkId, Integer limit, String createdSinceTimestamp)
+	public ResultSet<EmailCampaignTrackingClick> getClicksByLinkId(String emailCampaignId, String linkId, Integer limit, String createdSinceTimestamp)
 			throws ConstantContactServiceException;
 }

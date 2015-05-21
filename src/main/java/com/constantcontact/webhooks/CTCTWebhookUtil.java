@@ -18,14 +18,14 @@ public class CTCTWebhookUtil {
 
 
     /**
-     * The secret key provided by ConstantContact along with the API KEY
+     * The client secret associated with the api key
      */
     private String clientSecret;
 
     /**
      * Custom Class constructor.
      *
-     * @param clientSecret The secret key provided by ConstantContact along with the API KEY
+     * @param clientSecret The client secret associated with the api key
      */
     public CTCTWebhookUtil(String clientSecret) {
         this.setClientSecret(clientSecret);
@@ -43,7 +43,7 @@ public class CTCTWebhookUtil {
 
     /**
      * Set the clientSecret
-     * @param clientSecret The secret key provided by ConstantContact along with the API KEY
+     * @param clientSecret The client secret associated with the api key
      */
     public void setClientSecret(String clientSecret) {
         this.clientSecret = clientSecret;
@@ -66,7 +66,7 @@ public class CTCTWebhookUtil {
      * <li>or an error is raised when parsing the bodyMessage.</li>
      * </ul>
      * <p/>
-     * Error message is taken from one of the members of {@link com.constantcontact.util.Config.Errors}
+     * Error message is taken from one of the members of {@link com.constantcontact.util.Config}
      */
 
     public BillingChangeNotification getBillingChangeNotification(String xCtctHmacSHA256, String bodyMessage) throws
@@ -74,7 +74,7 @@ public class CTCTWebhookUtil {
         if (isValidWebhook(xCtctHmacSHA256, bodyMessage)) {
             return Component.fromJSON(bodyMessage, BillingChangeNotification.class);
         } else {
-            throw new ConstantContactException(Config.Errors.INVALID_WEBHOOK);
+            throw new ConstantContactException(Config.instance().getErrorInvalidWebhook());
         }
     }
 
@@ -86,11 +86,11 @@ public class CTCTWebhookUtil {
      * @return true if in case of success; false if the Webhook is invalid.
      * @throws NoSuchAlgorithmException Thrown when the encryption algorithm used for validation is not available. Should not happen. <br/>
      * @throws ConstantContactException Thrown when: message encryption does not correspond with x-ctct-hmac-sha256 header value. <br/>
-     * Error message is taken from one of the members of {@link com.constantcontact.util.Config.Errors}
+     * Error message is taken from one of the members of {@link com.constantcontact.util.Config}
      */
     public boolean isValidWebhook(String xCtctHmacSHA256, String bodyMessage) throws ConstantContactException, NoSuchAlgorithmException {
         if (getClientSecret() == null) {
-            throw new ConstantContactException(Config.Errors.NO_CLIENT_SECRET);
+            throw new ConstantContactException(Config.instance().getErrorNoClientSecret());
         }
         return new WebHookValidator(xCtctHmacSHA256, bodyMessage, getClientSecret()).isValid();
     }

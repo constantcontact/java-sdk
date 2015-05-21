@@ -1,17 +1,17 @@
 package com.constantcontact.services.contactlists;
 
-import java.net.HttpURLConnection;
-import java.util.List;
-
 import com.constantcontact.components.Component;
 import com.constantcontact.components.contacts.Contact;
 import com.constantcontact.components.contacts.ContactList;
 import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.base.BaseService;
-import com.constantcontact.util.CUrlRequestError;
-import com.constantcontact.util.CUrlResponse;
+import com.constantcontact.util.RawApiResponse;
 import com.constantcontact.util.Config;
+import com.constantcontact.util.ConstantContactExceptionFactory;
+
+import java.net.HttpURLConnection;
+import java.util.List;
 
 /**
  * Service Layer Implementation for the Contact Lists operations in Constant Contact.
@@ -20,10 +20,40 @@ import com.constantcontact.util.Config;
  */
 public class ContactListService extends BaseService implements IContactListService {
 
+	private String accessToken;
+	private String apiKey;
+	
+	/**
+	 * @return the accessToken
+	 */
+	public String getAccessToken() {
+		return accessToken;
+	}
+
+	/**
+	 * @param accessToken the accessToken to set
+	 */
+	public void setAccessToken(String accessToken) {
+		this.accessToken = accessToken;
+	}
+
+	/**
+	 * @return the apiKey
+	 */
+	public String getApiKey() {
+		return apiKey;
+	}
+
+	/**
+	 * @param apiKey the apiKey to set
+	 */
+	public void setApiKey(String apiKey) {
+		this.apiKey = apiKey;
+	}
+
 	/**
 	 * Implements the Get lists for an account operation by calling the ConstantContact server side.
 	 * 
-	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param modifiedSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/> 
 	 * 		   It will return only the lists modified since the supplied date. <br/>
 	 * 		   If you want to bypass this filter set modifiedSinceTimestamp to null.
@@ -32,24 +62,20 @@ public class ContactListService extends BaseService implements IContactListServi
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 
-	public List<ContactList> getLists(String accessToken, String modifiedSinceTimestamp) throws ConstantContactServiceException {
+	public List<ContactList> getLists(String modifiedSinceTimestamp) throws ConstantContactServiceException {
 		List<ContactList> lists = null;
 		try {
-			String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, Config.Endpoints.LISTS);
+			String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), Config.instance().getLists());
 						
 			if(modifiedSinceTimestamp != null)
 				url = appendParam(url, "modified_since", modifiedSinceTimestamp);
 			
-			CUrlResponse response = getRestClient().get(url, accessToken);
+			RawApiResponse response = getRestClient().get(url);
 			if (response.hasData()) {
 				lists = Component.listFromJSON(response.getBody(), ContactList.class);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (ConstantContactServiceException e) {
 			throw new ConstantContactServiceException(e);
@@ -62,29 +88,24 @@ public class ContactListService extends BaseService implements IContactListServi
 	/**
 	 * Implements the add list for an account operation by calling the ConstantContact server side.
 	 * 
-	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param list The {@link ContactList} that was added, when successful.
 	 * @return Returns the newly created list containing values as returned by the server on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 
-	public ContactList addList(String accessToken, ContactList list) throws ConstantContactServiceException {
+	public ContactList addList(ContactList list) throws ConstantContactServiceException {
 		ContactList newList = null;
 		try {
-			String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, Config.Endpoints.LISTS);
+			String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), Config.instance().getLists());
 			
 			String json = list.toJSON();
-			CUrlResponse response = getRestClient().post(url, accessToken, json);
+			RawApiResponse response = getRestClient().post(url, json);
 			if (response.hasData()) {
 				newList = Component.fromJSON(response.getBody(), ContactList.class);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (ConstantContactServiceException e) {
 			throw new ConstantContactServiceException(e);
@@ -97,28 +118,33 @@ public class ContactListService extends BaseService implements IContactListServi
 	/**
 	 * Implements the get individual list for an account operation by calling the ConstantContact server side.
 	 * 
-	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param listId List id.
 	 * @return The {@link ContactList} containing values as returned by the server on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 
-	public ContactList getList(String accessToken, String listId) throws ConstantContactServiceException {
+	public ContactList getList(String listId) throws ConstantContactServiceException {
+		
+		try {
+			int nListId = Integer.parseInt(listId);
+			if (nListId < 1) {
+				throw new NumberFormatException();
+			}
+		} catch (Exception e) {
+			throw new IllegalArgumentException(Config.instance().getErrorListOrId());
+		}
+		
 		ContactList list = null;
 		try {
-			String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, String.format(Config.Endpoints.LIST, listId));
+			String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.instance().getList(), listId));
 			
-			CUrlResponse response = getRestClient().get(url, accessToken);
+			RawApiResponse response = getRestClient().get(url);
 			if (response.hasData()) {
 				list = Component.fromJSON(response.getBody(), ContactList.class);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (ConstantContactServiceException e) {
 			throw new ConstantContactServiceException(e);
@@ -131,32 +157,34 @@ public class ContactListService extends BaseService implements IContactListServi
 	 /**
      * Updates a Contact List identified by its List Id 
      * 
-     * @param accessToken Constant Contact OAuth2 access token.
      * @param list The List to update
      * @return The {@link ContactList} containing values as returned by the server on success; <br/>
      *         An exception is thrown otherwise.
      * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
      */
 
-    public ContactList updateList(String accessToken, ContactList list) throws ConstantContactServiceException {
-
+    public ContactList updateList(ContactList list) throws ConstantContactServiceException {
+    	
+    	if (list == null) {
+            throw new IllegalArgumentException(Config.instance().getErrorListOrId());
+        }
+        if (list.getId() == null || !(list.getId().length() > 0)) {
+            throw new IllegalArgumentException(Config.instance().getErrorId());
+        }
+        
         ContactList resultingList = null;
         try {
-            String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, String.format(Config.Endpoints.LIST, list.getId()));
+            String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.instance().getList(), list.getId()));
 
             String json = list.toJSON();
             
-            CUrlResponse response = getRestClient().put(url, accessToken, json);
+            RawApiResponse response = getRestClient().put(url, json);
             
             if (response.hasData()) {
                 resultingList = Component.fromJSON(response.getBody(), ContactList.class);
             }
             if (response.isError()) {
-                ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-                        ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-                response.getInfo().add(new CUrlRequestError("url", url));
-                constantContactException.setErrorInfo(response.getInfo());
-                throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
             }
         } catch (ConstantContactServiceException e) {
             throw new ConstantContactServiceException(e);
@@ -180,26 +208,36 @@ public class ContactListService extends BaseService implements IContactListServi
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 
-	public ResultSet<Contact> getContactsFromList(String accessToken, String listId, Integer limit, String modifiedSinceTimestamp) throws ConstantContactServiceException {
+	public ResultSet<Contact> getContactsFromList(String listId, Integer limit, String modifiedSinceTimestamp) throws ConstantContactServiceException {
+		
+		if(listId == null) {
+			throw new IllegalArgumentException(Config.instance().getErrorListOrId());
+		}
+		
+		try {
+			int nListId = Integer.parseInt(listId);
+			if (nListId < 1) {
+				throw new NumberFormatException();
+			}
+		} catch (Exception e) {
+			throw new IllegalArgumentException(Config.instance().getErrorListOrId());
+		}
+		
 		ResultSet<Contact> contacts = null;
 		try {
-			String url = String.format("%1$s%2$s", Config.Endpoints.BASE_URL, String.format(Config.Endpoints.LIST_CONTACTS, listId));
+			String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.instance().getListContacts(), listId));
 			url = paginateUrl(url, limit);
 			
 			if (modifiedSinceTimestamp != null) {
 		        url = appendParam(url, "modified_since", modifiedSinceTimestamp);
 		      }
 			
-			CUrlResponse response = getRestClient().get(url, accessToken);
+			RawApiResponse response = getRestClient().get(url);
 			if (response.hasData()) {
 				contacts = Component.resultSetFromJSON(response.getBody(), Contact.class);
 			}
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 		} catch (ConstantContactServiceException e) {
 			throw new ConstantContactServiceException(e);
@@ -213,23 +251,18 @@ public class ContactListService extends BaseService implements IContactListServi
 	 * Deletes a single contact list based on contact list unique identifier.<br/>
 	 * Implements the delete ContactList operation of the Contact Lists API by calling the ConstantContact server side.
 	 * 
-	 * @param accessToken Constant Contact OAuth2 access token.
 	 * @param listId Unique contact list id of the contact list to delete.
 	 * @return Returns true if operation succeeded; an exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */	
 
-	public boolean deleteList(String accessToken, String listId) throws ConstantContactServiceException {
+	public boolean deleteList(String listId) throws ConstantContactServiceException {
 		try {
-			String url = String.format("%1$s%2$s",Config.Endpoints.BASE_URL, String.format(Config.Endpoints.LIST, listId));
+			String url = String.format("%1$s%2$s",Config.instance().getBaseUrl(), String.format(Config.instance().getList(), listId));
 			
-			CUrlResponse response = getRestClient().delete(url, accessToken);
+			RawApiResponse response = getRestClient().delete(url);
 			if (response.isError()) {
-				ConstantContactServiceException constantContactException = new ConstantContactServiceException(
-						ConstantContactServiceException.RESPONSE_ERR_SERVICE);
-				response.getInfo().add(new CUrlRequestError("url", url));
-				constantContactException.setErrorInfo(response.getInfo());
-				throw constantContactException;
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
 			}
 			return response.getStatusCode() == HttpURLConnection.HTTP_NO_CONTENT;
 		} catch (ConstantContactServiceException e) {
@@ -242,7 +275,9 @@ public class ContactListService extends BaseService implements IContactListServi
 	/**
 	 * Default constructor.
 	 */
-	public ContactListService() {
-		super();
+	public ContactListService(String accessToken, String apiKey) {
+		super(accessToken, apiKey);
+		this.setAccessToken(accessToken);
+		this.setApiKey(apiKey);
 	}
 }

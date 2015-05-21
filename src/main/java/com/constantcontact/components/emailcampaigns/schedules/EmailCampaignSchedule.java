@@ -2,7 +2,6 @@ package com.constantcontact.components.emailcampaigns.schedules;
 
 import java.io.Serializable;
 
-import com.constantcontact.ConstantContact;
 import com.constantcontact.components.Component;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;

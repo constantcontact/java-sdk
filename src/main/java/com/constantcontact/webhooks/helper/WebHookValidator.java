@@ -26,7 +26,7 @@ public class WebHookValidator {
     private String body;
 
     /**
-     * The client secret provided by ConstantContact
+     * The client secret associated with the api key
      */
     private String sharedSecret;
 
