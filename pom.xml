@@ -92,7 +92,7 @@
                     <formats>
                         <format>HTML</format>
                     </formats>
-                    <skip>${maven.test.skip}</skip>
+                    <skip>${skipTests}</skip>
                     <check>
                         <haltOnFailure>true</haltOnFailure>
                         <totalBranchRate>25</totalBranchRate>
