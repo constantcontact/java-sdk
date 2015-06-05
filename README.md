@@ -1,6 +1,8 @@
 Constant Contact JAVA SDK
 =========================
 
+[![Build Status](https://travis-ci.org/constantcontact/java-sdk.svg)](https://travis-ci.org/constantcontact/java-sdk)
+
 ## Installation
 
 In order to use the Constant Contact SDK please follow these steps:
