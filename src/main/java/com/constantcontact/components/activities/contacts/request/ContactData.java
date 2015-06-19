@@ -53,6 +53,15 @@ public class ContactData extends Component implements Serializable {
 	@JsonIgnore
 	private List<CustomField> customFields;
 
+    @JsonIgnore
+    private String birthday;
+
+    @JsonIgnore
+    private String birthdayMonth;
+
+    @JsonIgnore
+    private String anniversary;
+
 	/**
 	 * Get the email addresses.
 	 * 
@@ -153,7 +162,37 @@ public class ContactData extends Component implements Serializable {
 		return customFields;
 	}
 
-	/**
+    /**
+     * Get the birthday.
+     *
+     * @return The birthday.
+     */
+    @JsonProperty("birthday_day")
+    public String getBirthday() {
+        return birthday;
+    }
+
+    /**
+     * Get the birthdayMonth.
+     *
+     * @return The birthdayMonth.
+     */
+    @JsonProperty("birthday_month")
+    public String getBirthdayMonth() {
+        return birthdayMonth;
+    }
+
+    /**
+     * Get the anniversary.
+     *
+     * @return The anniversary.
+     */
+    @JsonProperty("anniversary")
+    public String getAnniversary() {
+        return anniversary;
+    }
+
+    /**
 	 * Set the email Addresses.
 	 * 
 	 * @param emailAddresses New email Addresses.
@@ -243,7 +282,34 @@ public class ContactData extends Component implements Serializable {
 		this.customFields = customFields;
 	}
 
-	/**
+    /**
+     * Set the Birthday
+     *
+     * @param birthday The new Birthday
+     */
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
+    }
+
+    /**
+     * Set the Birthday Month
+     *
+     * @param birthdayMonth The new Birthday Month
+     */
+    public void setBirthdayMonth(String birthdayMonth) {
+        this.birthdayMonth = birthdayMonth;
+    }
+
+    /**
+     * Set the Anniversary
+     *
+     * @param anniversary The new Anniversary
+     */
+    public void setAnniversary(String anniversary) {
+        this.anniversary = anniversary;
+    }
+
+    /**
 	 * Default constructor.
 	 */
 	public ContactData() {
@@ -279,6 +345,12 @@ public class ContactData extends Component implements Serializable {
 		builder.append(addresses);
 		builder.append(", customFields=");
 		builder.append(customFields);
+        builder.append(", birthday=");
+        builder.append(birthday);
+        builder.append(", birthdayMonth=");
+        builder.append(birthdayMonth);
+        builder.append(", anniversary=");
+        builder.append(anniversary);
 		builder.append("]");
 		return builder.toString();
 	}
