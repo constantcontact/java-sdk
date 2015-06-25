@@ -414,12 +414,12 @@ public class ConstantContactActivityTest {
 
         try {
 
-            List<DetailedStatusReport> detailedStatusReportList = new ArrayList<DetailedStatusReport>();
+            DetailedStatusReport detailedStatusReport;
 
-            detailedStatusReportList = bulkActivitiesServiceMock.getDetailedStatusReport(status, type, id);
-            verify(bulkActivitiesServiceMock).getDetailedStatusReport(status, type, id);
+            detailedStatusReport = bulkActivitiesServiceMock.getDetailedStatusReport(id);
+            verify(bulkActivitiesServiceMock).getDetailedStatusReport(id);
 
-            assertNotNull(detailedStatusReportList);
+            assertNotNull(detailedStatusReport);
 
         } catch (ConstantContactServiceException e) {
             e.printStackTrace();

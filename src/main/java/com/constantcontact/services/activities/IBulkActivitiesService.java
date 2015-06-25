@@ -85,7 +85,7 @@ public interface IBulkActivitiesService extends IBaseService {
 
 	/**
 	 * Implements the bulk get Summary Report operation by calling the ConstantContact server side.
-	 * 
+	 *
 	 * @return A response containing the values returned from the server for the requested operation on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
@@ -93,14 +93,25 @@ public interface IBulkActivitiesService extends IBaseService {
 	public List<SummaryReport> getSummaryReport() throws ConstantContactServiceException;
 
 	/**
+	 * Implements the bulk get Summary Report operation by calling the ConstantContact server side.
+	 *
+	 * @param status The status, as seen in {@link com.constantcontact.components.activities.contacts.types.BulkActivityStatus}
+	 * @param type The type, as seen in {@link com.constantcontact.components.activities.contacts.types.BulkActivityType}
+	 * @return A response containing the values returned from the server for the requested operation on success; <br/>
+	 *         An exception is thrown otherwise.
+	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
+	 */
+	public List<SummaryReport> getSummaryReport(String status, String type) throws ConstantContactServiceException;
+
+	/**
 	 * Implements the bulk get Detailed Status Report operation by calling the ConstantContact server side.
-	 * 
-	 * @param status The status, as seen in {@link BulkActivityStatus}
-	 * @param type The type, as seen in {@link BulkActivityType}
+	 *
 	 * @param id The id
 	 * @return A response containing the values returned from the server for the requested operation on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
-	public List<DetailedStatusReport> getDetailedStatusReport(String status, String type, String id) throws ConstantContactServiceException;
+
+	public DetailedStatusReport getDetailedStatusReport(String id) throws ConstantContactServiceException;
+
 }

@@ -251,16 +251,37 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 
 	/**
 	 * Implements the bulk get Summary Report operation by calling the ConstantContact server side.
-	 * 
+	 *
 	 * @return A response containing the values returned from the server for the requested operation on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 
 	public List<SummaryReport> getSummaryReport() throws ConstantContactServiceException {
+		return this.getSummaryReport(null,null);
+	}
+
+	/**
+	 * Implements the bulk get Summary Report operation by calling the ConstantContact server side.
+	 *
+	 * @param status The status, as seen in {@link com.constantcontact.components.activities.contacts.types.BulkActivityStatus}
+	 * @param type The type, as seen in {@link com.constantcontact.components.activities.contacts.types.BulkActivityType}
+	 * @return A response containing the values returned from the server for the requested operation on success; <br/>
+	 *         An exception is thrown otherwise.
+	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
+	 */
+
+
+	public List<SummaryReport> getSummaryReport(String status, String type) throws ConstantContactServiceException {
 		List<SummaryReport> activitiesResponse = null;
 		try {
 			String url = Config.instance().getBaseUrl() + Config.instance().getActivities();
+			if (status != null && status.length() > 0) {
+				url = appendParam(url, "status", status);
+			}
+			if (type != null && type.length() > 0) {
+				url = appendParam(url, "type", type);
+			}
 
 			RawApiResponse response = getRestClient().get(url);
 			if (response.hasData()) {
@@ -279,34 +300,26 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 
 	/**
 	 * Implements the bulk get Detailed Status Report operation by calling the ConstantContact server side.
-	 * 
-	 * @param status The status, as seen in {@link BulkActivityStatus}
-	 * @param type The type, as seen in {@link BulkActivityType}
+	 *
 	 * @param id The id
 	 * @return A response containing the values returned from the server for the requested operation on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 
-	public List<DetailedStatusReport> getDetailedStatusReport(String status, String type, String id) throws ConstantContactServiceException {
 
-		List<DetailedStatusReport> detailedStatusReports = null;
+	public DetailedStatusReport getDetailedStatusReport(String id) throws
+																						ConstantContactServiceException {
 
-		String url = Config.instance().getBaseUrl() + Config.instance().getActivities();
+		DetailedStatusReport statusReport = null;
+
+		String url = Config.instance().getBaseUrl() + String.format(Config.instance().getActivity(),id);
 		try {
-			if (status != null && status.length() > 0) {
-				url = appendParam(url, "status", status);
-			}
-			if (type != null && type.length() > 0) {
-				url = appendParam(url, "type", type);
-			}
-			if (id != null && id.length() > 0) {
-				url = appendParam(url, "id", id);
-			}
 
 			RawApiResponse response = getRestClient().get(url);
+
 			if (response.hasData()) {
-				detailedStatusReports = Component.listFromJSON(response.getBody(), DetailedStatusReport.class);
+				statusReport = Component.fromJSON(response.getBody(), DetailedStatusReport.class);
 			}
 			if (response.isError()) {
                 throw ConstantContactExceptionFactory.createServiceException(response, url);
@@ -316,7 +329,7 @@ public class BulkActivitiesService extends BaseService implements IBulkActivitie
 		} catch (Exception e) {
 			throw new ConstantContactServiceException(e);
 		}
-		return detailedStatusReports;
+		return statusReport;
 	}
 
 	/**

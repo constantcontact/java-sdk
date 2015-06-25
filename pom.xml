@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.constantcontact</groupId>
     <artifactId>constantcontact</artifactId>
-    <version>3.1.2</version>
+    <version>4.1.0</version>
     <dependencies>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -92,7 +92,7 @@
                     <formats>
                         <format>HTML</format>
                     </formats>
-                    <skip>${maven.test.skip}</skip>
+                    <skip>${skipTests}</skip>
                     <check>
                         <haltOnFailure>true</haltOnFailure>
                         <totalBranchRate>25</totalBranchRate>
