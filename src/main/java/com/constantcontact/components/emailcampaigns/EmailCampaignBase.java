@@ -81,10 +81,6 @@ public abstract class EmailCampaignBase extends Component implements Serializabl
 	private String createdDate;
 	@JsonIgnore
 	private String permalinkUrl;
-	@JsonIgnore
-	private String archiveStatus;
-	@JsonIgnore
-	private String archiveUrl;
 
 	/**
 	 * Gets the template type.
@@ -387,26 +383,6 @@ public abstract class EmailCampaignBase extends Component implements Serializabl
 	}
 
 	/**
-	 * Get the Archive Status
-	 * 
-	 * @return The Archive Status, as seen in the {@link ArchiveStatus}
-	 */
-	@JsonProperty("archive_status")
-	public String getArchiveStatus() {
-		return archiveStatus;
-	}
-
-	/**
-	 * Get the Archive Url
-	 * 
-	 * @return The Archive Url
-	 */
-	@JsonProperty("archive_url")
-	public String getArchiveUrl() {
-		return archiveUrl;
-	}
-
-	/**
 	 * Sets the template type.
 	 * 
 	 * @param templateType The template type, as seen in {@link TemplateType}.
@@ -677,24 +653,6 @@ public abstract class EmailCampaignBase extends Component implements Serializabl
 	}
 
 	/**
-	 * Set the Archive Status
-	 * 
-	 * @param archiveStatus The Archive Status, as seen in {@link ArchiveStatus}
-	 */
-	public void setArchiveStatus(String archiveStatus) {
-		this.archiveStatus = archiveStatus;
-	}
-
-	/**
-	 * Set the Archive Url
-	 * 
-	 * @param archiveUrl The Archive Url
-	 */
-	public void setArchiveUrl(String archiveUrl) {
-		this.archiveUrl = archiveUrl;
-	}
-
-	/**
 	 * Default constructor.
 	 */
 	public EmailCampaignBase() {
@@ -770,10 +728,6 @@ public abstract class EmailCampaignBase extends Component implements Serializabl
 		builder.append(createdDate);
 	    builder.append(", permalinkUrl=");
 	    builder.append(permalinkUrl);
-		builder.append(", archiveStatus=");
-		builder.append(archiveStatus);
-		builder.append(", archiveUrl=");
-		builder.append(archiveUrl);
 		builder.append(" ]\n");
 		return builder.toString();
 	}

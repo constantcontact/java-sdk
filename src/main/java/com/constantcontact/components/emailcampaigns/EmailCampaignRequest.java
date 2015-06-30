@@ -138,30 +138,6 @@ public class EmailCampaignRequest extends EmailCampaignBase implements Serializa
 	public TrackingSummary getTrackingSummary() {
 		return super.getTrackingSummary();
 	}
-	/**
-	 * Override of {@link EmailCampaignBase#getArchiveStatus()} to hide it via JsonIgnore.<br/>
-	 * Reason: server returns an error when this field appears in a request.
-	 * 
-	 * @return Call to parent method
-	 */
-	@Override
-	@JsonIgnore
-	public String getArchiveStatus() {
-		return super.getArchiveStatus();
-	}
-	/**
-	 * Override of {@link EmailCampaignBase#getArchiveUrl()} to hide it via JsonIgnore.<br/>
-	 * Reason: server returns an error when this field appears in a request.
-	 * 
-	 * @return Call to parent method
-	 */
-	@Override
-	@JsonIgnore
-	public String getArchiveUrl() {
-		return super.getArchiveUrl();
-	}
-	
-	
 
 	/**
 	 * Default constructor.
@@ -205,8 +181,6 @@ public class EmailCampaignRequest extends EmailCampaignBase implements Serializa
 		setTrackingSummary(response.getTrackingSummary());
 		setSentToContactLists(response.getSentToContactLists());
 		setCreatedDate(response.getCreatedDate());
-		setArchiveStatus(response.getArchiveStatus());
-		setArchiveUrl(response.getArchiveUrl());
 	}
 
 	/**

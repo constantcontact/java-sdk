@@ -1,5 +1,7 @@
 package com.constantcontact.util;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -23,6 +25,7 @@ public final class Config
         loadProperties();
     }
 
+
     /**
      * Singleton
      * 
@@ -44,8 +47,10 @@ public final class Config
 
         try
         {
-			
-            Properties systemProperties = System.getProperties();
+
+        	// Karaf patch
+        	// vincenzo.mazzeo@alidays.it
+        	Properties systemProperties = System.getProperties();
 			if (systemProperties.containsKey("karaf.etc")) {
 				// Bundle deploy
 				String karafEtc = systemProperties.getProperty("karaf.etc");
@@ -96,6 +101,7 @@ public final class Config
             activitiesClearLists = prop.getProperty("constantcontact.api.activitiesclearlists");
             activitiesExportContacts = prop.getProperty("constantcontact.api.activitiesexportcontacts");
             activities = prop.getProperty("constantcontact.api.activities");
+            activity = prop.getProperty("constantcontact.api.activity");
             libraryInfo = prop.getProperty("constantcontact.api.libraryinfo");
             libraryFiles = prop.getProperty("constantcontact.api.libraryfiles");
             libraryFilesByFolder = prop.getProperty("constantcontact.api.libraryfilesbyfolder");
@@ -358,6 +364,7 @@ public final class Config
      * Endpoint for the bulk activities retrieve.
      */
     private String activities;
+    private String activity;
 
     private String libraryInfo;
     private String libraryFiles;
@@ -972,14 +979,21 @@ public final class Config
         this.activitiesExportContacts = activitiesExportContacts;
     }
 
-    public String getActivities()
+    public String getActivities() { return activities; }
+
+    public String getActivity()
     {
-        return activities;
+        return activity;
     }
 
     public void setActivities(String activities)
     {
         this.activities = activities;
+    }
+
+    public void setActivity(String activity)
+    {
+        this.activity = activity;
     }
 
     public String getLibraryInfo()

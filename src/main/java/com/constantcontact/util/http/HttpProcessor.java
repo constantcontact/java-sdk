@@ -9,6 +9,7 @@ import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -72,7 +73,7 @@ public class HttpProcessor implements ProcessorBase {
         byte[] bytes = null;
         
         if (data != null){
-            bytes = data.getBytes();
+            bytes = data.getBytes(Charset.forName("utf-8"));
         }
         
         return makeHttpRequest(urlParam, httpMethod, contentType, this.getAccessToken(), bytes);
@@ -270,7 +271,7 @@ public class HttpProcessor implements ProcessorBase {
 			}
 			
 			if (is != null){
-			    BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+			    BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("utf-8")));
 			    String line;
 			    StringBuffer response = new StringBuffer();
 		

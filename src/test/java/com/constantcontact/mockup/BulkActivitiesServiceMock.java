@@ -143,8 +143,7 @@ public class BulkActivitiesServiceMock extends BulkActivitiesService{
 
 	/**
 	 * Implements the bulk clear Lists operation by calling the ConstantContact server side.
-	 * 
-	 * @param accessToken Constant Contact OAuth2 access token.
+	 *
 	 * @param request The request
 	 * @return A response containing the values returned from the server for the requested operation on success; <br/>
 	 *         An exception is thrown otherwise.
@@ -169,8 +168,7 @@ public class BulkActivitiesServiceMock extends BulkActivitiesService{
 
 	/**
 	 * Implements the bulk export Contacts operation by calling the ConstantContact server side.
-	 * 
-	 * @param accessToken Constant Contact OAuth2 access token.
+	 *
 	 * @param request The request
 	 * @return A response containing the values returned from the server for the requested operation on success; <br/>
 	 *         An exception is thrown otherwise.
@@ -195,15 +193,28 @@ public class BulkActivitiesServiceMock extends BulkActivitiesService{
 
 	/**
 	 * Implements the bulk get Summary Report operation by calling the ConstantContact server side.
-	 * 
-	 * @param accessToken Constant Contact OAuth2 access token.
+	 *
+	 * @return A response containing the values returned from the server for the requested operation on success; <br/>
+	 *         An exception is thrown otherwise.
+	 * @throws com.constantcontact.exceptions.service.ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
+	 */
+
+	@Override
+	public List<SummaryReport> getSummaryReport() throws ConstantContactServiceException {
+		return this.getSummaryReport(null,null);
+	}
+	/**
+	 * Implements the bulk get Summary Report operation by calling the ConstantContact server side.
+	 *
+	 * @param status The status, as seen in {@link com.constantcontact.components.activities.contacts.types.BulkActivityStatus}
+	 * @param type The type, as seen in {@link com.constantcontact.components.activities.contacts.types.BulkActivityType}
 	 * @return A response containing the values returned from the server for the requested operation on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws com.constantcontact.exceptions.service.ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 
     @Override
-	public List<SummaryReport> getSummaryReport() throws ConstantContactServiceException {
+	public List<SummaryReport> getSummaryReport(String status, String type) throws ConstantContactServiceException {
 		List<SummaryReport> activitiesResponse = null;
 		try {
 				activitiesResponse = Component.listFromJSON(MockedServerResponses.getSummaryReportBulkActivitiesData, SummaryReport.class);
@@ -215,10 +226,7 @@ public class BulkActivitiesServiceMock extends BulkActivitiesService{
 
 	/**
 	 * Implements the bulk get Detailed Status Report operation by calling the ConstantContact server side.
-	 * 
-	 * @param accessToken Constant Contact OAuth2 access token.
-	 * @param status The status, as seen in {@link com.constantcontact.components.activities.contacts.types.BulkActivityStatus}
-	 * @param type The type, as seen in {@link com.constantcontact.components.activities.contacts.types.BulkActivityType}
+	 *
 	 * @param id The id
 	 * @return A response containing the values returned from the server for the requested operation on success; <br/>
 	 *         An exception is thrown otherwise.
@@ -226,17 +234,18 @@ public class BulkActivitiesServiceMock extends BulkActivitiesService{
 	 */
 
     @Override
-	public List<DetailedStatusReport> getDetailedStatusReport(String status, String type, String id) throws ConstantContactServiceException {
+	public DetailedStatusReport getDetailedStatusReport(String id) throws ConstantContactServiceException {
 
-		List<DetailedStatusReport> detailedStatusReports = null;
+		DetailedStatusReport detailedStatusReport = null;
 
 		String url = Config.instance().getBaseUrl() + Config.instance().getActivities();
 		try {
-				detailedStatusReports = Component.listFromJSON(MockedServerResponses.getDetailedStatusReportBulkActivitiesData, DetailedStatusReport.class);
+				detailedStatusReport = Component.fromJSON(MockedServerResponses.getDetailedStatusReportBulkActivitiesData,
+													   DetailedStatusReport.class);
 		} catch (Exception e) {
 			throw new ConstantContactServiceException(e);
 		}
-		return detailedStatusReports;
+		return detailedStatusReport;
 	}
 
 	/**
