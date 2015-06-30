@@ -1,5 +1,7 @@
 package com.constantcontact.util;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -46,7 +48,17 @@ public final class Config
         try
         {
 
-            input = Config.class.getClassLoader().getResourceAsStream(CTCT_API_PROPERTIES);
+        	// Karaf patch
+        	// vincenzo.mazzeo@alidays.it
+        	Properties systemProperties = System.getProperties();
+			if (systemProperties.containsKey("karaf.etc")) {
+				// Bundle deploy
+				String karafEtc = systemProperties.getProperty("karaf.etc");
+				input = new FileInputStream(new File(karafEtc, CTCT_API_PROPERTIES));
+			}
+			else {
+				input = Config.class.getClassLoader().getResourceAsStream(CTCT_API_PROPERTIES);
+			}
 
             if (input != null)
             {
