@@ -68,6 +68,8 @@ public final class Config {
             emailCampaignsTrackingSends = prop.getProperty("constantcontact.api.emailcampaignstrackingsends");
             emailCampaignsTrackingUnsubscribes = prop.getProperty("constantcontact.api.emailcampaignstrackingunsubscribes");
             emailCampaignsTrackingClicksByLink = prop.getProperty("constantcontact.api.emailcampaignstrackingclicksbylink");
+            emailCampaignsPreview = prop.getProperty("constantcontact.api.emailcampaignspreview");
+            emailCampaignsTests = prop.getProperty("constantcontact.api.emailcampaignstests");
             contactsTrackingReportsSummary = prop.getProperty("constantcontact.api.contactstrackingreportssummary");
             contactsTrackingReportsByCampaignSummary = prop.getProperty("constantcontact.api.contactstrackingreportsbycampaignsummary");
             contactsTrackingAll = prop.getProperty("constantcontact.api.contactstrackingall");
@@ -113,6 +115,7 @@ public final class Config {
             errorId = prop.getProperty("constantcontact.api.errors.id");
             errorStatus = prop.getProperty("constantcontact.api.errors.status");
             errorEmailCampaignScheduleNull = prop.getProperty("constantcontact.api.errors.emailcampaignschedulenull");
+            errorEmailCampaignTestNull = prop.getProperty("constantcontact.api.errors.emailcampaignstestnull");
             errorBulkContactsRequestNull = prop.getProperty("constantcontact.api.errors.bulkcontactsrequestnull");
             errorBulkContactsListNull = prop.getProperty("constantcontact.api.errors.bulkcontactslistnull");
             errorFileNameNull = prop.getProperty("constantcontact.api.errors.filenamenull");
@@ -267,6 +270,17 @@ public final class Config {
      * Access email campaign tracking clicks by link for a given email campaign.
      */
     private String emailCampaignsTrackingClicksByLink;
+
+    /**
+     * Access email campaign preview for a given email campaign.
+     */
+    private String emailCampaignsPreview;
+
+    /**
+     * Access email campaign tests for a given email campaign.
+     */
+    private String emailCampaignsTests;
+
 
     /**
      * Access contact tracking reports summary for a given contact.
@@ -456,6 +470,11 @@ public final class Config {
      * EmailCampaignSchedule null error.
      */
     private String errorEmailCampaignScheduleNull;
+
+    /**
+     * EmailCampaignTest null error.
+     */
+    private String errorEmailCampaignTestNull;
 
     /**
      * Contacts Request null error.
@@ -771,9 +790,25 @@ public final class Config {
         return emailCampaignsTrackingClicksByLink;
     }
 
+    public String getEmailCampaignsPreview() {
+        return emailCampaignsPreview;
+    }
+
+    public void setEmailCampaignsPreview(String emailCampaignsPreview) {
+        this.emailCampaignsPreview = emailCampaignsPreview;
+    }
+
     public void setEmailCampaignsTrackingClicksByLink(
             String emailCampaignsTrackingClicksByLink) {
         this.emailCampaignsTrackingClicksByLink = emailCampaignsTrackingClicksByLink;
+    }
+
+    public String getEmailCampaignsTests() {
+        return emailCampaignsTests;
+    }
+
+    public void setEmailCampaignsTests(String emailCampaignsTests) {
+        this.emailCampaignsTests = emailCampaignsTests;
     }
 
     public String getContactsTrackingReportsSummary() {
@@ -1136,6 +1171,14 @@ public final class Config {
 
     public void setErrorEmailCampaignScheduleNull(String errorEmailCampaignScheduleNull) {
         this.errorEmailCampaignScheduleNull = errorEmailCampaignScheduleNull;
+    }
+
+    public String getErrorEmailCampaignTestNull() {
+        return errorEmailCampaignTestNull;
+    }
+
+    public void setErrorEmailCampaignTestNull(String errorEmailCampaignTestNull) {
+        this.errorEmailCampaignTestNull = errorEmailCampaignTestNull;
     }
 
     public String getErrorBulkContactsRequestNull() {
