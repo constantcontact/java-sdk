@@ -9,8 +9,7 @@ import java.util.Properties;
  *
  * @author ConstantContact
  */
-public final class Config
-{
+public final class Config {
 
     private static Config instance;
     private static final String CTCT_API_PROPERTIES = "ctct_api.properties";
@@ -18,38 +17,32 @@ public final class Config
     /**
      * Private Constructor
      */
-    private Config()
-    {
+    private Config() {
         loadProperties();
     }
 
 
     /**
      * Singleton
-     * 
+     *
      * @return
      */
-    public static Config instance()
-    {
-        if (instance == null)
-        {
+    public static Config instance() {
+        if (instance == null) {
             instance = new Config();
         }
         return instance;
     }
 
-    private void loadProperties()
-    {
+    private void loadProperties() {
         Properties prop = new Properties();
         InputStream input = null;
 
-        try
-        {
+        try {
 
             input = Config.class.getClassLoader().getResourceAsStream(CTCT_API_PROPERTIES);
 
-            if (input != null)
-            {
+            if (input != null) {
                 prop.load(input);
             }
 
@@ -75,6 +68,8 @@ public final class Config
             emailCampaignsTrackingSends = prop.getProperty("constantcontact.api.emailcampaignstrackingsends");
             emailCampaignsTrackingUnsubscribes = prop.getProperty("constantcontact.api.emailcampaignstrackingunsubscribes");
             emailCampaignsTrackingClicksByLink = prop.getProperty("constantcontact.api.emailcampaignstrackingclicksbylink");
+            emailCampaignsPreview = prop.getProperty("constantcontact.api.emailcampaignspreview");
+            emailCampaignsTests = prop.getProperty("constantcontact.api.emailcampaignstests");
             contactsTrackingReportsSummary = prop.getProperty("constantcontact.api.contactstrackingreportssummary");
             contactsTrackingReportsByCampaignSummary = prop.getProperty("constantcontact.api.contactstrackingreportsbycampaignsummary");
             contactsTrackingAll = prop.getProperty("constantcontact.api.contactstrackingall");
@@ -120,6 +115,7 @@ public final class Config
             errorId = prop.getProperty("constantcontact.api.errors.id");
             errorStatus = prop.getProperty("constantcontact.api.errors.status");
             errorEmailCampaignScheduleNull = prop.getProperty("constantcontact.api.errors.emailcampaignschedulenull");
+            errorEmailCampaignTestNull = prop.getProperty("constantcontact.api.errors.emailcampaignstestnull");
             errorBulkContactsRequestNull = prop.getProperty("constantcontact.api.errors.bulkcontactsrequestnull");
             errorBulkContactsListNull = prop.getProperty("constantcontact.api.errors.bulkcontactslistnull");
             errorFileNameNull = prop.getProperty("constantcontact.api.errors.filenamenull");
@@ -151,21 +147,13 @@ public final class Config
             headerUserAgent = prop.getProperty("constantcontact.api.headeruseragent");
             utf8 = prop.getProperty("constantcontact.api.utf8");
 
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             throw new IllegalStateException("Cannot configure connection to Constant Contact", e);
-        }
-        finally
-        {
-            if (input != null)
-            {
-                try
-                {
+        } finally {
+            if (input != null) {
+                try {
                     input.close();
-                }
-                catch (IOException ignoreMe)
-                {
+                } catch (IOException ignoreMe) {
 
                 }
             }
@@ -282,6 +270,17 @@ public final class Config
      * Access email campaign tracking clicks by link for a given email campaign.
      */
     private String emailCampaignsTrackingClicksByLink;
+
+    /**
+     * Access email campaign preview for a given email campaign.
+     */
+    private String emailCampaignsPreview;
+
+    /**
+     * Access email campaign tests for a given email campaign.
+     */
+    private String emailCampaignsTests;
+
 
     /**
      * Access contact tracking reports summary for a given contact.
@@ -473,6 +472,11 @@ public final class Config
     private String errorEmailCampaignScheduleNull;
 
     /**
+     * EmailCampaignTest null error.
+     */
+    private String errorEmailCampaignTestNull;
+
+    /**
      * Contacts Request null error.
      */
     private String errorBulkContactsRequestNull;
@@ -610,975 +614,810 @@ public final class Config
      */
     private String utf8;
 
-    public String getBaseUrl()
-    {
+    public String getBaseUrl() {
         return baseUrl;
     }
 
-    public void setBaseUrl(String baseUrl)
-    {
+    public void setBaseUrl(String baseUrl) {
         this.baseUrl = baseUrl;
     }
 
-    public String getContact()
-    {
+    public String getContact() {
         return contact;
     }
 
-    public void setContact(String contact)
-    {
+    public void setContact(String contact) {
         this.contact = contact;
     }
 
-    public String getContacts()
-    {
+    public String getContacts() {
         return contacts;
     }
 
-    public void setContacts(String contacts)
-    {
+    public void setContacts(String contacts) {
         this.contacts = contacts;
     }
 
-    public String getLists()
-    {
+    public String getLists() {
         return lists;
     }
 
-    public void setLists(String lists)
-    {
+    public void setLists(String lists) {
         this.lists = lists;
     }
 
-    public String getList()
-    {
+    public String getList() {
         return list;
     }
 
-    public void setList(String list)
-    {
+    public void setList(String list) {
         this.list = list;
     }
 
-    public String getListContacts()
-    {
+    public String getListContacts() {
         return listContacts;
     }
 
-    public void setListContacts(String listContacts)
-    {
+    public void setListContacts(String listContacts) {
         this.listContacts = listContacts;
     }
 
-    public String getContactLists()
-    {
+    public String getContactLists() {
         return contactLists;
     }
 
-    public void setContactLists(String contactLists)
-    {
+    public void setContactLists(String contactLists) {
         this.contactLists = contactLists;
     }
 
-    public String getContactList()
-    {
+    public String getContactList() {
         return contactList;
     }
 
-    public void setContactList(String contactList)
-    {
+    public void setContactList(String contactList) {
         this.contactList = contactList;
     }
 
-    public String getEmailCampaigns()
-    {
+    public String getEmailCampaigns() {
         return emailCampaigns;
     }
 
-    public void setEmailCampaigns(String emailCampaigns)
-    {
+    public void setEmailCampaigns(String emailCampaigns) {
         this.emailCampaigns = emailCampaigns;
     }
 
-    public String getEmailCampaignId()
-    {
+    public String getEmailCampaignId() {
         return emailCampaignId;
     }
 
-    public void setEmailCampaignId(String emailCampaignId)
-    {
+    public void setEmailCampaignId(String emailCampaignId) {
         this.emailCampaignId = emailCampaignId;
     }
 
-    public String getEmailCampaignsId()
-    {
+    public String getEmailCampaignsId() {
         return emailCampaignsId;
     }
 
-    public void setEmailCampaignsId(String emailCampaignsId)
-    {
+    public void setEmailCampaignsId(String emailCampaignsId) {
         this.emailCampaignsId = emailCampaignsId;
     }
 
-    public String getVerifiedEmailAddresses()
-    {
+    public String getVerifiedEmailAddresses() {
         return verifiedEmailAddresses;
     }
 
-    public void setVerifiedEmailAddresses(String verifiedEmailAddresses)
-    {
+    public void setVerifiedEmailAddresses(String verifiedEmailAddresses) {
         this.verifiedEmailAddresses = verifiedEmailAddresses;
     }
 
-    public String getEmailCampaignsSchedulesId()
-    {
+    public String getEmailCampaignsSchedulesId() {
         return emailCampaignsSchedulesId;
     }
 
-    public void setEmailCampaignsSchedulesId(String emailCampaignsSchedulesId)
-    {
+    public void setEmailCampaignsSchedulesId(String emailCampaignsSchedulesId) {
         this.emailCampaignsSchedulesId = emailCampaignsSchedulesId;
     }
 
-    public String getEmailCampaignsSchedulesIdAll()
-    {
+    public String getEmailCampaignsSchedulesIdAll() {
         return emailCampaignsSchedulesIdAll;
     }
 
-    public void setEmailCampaignsSchedulesIdAll(String emailCampaignsSchedulesIdAll)
-    {
+    public void setEmailCampaignsSchedulesIdAll(String emailCampaignsSchedulesIdAll) {
         this.emailCampaignsSchedulesIdAll = emailCampaignsSchedulesIdAll;
     }
 
-    public String getEmailCampaignsTrackingReportsSummary()
-    {
+    public String getEmailCampaignsTrackingReportsSummary() {
         return emailCampaignsTrackingReportsSummary;
     }
 
     public void setEmailCampaignsTrackingReportsSummary(
-            String emailCampaignsTrackingReportsSummary)
-    {
+            String emailCampaignsTrackingReportsSummary) {
         this.emailCampaignsTrackingReportsSummary = emailCampaignsTrackingReportsSummary;
     }
 
-    public String getEmailCampaignsTrackingBounces()
-    {
+    public String getEmailCampaignsTrackingBounces() {
         return emailCampaignsTrackingBounces;
     }
 
     public void setEmailCampaignsTrackingBounces(
-            String emailCampaignsTrackingBounces)
-    {
+            String emailCampaignsTrackingBounces) {
         this.emailCampaignsTrackingBounces = emailCampaignsTrackingBounces;
     }
 
-    public String getEmailCampaignsTrackingClicks()
-    {
+    public String getEmailCampaignsTrackingClicks() {
         return emailCampaignsTrackingClicks;
     }
 
-    public void setEmailCampaignsTrackingClicks(String emailCampaignsTrackingClicks)
-    {
+    public void setEmailCampaignsTrackingClicks(String emailCampaignsTrackingClicks) {
         this.emailCampaignsTrackingClicks = emailCampaignsTrackingClicks;
     }
 
-    public String getEmailCampaignsTrackingForwards()
-    {
+    public String getEmailCampaignsTrackingForwards() {
         return emailCampaignsTrackingForwards;
     }
 
     public void setEmailCampaignsTrackingForwards(
-            String emailCampaignsTrackingForwards)
-    {
+            String emailCampaignsTrackingForwards) {
         this.emailCampaignsTrackingForwards = emailCampaignsTrackingForwards;
     }
 
-    public String getEmailCampaignsTrackingOpens()
-    {
+    public String getEmailCampaignsTrackingOpens() {
         return emailCampaignsTrackingOpens;
     }
 
-    public void setEmailCampaignsTrackingOpens(String emailCampaignsTrackingOpens)
-    {
+    public void setEmailCampaignsTrackingOpens(String emailCampaignsTrackingOpens) {
         this.emailCampaignsTrackingOpens = emailCampaignsTrackingOpens;
     }
 
-    public String getEmailCampaignsTrackingSends()
-    {
+    public String getEmailCampaignsTrackingSends() {
         return emailCampaignsTrackingSends;
     }
 
-    public void setEmailCampaignsTrackingSends(String emailCampaignsTrackingSends)
-    {
+    public void setEmailCampaignsTrackingSends(String emailCampaignsTrackingSends) {
         this.emailCampaignsTrackingSends = emailCampaignsTrackingSends;
     }
 
-    public String getEmailCampaignsTrackingUnsubscribes()
-    {
+    public String getEmailCampaignsTrackingUnsubscribes() {
         return emailCampaignsTrackingUnsubscribes;
     }
 
     public void setEmailCampaignsTrackingUnsubscribes(
-            String emailCampaignsTrackingUnsubscribes)
-    {
+            String emailCampaignsTrackingUnsubscribes) {
         this.emailCampaignsTrackingUnsubscribes = emailCampaignsTrackingUnsubscribes;
     }
 
-    public String getEmailCampaignsTrackingClicksByLink()
-    {
+    public String getEmailCampaignsTrackingClicksByLink() {
         return emailCampaignsTrackingClicksByLink;
     }
 
+    public String getEmailCampaignsPreview() {
+        return emailCampaignsPreview;
+    }
+
+    public void setEmailCampaignsPreview(String emailCampaignsPreview) {
+        this.emailCampaignsPreview = emailCampaignsPreview;
+    }
+
     public void setEmailCampaignsTrackingClicksByLink(
-            String emailCampaignsTrackingClicksByLink)
-    {
+            String emailCampaignsTrackingClicksByLink) {
         this.emailCampaignsTrackingClicksByLink = emailCampaignsTrackingClicksByLink;
     }
 
-    public String getContactsTrackingReportsSummary()
-    {
+    public String getEmailCampaignsTests() {
+        return emailCampaignsTests;
+    }
+
+    public void setEmailCampaignsTests(String emailCampaignsTests) {
+        this.emailCampaignsTests = emailCampaignsTests;
+    }
+
+    public String getContactsTrackingReportsSummary() {
         return contactsTrackingReportsSummary;
     }
 
     public void setContactsTrackingReportsSummary(
-            String contactsTrackingReportsSummary)
-    {
+            String contactsTrackingReportsSummary) {
         this.contactsTrackingReportsSummary = contactsTrackingReportsSummary;
     }
 
-    public String getContactsTrackingReportsByCampaignSummary()
-    {
+    public String getContactsTrackingReportsByCampaignSummary() {
         return contactsTrackingReportsByCampaignSummary;
     }
 
     public void setContactsTrackingReportsByCampaignSummary(
-            String contactsTrackingReportsByCampaignSummary)
-    {
+            String contactsTrackingReportsByCampaignSummary) {
         this.contactsTrackingReportsByCampaignSummary = contactsTrackingReportsByCampaignSummary;
     }
 
-    public String getContactsTrackingAll()
-    {
+    public String getContactsTrackingAll() {
         return contactsTrackingAll;
     }
 
-    public void setContactsTrackingAll(String contactsTrackingAll)
-    {
+    public void setContactsTrackingAll(String contactsTrackingAll) {
         this.contactsTrackingAll = contactsTrackingAll;
     }
 
-    public String getContactsTrackingBounces()
-    {
+    public String getContactsTrackingBounces() {
         return contactsTrackingBounces;
     }
 
-    public void setContactsTrackingBounces(String contactsTrackingBounces)
-    {
+    public void setContactsTrackingBounces(String contactsTrackingBounces) {
         this.contactsTrackingBounces = contactsTrackingBounces;
     }
 
-    public String getContactsTrackingClicks()
-    {
+    public String getContactsTrackingClicks() {
         return contactsTrackingClicks;
     }
 
-    public void setContactsTrackingClicks(String contactsTrackingClicks)
-    {
+    public void setContactsTrackingClicks(String contactsTrackingClicks) {
         this.contactsTrackingClicks = contactsTrackingClicks;
     }
 
-    public String getContactsTrackingForwards()
-    {
+    public String getContactsTrackingForwards() {
         return contactsTrackingForwards;
     }
 
-    public void setContactsTrackingForwards(String contactsTrackingForwards)
-    {
+    public void setContactsTrackingForwards(String contactsTrackingForwards) {
         this.contactsTrackingForwards = contactsTrackingForwards;
     }
 
-    public String getContactsTrackingOpens()
-    {
+    public String getContactsTrackingOpens() {
         return contactsTrackingOpens;
     }
 
-    public void setContactsTrackingOpens(String contactsTrackingOpens)
-    {
+    public void setContactsTrackingOpens(String contactsTrackingOpens) {
         this.contactsTrackingOpens = contactsTrackingOpens;
     }
 
-    public String getContactsTrackingSends()
-    {
+    public String getContactsTrackingSends() {
         return contactsTrackingSends;
     }
 
-    public void setContactsTrackingSends(String contactsTrackingSends)
-    {
+    public void setContactsTrackingSends(String contactsTrackingSends) {
         this.contactsTrackingSends = contactsTrackingSends;
     }
 
-    public String getContactsTrackingUnsubscribes()
-    {
+    public String getContactsTrackingUnsubscribes() {
         return contactsTrackingUnsubscribes;
     }
 
-    public void setContactsTrackingUnsubscribes(String contactsTrackingUnsubscribes)
-    {
+    public void setContactsTrackingUnsubscribes(String contactsTrackingUnsubscribes) {
         this.contactsTrackingUnsubscribes = contactsTrackingUnsubscribes;
     }
 
-    public String getActivitiesAddContacts()
-    {
+    public String getActivitiesAddContacts() {
         return activitiesAddContacts;
     }
 
-    public void setActivitiesAddContacts(String activitiesAddContacts)
-    {
+    public void setActivitiesAddContacts(String activitiesAddContacts) {
         this.activitiesAddContacts = activitiesAddContacts;
     }
 
-    public String getActivitiesRemoveFromLists()
-    {
+    public String getActivitiesRemoveFromLists() {
         return activitiesRemoveFromLists;
     }
 
-    public void setActivitiesRemoveFromLists(String activitiesRemoveFromLists)
-    {
+    public void setActivitiesRemoveFromLists(String activitiesRemoveFromLists) {
         this.activitiesRemoveFromLists = activitiesRemoveFromLists;
     }
 
-    public String getActivitiesClearLists()
-    {
+    public String getActivitiesClearLists() {
         return activitiesClearLists;
     }
 
-    public void setActivitiesClearLists(String activitiesClearLists)
-    {
+    public void setActivitiesClearLists(String activitiesClearLists) {
         this.activitiesClearLists = activitiesClearLists;
     }
 
-    public String getActivitiesExportContacts()
-    {
+    public String getActivitiesExportContacts() {
         return activitiesExportContacts;
     }
 
-    public void setActivitiesExportContacts(String activitiesExportContacts)
-    {
+    public void setActivitiesExportContacts(String activitiesExportContacts) {
         this.activitiesExportContacts = activitiesExportContacts;
     }
 
-    public String getActivities() { return activities; }
+    public String getActivities() {
+        return activities;
+    }
 
-    public String getActivity()
-    {
+    public String getActivity() {
         return activity;
     }
 
-    public void setActivities(String activities)
-    {
+    public void setActivities(String activities) {
         this.activities = activities;
     }
 
-    public void setActivity(String activity)
-    {
+    public void setActivity(String activity) {
         this.activity = activity;
     }
 
-    public String getLibraryInfo()
-    {
+    public String getLibraryInfo() {
         return libraryInfo;
     }
 
-    public void setLibraryInfo(String libraryInfo)
-    {
+    public void setLibraryInfo(String libraryInfo) {
         this.libraryInfo = libraryInfo;
     }
 
-    public String getLibraryFiles()
-    {
+    public String getLibraryFiles() {
         return libraryFiles;
     }
 
-    public void setLibraryFiles(String libraryFiles)
-    {
+    public void setLibraryFiles(String libraryFiles) {
         this.libraryFiles = libraryFiles;
     }
 
-    public String getLibraryFilesByFolder()
-    {
+    public String getLibraryFilesByFolder() {
         return libraryFilesByFolder;
     }
 
-    public void setLibraryFilesByFolder(String libraryFilesByFolder)
-    {
+    public void setLibraryFilesByFolder(String libraryFilesByFolder) {
         this.libraryFilesByFolder = libraryFilesByFolder;
     }
 
-    public String getLibraryFolders()
-    {
+    public String getLibraryFolders() {
         return libraryFolders;
     }
 
-    public void setLibraryFolders(String libraryFolders)
-    {
+    public void setLibraryFolders(String libraryFolders) {
         this.libraryFolders = libraryFolders;
     }
 
-    public String getLibraryFolder()
-    {
+    public String getLibraryFolder() {
         return libraryFolder;
     }
 
-    public void setLibraryFolder(String libraryFolder)
-    {
+    public void setLibraryFolder(String libraryFolder) {
         this.libraryFolder = libraryFolder;
     }
 
-    public String getLibraryFolderTrash()
-    {
+    public String getLibraryFolderTrash() {
         return libraryFolderTrash;
     }
 
-    public void setLibraryFolderTrash(String libraryFolderTrash)
-    {
+    public void setLibraryFolderTrash(String libraryFolderTrash) {
         this.libraryFolderTrash = libraryFolderTrash;
     }
 
-    public String getLibraryFile()
-    {
+    public String getLibraryFile() {
         return libraryFile;
     }
 
-    public void setLibraryFile(String libraryFile)
-    {
+    public void setLibraryFile(String libraryFile) {
         this.libraryFile = libraryFile;
     }
 
-    public String getLibraryFileUploadStatus()
-    {
+    public String getLibraryFileUploadStatus() {
         return libraryFileUploadStatus;
     }
 
-    public void setLibraryFileUploadStatus(String libraryFileUploadStatus)
-    {
+    public void setLibraryFileUploadStatus(String libraryFileUploadStatus) {
         this.libraryFileUploadStatus = libraryFileUploadStatus;
     }
 
-    public String getLibraryFileMove()
-    {
+    public String getLibraryFileMove() {
         return libraryFileMove;
     }
 
-    public void setLibraryFileMove(String libraryFileMove)
-    {
+    public void setLibraryFileMove(String libraryFileMove) {
         this.libraryFileMove = libraryFileMove;
     }
 
-    public String getEvents()
-    {
+    public String getEvents() {
         return events;
     }
 
-    public void setEvents(String events)
-    {
+    public void setEvents(String events) {
         this.events = events;
     }
 
-    public String getEventId()
-    {
+    public String getEventId() {
         return eventId;
     }
 
-    public void setEventId(String eventId)
-    {
+    public void setEventId(String eventId) {
         this.eventId = eventId;
     }
 
-    public String getEventFees()
-    {
+    public String getEventFees() {
         return eventFees;
     }
 
-    public void setEventFees(String eventFees)
-    {
+    public void setEventFees(String eventFees) {
         this.eventFees = eventFees;
     }
 
-    public String getEventFeeId()
-    {
+    public String getEventFeeId() {
         return eventFeeId;
     }
 
-    public void setEventFeeId(String eventFeeId)
-    {
+    public void setEventFeeId(String eventFeeId) {
         this.eventFeeId = eventFeeId;
     }
 
-    public String getEventPromocodes()
-    {
+    public String getEventPromocodes() {
         return eventPromocodes;
     }
 
-    public void setEventPromocodes(String eventPromocodes)
-    {
+    public void setEventPromocodes(String eventPromocodes) {
         this.eventPromocodes = eventPromocodes;
     }
 
-    public String getEventPromocodeId()
-    {
+    public String getEventPromocodeId() {
         return eventPromocodeId;
     }
 
-    public void setEventPromocodeId(String eventPromocodeId)
-    {
+    public void setEventPromocodeId(String eventPromocodeId) {
         this.eventPromocodeId = eventPromocodeId;
     }
 
-    public String getEventRegistrants()
-    {
+    public String getEventRegistrants() {
         return eventRegistrants;
     }
 
-    public void setEventRegistrants(String eventRegistrants)
-    {
+    public void setEventRegistrants(String eventRegistrants) {
         this.eventRegistrants = eventRegistrants;
     }
 
-    public String getEventRegistrantId()
-    {
+    public String getEventRegistrantId() {
         return eventRegistrantId;
     }
 
-    public void setEventRegistrantId(String eventRegistrantId)
-    {
+    public void setEventRegistrantId(String eventRegistrantId) {
         this.eventRegistrantId = eventRegistrantId;
     }
 
-    public String getEventItems()
-    {
+    public String getEventItems() {
         return eventItems;
     }
 
-    public void setEventItems(String eventItems)
-    {
+    public void setEventItems(String eventItems) {
         this.eventItems = eventItems;
     }
 
-    public String getEventItemId()
-    {
+    public String getEventItemId() {
         return eventItemId;
     }
 
-    public void setEventItemId(String eventItemId)
-    {
+    public void setEventItemId(String eventItemId) {
         this.eventItemId = eventItemId;
     }
 
-    public String getEventItemAttributes()
-    {
+    public String getEventItemAttributes() {
         return eventItemAttributes;
     }
 
-    public void setEventItemAttributes(String eventItemAttributes)
-    {
+    public void setEventItemAttributes(String eventItemAttributes) {
         this.eventItemAttributes = eventItemAttributes;
     }
 
-    public String getEventItemAttributeId()
-    {
+    public String getEventItemAttributeId() {
         return eventItemAttributeId;
     }
 
-    public void setEventItemAttributeId(String eventItemAttributeId)
-    {
+    public void setEventItemAttributeId(String eventItemAttributeId) {
         this.eventItemAttributeId = eventItemAttributeId;
     }
 
-    public String getAccountInfo()
-    {
+    public String getAccountInfo() {
         return accountInfo;
     }
 
-    public void setAccountInfo(String accountInfo)
-    {
+    public void setAccountInfo(String accountInfo) {
         this.accountInfo = accountInfo;
     }
 
-    public String getLoginBaseUrl()
-    {
+    public String getLoginBaseUrl() {
         return loginBaseUrl;
     }
 
-    public void setLoginBaseUrl(String loginBaseUrl)
-    {
+    public void setLoginBaseUrl(String loginBaseUrl) {
         this.loginBaseUrl = loginBaseUrl;
     }
 
-    public String getLoginEndpoint()
-    {
+    public String getLoginEndpoint() {
         return loginEndpoint;
     }
 
-    public void setLoginEndpoint(String loginEndpoint)
-    {
+    public void setLoginEndpoint(String loginEndpoint) {
         this.loginEndpoint = loginEndpoint;
     }
 
-    public String getLoginHost()
-    {
+    public String getLoginHost() {
         return loginHost;
     }
 
-    public void setLoginHost(String loginHost)
-    {
+    public void setLoginHost(String loginHost) {
         this.loginHost = loginHost;
     }
 
-    public String getErrorContactOrId()
-    {
+    public String getErrorContactOrId() {
         return errorContactOrId;
     }
 
-    public void setErrorContactOrId(String errorContactOrId)
-    {
+    public void setErrorContactOrId(String errorContactOrId) {
         this.errorContactOrId = errorContactOrId;
     }
 
-    public String getErrorListOrId()
-    {
+    public String getErrorListOrId() {
         return errorListOrId;
     }
 
-    public void setErrorListOrId(String errorListOrId)
-    {
+    public void setErrorListOrId(String errorListOrId) {
         this.errorListOrId = errorListOrId;
     }
 
-    public String getErrorId()
-    {
+    public String getErrorId() {
         return errorId;
     }
 
-    public void setErrorId(String errorId)
-    {
+    public void setErrorId(String errorId) {
         this.errorId = errorId;
     }
 
-    public String getErrorStatus()
-    {
+    public String getErrorStatus() {
         return errorStatus;
     }
 
-    public void setErrorStatus(String errorStatus)
-    {
+    public void setErrorStatus(String errorStatus) {
         this.errorStatus = errorStatus;
     }
 
-    public String getErrorEmailCampaignScheduleNull()
-    {
+    public String getErrorEmailCampaignScheduleNull() {
         return errorEmailCampaignScheduleNull;
     }
 
-    public void setErrorEmailCampaignScheduleNull(String errorEmailCampaignScheduleNull)
-    {
+    public void setErrorEmailCampaignScheduleNull(String errorEmailCampaignScheduleNull) {
         this.errorEmailCampaignScheduleNull = errorEmailCampaignScheduleNull;
     }
 
-    public String getErrorBulkContactsRequestNull()
-    {
+    public String getErrorEmailCampaignTestNull() {
+        return errorEmailCampaignTestNull;
+    }
+
+    public void setErrorEmailCampaignTestNull(String errorEmailCampaignTestNull) {
+        this.errorEmailCampaignTestNull = errorEmailCampaignTestNull;
+    }
+
+    public String getErrorBulkContactsRequestNull() {
         return errorBulkContactsRequestNull;
     }
 
-    public void setErrorBulkContactsRequestNull(String errorBulkContactsRequestNull)
-    {
+    public void setErrorBulkContactsRequestNull(String errorBulkContactsRequestNull) {
         this.errorBulkContactsRequestNull = errorBulkContactsRequestNull;
     }
 
-    public String getErrorBulkContactsListNull()
-    {
+    public String getErrorBulkContactsListNull() {
         return errorBulkContactsListNull;
     }
 
-    public void setErrorBulkContactsListNull(String errorBulkContactsListNull)
-    {
+    public void setErrorBulkContactsListNull(String errorBulkContactsListNull) {
         this.errorBulkContactsListNull = errorBulkContactsListNull;
     }
 
-    public String getErrorFileNameNull()
-    {
+    public String getErrorFileNameNull() {
         return errorFileNameNull;
     }
 
-    public void setErrorFileNameNull(String errorFileNameNull)
-    {
+    public void setErrorFileNameNull(String errorFileNameNull) {
         this.errorFileNameNull = errorFileNameNull;
     }
 
-    public String getErrorFileNull()
-    {
+    public String getErrorFileNull() {
         return errorFileNull;
     }
 
-    public void setErrorFileNull(String errorFileNull)
-    {
+    public void setErrorFileNull(String errorFileNull) {
         this.errorFileNull = errorFileNull;
     }
 
-    public String getErrorFolderNull()
-    {
+    public String getErrorFolderNull() {
         return errorFolderNull;
     }
 
-    public void setErrorFolderNull(String errorFolderNull)
-    {
+    public void setErrorFolderNull(String errorFolderNull) {
         this.errorFolderNull = errorFolderNull;
     }
 
-    public String getErrorFolderIdNull()
-    {
+    public String getErrorFolderIdNull() {
         return errorFolderIdNull;
     }
 
-    public void setErrorFolderIdNull(String errorFolderIdNull)
-    {
+    public void setErrorFolderIdNull(String errorFolderIdNull) {
         this.errorFolderIdNull = errorFolderIdNull;
     }
 
-    public String getErrorFileIdNull()
-    {
+    public String getErrorFileIdNull() {
         return errorFileIdNull;
     }
 
-    public void setErrorFileIdNull(String errorFileIdNull)
-    {
+    public void setErrorFileIdNull(String errorFileIdNull) {
         this.errorFileIdNull = errorFileIdNull;
     }
 
-    public String getErrorPaginationNull()
-    {
+    public String getErrorPaginationNull() {
         return errorPaginationNull;
     }
 
-    public void setErrorPaginationNull(String errorPaginationNull)
-    {
+    public void setErrorPaginationNull(String errorPaginationNull) {
         this.errorPaginationNull = errorPaginationNull;
     }
 
-    public String getErrorMyLibraryImageSourceNull()
-    {
+    public String getErrorMyLibraryImageSourceNull() {
         return errorMyLibraryImageSourceNull;
     }
 
-    public void setErrorMyLibraryImageSourceNull(String errorMyLibraryImageSourceNull)
-    {
+    public void setErrorMyLibraryImageSourceNull(String errorMyLibraryImageSourceNull) {
         this.errorMyLibraryImageSourceNull = errorMyLibraryImageSourceNull;
     }
 
-    public String getErrorMyLibraryDescriptionNull()
-    {
+    public String getErrorMyLibraryDescriptionNull() {
         return errorMyLibraryDescriptionNull;
     }
 
-    public void setErrorMyLibraryDescriptionNull(String errorMyLibraryDescriptionNull)
-    {
+    public void setErrorMyLibraryDescriptionNull(String errorMyLibraryDescriptionNull) {
         this.errorMyLibraryDescriptionNull = errorMyLibraryDescriptionNull;
     }
 
-    public String getErrorMyLibraryFileTypeNull()
-    {
+    public String getErrorMyLibraryFileTypeNull() {
         return errorMyLibraryFileTypeNull;
     }
 
-    public void setErrorMyLibraryFileTypeNull(String errorMyLibraryFileTypeNull)
-    {
+    public void setErrorMyLibraryFileTypeNull(String errorMyLibraryFileTypeNull) {
         this.errorMyLibraryFileTypeNull = errorMyLibraryFileTypeNull;
     }
 
-    public String getErrorEventId()
-    {
+    public String getErrorEventId() {
         return errorEventId;
     }
 
-    public void setErrorEventId(String errorEventId)
-    {
+    public void setErrorEventId(String errorEventId) {
         this.errorEventId = errorEventId;
     }
 
-    public String getErrorEventFeeId()
-    {
+    public String getErrorEventFeeId() {
         return errorEventFeeId;
     }
 
-    public void setErrorEventFeeId(String errorEventFeeId)
-    {
+    public void setErrorEventFeeId(String errorEventFeeId) {
         this.errorEventFeeId = errorEventFeeId;
     }
 
-    public String getErrorEvent()
-    {
+    public String getErrorEvent() {
         return errorEvent;
     }
 
-    public void setErrorEvent(String errorEvent)
-    {
+    public void setErrorEvent(String errorEvent) {
         this.errorEvent = errorEvent;
     }
 
-    public String getErrorEventFee()
-    {
+    public String getErrorEventFee() {
         return errorEventFee;
     }
 
-    public void setErrorEventFee(String errorEventFee)
-    {
+    public void setErrorEventFee(String errorEventFee) {
         this.errorEventFee = errorEventFee;
     }
 
-    public String getErrorPromocode()
-    {
+    public String getErrorPromocode() {
         return errorPromocode;
     }
 
-    public void setErrorPromocode(String errorPromocode)
-    {
+    public void setErrorPromocode(String errorPromocode) {
         this.errorPromocode = errorPromocode;
     }
 
-    public String getErrorPromocodeId()
-    {
+    public String getErrorPromocodeId() {
         return errorPromocodeId;
     }
 
-    public void setErrorPromocodeId(String errorPromocodeId)
-    {
+    public void setErrorPromocodeId(String errorPromocodeId) {
         this.errorPromocodeId = errorPromocodeId;
     }
 
-    public String getErrorRegistrantId()
-    {
+    public String getErrorRegistrantId() {
         return errorRegistrantId;
     }
 
-    public void setErrorRegistrantId(String errorRegistrantId)
-    {
+    public void setErrorRegistrantId(String errorRegistrantId) {
         this.errorRegistrantId = errorRegistrantId;
     }
 
-    public String getErrorEventItemId()
-    {
+    public String getErrorEventItemId() {
         return errorEventItemId;
     }
 
-    public void setErrorEventItemId(String errorEventItemId)
-    {
+    public void setErrorEventItemId(String errorEventItemId) {
         this.errorEventItemId = errorEventItemId;
     }
 
     public String getErrorEventItem() {
-		return errorEventItem;
-	}
+        return errorEventItem;
+    }
 
-	public void setErrorEventItem(String errorEventItem) {
-		this.errorEventItem = errorEventItem;
-	}
+    public void setErrorEventItem(String errorEventItem) {
+        this.errorEventItem = errorEventItem;
+    }
 
-	public String getErrorEventItemAttributeId()
-    {
+    public String getErrorEventItemAttributeId() {
         return errorEventItemAttributeId;
     }
 
-    public void setErrorEventItemAttributeId(String errorEventItemAttributeId)
-    {
+    public void setErrorEventItemAttributeId(String errorEventItemAttributeId) {
         this.errorEventItemAttributeId = errorEventItemAttributeId;
     }
 
-    public String getErrorEventItemAttribute()
-    {
+    public String getErrorEventItemAttribute() {
         return errorEventItemAttribute;
     }
 
-    public void setErrorEventItemAttribute(String errorEventItemAttribute)
-    {
+    public void setErrorEventItemAttribute(String errorEventItemAttribute) {
         this.errorEventItemAttribute = errorEventItemAttribute;
     }
 
-    public String getErrorAccountInfo()
-    {
+    public String getErrorAccountInfo() {
         return errorAccountInfo;
     }
 
-    public void setErrorAccountInfo(String errorAccountInfo)
-    {
+    public void setErrorAccountInfo(String errorAccountInfo) {
         this.errorAccountInfo = errorAccountInfo;
     }
 
-    public String getErrorInvalidWebhook()
-    {
+    public String getErrorInvalidWebhook() {
         return errorInvalidWebhook;
     }
 
-    public void setErrorInvalidWebhook(String errorInvalidWebhook)
-    {
+    public void setErrorInvalidWebhook(String errorInvalidWebhook) {
         this.errorInvalidWebhook = errorInvalidWebhook;
     }
 
-    public String getErrorNoClientSecret()
-    {
+    public String getErrorNoClientSecret() {
         return errorNoClientSecret;
     }
 
-    public void setErrorNoClientSecret(String errorNoClientSecret)
-    {
+    public void setErrorNoClientSecret(String errorNoClientSecret) {
         this.errorNoClientSecret = errorNoClientSecret;
     }
 
-    public int getEmailCampaignScheduleCreated()
-    {
+    public int getEmailCampaignScheduleCreated() {
         return emailCampaignScheduleCreated;
     }
 
-    public void setEmailCampaignScheduleCreated(int emailCampaignScheduleCreated)
-    {
+    public void setEmailCampaignScheduleCreated(int emailCampaignScheduleCreated) {
         this.emailCampaignScheduleCreated = emailCampaignScheduleCreated;
     }
 
-    public String getHeaderAccept()
-    {
+    public String getHeaderAccept() {
         return headerAccept;
     }
 
-    public void setHeaderAccept(String headerAccept)
-    {
+    public void setHeaderAccept(String headerAccept) {
         this.headerAccept = headerAccept;
     }
 
-    public String getHeaderContentType()
-    {
+    public String getHeaderContentType() {
         return headerContentType;
     }
 
-    public void setHeaderContentType(String headerContentType)
-    {
+    public void setHeaderContentType(String headerContentType) {
         this.headerContentType = headerContentType;
     }
 
-    public String getHeaderUserAgent()
-    {
+    public String getHeaderUserAgent() {
         return headerUserAgent;
     }
 
-    public void setHeaderUserAgent(String headerUserAgent)
-    {
+    public void setHeaderUserAgent(String headerUserAgent) {
         this.headerUserAgent = headerUserAgent;
     }
 
-    public String getUtf8()
-    {
+    public String getUtf8() {
         return utf8;
     }
 
-    public void setUtf8(String utf8)
-    {
+    public void setUtf8(String utf8) {
         this.utf8 = utf8;
     }
 

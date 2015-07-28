@@ -15,6 +15,8 @@ import com.constantcontact.services.emailcampaigns.EmailCampaignService;
 import com.constantcontact.services.emailcampaigns.IEmailCampaignService;
 import com.constantcontact.services.emailcampaigns.schedule.EmailCampaignScheduleService;
 import com.constantcontact.services.emailcampaigns.schedule.IEmailCampaignScheduleService;
+import com.constantcontact.services.emailcampaigns.test.EmailCampaignTestService;
+import com.constantcontact.services.emailcampaigns.test.IEmailCampaignTestService;
 import com.constantcontact.services.emailcampaigns.tracking.EmailCampaignTrackingService;
 import com.constantcontact.services.emailcampaigns.tracking.IEmailCampaignTrackingService;
 import com.constantcontact.services.eventspot.EventSpotService;
@@ -108,6 +110,16 @@ public class ConstantContactFactory {
     
     public IEmailCampaignTrackingService createEmailCampaignTrackingService() {
         return new EmailCampaignTrackingService(accessToken, apiKey);
+    }
+
+    /**
+     * Creates a new {@link EmailCampaignTestService}
+     *
+     * @return A {@link EmailCampaignTestService} instance.
+     */
+
+    public IEmailCampaignTestService createEmailCampaignTestService() {
+        return new EmailCampaignTestService(accessToken, apiKey);
     }
     
     /**

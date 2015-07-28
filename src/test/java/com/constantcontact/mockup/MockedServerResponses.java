@@ -107,6 +107,10 @@ public class MockedServerResponses {
 
     public static final boolean deleteCampaignEmailCampaignServiceData = true;
 
+    public static final String getEmailCampaignPreviewData = "{    \"subject\": \"Subject Test\",   \"from_email\": \"myemail@example.com\",    \"reply_to_email\": \"myemail@example.com\",    \"preview_email_content\": \"<html><body>Hi <a href='http://www.constantcontact.com'>Visit ConstantContact.com!</a> </body></html>\",    \"preview_text_content\": \"Visit Constant Contact\"}";
+
+    public static final String testEmailCampaignData = "{    \"format\": \"HTML_AND_TEXT\",    \"personal_message\": \"This is a test send of the email campaign message.\",    \"email_addresses\": [        \"address1@example.com\",        \"address2@example.com\",        \"address3@example.com\"    ]}";
+
     public static final String getLibraryInfoMyLibraryServiceData = "{\"max_free_file_num\":5,\"max_premium_space_limit\":0,\"image_root\":\"https://origin.ih.constantcontact.com\",\"usage_summary\":{\"folder_count\":2,\"file_count\":3,\"image_count\":3,\"document_count\":0,\"total_bytes_used\":3072,\"image_bytes_used\":3072,\"document_bytes_used\":0,\"total_bytes_remaining\":0,\"free_files_remaining\":2},\"max_upload_size_limit\":5242880}\n";
 
     public static final String getLibraryFoldersMyLibraryServiceData = "{\"meta\":{\"pagination\":{}},\"results\":[{\"id\":\"-23\",\"name\":\"Test Folder Thu Jan 29 13:45:18 EET 2015\",\"level\":1,\"children\":[],\"item_count\":1,\"modified_date\":\"2015-01-29T06:45:18.000-05:00\",\"created_date\":\"2015-01-29T06:45:18.000-05:00\"},{\"id\":\"-20\",\"name\":\"Test Folder Thu Jan 29 13:41:57 EET 2015\",\"level\":1,\"children\":[],\"item_count\":1,\"modified_date\":\"2015-01-29T06:41:58.000-05:00\",\"created_date\":\"2015-01-29T06:41:58.000-05:00\"}]}\n";
