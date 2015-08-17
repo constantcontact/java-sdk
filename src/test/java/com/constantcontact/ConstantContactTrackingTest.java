@@ -13,6 +13,7 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.constantcontact.components.contacts.tracking.reports.summary.ContactTrackingSummaryReport;
+import com.constantcontact.components.generic.response.Pagination;
 import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.mockup.ConstantContactFactoryMock;
@@ -27,21 +28,20 @@ import com.constantcontact.services.contacts.tracking.IContactTrackingService;
 @RunWith(MockitoJUnitRunner.class)
 public class ConstantContactTrackingTest {
 
-	private ConstantContactFactoryMock constantContactFactory;
+    private ConstantContactFactoryMock constantContactFactory;
     private IContactTrackingService contactTrackingService;
 
     @Before
-    public void beforeTests(){
-    	constantContactFactory = Mockito.spy(new ConstantContactFactoryMock("",""));
-    	contactTrackingService = constantContactFactory.createContactTrackingService();
+    public void beforeTests() {
+        constantContactFactory = Mockito.spy(new ConstantContactFactoryMock("", ""));
+        contactTrackingService = constantContactFactory.createContactTrackingService();
     }
 
     /**
      * Tests the getContactTrackingSummary from the ConstantContact.class
-     *
      */
     @Test
-    public void getSummaryTest(){
+    public void getSummaryTest() {
         String contactId = "1";
 
         try {
@@ -61,17 +61,16 @@ public class ConstantContactTrackingTest {
 
     /**
      * Tests that the getContactTrackingSummary throws the proper exception
-     *
      */
     @Test(expected = IllegalArgumentException.class)
-    public void getSummaryExceptionTest(){
+    public void getSummaryExceptionTest() {
         String contactId = null;
 
         try {
 
             ContactTrackingSummaryReport trackingSummaryReport = mock(ContactTrackingSummaryReport.class);
 
-            trackingSummaryReport =  contactTrackingService.getSummary(contactId, null);
+            trackingSummaryReport = contactTrackingService.getSummary(contactId, null);
             verify(contactTrackingService).getSummary(contactId, null);
 
         } catch (ConstantContactServiceException e) {
@@ -82,10 +81,9 @@ public class ConstantContactTrackingTest {
 
     /**
      * Tests the getContactTrackingSummaryByCampaign from the ConstantContact.class
-     *
      */
     @Test
-    public void getContactTrackingSummaryByCampaignTest(){
+    public void getContactTrackingSummaryByCampaignTest() {
         String contactId = "1";
 
         try {
@@ -104,10 +102,9 @@ public class ConstantContactTrackingTest {
 
     /**
      * Tests that the getContactTrackingSummaryByCampaign throws the proper exception
-     *
      */
     @Test(expected = IllegalArgumentException.class)
-    public void getContactTrackingSummaryByCampaignExceptionTest(){
+    public void getContactTrackingSummaryByCampaignExceptionTest() {
         String contactId = null;
 
         try {
@@ -124,10 +121,9 @@ public class ConstantContactTrackingTest {
 
     /**
      * Tests the getContactTrackingActivities from the ConstantContact.class
-     *
      */
     @Test
-    public void getContactTrackingActivitiesTest(){
+    public void getContactTrackingActivitiesTest() {
         String contactId = "1";
 
         try {
@@ -146,10 +142,9 @@ public class ConstantContactTrackingTest {
 
     /**
      * Tests that the getContactTrackingActivities throws the proper exception
-     *
      */
     @Test(expected = IllegalArgumentException.class)
-    public void getContactTrackingActivitiesExceptionTest(){
+    public void getContactTrackingActivitiesExceptionTest() {
         String contactId = null;
 
         try {
@@ -165,11 +160,164 @@ public class ConstantContactTrackingTest {
     }
 
     /**
-     * Tests the getContactTrackingBounces from the ConstantContact.class
-     *
+     * Tests the getActivities(pagination) from the ConstantContact.class
      */
     @Test
-    public void getContactTrackingBouncesTest(){
+    public void getContactTrackingPaginatedActivitiesTest() {
+        String contactId = "1";
+        Pagination pagination = new Pagination();
+        pagination.setNextLink("link");
+        try {
+
+            ResultSet resultSet = mock(ResultSet.class);
+
+            resultSet = contactTrackingService.getActivities(pagination);
+            verify(contactTrackingService).getActivities(pagination);
+
+            assertNotNull(resultSet);
+
+        } catch (ConstantContactServiceException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Tests the getBounces(pagination) from the ConstantContact.class
+     */
+    @Test
+    public void getContactTrackingPaginatedBouncesTest() {
+        String contactId = "1";
+        Pagination pagination = new Pagination();
+        pagination.setNextLink("link");
+        try {
+
+            ResultSet resultSet = mock(ResultSet.class);
+
+            resultSet = contactTrackingService.getBounces(pagination);
+            verify(contactTrackingService).getBounces(pagination);
+
+            assertNotNull(resultSet);
+
+        } catch (ConstantContactServiceException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Tests the getClicks(pagination) from the ConstantContact.class
+     */
+    @Test
+    public void getContactTrackingPaginatedClicksTest() {
+        String contactId = "1";
+        Pagination pagination = new Pagination();
+        pagination.setNextLink("link");
+        try {
+
+            ResultSet resultSet = mock(ResultSet.class);
+
+            resultSet = contactTrackingService.getClicks(pagination);
+            verify(contactTrackingService).getClicks(pagination);
+
+            assertNotNull(resultSet);
+
+        } catch (ConstantContactServiceException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Tests the getForwards(pagination) from the ConstantContact.class
+     */
+    @Test
+    public void getContactTrackingPaginatedForwardsTest() {
+        String contactId = "1";
+        Pagination pagination = new Pagination();
+        pagination.setNextLink("link");
+        try {
+
+            ResultSet resultSet = mock(ResultSet.class);
+
+            resultSet = contactTrackingService.getForwards(pagination);
+            verify(contactTrackingService).getForwards(pagination);
+
+            assertNotNull(resultSet);
+
+        } catch (ConstantContactServiceException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Tests the getOpens(pagination) from the ConstantContact.class
+     */
+    @Test
+    public void getContactTrackingPaginatedOpensTest() {
+        String contactId = "1";
+        Pagination pagination = new Pagination();
+        pagination.setNextLink("link");
+        try {
+
+            ResultSet resultSet = mock(ResultSet.class);
+
+            resultSet = contactTrackingService.getOpens(pagination);
+            verify(contactTrackingService).getOpens(pagination);
+
+            assertNotNull(resultSet);
+
+        } catch (ConstantContactServiceException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Tests the getSends(pagination) from the ConstantContact.class
+     */
+    @Test
+    public void getContactTrackingPaginatedSendsTest() {
+        String contactId = "1";
+        Pagination pagination = new Pagination();
+        pagination.setNextLink("link");
+        try {
+
+            ResultSet resultSet = mock(ResultSet.class);
+
+            resultSet = contactTrackingService.getSends(pagination);
+            verify(contactTrackingService).getSends(pagination);
+
+            assertNotNull(resultSet);
+
+        } catch (ConstantContactServiceException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Tests the getUnsubscribes(pagination) from the ConstantContact.class
+     */
+    @Test
+    public void getContactTrackingPaginatedUnsubscribesTest() {
+        String contactId = "1";
+        Pagination pagination = new Pagination();
+        pagination.setNextLink("link");
+        try {
+
+            ResultSet resultSet = mock(ResultSet.class);
+
+            resultSet = contactTrackingService.getUnsubscribes(pagination);
+            verify(contactTrackingService).getUnsubscribes(pagination);
+
+            assertNotNull(resultSet);
+
+        } catch (ConstantContactServiceException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Tests the getContactTrackingBounces from the ConstantContact.class
+     */
+    @Test
+    public void getContactTrackingBouncesTest() {
         String contactId = "1";
 
         try {
@@ -188,10 +336,9 @@ public class ConstantContactTrackingTest {
 
     /**
      * Tests that the getContactTrackingBounces throws the proper exception
-     *
      */
     @Test(expected = IllegalArgumentException.class)
-    public void getContactTrackingBouncesExceptionTest(){
+    public void getContactTrackingBouncesExceptionTest() {
         String contactId = null;
 
         try {
@@ -208,10 +355,9 @@ public class ConstantContactTrackingTest {
 
     /**
      * Tests the getContactTrackingClicks from the ConstantContact.class
-     *
      */
     @Test
-    public void getContactTrackingClicksTest(){
+    public void getContactTrackingClicksTest() {
         String contactId = "1";
         int limit = 1;
 
@@ -231,10 +377,9 @@ public class ConstantContactTrackingTest {
 
     /**
      * Tests that the getContactTrackingClicks throws the proper exception
-     *
      */
     @Test(expected = IllegalArgumentException.class)
-    public void getContactTrackingClicksExceptionTest(){
+    public void getContactTrackingClicksExceptionTest() {
         String contactId = null;
         int limit = 0;
 
@@ -252,10 +397,9 @@ public class ConstantContactTrackingTest {
 
     /**
      * Tests the getContactTrackingForwards from the ConstantContact.class
-     *
      */
     @Test
-    public void getContactTrackingForwardsTest(){
+    public void getContactTrackingForwardsTest() {
         String contactId = "1";
         int limit = 1;
 
@@ -275,10 +419,9 @@ public class ConstantContactTrackingTest {
 
     /**
      * Tests that the getContactTrackingForwards throws the proper exception
-     *
      */
     @Test(expected = IllegalArgumentException.class)
-    public void getContactTrackingForwardsExceptionTest(){
+    public void getContactTrackingForwardsExceptionTest() {
         String contactId = null;
         int limit = 0;
 
@@ -296,10 +439,9 @@ public class ConstantContactTrackingTest {
 
     /**
      * Tests the getContactTrackingOpens from the ConstantContact.class
-     *
      */
     @Test
-    public void getContactTrackingOpensTest(){
+    public void getContactTrackingOpensTest() {
         String contactId = "1";
         int limit = 1;
 
@@ -319,10 +461,9 @@ public class ConstantContactTrackingTest {
 
     /**
      * Tests that the getContactTrackingOpens throws the proper exception
-     *
      */
     @Test(expected = IllegalArgumentException.class)
-    public void getContactTrackingOpensExceptionTest(){
+    public void getContactTrackingOpensExceptionTest() {
         String contactId = null;
         int limit = 0;
 
@@ -340,10 +481,9 @@ public class ConstantContactTrackingTest {
 
     /**
      * Tests the getContactTrackingSends method from ConstantContact.class
-     *
      */
     @Test
-    public void getContactTrackingSendsTest(){
+    public void getContactTrackingSendsTest() {
         String contactId = "1";
         int limit = 1;
 
@@ -363,10 +503,9 @@ public class ConstantContactTrackingTest {
 
     /**
      * Tests that the getContactTrackingSends throws the proper exception
-     *
      */
     @Test(expected = IllegalArgumentException.class)
-    public void getContactTrackingSendsExceptionTest(){
+    public void getContactTrackingSendsExceptionTest() {
         String contactId = null;
         int limit = 0;
 
@@ -384,10 +523,9 @@ public class ConstantContactTrackingTest {
 
     /**
      * Tests the getContactTrackingUnsubscribes method from ConstantContact.class
-     *
      */
     @Test
-    public void getContactTrackingUnsubscribesTest(){
+    public void getContactTrackingUnsubscribesTest() {
         String contactId = "1";
         int limit = 1;
 
@@ -407,10 +545,9 @@ public class ConstantContactTrackingTest {
 
     /**
      * Tests that the getContactTrackingUnsubscribes throws the proper exception
-     *
      */
     @Test(expected = IllegalArgumentException.class)
-    public void getContactTrackingUnsubscribesExceptionTest(){
+    public void getContactTrackingUnsubscribesExceptionTest() {
         String contactId = null;
         int limit = 0;
 
