@@ -139,6 +139,7 @@ public final class Config {
             errorEventItemAttributeId = prop.getProperty("constantcontact.api.errors.eventitemattributeid");
             errorEventItemAttribute = prop.getProperty("constantcontact.api.errors.eventitemattribute");
             errorAccountInfo = prop.getProperty("constantcontact.api.errors.accountinfo");
+            errorLinkId = prop.getProperty("constantcontact.api.errors.linkId");
             errorInvalidWebhook = prop.getProperty("constantcontact.api.errors.invalidwebhook");
             errorNoClientSecret = prop.getProperty("constantcontact.api.errors.noclientsecret");
             emailCampaignScheduleCreated = Integer.parseInt(prop.getProperty("constantcontact.api.httpcodes.emailcampaignschedulecreated"));
@@ -581,6 +582,11 @@ public final class Config {
      * Account Info null error;
      */
     private String errorAccountInfo;
+
+    /**
+     * LinkId null error;
+     */
+    private String errorLinkId;
 
     /**
      * Invalid Webhook error;
@@ -1363,6 +1369,14 @@ public final class Config {
 
     public void setErrorAccountInfo(String errorAccountInfo) {
         this.errorAccountInfo = errorAccountInfo;
+    }
+
+    public String getErrorLinkId() {
+        return errorLinkId;
+    }
+
+    public void setErrorLinkId(String errorLinkId) {
+        this.errorLinkId = errorLinkId;
     }
 
     public String getErrorInvalidWebhook() {

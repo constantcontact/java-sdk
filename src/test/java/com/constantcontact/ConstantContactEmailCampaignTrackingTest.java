@@ -10,6 +10,7 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.constantcontact.components.emailcampaigns.tracking.reports.summary.EmailCampaignTrackingSummary;
+import com.constantcontact.components.generic.response.Pagination;
 import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.mockup.ConstantContactFactoryMock;
@@ -572,5 +573,136 @@ public class ConstantContactEmailCampaignTrackingTest {
 				linkId, 1, null);
 
 	}
+
+    /**
+     * Tests the retrieving of the email campaign pagination
+     *
+     */
+    @Test
+    public void getEmailCampaignTrackingPaginationTest() {
+        String emailCampaignId = "1";
+        Pagination pagination = new Pagination();
+        pagination.setNextLink("link");
+
+        try {
+
+            ResultSet resultSet = new ResultSet();
+
+            resultSet = emailCampaignTrackingServiceMock.getClicks(pagination);
+            verify(emailCampaignTrackingServiceMock).getClicks(pagination);
+
+            assertNotNull(resultSet);
+
+            resultSet = emailCampaignTrackingServiceMock.getForwards(pagination);
+            verify(emailCampaignTrackingServiceMock).getForwards(pagination);
+
+            assertNotNull(resultSet);
+
+            resultSet = emailCampaignTrackingServiceMock.getOpens(pagination);
+            verify(emailCampaignTrackingServiceMock).getOpens(pagination);
+
+            assertNotNull(resultSet);
+
+
+            resultSet = emailCampaignTrackingServiceMock.getBounces(pagination);
+            verify(emailCampaignTrackingServiceMock).getBounces(pagination);
+
+            assertNotNull(resultSet);
+
+
+            resultSet = emailCampaignTrackingServiceMock.getUnsubscribes(pagination);
+            verify(emailCampaignTrackingServiceMock).getUnsubscribes(pagination);
+
+            assertNotNull(resultSet);
+
+
+            resultSet = emailCampaignTrackingServiceMock.getSends(pagination);
+            verify(emailCampaignTrackingServiceMock).getSends(pagination);
+
+            assertNotNull(resultSet);
+
+        } catch (ConstantContactServiceException e) {
+            e.printStackTrace();
+            System.out.println(e.getErrorInfo());
+        }
+    }
+
+    /**
+     * Tests the retrieving of the email campaign pagination
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void getEmailCampaignTrackingClicksPaginationTestException() throws ConstantContactServiceException {
+        Pagination pagination = null;
+
+        ResultSet resultSet = emailCampaignTrackingServiceMock.getClicks(pagination);
+        verify(emailCampaignTrackingServiceMock).getClicks(pagination);
+
+        assertNotNull(resultSet);
+    }
+
+    /**
+     * Tests the retrieving of the email campaign pagination
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void getEmailCampaignTrackingForwardsPaginationTestException() throws ConstantContactServiceException {
+        Pagination pagination = null;
+
+        ResultSet resultSet = emailCampaignTrackingServiceMock.getForwards(pagination);
+        verify(emailCampaignTrackingServiceMock).getForwards(pagination);
+
+        assertNotNull(resultSet);
+    }
+
+    /**
+     * Tests the retrieving of the email campaign pagination
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void getEmailCampaignTrackingOpensPaginationTestException() throws ConstantContactServiceException {
+        Pagination pagination = null;
+
+        ResultSet resultSet = emailCampaignTrackingServiceMock.getOpens(pagination);
+        verify(emailCampaignTrackingServiceMock).getOpens(pagination);
+
+        assertNotNull(resultSet);
+    }
+
+    /**
+     * Tests the retrieving of the email campaign pagination
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void getEmailCampaignTrackingSendsPaginationTestException() throws ConstantContactServiceException {
+        Pagination pagination = null;
+
+        ResultSet resultSet = emailCampaignTrackingServiceMock.getSends(pagination);
+        verify(emailCampaignTrackingServiceMock).getSends(pagination);
+
+        assertNotNull(resultSet);
+    }
+
+    /**
+     * Tests the retrieving of the email campaign pagination
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void getEmailCampaignTrackingBouncesPaginationTestException() throws ConstantContactServiceException {
+        Pagination pagination = null;
+
+        ResultSet resultSet = emailCampaignTrackingServiceMock.getBounces(pagination);
+        verify(emailCampaignTrackingServiceMock).getBounces(pagination);
+
+        assertNotNull(resultSet);
+    }
+
+    /**
+     * Tests the retrieving of the email campaign pagination
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void getEmailCampaignTrackingUnsubscribesPaginationTestException() throws ConstantContactServiceException {
+        Pagination pagination = null;
+
+        ResultSet resultSet = emailCampaignTrackingServiceMock.getUnsubscribes(pagination);
+        verify(emailCampaignTrackingServiceMock).getUnsubscribes(pagination);
+
+        assertNotNull(resultSet);
+    }
 
 }
