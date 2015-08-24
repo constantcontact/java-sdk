@@ -3,6 +3,7 @@ package com.constantcontact.services.eventspot;
 import com.constantcontact.components.eventspot.*;
 import com.constantcontact.components.eventspot.Registrant.Registrant;
 import com.constantcontact.components.eventspot.Registrant.RegistrantDetails;
+import com.constantcontact.components.generic.response.Pagination;
 import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.base.IBaseService;
@@ -27,6 +28,16 @@ public interface IEventSpotService extends IBaseService {
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
     public ResultSet<Event> getEvents(Integer limit) throws ConstantContactServiceException;
+
+    /**
+     * Gets all the Events.<br/>
+     * Implements the get Events operation of the EventSpot API by calling the ConstantContact server side.
+     *
+     * @param pagination A {@link Pagination} instance containing the link to the next page of results.
+     *                   An exception is thrown otherwise.
+     * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
+     */
+    public ResultSet<Event> getEvents(Pagination pagination) throws ConstantContactServiceException;
 	
 	/**
 	 * Gets a single Event.<br/>
@@ -199,6 +210,15 @@ public interface IEventSpotService extends IBaseService {
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
     public ResultSet<Registrant> getEventRegistrants(String eventId, Integer limit) throws ConstantContactServiceException;
+
+    /**
+     * Gets all the Event Registrants.<br/>
+     * Implements the get Event Registrants operation of the EventSpot API by calling the ConstantContact server side.
+     * @param pagination A {@link Pagination} instance containing the link to the next page of results.
+     *                   An exception is thrown otherwise.
+     * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
+     */
+    public ResultSet<Registrant> getEventRegistrants(Pagination pagination) throws ConstantContactServiceException;
 	
 	/**
 	 * Gets a single Event Registrant.<br/>

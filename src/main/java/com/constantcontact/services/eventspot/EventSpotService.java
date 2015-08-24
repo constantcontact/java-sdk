@@ -4,6 +4,7 @@ import com.constantcontact.components.Component;
 import com.constantcontact.components.eventspot.*;
 import com.constantcontact.components.eventspot.Registrant.Registrant;
 import com.constantcontact.components.eventspot.Registrant.RegistrantDetails;
+import com.constantcontact.components.generic.response.Pagination;
 import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.base.BaseService;
@@ -11,21 +12,22 @@ import com.constantcontact.util.RawApiResponse;
 import com.constantcontact.util.Config;
 import com.constantcontact.util.ConstantContactExceptionFactory;
 
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * {@link EventSpotService} class in Constant Contact.
- * 
+ *
  * @author ConstantContact
- * 
+ *
  */
 public class EventSpotService extends BaseService implements IEventSpotService {
 
 	private String accessToken;
 	private String apiKey;
-	
+
 	/**
 	 * @return the accessToken
 	 */
@@ -57,7 +59,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	/**
 	 * Gets all the Events.<br/>
 	 * Implements the get Events operation of the EventSpot API by calling the ConstantContact server side.
-	 * 
+	 *
 	 * @param limit The limit
 	 * @return A {@link ResultSet} of {@link Event} containing data as returned by the server on success; <br/>
 	 *         An exception is thrown otherwise.
@@ -84,7 +86,40 @@ public class EventSpotService extends BaseService implements IEventSpotService {
         }
         return events;
     }
-	
+
+    /**
+     * Gets all the Events.<br/>
+     * Implements the get Events operation of the EventSpot API by calling the ConstantContact server side.
+     *
+     * @param pagination A {@link Pagination} instance containing the link to the next page of results.
+     *                   An exception is thrown otherwise.
+     * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
+     */
+    public ResultSet<Event> getEvents(Pagination pagination) throws ConstantContactServiceException {
+        if (pagination == null || pagination.getNextLink() == null) {
+            throw new IllegalArgumentException(Config.instance().getErrorPaginationNull());
+        }
+
+        ResultSet<Event> events = null;
+        String url = paginateUrl(Config.instance().getBaseUrl(), pagination.getNextLink(), null);
+
+        try {
+            RawApiResponse response = getRestClient().get(url);
+
+            if (response.hasData()) {
+                events = Component.resultSetFromJSON(response.getBody(), Event.class);
+            }
+            if (response.isError()) {
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
+            }
+        } catch (ConstantContactServiceException e) {
+            throw new ConstantContactServiceException(e);
+        } catch (Exception e) {
+            throw new ConstantContactServiceException(e);
+        }
+        return events;
+    }
+
 	/**
 	 * Gets a single Event.<br/>
 	 * Implements the get Event operation of the EventSpot API by calling the ConstantContact server side.
@@ -119,14 +154,14 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	/**
 	 * Adds a single Event.<br/>
 	 * Implements the add Event operation of the EventSpot API by calling the ConstantContact server side.
-	 * 
+	 *
 	 * @param event The Event to add
 	 * @return An {@link Event} containing data as returned by the server on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
     public Event addEvent(Event event) throws ConstantContactServiceException {
-    	
+
         if (event == null) {
             throw new IllegalArgumentException(Config.instance().getErrorEvent());
         }
@@ -150,18 +185,18 @@ public class EventSpotService extends BaseService implements IEventSpotService {
         }
         return newEvent;
     }
-	
+
 	/**
 	 * Updates a single Event.<br/>
 	 * Implements the update Event operation of the EventSpot API by calling the ConstantContact server side.
-	 * 
+	 *
 	 * @param event The event to update.
 	 * @return An {@link Event} containing data as returned by the server on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
     public Event updateEvent(Event event) throws ConstantContactServiceException {
-    	
+
         if(event == null) {
             throw new IllegalArgumentException(Config.instance().getErrorEvent());
         }
@@ -186,11 +221,11 @@ public class EventSpotService extends BaseService implements IEventSpotService {
         }
         return updatedEvent;
     }
-	
+
 	/**
 	 * Updates the Event status.<br/>
 	 * Implements the update Event Status operation of the EventSpot API by calling the ConstantContact server side.
-	 * 
+	 *
 	 * @param eventId The id of the event to update.
 	 * @param status The status of the event.
 	 * @return true on success;<br/>
@@ -198,11 +233,11 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
     public boolean updateEventStatus(String eventId, String status) throws ConstantContactServiceException {
-    	
+
     	if(eventId == null) {
             throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
-    	
+
         try {
             String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                     String.format(Config.instance().getEventId(), eventId));
@@ -224,7 +259,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
             throw new ConstantContactServiceException(e);
         }
     }
-	
+
 	/**
 	 * Gets all the Event Fees.<br/>
 	 * Implements the get Event Fees operation of the EventSpot API by calling the ConstantContact server side.
@@ -232,13 +267,13 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	 * @return A {@link List} of {@link EventFee} containing data as returned by the server on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
-	 */	
+	 */
     public List<EventFee> getEventFees(String eventId) throws ConstantContactServiceException {
-    	
+
     	if (eventId == null) {
             throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
-    	
+
         List<EventFee> eventFees = null;
         try {
             String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
@@ -263,16 +298,16 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	/**
 	 * Gets a single Event Fee.<br/>
 	 * Implements the get Event Fee operation of the EventSpot API by calling the ConstantContact server side.
-	 * 
+	 *
 	 * @param eventId The id of the event.
-	 * @param feeId The id of the event fee. 
+	 * @param feeId The id of the event fee.
 	 * @return An {@link EventFee} containing data as returned by the server on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
     
     public EventFee getEventFee(String eventId, String feeId) throws ConstantContactServiceException {
-    	
+
     	if (eventId == null) {
             throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
@@ -304,7 +339,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	/**
 	 * Adds a single Event Fee.<br/>
 	 * Implements the add Event Fee operation of the EventSpot API by calling the ConstantContact server side.
-	 * 
+	 *
 	 * @param eventId The id of the event.
 	 * @param eventFee The event fee to add.
 	 * @return An {@link EventFee} containing data as returned by the server on success; <br/>
@@ -313,14 +348,14 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	 */
     
     public EventFee addEventFee(String eventId, EventFee eventFee) throws ConstantContactServiceException {
-    	
+
     	if (eventId == null) {
             throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
         if (eventFee == null) {
             throw new IllegalArgumentException(Config.instance().getErrorEventFee());
         }
-         
+
         EventFee newEventFee = null;
         try {
             String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
@@ -345,7 +380,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	/**
 	 * Updates a single Event Fee.<br/>
 	 * Implements the update Event Fee operation of the EventSpot API by calling the ConstantContact server side.
-	 * 
+	 *
 	 * @param eventId The id of the event.
 	 * @param eventFee The event fee to update.
 	 * @return An {@link EventFee} containing data as returned by the server on success; <br/>
@@ -354,14 +389,14 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	 */
     
     public EventFee updateEventFee(String eventId, EventFee eventFee) throws ConstantContactServiceException {
-    	
+
     	 if (eventId == null) {
              throw new IllegalArgumentException(Config.instance().getErrorEventId());
          }
          if (eventFee == null || eventFee.getId() == null) {
              throw new IllegalArgumentException(Config.instance().getErrorEventFeeId());
          }
-         
+
         EventFee newEventFee = null;
         try {
             String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
@@ -386,7 +421,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	/**
 	 * Deletes a single Event Fee.<br/>
 	 * Implements the delete Event Fee operation of the EventSpot API by calling the ConstantContact server side.
-	 * 
+	 *
 
 	 * @param eventId The id of the event.
 	 * @param eventFeeId The id of the event fee to delete.
@@ -396,7 +431,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	 */
     
     public boolean deleteEventFee(String eventId, String eventFeeId) throws ConstantContactServiceException {
-    	
+
     	if (eventId == null) {
             throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
@@ -423,7 +458,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	/**
 	 * Gets all the Event Promocodes.<br/>
 	 * Implements the get Event Promocodes operation of the EventSpot API by calling the ConstantContact server side.
-	 * 
+	 *
 	 * @param eventId The event id.
 	 * @return A {@link List} of {@link Promocode} containing data as returned by the server on success; <br/>
 	 *         An exception is thrown otherwise.
@@ -431,11 +466,11 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	 */
     
     public List<Promocode> getEventPromocodes(String eventId) throws ConstantContactServiceException {
-    	
+
     	if (eventId == null) {
             throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
-    	
+
         List<Promocode> promocodes = null;
         try {
             String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
@@ -469,14 +504,14 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	 */
 
     public Promocode getEventPromocode(String eventId, String promocodeId) throws ConstantContactServiceException {
-    	
+
     	 if (eventId == null) {
              throw new IllegalArgumentException(Config.instance().getErrorEventId());
          }
          if (promocodeId == null) {
              throw new IllegalArgumentException(Config.instance().getErrorPromocodeId());
          }
-         
+
         Promocode promocode = null;
         try {
             String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
@@ -496,21 +531,21 @@ public class EventSpotService extends BaseService implements IEventSpotService {
             throw new ConstantContactServiceException(e);
         }
         return promocode;
-    }	
-	
+    }
+
 	/**
 	 * Adds a single Event Promocode.<br/>
 	 * Implements the add Event Promocode operation of the EventSpot API by calling the ConstantContact server side.
-	 * 
+	 *
 	 * @param eventId The id of the event.
 	 * @param promocode The event promocode to add.
 	 * @return An {@link Promocode} containing data as returned by the server on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
-	 */	
+	 */
     
     public Promocode addEventPromocode(String eventId, Promocode promocode) throws ConstantContactServiceException {
-    	
+
     	if (eventId == null) {
             throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
@@ -542,7 +577,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	/**
 	 * Updates a single Event Promocode.<br/>
 	 * Implements the update Event Promocode operation of the EventSpot API by calling the ConstantContact server side.
-	 * 
+	 *
 	 * @param eventId The id of the event.
 	 * @param promocode The event promocode to update.
 	 * @return An {@link Promocode} containing data as returned by the server on success; <br/>
@@ -551,7 +586,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	 */
     
     public Promocode updateEventPromocode(String eventId, Promocode promocode) throws ConstantContactServiceException {
-    	
+
     	if (eventId == null) {
             throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
@@ -583,7 +618,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	/**
 	 * Deletes a single Event Promocode.<br/>
 	 * Implements the delete Event Promocode operation of the EventSpot API by calling the ConstantContact server side.
-	 * 
+	 *
 	 * @param eventId The id of the event.
 	 * @param promocodeId The id of the event promocode to delete.
 	 * @return true on success; <br/>
@@ -592,14 +627,14 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	 */
     
     public boolean deleteEventPromocode(String eventId, String promocodeId) throws ConstantContactServiceException {
-    	
+
     	 if (eventId == null) {
              throw new IllegalArgumentException(Config.instance().getErrorEventId());
          }
          if (promocodeId == null) {
              throw new IllegalArgumentException(Config.instance().getErrorPromocodeId());
          }
-         
+
         try {
             String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
                     String.format(Config.instance().getEventPromocodeId(), eventId, promocodeId));
@@ -615,11 +650,11 @@ public class EventSpotService extends BaseService implements IEventSpotService {
             throw new ConstantContactServiceException(e);
         }
     }
-	
+
 	/**
 	 * Gets all the Event Registrants.<br/>
 	 * Implements the get Event Registrants operation of the EventSpot API by calling the ConstantContact server side.
-	 * 
+	 *
 	 * @param eventId The id of the event.
 	 * @param limit The limit.
 	 * @return A {@link ResultSet} of {@link Registrant} containing data as returned by the server on success; <br/>
@@ -628,45 +663,42 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	 */
     
     public ResultSet<Registrant> getEventRegistrants(String eventId, Integer limit) throws ConstantContactServiceException {
-    	
+
     	if (eventId == null) {
             throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
-    	
-        ResultSet<Registrant> eventRegistrants = null;
-        try {
-            String url = paginateUrl(
-                    String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.instance().getEventRegistrants(), eventId)), limit);
 
-            RawApiResponse response = getRestClient().get(url);
-
-            if (response.hasData()) {
-                eventRegistrants = Component.resultSetFromJSON(response.getBody(), Registrant.class);
-            }
-            if (response.isError()) {
-                throw ConstantContactExceptionFactory.createServiceException(response, url);
-            }
-        } catch (ConstantContactServiceException e) {
-            throw new ConstantContactServiceException(e);
-        } catch (Exception e) {
-            throw new ConstantContactServiceException(e);
-        }
-        return eventRegistrants;
+        return getEventRegistrants(eventId, limit, null);
     }
-	
+
+    /**
+     * Gets all the Event Registrants.<br/>
+     * Implements the get Event Registrants operation of the EventSpot API by calling the ConstantContact server side.
+     * @param pagination A {@link Pagination} instance containing the link to the next page of results.
+     *                   An exception is thrown otherwise.
+     * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
+     */
+    public ResultSet<Registrant> getEventRegistrants(Pagination pagination) throws ConstantContactServiceException {
+        if (pagination == null || pagination.getNextLink() == null) {
+            throw new IllegalArgumentException(Config.instance().getErrorPaginationNull());
+        }
+
+        return getEventRegistrants(null, null, pagination);
+    }
+
 	/**
 	 * Gets a single Event Registrant.<br/>
 	 * Implements the get Event Registrant operation of the EventSpot API by calling the ConstantContact server side.
-	 * 
+	 *
 	 * @param eventId The id of the event.
-	 * @param registrantId The id of the event registrant. 
+	 * @param registrantId The id of the event registrant.
 	 * @return An {@link RegistrantDetails} containing data as returned by the server on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
     
     public RegistrantDetails getEventRegistrant(String eventId, String registrantId) throws ConstantContactServiceException {
-    	
+
     	if (eventId == null) {
             throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
@@ -694,11 +726,11 @@ public class EventSpotService extends BaseService implements IEventSpotService {
         }
         return registrant;
     }
-	
+
 	/**
 	 * Gets all the Event Items.<br/>
 	 * Implements the get Event Items operation of the EventSpot API by calling the ConstantContact server side.
-	 * 
+	 *
 	 * @param eventId The event id.
 	 * @return A {@link List} of {@link EventItem} containing data as returned by the server on success; <br/>
 	 *         An exception is thrown otherwise.
@@ -706,11 +738,11 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	 */
     
     public List<EventItem> getEventItems(String eventId) throws ConstantContactServiceException {
-    	
+
     	if (eventId == null) {
             throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
-    	
+
         List<EventItem> eventItems = null;
         try {
             String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
@@ -735,23 +767,23 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	/**
 	 * Gets a single Event Item.<br/>
 	 * Implements the get Event Item operation of the EventSpot API by calling the ConstantContact server side.
-	 * 
+	 *
 	 * @param eventId The id of the event.
-	 * @param itemId The id of the event item to get. 
+	 * @param itemId The id of the event item to get.
 	 * @return An {@link EventItem} containing data as returned by the server on success; <br/>
 	 *         An exception is thrown otherwise.
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
     
     public EventItem getEventItem(String eventId, String itemId) throws ConstantContactServiceException {
-    	
+
     	 if (eventId == null) {
              throw new IllegalArgumentException(Config.instance().getErrorEventId());
          }
          if (itemId == null) {
              throw new IllegalArgumentException(Config.instance().getErrorEventItemId());
          }
-         
+
         EventItem eventItem = null;
         try {
             String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
@@ -772,11 +804,11 @@ public class EventSpotService extends BaseService implements IEventSpotService {
         }
         return eventItem;
     }
-	
+
 	/**
 	 * Adds a single Event Item.<br/>
 	 * Implements the add Event Item operation of the EventSpot API by calling the ConstantContact server side.
-	 * 
+	 *
 	 * @param eventId The id of the event.
 	 * @param eventItem The event item to add.
 	 * @return An {@link EventItem} containing data as returned by the server on success; <br/>
@@ -785,7 +817,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	 */
     
     public EventItem addEventItem(String eventId, EventItem eventItem) throws ConstantContactServiceException {
-    	
+
     	if (eventId == null) {
             throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
@@ -817,7 +849,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	/**
 	 * Updates a single Event Item.<br/>
 	 * Implements the update Event Item operation of the EventSpot API by calling the ConstantContact server side.
-	 * 
+	 *
 	 * @param eventId The id of the event.
 	 * @param item The event item to update.
 	 * @return An {@link EventItem} containing data as returned by the server on success; <br/>
@@ -826,7 +858,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	 */
     
     public EventItem updateEventItem(String eventId, EventItem item) throws ConstantContactServiceException {
-    	
+
     	 if (eventId == null) {
              throw new IllegalArgumentException(Config.instance().getErrorEventId());
          }
@@ -836,7 +868,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
          if (item.getId() == null) {
              throw new IllegalArgumentException(Config.instance().getErrorEventId());
          }
-         
+
         EventItem eventItem = null;
         try {
             String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
@@ -861,7 +893,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	/**
 	 * Deletes a single Event Item.<br/>
 	 * Implements the delete Event Item operation of the EventSpot API by calling the ConstantContact server side.
-	 * 
+	 *
 	 * @param eventId The id of the event.
 	 * @param itemId The id of the event item to delete.
 	 * @return true on success; <br/>
@@ -870,7 +902,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	 */
     
     public boolean deleteEventItem(String eventId, String itemId) throws ConstantContactServiceException {
-    	
+
     	if (eventId == null) {
             throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
@@ -905,7 +937,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 	 */
     
     public List<EventItemAttribute> getEventItemAttributes(String eventId, String itemId) throws ConstantContactServiceException {
-    	
+
     	if (eventId == null) {
             throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
@@ -948,7 +980,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 
     public EventItemAttribute getEventItemAttribute(String eventId, String itemId, String itemAttributeId) throws
             ConstantContactServiceException {
-    	
+
     	 if (eventId == null) {
              throw new IllegalArgumentException(Config.instance().getErrorEventId());
          }
@@ -958,7 +990,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
          if (itemAttributeId == null) {
              throw new IllegalArgumentException(Config.instance().getErrorEventItemAttributeId());
          }
-         
+
         EventItemAttribute eventItemAttribute = null;
         try {
             String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
@@ -994,7 +1026,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
     
     public EventItemAttribute addEventItemAttribute(String eventId, String itemId, EventItemAttribute itemAttribute) throws
             ConstantContactServiceException {
-    	
+
     	 if (eventId == null) {
              throw new IllegalArgumentException(Config.instance().getErrorEventId());
          }
@@ -1004,7 +1036,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
          if (itemAttribute == null) {
              throw new IllegalArgumentException(Config.instance().getErrorEventItemAttribute());
          }
-         
+
         EventItemAttribute eventItemAttribute = null;
         try {
             String url = String.format("%1$s%2$s", Config.instance().getBaseUrl(),
@@ -1040,7 +1072,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
 
     public EventItemAttribute updateEventItemAttribute(String eventId, String itemId, EventItemAttribute itemAttribute) throws
             ConstantContactServiceException {
-    	
+
     	if (eventId == null) {
             throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
@@ -1071,11 +1103,11 @@ public class EventSpotService extends BaseService implements IEventSpotService {
         }
         return eventItemAttribute;
     }
-	
+
 	/**
 	 * Deletes a single Event Item Attribute.<br/>
 	 * Implements the delete Event Item Attribute operation of the EventSpot API by calling the ConstantContact server side.
-	 * 
+	 *
 	 * @param eventId The id of the event.
 	 * @param itemId The id of the event item.
 	 * @param itemAttributeId The id of the event item attribute to delete.
@@ -1086,7 +1118,7 @@ public class EventSpotService extends BaseService implements IEventSpotService {
     
     public boolean deleteEventItemAttribute(String eventId, String itemId, String itemAttributeId) throws
             ConstantContactServiceException {
-    	
+
     	if (eventId == null) {
             throw new IllegalArgumentException(Config.instance().getErrorEventId());
         }
@@ -1111,6 +1143,47 @@ public class EventSpotService extends BaseService implements IEventSpotService {
         } catch (Exception e) {
             throw new ConstantContactServiceException(e);
         }
+    }
+
+    /**
+     * Gets all the Event Registrants.<br/>
+     * Implements the get Event Registrants operation of the EventSpot API by calling the ConstantContact server side.
+     *
+     * @param eventId The id of the event.
+     * @param limit The limit.
+     * @return A {@link ResultSet} of {@link Registrant} containing data as returned by the server on success; <br/>
+     *         An exception is thrown otherwise.
+     * @param pagination A {@link Pagination} instance containing the link to the next page of results.
+     *                   An exception is thrown otherwise.
+     * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
+     */
+
+    private ResultSet<Registrant> getEventRegistrants(String eventId, Integer limit, Pagination pagination) throws ConstantContactServiceException {
+        ResultSet<Registrant> eventRegistrants = null;
+        String url;
+
+        if (pagination == null) {
+            url = paginateUrl(String.format("%1$s%2$s", Config.instance().getBaseUrl(), String.format(Config.instance().getEventRegistrants(), eventId)), limit);
+            url = paginateUrl(url, limit);
+        } else {
+            url = paginateUrl(Config.instance().getBaseUrl(), pagination.getNextLink(), null);
+        }
+
+        try {
+            RawApiResponse response = getRestClient().get(url);
+
+            if (response.hasData()) {
+                eventRegistrants = Component.resultSetFromJSON(response.getBody(), Registrant.class);
+            }
+            if (response.isError()) {
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
+            }
+        } catch (ConstantContactServiceException e) {
+            throw new ConstantContactServiceException(e);
+        } catch (Exception e) {
+            throw new ConstantContactServiceException(e);
+        }
+        return eventRegistrants;
     }
 
     /**

@@ -8,6 +8,7 @@ import com.constantcontact.components.emailcampaigns.tracking.opens.EmailCampaig
 import com.constantcontact.components.emailcampaigns.tracking.reports.summary.EmailCampaignTrackingSummary;
 import com.constantcontact.components.emailcampaigns.tracking.sends.EmailCampaignTrackingSend;
 import com.constantcontact.components.emailcampaigns.tracking.unsubscribes.EmailCampaignTrackingUnsubscribe;
+import com.constantcontact.components.generic.response.Pagination;
 import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.emailcampaigns.tracking.EmailCampaignTrackingService;
@@ -133,6 +134,32 @@ public class EmailCampaignTrackingServiceMock extends
 		return bounces;
 	}
 
+    /**
+     * Implements the get Bounces operation of the Email Campaign Tracking API by calling the ConstantContact server side.
+     *
+     * @param pagination A {@link com.constantcontact.components.generic.response.Pagination} instance containing the link to the next page of results.
+     *                   An exception is thrown otherwise.
+     * @return A {@link ResultSet} of {@link EmailCampaignTrackingBounce} containing the bounces - values returned by the server side - on success; <br/>
+     *         An exception is thrown otherwise.
+     * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
+     */
+    public ResultSet<EmailCampaignTrackingBounce> getBounces(Pagination pagination) throws ConstantContactServiceException {
+        if (pagination == null || pagination.getNextLink() == null) {
+            throw new IllegalArgumentException(Config.instance().getErrorPaginationNull());
+        }
+
+        ResultSet<EmailCampaignTrackingBounce> bounces = null;
+        try {
+            bounces = Component
+                    .resultSetFromJSON(
+                            MockedServerResponses.getBouncesEmailCampaignTrackingServiceData,
+                            EmailCampaignTrackingBounce.class);
+        } catch (Exception e) {
+            throw new ConstantContactServiceException(e);
+        }
+        return bounces;
+    }
+
 	/**
 	 * Gets the Email Campaign Tracking Clicks based on the id of the email
 	 * campaign.<br/>
@@ -180,6 +207,34 @@ public class EmailCampaignTrackingServiceMock extends
 		}
 		return clicks;
 	}
+
+    /**
+     * Implements the get Clicks operation of the Email Campaign Tracking API by calling the ConstantContact server side.
+     *
+     * @param pagination A {@link Pagination} instance containing the link to the next page of results.
+     *                   An exception is thrown otherwise.
+     * 		   It will return only the clicks performed since the supplied date. <br/>
+     * 		   If you want to bypass this filter, set createdSinceTimestamp to null.
+     * @return A {@link ResultSet} of {@link EmailCampaignTrackingClick} containing the clicks - values returned by the server side - on success; <br/>
+     *         An exception is thrown otherwise.
+     * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
+     */
+    public ResultSet<EmailCampaignTrackingClick> getClicks(Pagination pagination) throws ConstantContactServiceException {
+        if (pagination == null || pagination.getNextLink() == null) {
+            throw new IllegalArgumentException(Config.instance().getErrorPaginationNull());
+        }
+
+        ResultSet<EmailCampaignTrackingClick> clicks = null;
+        try {
+            clicks = Component
+                    .resultSetFromJSON(
+                            MockedServerResponses.getClicksEmailCampaignTrackingServiceData,
+                            EmailCampaignTrackingClick.class);
+        } catch (Exception e) {
+            throw new ConstantContactServiceException(e);
+        }
+        return clicks;
+    }
 
 	/**
 	 * Gets the Email Campaign Tracking Forwards based on the id of the email
@@ -229,6 +284,32 @@ public class EmailCampaignTrackingServiceMock extends
 		return forwards;
 	}
 
+    /**
+     * Implements the get Forwards operation of the Email Campaign Tracking API by calling the ConstantContact server side.
+     *
+     * @param pagination A {@link Pagination} instance containing the link to the next page of results.
+     *                   An exception is thrown otherwise.
+     * @return A {@link ResultSet} of {@link EmailCampaignTrackingForward} containing the forwards - values returned by the server side - on success; <br/>
+     *         An exception is thrown otherwise.
+     * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
+     */
+    public ResultSet<EmailCampaignTrackingForward> getForwards(Pagination pagination) throws ConstantContactServiceException {
+        if (pagination == null || pagination.getNextLink() == null) {
+            throw new IllegalArgumentException(Config.instance().getErrorPaginationNull());
+        }
+
+        ResultSet<EmailCampaignTrackingForward> forwards = null;
+        try {
+            forwards = Component
+                    .resultSetFromJSON(
+                            MockedServerResponses.getForwardsEmailCampaignTrackingServicesData,
+                            EmailCampaignTrackingForward.class);
+        } catch (Exception e) {
+            throw new ConstantContactServiceException(e);
+        }
+        return forwards;
+    }
+
 	/**
 	 * Gets the Email Campaign Tracking Opens based on the id of the email
 	 * campaign.<br/>
@@ -275,6 +356,32 @@ public class EmailCampaignTrackingServiceMock extends
 		return opens;
 	}
 
+    /**
+     * Implements the get Opens operation of the Email Campaign Tracking API by calling the ConstantContact server side.
+     *
+     * @param pagination A {@link Pagination} instance containing the link to the next page of results.
+     *                   An exception is thrown otherwise.
+     * @return A {@link ResultSet} of {@link EmailCampaignTrackingOpen} containing the opens - values returned by the server side - on success; <br/>
+     *         An exception is thrown otherwise.
+     * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
+     */
+    public ResultSet<EmailCampaignTrackingOpen> getOpens(Pagination pagination) throws ConstantContactServiceException {
+        if (pagination == null || pagination.getNextLink() == null) {
+            throw new IllegalArgumentException(Config.instance().getErrorPaginationNull());
+        }
+
+        ResultSet<EmailCampaignTrackingOpen> opens = null;
+        try {
+            opens = Component
+                    .resultSetFromJSON(
+                            MockedServerResponses.getOpensEmailCampaignTrackingServicesData,
+                            EmailCampaignTrackingOpen.class);
+        } catch (Exception e) {
+            throw new ConstantContactServiceException(e);
+        }
+        return opens;
+    }
+
 	/**
 	 * Gets the Email Campaign Tracking Sends based on the id of the email
 	 * campaign.<br/>
@@ -315,13 +422,39 @@ public class EmailCampaignTrackingServiceMock extends
 		try {
 			sends = Component
 					.resultSetFromJSON(
-							MockedServerResponses.getSendsEmailCampaignTrackingServicesData,
-							EmailCampaignTrackingSend.class);
+                            MockedServerResponses.getSendsEmailCampaignTrackingServicesData,
+                            EmailCampaignTrackingSend.class);
 		} catch (Exception e) {
 			throw new ConstantContactServiceException(e);
 		}
 		return sends;
 	}
+
+    /**
+     * Implements Sends operation of the Email Campaign Tracking API by calling the ConstantContact server side.
+     *
+     * @param pagination A {@link Pagination} instance containing the link to the next page of results.
+     *                   An exception is thrown otherwise.
+     * @return A {@link ResultSet} of {@link EmailCampaignTrackingSend} containing the sends - values returned by the server side - on success; <br/>
+     *         An exception is thrown otherwise.
+     * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
+     */
+    public ResultSet<EmailCampaignTrackingSend> getSends(Pagination pagination) throws ConstantContactServiceException {
+        if (pagination == null || pagination.getNextLink() == null) {
+            throw new IllegalArgumentException(Config.instance().getErrorPaginationNull());
+        }
+
+        ResultSet<EmailCampaignTrackingSend> sends = null;
+        try {
+            sends = Component
+                    .resultSetFromJSON(
+                            MockedServerResponses.getSendsEmailCampaignTrackingServicesData,
+                            EmailCampaignTrackingSend.class);
+        } catch (Exception e) {
+            throw new ConstantContactServiceException(e);
+        }
+        return sends;
+    }
 
 	/**
 	 * Gets the Email Campaign Tracking Unsubscribes based on the id of the
@@ -371,6 +504,32 @@ public class EmailCampaignTrackingServiceMock extends
 		}
 		return unsubscribes;
 	}
+
+    /**
+     * Implements the get Unsubscribes operation of the Email Campaign Tracking API by calling the ConstantContact server side.
+     *
+     * @param pagination A {@link Pagination} instance containing the link to the next page of results.
+     *                   An exception is thrown otherwise.
+     * @return A {@link ResultSet} of {@link EmailCampaignTrackingUnsubscribe} containing the unsubscribes - values returned by the server side - on success; <br/>
+     *         An exception is thrown otherwise.
+     * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
+     */
+    public ResultSet<EmailCampaignTrackingUnsubscribe> getUnsubscribes(Pagination pagination) throws ConstantContactServiceException {
+        if (pagination == null || pagination.getNextLink() == null) {
+            throw new IllegalArgumentException(Config.instance().getErrorPaginationNull());
+        }
+
+        ResultSet<EmailCampaignTrackingUnsubscribe> unsubscribes = null;
+        try {
+            unsubscribes = Component
+                    .resultSetFromJSON(
+                            MockedServerResponses.getUnsubscribesEmailCampaignTrackingServicesData,
+                            EmailCampaignTrackingUnsubscribe.class);
+        } catch (Exception e) {
+            throw new ConstantContactServiceException(e);
+        }
+        return unsubscribes;
+    }
 
 	/**
 	 * Gets the Email Campaign Tracking Clicks based on the id of the email

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.constantcontact.components.contacts.Contact;
 import com.constantcontact.components.contacts.ContactList;
+import com.constantcontact.components.generic.response.Pagination;
 import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.base.IBaseService;
@@ -66,6 +67,15 @@ public interface IContactListService extends IBaseService {
 	 * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
 	 */
 	public ResultSet<Contact> getContactsFromList(String listId, Integer limit, String modifiedSinceTimestamp) throws ConstantContactServiceException;
+
+    /**
+     * Implements the Get contacts from an individual list operation by calling the ConstantContact server side.
+     *
+     * @param pagination A {@link Pagination} instance containing the link to the next page of results.
+     *                   An exception is thrown otherwise.
+     * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
+     */
+    public ResultSet<Contact> getContactsFromList(Pagination pagination) throws ConstantContactServiceException;
 
 	/**
 	 * Implements the delete ContactList operation of the Contact Lists API by calling the ConstantContact server side.

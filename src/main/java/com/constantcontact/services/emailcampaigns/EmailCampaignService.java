@@ -3,6 +3,7 @@ package com.constantcontact.services.emailcampaigns;
 import com.constantcontact.components.Component;
 import com.constantcontact.components.emailcampaigns.EmailCampaignRequest;
 import com.constantcontact.components.emailcampaigns.EmailCampaignResponse;
+import com.constantcontact.components.generic.response.Pagination;
 import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.base.BaseService;
@@ -10,6 +11,7 @@ import com.constantcontact.util.RawApiResponse;
 import com.constantcontact.util.Config;
 import com.constantcontact.util.ConstantContactExceptionFactory;
 
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 
 /**
@@ -47,6 +49,7 @@ public class EmailCampaignService extends BaseService implements IEmailCampaignS
 	public void setApiKey(String apiKey) {
 		this.apiKey = apiKey;
 	}
+
 	/**
 	 * Gets all the Email Campaigns.<br/>
 	 * Implements the get Campaigns operation of the Email Campaign API by calling the ConstantContact server side.
@@ -61,28 +64,24 @@ public class EmailCampaignService extends BaseService implements IEmailCampaignS
 	 */
 
 	public ResultSet<EmailCampaignResponse> getCampaigns(Integer limit, String modifiedSinceTimestamp) throws ConstantContactServiceException {
-		ResultSet<EmailCampaignResponse> campaigns = null;
-		try {
-			String url = paginateUrl(String.format("%1$s%2$s", Config.instance().getBaseUrl(), Config.instance().getEmailCampaigns()), limit);
-			
-			if(modifiedSinceTimestamp != null)
-				url = appendParam(url, "modified_since", modifiedSinceTimestamp);
-			
-			RawApiResponse response = getRestClient().get(url);
-			
-			if (response.hasData()) {
-				campaigns = Component.resultSetFromJSON(response.getBody(), EmailCampaignResponse.class);
-			}
-			if (response.isError()) {
-                throw ConstantContactExceptionFactory.createServiceException(response, url);
-			}
-		} catch (ConstantContactServiceException e) {
-			throw new ConstantContactServiceException(e);
-		} catch (Exception e) {
-			throw new ConstantContactServiceException(e);
-		}
-		return campaigns;
+		return getCampaigns(limit, modifiedSinceTimestamp, null);
 	}
+
+    /**
+     * Gets all the Email Campaigns.<br/>
+     * Implements the get Campaigns operation of the Email Campaign API by calling the ConstantContact server side.
+     *
+     * @param pagination A {@link com.constantcontact.components.generic.response.Pagination} instance containing the link to the next page of results.
+     *                   An exception is thrown otherwise.
+     * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
+     */
+    public ResultSet<EmailCampaignResponse> getCampaigns(Pagination pagination) throws ConstantContactServiceException {
+        if (pagination == null || pagination.getNextLink() == null) {
+            throw new IllegalArgumentException(Config.instance().getErrorPaginationNull());
+        }
+
+        return getCampaigns(null, null, pagination);
+    }
 	/**
 	 * Gets a single Email Campaign.<br/>
 	 * Implements the get Campaign operation of the Email Campaign API by calling the ConstantContact server side.
@@ -217,6 +216,52 @@ public class EmailCampaignService extends BaseService implements IEmailCampaignS
 			throw new ConstantContactServiceException(e);
 		}
 	}
+
+    /**
+     * Gets all the Email Campaigns.<br/>
+     * Implements the get Campaigns operation of the Email Campaign API by calling the ConstantContact server side.
+     *
+     * @param limit The limit
+     * @param modifiedSinceTimestamp This time stamp is an ISO-8601 ordinal date supporting offset. <br/>
+     * 		   It will return only the Email Campaigns modified since the supplied date. <br/>
+     * 		   If you want to bypass this filter set modifiedSinceTimestamp to null.
+     * @return A {@link ResultSet} of {@link EmailCampaignResponse} containing data as returned by the server on success; <br/>
+     *         An exception is thrown otherwise.
+     * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
+     */
+
+    private ResultSet<EmailCampaignResponse> getCampaigns(Integer limit, String modifiedSinceTimestamp, Pagination pagination) throws ConstantContactServiceException {
+        ResultSet<EmailCampaignResponse> campaigns = null;
+        String url;
+
+        if (pagination == null) {
+            url = paginateUrl(String.format("%1$s%2$s", Config.instance().getBaseUrl(), Config.instance().getEmailCampaigns()), limit);
+            url = paginateUrl(url, limit);
+            try {
+                url = appendParam(url, "modified_since", modifiedSinceTimestamp);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        } else {
+            url = paginateUrl(Config.instance().getBaseUrl(), pagination.getNextLink(), null);
+        }
+
+        try {
+            RawApiResponse response = getRestClient().get(url);
+
+            if (response.hasData()) {
+                campaigns = Component.resultSetFromJSON(response.getBody(), EmailCampaignResponse.class);
+            }
+            if (response.isError()) {
+                throw ConstantContactExceptionFactory.createServiceException(response, url);
+            }
+        } catch (ConstantContactServiceException e) {
+            throw new ConstantContactServiceException(e);
+        } catch (Exception e) {
+            throw new ConstantContactServiceException(e);
+        }
+        return campaigns;
+    }
 
 	/**
 	 * Default constructor.

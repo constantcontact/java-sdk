@@ -15,6 +15,7 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.constantcontact.components.contacts.Contact;
+import com.constantcontact.components.generic.response.Pagination;
 import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.mockup.ConstantContactFactoryMock;
@@ -28,266 +29,304 @@ import com.constantcontact.services.contacts.IContactService;
 @RunWith(MockitoJUnitRunner.class)
 public class ConstantContactContactsTest {
 
-	private ConstantContactFactoryMock constantContactFactoryMock;
-    private IContactService contactServiceMock;
-    
-    private ConstantContactFactory constantContactFactory;
-    private IContactService contactService;
+  private ConstantContactFactoryMock constantContactFactoryMock;
+  private IContactService contactServiceMock;
 
-    @Before
-    public void beforeTests(){
-    	constantContactFactoryMock = Mockito.spy(new ConstantContactFactoryMock("",""));
-    	contactServiceMock = constantContactFactoryMock.createContactService();
-    	
-    	constantContactFactory = Mockito.spy(new ConstantContactFactory("",""));
-    	contactService = constantContactFactory.createContactService();
+  private ConstantContactFactory constantContactFactory;
+  private IContactService contactService;
+
+  @Before
+  public void beforeTests() {
+    constantContactFactoryMock = Mockito.spy(new ConstantContactFactoryMock("", ""));
+    contactServiceMock = constantContactFactoryMock.createContactService();
+
+    constantContactFactory = Mockito.spy(new ConstantContactFactory("", ""));
+    contactService = constantContactFactory.createContactService();
+  }
+
+  /**
+   * Tests the add contact functionality
+   */
+  @Test
+  public void addContactTest() {
+    Contact contact = mock(Contact.class);
+
+    try {
+      Contact resultContact = new Contact();
+      resultContact = contactServiceMock.addContact(contact, true);
+      verify(contactServiceMock).addContact(contact, true);
+
+      assertNotNull(resultContact);
+
+      resultContact = contactServiceMock.addContact(contact, false);
+      verify(contactServiceMock).addContact(contact, false);
+
+      assertNotNull(resultContact);
+
+    } catch (ConstantContactServiceException e) {
+      System.out.println(e.getErrorInfo());
+      e.printStackTrace();
     }
+  }
 
-    /**
-     * Tests the add contact functionality
-     *
-     */
-    @Test
-    public void addContactTest() {
-        Contact contact = mock(Contact.class);
+  /**
+   * Tests the getContact method from ConstantContact.class
+   */
+  @Test
+  public void getContactTest() {
 
-        try {
-            Contact resultContact = new Contact();
-            resultContact = contactServiceMock.addContact(contact,true);
-            verify(contactServiceMock).addContact(contact, true);
+    try {
+      Contact resultContact = new Contact();
 
-            assertNotNull(resultContact);
+      resultContact = contactServiceMock.getContact(anyString());
+      verify(contactServiceMock).getContact(anyString());
 
-            resultContact = contactServiceMock.addContact(contact, false);
-            verify(contactServiceMock).addContact(contact, false);
+      assertNotNull(resultContact);
 
-            assertNotNull(resultContact);
-
-        } catch (ConstantContactServiceException e) {
-            System.out.println(e.getErrorInfo());
-            e.printStackTrace();
-        }
+    } catch (ConstantContactServiceException e) {
+      System.out.println(e.getErrorInfo());
+      e.printStackTrace();
     }
+  }
 
-    /**
-     * Tests the getContact method from ConstantContact.class
-     *
-     */
-    @Test
-    public void getContactTest(){
+  /**
+   * Tests the getContactByEmail method from ConstantContact.class
+   */
+  @Test
+  public void getContactByEmailTest() {
 
-        try {
-            Contact resultContact = new Contact();
+    try {
 
-            resultContact = contactServiceMock.getContact(anyString());
-            verify(contactServiceMock).getContact(anyString());
+      ResultSet resultSet = mock(ResultSet.class);
 
-            assertNotNull(resultContact);
+      resultSet = contactServiceMock.getContactByEmail(anyString());
+      verify(contactServiceMock).getContactByEmail(anyString());
 
-        } catch (ConstantContactServiceException e) {
-            System.out.println(e.getErrorInfo());
-            e.printStackTrace();
-        }
+      assertNotNull(resultSet);
+
+    } catch (ConstantContactServiceException e) {
+      System.out.println(e.getErrorInfo());
+      e.printStackTrace();
     }
+  }
 
-    /**
-     * Tests the getContactByEmail method from ConstantContact.class
-     */
-    @Test
-    public void getContactByEmailTest(){
+  /**
+   * Tests the functionality of the updateContact method and the results of the update
+   */
+  @Test
+  public void updateContactTest() {
 
-        try {
+    try {
 
-            ResultSet resultSet = mock(ResultSet.class);
+      Contact contact = contactServiceMock.getContact(anyString());
 
-            resultSet = contactServiceMock.getContactByEmail(anyString());
-            verify(contactServiceMock).getContactByEmail(anyString());
+      Contact resultContact = contactServiceMock.updateContact(contact, true);
+      verify(contactServiceMock).updateContact(contact, true);
 
-            assertNotNull(resultSet);
+      assertNotNull(resultContact);
 
-        } catch (ConstantContactServiceException e) {
-            System.out.println(e.getErrorInfo());
-            e.printStackTrace();
-        }
+      resultContact = contactServiceMock.updateContact(contact, false);
+      verify(contactServiceMock).updateContact(contact, false);
+
+      assertNotNull(resultContact);
+
+    } catch (ConstantContactServiceException e) {
+      System.out.println(e.getErrorInfo());
+      e.printStackTrace();
     }
+  }
 
-    /**
-     * Tests the functionality of the updateContact method and the results of the update
-     *
-     */
-    @Test
-    public void updateContactTest(){
+  /**
+   * Tests that the updateContact method throws the proper exception
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void updateContactExceptionTest() {
 
-        try {
+    try {
 
-            Contact contact = contactServiceMock.getContact(anyString());
+      Contact contact = null;
 
-            Contact resultContact = contactServiceMock.updateContact(contact, true);
-            verify(contactServiceMock).updateContact(contact, true);
+      Contact resultContact = contactServiceMock.updateContact(contact, true);
+      verify(contactServiceMock).updateContact(contact, true);
 
-            assertNotNull(resultContact);
-            
-            resultContact = contactServiceMock.updateContact(contact, false);
-            verify(contactServiceMock).updateContact(contact, false);
-
-            assertNotNull(resultContact);
-
-        } catch (ConstantContactServiceException e) {
-            System.out.println(e.getErrorInfo());
-            e.printStackTrace();
-        }
+    } catch (ConstantContactServiceException e) {
+      System.out.println(e.getErrorInfo());
+      e.printStackTrace();
     }
+  }
 
-    /**
-     * Tests that the updateContact method throws the proper exception
-     *
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void updateContactExceptionTest(){
+  /**
+   * Tests that the updateContact method throws the proper exception
+   *
+   * @throws ConstantContactServiceException
+   */
+  @Test(expected = ConstantContactServiceException.class)
+  public void updateContactServerExceptionTest() throws ConstantContactServiceException {
 
-        try {
+    Contact contact = new Contact();
+    contact.setId("1");
 
-            Contact contact = null;
+    Contact resultContact = contactService.updateContact(contact, true);
 
-            Contact resultContact = contactServiceMock.updateContact(contact, true);
-            verify(contactServiceMock).updateContact(contact, true);
+  }
 
-        } catch (ConstantContactServiceException e) {
-            System.out.println(e.getErrorInfo());
-            e.printStackTrace();
-        }
+  /**
+   * Tests the functionality of the deleteContact method and the possibility of opting a contact back in
+   */
+  @Test
+  public void deleteContactTest() {
+    String contactId = "1";
+
+    try {
+
+      Boolean deleted = contactServiceMock.deleteContact(contactId);
+      verify(contactServiceMock).deleteContact(anyString());
+
+      assertTrue(deleted.toString(), deleted);
+
+    } catch (ConstantContactServiceException e) {
+      System.out.println(e.getErrorInfo());
+      e.printStackTrace();
     }
-    
-    /**
-     * Tests that the updateContact method throws the proper exception
-     * @throws ConstantContactServiceException 
-     *
-     */
-    @Test(expected = ConstantContactServiceException.class)
-    public void updateContactServerExceptionTest() throws ConstantContactServiceException{
+  }
 
-        Contact contact = new Contact();
-        contact.setId("1");
-        
-        Contact resultContact = contactService.updateContact(contact, true);
+  /**
+   * Tests that the deleteContact method throws the proper exception
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void deleteExceptionTest() {
+    String contactId = "0";
+    try {
 
+      Boolean deleted = contactServiceMock.deleteContact(contactId);
+      verify(contactServiceMock).deleteContact(anyString());
+
+    } catch (ConstantContactServiceException e) {
+      System.out.println(e.getErrorInfo());
+      e.printStackTrace();
     }
+  }
 
-    /**
-     * Tests the functionality of the deleteContact method and the possibility of opting a contact back in
-     *
-     */
-    @Test
-    public void deleteContactTest(){
-        String contactId = "1";
+  /**
+   * Tests that the deleteContact method throws the proper exception
+   *
+   * @throws ConstantContactServiceException
+   */
+  @Test(expected = ConstantContactServiceException.class)
+  public void deleteServiceExceptionTest() throws ConstantContactServiceException {
+    String contactId = "1";
 
-        try {
+    Boolean deleted = contactService.deleteContact(contactId);
+  }
 
-            Boolean deleted = contactServiceMock.deleteContact(contactId);
-            verify(contactServiceMock).deleteContact(anyString());
+  /**
+   * Tests the get contacts functionality
+   */
+  @Test
+  public void getContactsTest() {
+    ResultSet contactResultSet = mock(ResultSet.class);
+    try {
 
-            assertTrue(deleted.toString(), deleted);
+      contactResultSet = contactServiceMock.getContacts(10, null, Contact.Status.ACTIVE);
+      verify(contactServiceMock).getContacts(anyInt(), anyString(), eq(Contact.Status.ACTIVE));
 
-        } catch (ConstantContactServiceException e) {
-            System.out.println(e.getErrorInfo());
-            e.printStackTrace();
-        }
+      assertNotNull(contactResultSet);
+
+    } catch (ConstantContactServiceException e) {
+      System.out.print(e.getErrorInfo());
+      e.printStackTrace();
     }
+  }
 
-    /**
-     * Tests that the deleteContact method throws the proper exception
-     *
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void deleteExceptionTest(){
-        String contactId = "0";
-        try {
+  /**
+   * Tests that the getContacts method throws the proper exception
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void getContactsExceptionTest() {
+    ResultSet contactResultSet = mock(ResultSet.class);
+    try {
 
-            Boolean deleted = contactServiceMock.deleteContact(contactId);
-            verify(contactServiceMock).deleteContact(anyString());
+      contactResultSet = contactServiceMock.getContacts(10, null, Contact.Status.VISITOR);
+      verify(contactServiceMock).getContacts(anyInt(), anyString(), eq(Contact.Status.VISITOR));
 
-        } catch (ConstantContactServiceException e) {
-            System.out.println(e.getErrorInfo());
-            e.printStackTrace();
-        }
+    } catch (ConstantContactServiceException e) {
+      System.out.print(e.getErrorInfo());
+      e.printStackTrace();
     }
+  }
 
-    /**
-     * Tests that the deleteContact method throws the proper exception
-     * @throws ConstantContactServiceException 
-     *
-     */
-    @Test(expected = ConstantContactServiceException.class)
-    public void deleteServiceExceptionTest() throws ConstantContactServiceException{
-        String contactId = "1";
-        
-        Boolean deleted = contactService.deleteContact(contactId);
+  /**
+   * Tests that the getContacts method throws the proper exception
+   *
+   * @throws ConstantContactServiceException
+   */
+  @Test(expected = ConstantContactServiceException.class)
+  public void getContactsServiceExceptionTest() throws ConstantContactServiceException {
+    ResultSet contactResultSet = new ResultSet<String>();
+
+    contactResultSet = contactService.getContacts(10, null, Contact.Status.ACTIVE);
+  }
+
+  /**
+   * Tests the get paginated contacts functionality
+   */
+  @Test
+  public void getPaginatedContactsTest() {
+    ResultSet contactResultSet = mock(ResultSet.class);
+    final Pagination pagination = new Pagination();
+    pagination.setNextLink("should/be/a/valid/link");
+
+    try {
+
+      contactResultSet = contactServiceMock.getContacts(pagination);
+      verify(contactServiceMock).getContacts(pagination);
+
+      assertNotNull(contactResultSet);
+
+    } catch (ConstantContactServiceException e) {
+      System.out.print(e.getErrorInfo());
+      e.printStackTrace();
     }
-    
-    /**
-     * Tests the get contacts functionality
-     */
-    @Test
-    public void getContactsTest(){
-        ResultSet contactResultSet = mock(ResultSet.class);
-        try {
+  }
 
-            contactResultSet = contactServiceMock.getContacts(10, null, Contact.Status.ACTIVE);
-            verify(contactServiceMock).getContacts(anyInt(), anyString(), eq(Contact.Status.ACTIVE));
+  /**
+   * Tests the get paginated contacts functionality
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void getPaginatedContatsIllegalArgumentExceptionTest() {
+    ResultSet contactResultSet = mock(ResultSet.class);
+    final Pagination pagination = null;
 
-            assertNotNull(contactResultSet);
+    try {
 
-        } catch (ConstantContactServiceException e) {
-            System.out.print(e.getErrorInfo());
-            e.printStackTrace();
-        }
+      contactResultSet = contactServiceMock.getContacts(pagination);
+      verify(contactServiceMock).getContacts(pagination);
+
+      assertNotNull(contactResultSet);
+
+    } catch (ConstantContactServiceException e) {
+      System.out.print(e.getErrorInfo());
+      e.printStackTrace();
     }
+  }
 
-    /**
-     * Tests that the getContacts method throws the proper exception
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void getContactsExceptionTest(){
-        ResultSet contactResultSet = mock(ResultSet.class);
-        try {
+  /**
+   * Tests the deleteContactFromLists method from ConstantContact.class
+   */
+  @Test
+  public void deleteContactFromListsTest() {
 
-            contactResultSet = contactServiceMock.getContacts(10, null, Contact.Status.VISITOR);
-            verify(contactServiceMock).getContacts(anyInt(), anyString(), eq(Contact.Status.VISITOR));
+    String contactId = "1";
+    try {
 
-        } catch (ConstantContactServiceException e) {
-            System.out.print(e.getErrorInfo());
-            e.printStackTrace();
-        }
+      Boolean deleted = contactServiceMock.deleteContactFromLists(contactId);
+      verify(contactServiceMock).deleteContactFromLists(contactId);
+
+      assertTrue(deleted);
+
+    } catch (ConstantContactServiceException e) {
+      e.printStackTrace();
     }
-
-    /**
-     * Tests that the getContacts method throws the proper exception
-     * @throws ConstantContactServiceException 
-     */
-    @Test(expected = ConstantContactServiceException.class)
-    public void getContactsServiceExceptionTest() throws ConstantContactServiceException{
-        ResultSet contactResultSet = new ResultSet<String>();
-        
-        contactResultSet = contactService.getContacts(10, null, Contact.Status.ACTIVE);
-    }
-    
-    /**
-     * Tests the deleteContactFromLists method from ConstantContact.class
-     */
-    @Test
-    public void deleteContactFromListsTest(){
-
-        String contactId = "1";
-        try {
-            
-            Boolean deleted = contactServiceMock.deleteContactFromLists(contactId);
-            verify(contactServiceMock).deleteContactFromLists(contactId);
-
-            assertTrue(deleted);
-
-        } catch (ConstantContactServiceException e) {
-            e.printStackTrace();
-        }
-    }
+  }
 
 }

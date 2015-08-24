@@ -10,10 +10,13 @@ import com.constantcontact.components.eventspot.EventItemAttribute;
 import com.constantcontact.components.eventspot.Promocode;
 import com.constantcontact.components.eventspot.Registrant.Registrant;
 import com.constantcontact.components.eventspot.Registrant.RegistrantDetails;
+import com.constantcontact.components.generic.response.Pagination;
 import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.eventspot.EventSpotService;
 import com.constantcontact.util.Config;
+import com.constantcontact.util.ConstantContactExceptionFactory;
+import com.constantcontact.util.RawApiResponse;
 
 /**
  * {@link EventSpotServiceMock} class in Constant Contact.
@@ -83,6 +86,30 @@ public class EventSpotServiceMock extends EventSpotService {
 		}
 		return events;
 	}
+
+    /**
+     * Gets all the Events.<br/>
+     * Implements the get Events operation of the EventSpot API by calling the ConstantContact server side.
+     *
+     * @param pagination A {@link com.constantcontact.components.generic.response.Pagination} instance containing the link to the next page of results.
+     *                   An exception is thrown otherwise.
+     * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
+     */
+    public ResultSet<Event> getEvents(Pagination pagination) throws ConstantContactServiceException {
+        if (pagination == null || pagination.getNextLink() == null) {
+            throw new IllegalArgumentException(Config.instance().getErrorPaginationNull());
+        }
+
+        ResultSet<Event> events = null;
+        try {
+            events = Component.resultSetFromJSON(
+                    MockedServerResponses.getEventsEventSpotServiceData,
+                    Event.class);
+        } catch (Exception e) {
+            throw new ConstantContactServiceException(e);
+        }
+        return events;
+    }
 
 	/**
 	 * Gets a single Event.<br/>
@@ -631,6 +658,30 @@ public class EventSpotServiceMock extends EventSpotService {
 		}
 		return eventRegistrants;
 	}
+
+    /**
+     * Gets all the Event Registrants.<br/>
+     * Implements the get Event Registrants operation of the EventSpot API by calling the ConstantContact server side.
+     * @param pagination A {@link Pagination} instance containing the link to the next page of results.
+     *                   An exception is thrown otherwise.
+     * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
+     */
+    public ResultSet<Registrant> getEventRegistrants(Pagination pagination) throws ConstantContactServiceException {
+        if (pagination == null || pagination.getNextLink() == null) {
+            throw new IllegalArgumentException(Config.instance().getErrorPaginationNull());
+        }
+
+        ResultSet<Registrant> eventRegistrants = null;
+        try {
+            eventRegistrants = Component
+                    .resultSetFromJSON(
+                            MockedServerResponses.getEventRegistrantsEventSpotServiceData,
+                            Registrant.class);
+        } catch (Exception e) {
+            throw new ConstantContactServiceException(e);
+        }
+        return eventRegistrants;
+    }
 
 	/**
 	 * Gets a single Event Registrant.<br/>

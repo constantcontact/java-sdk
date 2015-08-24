@@ -3,6 +3,7 @@ package com.constantcontact.mockup;
 import com.constantcontact.components.Component;
 import com.constantcontact.components.contacts.Contact;
 import com.constantcontact.components.contacts.ContactList;
+import com.constantcontact.components.generic.response.Pagination;
 import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.services.contactlists.ContactListService;
@@ -186,6 +187,29 @@ public class ContactListServiceMock extends ContactListService {
 		}
 		return contacts;
 	}
+
+    /**
+     * Implements the Get contacts from an individual list operation by calling the ConstantContact server side.
+     *
+     * @param pagination A {@link com.constantcontact.components.generic.response.Pagination} instance containing the link to the next page of results.
+     *                   An exception is thrown otherwise.
+     *
+     * @throws ConstantContactServiceException When something went wrong in the Constant Contact flow or an error is returned from server.
+     */
+    @Override
+    public ResultSet<Contact> getContactsFromList(Pagination pagination) throws ConstantContactServiceException {
+        if (pagination == null || pagination.getNextLink() == null) {
+            throw new IllegalArgumentException(Config.instance().getErrorPaginationNull());
+        }
+
+        ResultSet<Contact> contacts = null;
+        try {
+            contacts = Component.resultSetFromJSON(MockedServerResponses.getContactsFromListContactListData, Contact.class);
+        } catch (Exception e) {
+            throw new ConstantContactServiceException(e);
+        }
+        return contacts;
+    }
 		
 	/**
 	 * Deletes a single contact list based on contact list unique identifier.<br/>

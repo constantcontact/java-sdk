@@ -20,6 +20,7 @@ import com.constantcontact.components.eventspot.EventItem;
 import com.constantcontact.components.eventspot.EventItemAttribute;
 import com.constantcontact.components.eventspot.Promocode;
 import com.constantcontact.components.eventspot.Registrant.RegistrantDetails;
+import com.constantcontact.components.generic.response.Pagination;
 import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.mockup.ConstantContactFactoryMock;
@@ -91,6 +92,49 @@ public class ConstantContactEventSpotTest {
 			e.printStackTrace();
 		}
 	}
+
+    /**
+     * Tests the getEvents pagination method from ConstantContact.class
+     *
+     */
+    @Test
+    public void getEventsPaginatedTest() {
+        int limit = 1;
+
+        Pagination pagination = new Pagination();
+        pagination.setNextLink("link");
+
+        try {
+
+            ResultSet resultSet = mock(ResultSet.class);
+
+            resultSet = eventSpotServiceMock.getEvents(pagination);
+            verify(eventSpotServiceMock).getEvents(pagination);
+
+            assertNotNull(resultSet);
+
+        } catch (ConstantContactServiceException e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * Tests the getEvents pagination method from ConstantContact.class
+     *
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void getEventsPaginatedTestException() throws ConstantContactServiceException {
+        int limit = 1;
+
+        Pagination pagination = null;
+
+
+        ResultSet resultSet = mock(ResultSet.class);
+
+        resultSet = eventSpotServiceMock.getEvents(pagination);
+        verify(eventSpotServiceMock).getEvents(pagination);
+
+        assertNotNull(resultSet);
+    }
 
 	/**
 	 * Tests the addEvent method from ConstantContact.class
@@ -944,6 +988,49 @@ public class ConstantContactEventSpotTest {
 			e.printStackTrace();
 		}
 	}
+
+    /**
+     * Tests the getEvents pagination method from ConstantContact.class
+     *
+     */
+    @Test
+    public void getEventsRegistrantsPaginatedTest() {
+        int limit = 1;
+
+        Pagination pagination = new Pagination();
+        pagination.setNextLink("link");
+
+        try {
+
+            ResultSet resultSet = mock(ResultSet.class);
+
+            resultSet = eventSpotServiceMock.getEventRegistrants(pagination);
+            verify(eventSpotServiceMock).getEventRegistrants(pagination);
+
+            assertNotNull(resultSet);
+
+        } catch (ConstantContactServiceException e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * Tests the getEvents pagination method from ConstantContact.class
+     *
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void getEventsRegistrantsPaginatedTestException() throws ConstantContactServiceException {
+        int limit = 1;
+
+        Pagination pagination = null;
+
+
+        ResultSet resultSet = mock(ResultSet.class);
+
+        resultSet = eventSpotServiceMock.getEventRegistrants(pagination);
+        verify(eventSpotServiceMock).getEventRegistrants(pagination);
+
+        assertNotNull(resultSet);
+    }
 
 	/**
 	 * Tests that the getEventRegistrant method throws the proper exception

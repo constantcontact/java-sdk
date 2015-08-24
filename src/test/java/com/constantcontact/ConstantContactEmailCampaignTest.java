@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -17,6 +18,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import com.constantcontact.components.emailcampaigns.EmailCampaignRequest;
 import com.constantcontact.components.emailcampaigns.EmailCampaignResponse;
 import com.constantcontact.components.emailcampaigns.schedules.EmailCampaignSchedule;
+import com.constantcontact.components.generic.response.Pagination;
 import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.mockup.ConstantContactFactoryMock;
@@ -110,6 +112,51 @@ public class ConstantContactEmailCampaignTest {
 
             assertNotNull(emailCampaignResponses);
 
+
+        } catch (ConstantContactServiceException e) {
+            System.out.println(e.getErrorInfo());
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Tests the retrieved email campaigns
+     */
+    @Test
+    public void getEmailCampaignsPaginatedTest() {
+        int limit = 1;
+        Pagination pagination = new Pagination();
+        pagination.setNextLink("link");
+
+        try {
+            ResultSet emailCampaignResponses = mock(ResultSet.class);
+
+            emailCampaignResponses = emailCampaignService.getCampaigns(pagination);
+            verify(emailCampaignService).getCampaigns(pagination);
+
+            assertNotNull(emailCampaignResponses);
+
+        } catch (ConstantContactServiceException e) {
+            System.out.println(e.getErrorInfo());
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Tests the retrieved email campaigns
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void getEmailCampaignsPaginatedTestException() {
+        int limit = 1;
+        Pagination pagination = null;
+
+        try {
+            ResultSet emailCampaignResponses = mock(ResultSet.class);
+
+            emailCampaignResponses = emailCampaignService.getCampaigns(pagination);
+            verify(emailCampaignService).getCampaigns(pagination);
+
+            assertNotNull(emailCampaignResponses);
 
         } catch (ConstantContactServiceException e) {
             System.out.println(e.getErrorInfo());

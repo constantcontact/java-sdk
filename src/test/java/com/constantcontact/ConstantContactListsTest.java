@@ -16,6 +16,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import com.constantcontact.components.contacts.Contact;
 import com.constantcontact.components.contacts.ContactList;
+import com.constantcontact.components.generic.response.Pagination;
 import com.constantcontact.components.generic.response.ResultSet;
 import com.constantcontact.exceptions.service.ConstantContactServiceException;
 import com.constantcontact.mockup.ConstantContactFactoryMock;
@@ -215,6 +216,54 @@ public class ConstantContactListsTest {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Tests the getContactsFromList method from ConstantContact.class
+     *
+     */
+    @Test
+    public void getContactsFromListPaginated(){
+        ContactList contactList = new ContactList();
+        String listId = "1";
+        contactList.setId(listId);
+        Pagination pagination = new Pagination();
+        pagination.setNextLink("link");
+
+        try {
+
+            ResultSet resultSet = mock(ResultSet.class);
+
+            resultSet = contactListService.getContactsFromList(pagination);
+            verify(contactListService).getContactsFromList(pagination);
+
+
+        } catch (ConstantContactServiceException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Tests that the getContactsFromList method throws the proper exception
+     *
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void getContactsFromListPaginatedExcetion(){
+        ContactList contactList = mock(ContactList.class);
+        String listId = null;
+        Pagination pagination = null;
+
+        try {
+
+            ResultSet resultSet = mock(ResultSet.class);
+
+            resultSet = contactListService.getContactsFromList(pagination);
+            verify(contactListService).getContactsFromList(pagination);
+
+        } catch (ConstantContactServiceException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     /**
      * Tests the add contact to list functionality
