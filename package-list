@@ -17,6 +17,7 @@ com.constantcontact.components.contacts.tracking.unsubscribes
 com.constantcontact.components.emailcampaigns
 com.constantcontact.components.emailcampaigns.activities
 com.constantcontact.components.emailcampaigns.schedules
+com.constantcontact.components.emailcampaigns.test
 com.constantcontact.components.emailcampaigns.tracking.bounces
 com.constantcontact.components.emailcampaigns.tracking.clicks
 com.constantcontact.components.emailcampaigns.tracking.forwards
@@ -43,6 +44,7 @@ com.constantcontact.services.contacts
 com.constantcontact.services.contacts.tracking
 com.constantcontact.services.emailcampaigns
 com.constantcontact.services.emailcampaigns.schedule
+com.constantcontact.services.emailcampaigns.test
 com.constantcontact.services.emailcampaigns.tracking
 com.constantcontact.services.eventspot
 com.constantcontact.services.library
