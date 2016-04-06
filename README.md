@@ -14,7 +14,7 @@ In order to use the Constant Contact SDK please follow these steps:
 <dependency>
   <groupId>com.constantcontact</groupId>
   <artifactId>constantcontact</artifactId>
-  <version>4.2.0</version>
+  <version>4.4.0</version>
 </dependency>
 ```
 
