@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.constantcontact.components.Component;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -198,6 +199,7 @@ public abstract class EmailCampaignBase extends Component implements Serializabl
 	 * @return The Message Footer
 	 */
 	@JsonProperty("message_footer")
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	public MessageFooter getMessageFooter() {
 		return messageFooter;
 	}
