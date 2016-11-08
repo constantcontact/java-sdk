@@ -1,56 +1,77 @@
-Constant Contact JAVA SDK
-=========================
+# Constant Contact Java SDK
+Java and Android library for accessing the Constant Contact API. Based on the [Retrofit](http://square.github.io/retrofit/) framework.
 
-[![Build Status](https://travis-ci.org/constantcontact/java-sdk.svg)](https://travis-ci.org/constantcontact/java-sdk)
+## Usage
+After creating an account [through Mashery](https://constantcontact.mashery.com/), and using your API key to get an access token for an 
+account, you can start by creating the ```CCApi2``` object, and make the call you need through the appropriate service.
+
+All of the calls respond with Retrofit ```Call``` objects, which can be consumed synchronously (```execute```) or 
+asynchronously (```enqueue```). Full documentation of the ```Call``` class can be found [here](https://square.github.io/retrofit/2.x/retrofit/retrofit2/Call.html/).
+
+Each service is fully documented in Javadoc with full explanations of each parameter.
+
+#### Get Account Information (Synchronous Example)
+```java
+CCApi2 _api = new CCApi2("your_api_key", "your_access_token");
+try {
+    AccountSummaryInformation accountSummary = _api.getAccountService().getAccountSummaryInformation().execute();
+} catch (IOException e) {
+    // Handle exception
+}
+```
+
+#### Get Contact Collection (Asynchronous Example)
+```java
+CCApi2 _api = new CCApi2("your_api_key", "your_access_token");
+Callback<Paged<Contact>> callback = new Callback<Paged<Contact>>() {
+    @Override
+    public void onResponse(Response<Paged<Contact>> response) {
+        List<Contact> contacts = response.body().getResults();
+    }
+    
+    @Override
+    public void onFailure(Throwable t) {
+    }
+}
+_api.getContactService().getContacts(50, ContactStatus.ACTIVE).enqueue(callback);
+```
 
 ## Installation
+The JAR is available on [JCenter](https://bintray.com/bintray/jcenter), or you can download manually from 
+the [releases page](https://github.com/constantcontact/java-sdk/releases).
 
-In order to use the Constant Contact SDK please follow these steps:
-
-1) This project builds with Apache Maven. Running maven clean install will build and test the source and install its artifacts and dependencies into your maven repository. At this point, you can add the Constant Contact SDK as a dependency to other projects. If you do not wish to build with Maven, consult the pom.xml file to examine the dependencies the Constant Contact SDK has. For example, it requires Jackson for JSON processing.
+### Gradle
+```groovy
+compile 'com.constantcontact:java-sdk:5.0.0'
+```
 
 ### Maven
 ```xml
-<dependency>
-  <groupId>com.constantcontact</groupId>
-  <artifactId>constantcontact</artifactId>
-  <version>4.4.0</version>
-</dependency>
+<dependencies>
+    <dependency>
+        <groupId>com.constantcontact</groupId>
+        <artifactId>java-sdk</artifactId>
+        <version>5.0.0</version>
+    </dependency>
+</dependencies>
 ```
 
-## Documentation
+### Artifacts
 
-The Javadoc is hosted at http://constantcontact.github.io/java-sdk
+In addition to the standard `java-sdk` artifact, there are specialized artifacts for Android users (all components implement `Parcelable`) 
+and RxJava users (all calls return `Observable`).
+- `java-sdk`
+- `java-sdk-rx`
+- `java-sdk-android`
+- `java-sdk-android-rx`
 
-API Documentation is located at http://developer.constantcontact.com/docs/developer-guides/api-documentation-index.html
-
-## Usage
-
-1) In the file you wish to use the SDK include the following code:
-
-import com.constantcontact.ConstantContact;
-
-
-2) Create a ConstantContact object
-
-`ConstantContact constantContact = new ConstantContact("<apiKey>", "<accessToken>");`  
-
-The API key represents the Application Key provided by Constant Contact for a specific application.
-The access token is obtained by performing the Constant Contact Authentication process.     
-                                                          
-                  
-3) Begin using the SDK functionality using the ConstantContact object.   
-             
-######Example for getting an contact
-
-`Contact contact = constantContact.getContact(int contactId);`  
-
-######Example for getting contact list
-       
-`ResultSet<Contact> contactList =  constantContact.getContacts();` 
-
-
-
-
-                                             
-
+## License
+    Copyright (c) 2016, Constant Contact, Inc.
+    All rights reserved.
+    
+    Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+    1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+    
