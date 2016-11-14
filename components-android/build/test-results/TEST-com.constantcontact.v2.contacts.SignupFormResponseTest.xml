@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.constantcontact.v2.contacts.SignupFormResponseTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2016-11-08T17:20:10" hostname="NGALBRAITHMAC1" time="0.0">
-  <properties/>
-  <testcase name="expectThatGettingAndSettingValues_WillReturnSame" classname="com.constantcontact.v2.contacts.SignupFormResponseTest" time="0.0"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
