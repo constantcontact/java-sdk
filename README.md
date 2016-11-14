@@ -58,12 +58,7 @@ compile 'com.constantcontact:java-sdk:5.0.0'
 
 ### Artifacts
 
-In addition to the standard `java-sdk` artifact, there are specialized artifacts for Android users (all components implement `Parcelable`) 
-and RxJava users (all calls return `Observable`).
-- `java-sdk`
-- `java-sdk-rx`
-- `java-sdk-android`
-- `java-sdk-android-rx`
+In addition to the standard `java-sdk` artifact, there is a `java-sdk-rx` artifact for RxJava users (all calls return `Observable`).
 
 ## License
     Copyright (c) 2016, Constant Contact, Inc.
