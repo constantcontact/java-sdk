@@ -23,7 +23,7 @@ public interface ContactService {
      * @param status Retrieve contacts with only the chosen {@link ContactStatus}
      * @return       an Observable that emits Paged Contacts
      */
-    @GET("com.constantcontact.v2/contacts")
+    @GET("v2/contacts")
     Call<Paged<Contact>> getContacts(@Query("limit") int limit, @Query("status") ContactStatus status);
 
     /**
@@ -34,7 +34,7 @@ public interface ContactService {
      * @param status Retrieve contacts with only the chosen {@link ContactStatus}
      * @return       an Observable that emits Paged Contacts
      */
-    @GET("com.constantcontact.v2/contacts")
+    @GET("v2/contacts")
     Call<Paged<Contact>> getContacts(@Query("limit") int limit, @Query("modified_since") String date, @Query("status") ContactStatus status);
 
     /**
@@ -45,7 +45,7 @@ public interface ContactService {
      * @param date   Date to specify retrieval of contacts that have been modified since then, in ISO-8601 format
      * @return       an Observable that emits Paged Contacts
      */
-    @GET("com.constantcontact.v2/lists/{listId}/contacts")
+    @GET("v2/lists/{listId}/contacts")
     Call<Paged<Contact>> getContacts(@Path("listId") String listId, @Query("limit") int limit, @Query("modified_since") String date);
 
     /**
@@ -56,7 +56,7 @@ public interface ContactService {
      * @return         an Observable that emits Paged Contacts
      * @see            Paged
      */
-    @GET("com.constantcontact.v2/contacts?next={next}")
+    @GET("v2/contacts?next={next}")
     Call<Paged<Contact>> getContacts(@Path("next") String nextLink);
 
     /**
@@ -66,7 +66,7 @@ public interface ContactService {
      * @param optInSource Specify who is creating this contact with {@link OptInSource}
      * @return            an Observable that emits a new Contact object, with changes by the server, such as adding an ID
      */
-    @POST("com.constantcontact.v2/contacts")
+    @POST("v2/contacts")
     Call<Contact> createContact(@Body Contact contact, @Query("action_by") OptInSource optInSource);
 
     /**
@@ -75,7 +75,7 @@ public interface ContactService {
      * @param contactId Contact's ID
      * @return          an Observable that emits a Contact
      */
-    @GET("com.constantcontact.v2/contacts/{contactId}")
+    @GET("v2/contacts/{contactId}")
     Call<Contact> getContact(@Path("contactId") String contactId);
 
     /**
@@ -86,7 +86,7 @@ public interface ContactService {
      * @param optInSource Specify who is updating this contact with {@link OptInSource}
      * @return            an Observable that emits an updated Contact
      */
-    @PUT("com.constantcontact.v2/contacts/{contactId")
+    @PUT("v2/contacts/{contactId")
     Call<Contact> updateContact(@Body Contact contact, @Path("contactId") String contactId, @Query("action_by") OptInSource optInSource);
 
     /**
@@ -95,7 +95,7 @@ public interface ContactService {
      * @param contactId Contact's ID
      * @return          an Observable that emits a {@link retrofit2.Response}
      */
-    @DELETE("com.constantcontact.v2/contacts/{contactId}")
+    @DELETE("v2/contacts/{contactId}")
     Call<Response> unsubscribeContact(@Path("contactId") String contactId);
 
     /**
@@ -104,7 +104,7 @@ public interface ContactService {
      * @param date Date to specify retrieval of contact lists that have been modified since then, in ISO-8601 format
      * @return     an Observable that emits a List of ContactLists
      */
-    @GET("com.constantcontact.v2/lists")
+    @GET("v2/lists")
     Call<List<ContactList>> getContactLists(@Query("modified_since") String date);
 
     /**
@@ -113,7 +113,7 @@ public interface ContactService {
      * @param contactList ContactList object (requires only name and status to create)
      * @return            an Observable that emits a new ContactList object, with changes by the server, such as adding an ID
      */
-    @POST("com.constantcontact.v2/lists")
+    @POST("v2/lists")
     Call<ContactList> createContactList(@Body ContactList contactList);
 
     /**
@@ -122,7 +122,7 @@ public interface ContactService {
      * @param listId ID of the list
      * @return       an Observable that emits a ContactList
      */
-    @GET("com.constantcontact.v2/lists/{listId}")
+    @GET("v2/lists/{listId}")
     Call<ContactList> getContactList(@Path("listId") String listId);
 
     /**
@@ -132,7 +132,7 @@ public interface ContactService {
      * @param listId      ID of the list
      * @return            an Observable that emits an updated ContactList
      */
-    @PUT("com.constantcontact.v2/lists/{listId}")
+    @PUT("v2/lists/{listId}")
     Call<ContactList> updateContactList(@Body ContactList contactList, @Path("listId") String listId);
 
     /**
@@ -141,7 +141,7 @@ public interface ContactService {
      * @param listId ID of the list
      * @return       an Observable that emits a {@link retrofit2.Response}
      */
-    @DELETE("com.constantcontact.v2/lists/{listId}")
+    @DELETE("v2/lists/{listId}")
     Call<Response> deleteContactList(@Path("listId") String listId);
 
     /**
@@ -151,6 +151,6 @@ public interface ContactService {
      * @return                  an Observable that emits a signup form response
      * @see                     <a href="http://developer.constantcontact.com/docs/signup-forms-tools/signup-form-creation.html">Signup Form Creation</a>
      */
-    @POST("com.constantcontact.v2/signupform")
+    @POST("v2/signupform")
     Call<SignupFormResponse> createCustomSignupForm(@Body SignupFormRequest signupFormRequest);
 }

@@ -22,7 +22,7 @@ public interface TrackingService {
      * @param campaignId The Campaign ID
      * @return           an Observable that emits a TrackingSummary
      */
-    @GET("com.constantcontact.v2/emailmarketing/campaigns/{campaignId}/tracking/reports/summary?updateSummary=true")
+    @GET("v2/emailmarketing/campaigns/{campaignId}/tracking/reports/summary?updateSummary=true")
     Observable<TrackingSummary> getTrackingSummary(@Path("campaignId") String campaignId);
 
     /**
@@ -33,7 +33,7 @@ public interface TrackingService {
      * @param limit            Page size to return (1 - 500)
      * @return                 an Observable that emits Paged BounceReports
      */
-    @GET("com.constantcontact.v2/emailmarketing/campaigns/{campaignId}/tracking/bounces")
+    @GET("v2/emailmarketing/campaigns/{campaignId}/tracking/bounces")
     Observable<Paged<BounceReport>> getBounceReports(@Path("campaignId") String campaignId, @Query("created_since") String createdSinceDate,
                                                      @Query("limit") int limit);
 
@@ -56,7 +56,7 @@ public interface TrackingService {
      * @param limit            Page size to return (1 - 500)
      * @return                 an Observable that emits Paged ClickReports
      */
-    @GET("com.constantcontact.v2/emailmarketing/campaigns/{campaignId}/tracking/clicks")
+    @GET("v2/emailmarketing/campaigns/{campaignId}/tracking/clicks")
     Observable<Paged<ClickReport>> getClickReports(@Path("campaignId") String campaignId, @Query("created_since") String createdSinceDate,
                                                    @Query("limit") int limit);
 
@@ -70,7 +70,7 @@ public interface TrackingService {
      * @return                 an Observable that emits Paged ClickReports
      * @see                    Campaign
      */
-    @GET("com.constantcontact.v2/emailmarketing/campaigns/{campaignId}/tracking/clicks/{linkId}")
+    @GET("v2/emailmarketing/campaigns/{campaignId}/tracking/clicks/{linkId}")
     Observable<Paged<ClickReport>> getClickReports(@Path("campaignId") String campaignId, @Path("linkId") String linkId,
                                                    @Query("created_since") String createdSinceDate, @Query("limit") int limit);
 
@@ -93,7 +93,7 @@ public interface TrackingService {
      * @param limit            Page size to return (1 - 500)
      * @return                 an Observable that emits Paged ForwardReports
      */
-    @GET("com.constantcontact.v2/emailmarketing/campaigns/{campaignId}/tracking/forwards")
+    @GET("v2/emailmarketing/campaigns/{campaignId}/tracking/forwards")
     Observable<Paged<ForwardReport>> getForwardReports(@Path("campaignId") String campaignId,
                                                        @Query("created_since") String createdSinceDate, @Query("limit") int limit);
 
@@ -116,7 +116,7 @@ public interface TrackingService {
      * @param limit            Page size to return (1 - 500)
      * @return                 an Observable that emits Paged OpenReports
      */
-    @GET("com.constantcontact.v2/emailmarketing/campaigns/{campaignId}/tracking/opens")
+    @GET("v2/emailmarketing/campaigns/{campaignId}/tracking/opens")
     Observable<Paged<OpenReport>> getOpenReports(@Path("campaignId") String campaignId, @Query("created_since") String createdSinceDate,
                                                  @Query("limit") int limit);
 
@@ -139,7 +139,7 @@ public interface TrackingService {
      * @param limit            Page size to return (1 - 500)
      * @return                 an Observable that emits Paged SendReports
      */
-    @GET("com.constantcontact.v2/emailmarketing/campaigns/{campaignId}/tracking/sends")
+    @GET("v2/emailmarketing/campaigns/{campaignId}/tracking/sends")
     Observable<Paged<SendReport>> getSendReports(@Path("campaignId") String campaignId, @Query("created_since") String createdSinceDate,
                                                  @Query("limit") int limit);
 
@@ -162,7 +162,7 @@ public interface TrackingService {
      * @param limit            Page size to return (1 - 500)
      * @return                 an Observable that emits Paged OptOutReports
      */
-    @GET("com.constantcontact.v2/emailmarketing/campaigns/{campaignId}/tracking/unsubscribes")
+    @GET("v2/emailmarketing/campaigns/{campaignId}/tracking/unsubscribes")
     Observable<Paged<OptOutReport>> getOptOutReports(@Path("campaignId") String campaignId, @Query("created_since") String createdSinceDate,
                                                      @Query("limit") int limit);
 

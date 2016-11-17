@@ -21,7 +21,7 @@ public interface AccountService {
      *
      * @return an Observable that emits AccountSummaryInformation
      */
-    @GET("com.constantcontact.v2/account/info")
+    @GET("v2/account/info")
     Observable<AccountSummaryInformation> getAccountSummaryInformation();
 
     /**
@@ -30,7 +30,7 @@ public interface AccountService {
      * @param summaryInfo AccountSummaryInformation
      * @return            an Observable that emits AccountSummaryInformation
      */
-    @PUT("com.constantcontact.v2/account/info")
+    @PUT("v2/account/info")
     Observable<AccountSummaryInformation> updateAccountSummaryInformation(@Body AccountSummaryInformation summaryInfo);
 
     /**
@@ -38,7 +38,7 @@ public interface AccountService {
      *
      * @return an Observable that emits a List of AccountEmailAddress
      */
-    @GET("com.constantcontact.v2/account/verifiedemailaddresses")
+    @GET("v2/account/verifiedemailaddresses")
     Observable<List<AccountEmailAddress>> getAccountEmailAddresses();
 
     /**
@@ -48,6 +48,6 @@ public interface AccountService {
      * @param emailAddress AccountEmailAddress
      * @return             an Observable that emits a List of AccountEmailAddress
      */
-    @POST("com.constantcontact.v2/account/verifiedemailaddresses")
+    @POST("v2/account/verifiedemailaddresses")
     Observable<List<AccountEmailAddress>> createAccountEmailAddress(@Body AccountEmailAddress emailAddress);
 }

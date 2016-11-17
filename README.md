@@ -2,13 +2,15 @@
 Java and Android library for accessing the Constant Contact API. Based on the [Retrofit](http://square.github.io/retrofit/) framework.
 
 ## Usage
-After creating an account [through Mashery](https://constantcontact.mashery.com/), and using your API key to get an access token for an 
-account, you can start by creating the ```CCApi2``` object, and make the call you need through the appropriate service.
+You'll need an API key and access token to use the SDK. Do so by creating a developer account [here](https://constantcontact.mashery.com/member/register), then register an app to generate an API key and access token for an account.
+
+Then, start by creating the ```CCApi2``` object, and make the call you need through the appropriate service. Learn more about signing up 
+for a developer account [here](https://developer.constantcontact.com/api-keys.html).
 
 All of the calls respond with Retrofit ```Call``` objects, which can be consumed synchronously (```execute```) or 
 asynchronously (```enqueue```). Full documentation of the ```Call``` class can be found [here](https://square.github.io/retrofit/2.x/retrofit/retrofit2/Call.html/).
 
-Each service is fully documented in Javadoc with full explanations of each parameter.
+Each service is fully documented in the [Javadoc](http://constantcontact.github.io/java-sdk/) with full explanations of each parameter.
 
 #### Get Account Information (Synchronous Example)
 ```java
@@ -42,7 +44,7 @@ the [releases page](https://github.com/constantcontact/java-sdk/releases).
 
 ### Gradle
 ```groovy
-compile 'com.constantcontact:java-sdk:5.0.0'
+compile 'com.constantcontact:java-sdk:5.0.2'
 ```
 
 ### Maven
@@ -51,7 +53,7 @@ compile 'com.constantcontact:java-sdk:5.0.0'
     <dependency>
         <groupId>com.constantcontact</groupId>
         <artifactId>java-sdk</artifactId>
-        <version>5.0.0</version>
+        <version>5.0.2</version>
     </dependency>
 </dependencies>
 ```

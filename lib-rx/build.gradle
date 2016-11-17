@@ -2,6 +2,8 @@ apply plugin: 'java'
 apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
 
+def ARTIFACT_VERSION="$VERSION_MAJOR.$VERSION_MINOR.$VERSION_PATCH"
+
 dependencies {
     compile project(':components')
 
@@ -22,7 +24,7 @@ dependencies {
 targetCompatibility = '1.7'
 sourceCompatibility = '1.7'
 
-archivesBaseName = 'ctctapi'
+archivesBaseName = 'ctct-api-rx'
 
 task sourceJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'
@@ -41,13 +43,13 @@ artifacts {
 
 publishing {
     publications {
-        MyPublication(MavenPublication) {
+        SdkRx(MavenPublication) {
             from components.java
             groupId 'com.constantcontact'
             artifactId 'java-sdk-rx'
             artifact sourceJar
             artifact javadocJar
-            version '5.0.0'
+            version ARTIFACT_VERSION
         }
     }
 }
@@ -56,7 +58,7 @@ bintray {
     user = project.hasProperty("bintray_user") ? bintray_user : "user"
     key = project.hasProperty("bintray_key") ? bintray_key : "key"
 
-    publications = ['MyPublication']
+    publications = ['SdkRx']
 
     pkg {
         repo = 'maven'
@@ -69,10 +71,10 @@ bintray {
         labels = ['constant contact', 'constant', 'contact']
 
         version {
-            name = '5.0.0'
+            name = ARTIFACT_VERSION
             desc = 'Java SDK for Constant Contact API with RxJava'
             released  = new Date()
-            vcsTag = '5.0.0'
+            vcsTag = ARTIFACT_VERSION
         }
     }
 }

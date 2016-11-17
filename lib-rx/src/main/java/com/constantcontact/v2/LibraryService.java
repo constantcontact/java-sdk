@@ -17,7 +17,7 @@ public interface LibraryService {
      *
      * @return an Observable that emits LibraryInfo
      */
-    @GET("com.constantcontact.v2/library/info")
+    @GET("v2/library/info")
     Observable<LibraryInfo> getLibraryInfo();
 
     /**
@@ -27,7 +27,7 @@ public interface LibraryService {
      * @param sortOrder {@link FolderSortOrder}
      * @return          an Observable that emits Paged Folders
      */
-    @GET("com.constantcontact.v2/library/folders")
+    @GET("v2/library/folders")
     Observable<Paged<Folder>> getFolders(@Query("limit") int limit, @Query("sort_by") FolderSortOrder sortOrder);
 
     /**
@@ -35,7 +35,7 @@ public interface LibraryService {
      * @param nextLink Value of the link found in the meta of the original call
      * @return         an Observable that emits Paged Folders
      */
-    @GET("com.constantcontact.v2/library/folders?next={next}")
+    @GET("v2/library/folders?next={next}")
     Observable<Paged<Folder>> getFolders(@Path("next") String nextLink);
 
     /**
@@ -44,7 +44,7 @@ public interface LibraryService {
      * @param folder Folder with only the name and parentId values
      * @return       an Observable that emits a Folder
      */
-    @POST("com.constantcontact.v2/library/folders")
+    @POST("v2/library/folders")
     Observable<Folder> createFolder(@Body Folder folder);
 
     /**
@@ -53,7 +53,7 @@ public interface LibraryService {
      * @param folderId The Folder ID
      * @return         an Observable that emits a Folder
      */
-    @GET("com.constantcontact.v2/library/folders/{folderId}")
+    @GET("v2/library/folders/{folderId}")
     Observable<Folder> getFolder(@Path("folderId") String folderId);
 
     /**
@@ -63,7 +63,7 @@ public interface LibraryService {
      * @param folder   Folder
      * @return         an Observable that emits an updated Folder
      */
-    @PUT("com.constantcontact.v2/library/folders/{folderId}?include_payload=TRUE")
+    @PUT("v2/library/folders/{folderId}?include_payload=TRUE")
     Observable<Folder> updateFolder(@Path("folderId") String folderId, @Body Folder folder);
 
     /**
@@ -72,7 +72,7 @@ public interface LibraryService {
      * @param folderId The Folder ID
      * @return         an Observable that emits a {@link retrofit2.Response}
      */
-    @DELETE("com.constantcontact.v2/library/folders/{folderId}")
+    @DELETE("v2/library/folders/{folderId}")
     Observable<Response> deleteFolder(@Path("folderId") String folderId);
 
     /**
@@ -84,7 +84,7 @@ public interface LibraryService {
      * @param type      {@link FileTypeQuery}
      * @return          an Observable that emits Paged Files
      */
-    @GET("com.constantcontact.v2/library/files")
+    @GET("v2/library/files")
     Observable<Paged<File>> getFiles(@Query("limit") int limit, @Query("sort_by") FileSortOrder sortOrder,
                                      @Query("source") FileSource source, @Query("type") FileTypeQuery type);
 
@@ -94,7 +94,7 @@ public interface LibraryService {
      * @param nextLink Value of the link found in the meta of the original call
      * @return         an Observable that emits Paged Files
      */
-    @GET("com.constantcontact.v2/library/files?next={next}")
+    @GET("v2/library/files?next={next}")
     Observable<Paged<File>> getFiles(@Path("next") String nextLink);
 
     /**
@@ -109,7 +109,7 @@ public interface LibraryService {
      * @param type      {@link FileTypeQuery}
      * @return          an Observable that emits Paged Files
      */
-    @GET("com.constantcontact.v2/library/folders/{folderId}/files")
+    @GET("v2/library/folders/{folderId}/files")
     Observable<Paged<File>> getFilesByFolder(@Path("folderId") String folderId, @Query("limit") int limit,
                                              @Query("sort_by") FileSortOrder sortOrder, @Query("source") FileSource source,
                                              @Query("type") FileTypeQuery type);
@@ -121,7 +121,7 @@ public interface LibraryService {
      * @param nextLink Value of the link found in the meta of the original call
      * @return         an Observable that emits Paged Files
      */
-    @GET("com.constantcontact.v2/library/folders/{folderId}/files?next={next}")
+    @GET("v2/library/folders/{folderId}/files?next={next}")
     Observable<Paged<File>> getFilesByFolder(@Path("folderId") String folderId, @Path("next") String nextLink);
 
     /**
@@ -130,7 +130,7 @@ public interface LibraryService {
      * @param fileId The File ID
      * @return       an Observable that emits a File
      */
-    @GET("com.constantcontact.v2/library/files/{fileId}")
+    @GET("v2/library/files/{fileId}")
     Observable<File> getFile(@Path("fileId") String fileId);
 
     /**
@@ -140,7 +140,7 @@ public interface LibraryService {
      * @param file   File
      * @return       an Observable that emits an updated File
      */
-    @PUT("com.constantcontact.v2/library/files/{fileId}?include_payload=TRUE")
+    @PUT("v2/library/files/{fileId}?include_payload=TRUE")
     Observable<File> updateFile(@Path("fileId") String fileId, @Body File file);
 
     /**
@@ -150,7 +150,7 @@ public interface LibraryService {
      * @param fileIds  Array of File ID's that will be moved to the new folder
      * @return         an Observable that emits an Array of updated Files
      */
-    @PUT("com.constantcontact.v2/library/folders/{folderId}/files")
+    @PUT("v2/library/folders/{folderId}/files")
     Observable<File> moveFiles(@Path("folderId") String folderId, @Body String[] fileIds);
 
     /**
@@ -159,7 +159,7 @@ public interface LibraryService {
      * @param fileId The File ID
      * @return       an Observable that emits a {@link retrofit2.Response}
      */
-    @DELETE("com.constantcontact.v2/library/files/{fileId}")
+    @DELETE("v2/library/files/{fileId}")
     Observable<Response> deleteFile(@Path("fileId") String fileId);
 
     /**
@@ -167,7 +167,7 @@ public interface LibraryService {
      *
      * @return an Observable that emits a {@link retrofit2.Response}
      */
-    @DELETE("com.constantcontact.v2/library/folders/trash/files")
+    @DELETE("v2/library/folders/trash/files")
     Observable<Response> deleteFilesInTrash();
 
     /**
@@ -176,7 +176,7 @@ public interface LibraryService {
      * @param fileIds Send one File ID, or multiples merged into one string separated by commas (no spaces)
      * @return        an Observable that emits an array of FileUploadStatuses
      */
-    @GET("com.constantcontact.v2/library/files/uploadstatus/{fileId}")
+    @GET("v2/library/files/uploadstatus/{fileId}")
     Observable<FileUploadStatus[]> getFileUploadStatus(@Path("fileId") String fileIds);
 
     /**
@@ -193,7 +193,7 @@ public interface LibraryService {
      */
     @Multipart
     @Headers("Content-Type: multipart/form-data")
-    @POST("com.constantcontact.v2/library/files")
+    @POST("v2/library/files")
     Observable<Response> uploadFile(@Part("data") RequestBody file, @Part("description") String description,
                                     @Part("file_name") String fileName, @Part("file_type") String fileType,
                                     @Part("folder_id") String folderId, @Part("source") String source);

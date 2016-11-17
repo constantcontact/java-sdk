@@ -23,7 +23,7 @@ public interface CampaignService {
      * @param updateSummary Set to true to ask the server to get the newest tracking info
      * @return              an Observable that emits a Campaign
      */
-    @GET("com.constantcontact.v2/emailmarketing/campaigns/{campaignId}")
+    @GET("v2/emailmarketing/campaigns/{campaignId}")
     Call<Campaign> getCampaign(@Path("campaignId") String campaignId, @Query("updateSummary") boolean updateSummary);
 
     /**
@@ -33,7 +33,7 @@ public interface CampaignService {
      * @param status {@link CampaignStatus} to filter by
      * @return       an Observable that emits Paged Campaigns
      */
-    @GET("com.constantcontact.v2/emailmarketing/campaigns")
+    @GET("v2/emailmarketing/campaigns")
     Call<Paged<Campaign>> getCampaigns(@Query("limit") int limit, @Query("status") CampaignStatus status);
 
     /**
@@ -44,7 +44,7 @@ public interface CampaignService {
      * @param status {@link CampaignStatus} to filter by
      * @return       an Observable that emits Paged Campaigns
      */
-    @GET("com.constantcontact.v2/emailmarketing/campaigns")
+    @GET("v2/emailmarketing/campaigns")
     Call<Paged<Campaign>> getCampaigns(@Query("limit") int limit, @Query("modified_since") String date, @Query("status") CampaignStatus status);
 
     /**
@@ -53,7 +53,7 @@ public interface CampaignService {
      * @param nextLink Next link that comes from a previous campaign collection call
      * @return         an Observable that emits Paged Campaigns
      */
-    @GET("com.constantcontact.v2/emailmarketing/campaigns?next={next}")
+    @GET("v2/emailmarketing/campaigns?next={next}")
     Call<Paged<Campaign>> getCampaigns(@Path("next") String nextLink);
 
     /**
@@ -62,7 +62,7 @@ public interface CampaignService {
      * @param campaign Campaign
      * @return         an Observable that emits a Campaign
      */
-    @POST("com.constantcontact.v2/emailmarketing/campaigns")
+    @POST("v2/emailmarketing/campaigns")
     Call<Campaign> createCampaign(@Body Campaign campaign);
 
     /**
@@ -72,7 +72,7 @@ public interface CampaignService {
      * @param campaignId ID of the Campaign
      * @return           an Observable that emits a Campaign
      */
-    @PUT("com.constantcontact.v2/emailmarketing/campaigns/{campaignId}")
+    @PUT("v2/emailmarketing/campaigns/{campaignId}")
     Call<Campaign> updateCampaign(@Body Campaign campaign, @Path("campaignId") String campaignId);
 
     /**
@@ -83,7 +83,7 @@ public interface CampaignService {
      * @param campaignId String - ID of the Campaign
      * @return           an Observable that emits a {@link retrofit2.Response}
      */
-    @DELETE("com.constantcontact.v2/emailmarketing/campaigns/{campaignId}")
+    @DELETE("v2/emailmarketing/campaigns/{campaignId}")
     Call<Response> deleteCampaign(@Path("campaignId") String campaignId);
 
     /**
@@ -93,7 +93,7 @@ public interface CampaignService {
      * @param campaignId ID of the Campaign
      * @return           an Observable that emits a TestSend
      */
-    @POST("com.constantcontact.v2/emailmarketing/campaigns/{campaignId}/tests")
+    @POST("v2/emailmarketing/campaigns/{campaignId}/tests")
     Call<TestSend> sendTestCampaign(@Body TestSend testSend, @Path("campaignId") String campaignId);
 
     /**
@@ -102,7 +102,7 @@ public interface CampaignService {
      * @param campaignId ID of the Campaign
      * @return           an Observable that emits a CampaignPreview
      */
-    @GET("com.constantcontact.v2/emailmarketing/campaigns/{campaignId}/preview")
+    @GET("v2/emailmarketing/campaigns/{campaignId}/preview")
     Call<CampaignPreview> getCampaignPreview(@Path("campaignId") String campaignId);
 
     /**
@@ -112,7 +112,7 @@ public interface CampaignService {
      * @param campaignId       ID of the campaign
      * @return                 an Observable that emits a CampaignSchedule
      */
-    @POST("com.constantcontact.v2/emailmarketing/campaigns/{campaignId}/schedules")
+    @POST("v2/emailmarketing/campaigns/{campaignId}/schedules")
     Call<CampaignSchedule> scheduleCampaign(@Body CampaignSchedule campaignSchedule, @Path("campaignId") String campaignId);
 
     /**
@@ -123,7 +123,7 @@ public interface CampaignService {
      * @param campaignId ID of the Campaign
      * @return           an Observable that emits a List of CampaignSchedules
      */
-    @GET("com.constantcontact.v2/emailmarketing/campaigns/{campaignId}/schedules")
+    @GET("v2/emailmarketing/campaigns/{campaignId}/schedules")
     Call<List<CampaignSchedule>> getCampaignSchedules(@Path("campaignId") String campaignId);
 
     /**
@@ -133,7 +133,7 @@ public interface CampaignService {
      * @param scheduleId ID of the CampaignSchedule
      * @return           an Observable that emits a CampaignSchedule
      */
-    @GET("com.constantcontact.v2/emailmarketing/campaigns/{campaignId}/schedules/{scheduleId}")
+    @GET("v2/emailmarketing/campaigns/{campaignId}/schedules/{scheduleId}")
     Call<CampaignSchedule> getCampaignSchedule(@Path("campaignId") String campaignId, @Path("scheduleId") String scheduleId);
 
     /**
@@ -143,7 +143,7 @@ public interface CampaignService {
      * @param scheduleId ID of the CampaignSchedule
      * @return           an Observable that emits a CampaignSchedule
      */
-    @PUT("com.constantcontact.v2/emailmarketing/campaigns/{campaignId}/schedules/{scheduleId}")
+    @PUT("v2/emailmarketing/campaigns/{campaignId}/schedules/{scheduleId}")
     Call<CampaignSchedule> updateCampaignSchedule(@Path("campaignId") String campaignId, @Path("scheduleId") String scheduleId);
 
     /**
@@ -153,6 +153,6 @@ public interface CampaignService {
      * @param scheduleId ID of the CampaignSchedule
      * @return           an Observable that emits a {@link retrofit2.Response}
      */
-    @DELETE("com.constantcontact.v2/emailmarketing/campaigns/{campaignId}/schedules/{scheduleId}")
+    @DELETE("v2/emailmarketing/campaigns/{campaignId}/schedules/{scheduleId}")
     Call<Response> deleteCampaignSchedule(@Path("campaignId") String campaignId, @Path("scheduleId") String scheduleId);
 }
