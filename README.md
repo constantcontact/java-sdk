@@ -44,7 +44,7 @@ the [releases page](https://github.com/constantcontact/java-sdk/releases).
 
 ### Gradle
 ```groovy
-compile 'com.constantcontact:java-sdk:5.0.2'
+compile 'com.constantcontact:java-sdk:5.0.3'
 ```
 
 ### Maven
@@ -53,7 +53,7 @@ compile 'com.constantcontact:java-sdk:5.0.2'
     <dependency>
         <groupId>com.constantcontact</groupId>
         <artifactId>java-sdk</artifactId>
-        <version>5.0.2</version>
+        <version>5.0.3</version>
     </dependency>
 </dependencies>
 ```
