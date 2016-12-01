@@ -1,4 +1,4 @@
-# Constant Contact Java SDK [![Build Status](https://travis-ci.org/constantcontact/java-sdk.svg?branch=master)](https://travis-ci.org/constantcontact/java-sdk)
+# Constant Contact Java SDK [![Build Status](https://travis-ci.org/constantcontact/java-sdk.svg?branch=master)](https://travis-ci.org/constantcontact/java-sdk) [ ![Download](https://api.bintray.com/packages/constantcontact/maven/java-sdk/images/download.svg) ](https://bintray.com/constantcontact/maven/java-sdk/_latestVersion)
 Java and Android library for accessing the Constant Contact API. Based on the [Retrofit](http://square.github.io/retrofit/) framework.
 
 ## Usage
