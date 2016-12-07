@@ -1,4 +1,4 @@
-# Constant Contact Java SDK
+# Constant Contact Java SDK [![Build Status](https://travis-ci.org/constantcontact/java-sdk.svg?branch=master)](https://travis-ci.org/constantcontact/java-sdk) [ ![Download](https://api.bintray.com/packages/constantcontact/maven/java-sdk/images/download.svg) ](https://bintray.com/constantcontact/maven/java-sdk/_latestVersion)
 Java and Android library for accessing the Constant Contact API. Based on the [Retrofit](http://square.github.io/retrofit/) framework.
 
 ## Usage
@@ -14,9 +14,9 @@ Each service is fully documented in the [Javadoc](http://constantcontact.github.
 
 #### Get Account Information (Synchronous Example)
 ```java
-CCApi2 _api = new CCApi2("your_api_key", "your_access_token");
+CCApi2 api = new CCApi2("your_api_key", "your_access_token");
 try {
-    AccountSummaryInformation accountSummary = _api.getAccountService().getAccountSummaryInformation().execute();
+    AccountSummaryInformation accountSummary = api.getAccountService().getAccountSummaryInformation().execute();
 } catch (IOException e) {
     // Handle exception
 }
@@ -24,7 +24,7 @@ try {
 
 #### Get Contact Collection (Asynchronous Example)
 ```java
-CCApi2 _api = new CCApi2("your_api_key", "your_access_token");
+CCApi2 api = new CCApi2("your_api_key", "your_access_token");
 Callback<Paged<Contact>> callback = new Callback<Paged<Contact>>() {
     @Override
     public void onResponse(Response<Paged<Contact>> response) {
@@ -35,7 +35,7 @@ Callback<Paged<Contact>> callback = new Callback<Paged<Contact>>() {
     public void onFailure(Throwable t) {
     }
 }
-_api.getContactService().getContacts(50, ContactStatus.ACTIVE).enqueue(callback);
+api.getContactService().getContacts(50, ContactStatus.ACTIVE).enqueue(callback);
 ```
 
 ## Installation
