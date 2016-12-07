@@ -19,6 +19,15 @@ public interface ContactService {
     /**
      * Get a {@link Paged} collection of {@link Contact}
      *
+     * @param email Email to search for
+     * @return      an Observable that emits Paged Contacts
+     */
+    @GET("v2/contacts")
+    Observable<Paged<Contact>> getContactsByEmail(@Query("email") String email);
+
+    /**
+     * Get a {@link Paged} collection of {@link Contact}
+     *
      * @param limit  Size of page to return (1-500)
      * @param status Retrieve contacts with only the chosen {@link ContactStatus}
      * @return       an Observable that emits Paged Contacts

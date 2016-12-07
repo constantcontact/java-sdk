@@ -8,7 +8,7 @@ Then, start by creating the ```CCApi2``` object, and make the call you need thro
 for a developer account [here](https://developer.constantcontact.com/api-keys.html).
 
 All of the calls respond with Retrofit ```Call``` objects, which can be consumed synchronously (```execute```) or 
-asynchronously (```enqueue```). Full documentation of the ```Call``` class can be found [here](https://square.github.io/retrofit/2.x/retrofit/retrofit2/Call.html/).
+asynchronously (```enqueue```). Full documentation of the ```Call``` class can be found [here](https://square.github.io/retrofit/2.x/retrofit/retrofit2/Call.html).
 
 Each service is fully documented in the [Javadoc](http://constantcontact.github.io/java-sdk/) with full explanations of each parameter.
 
@@ -40,11 +40,12 @@ _api.getContactService().getContacts(50, ContactStatus.ACTIVE).enqueue(callback)
 
 ## Installation
 The JAR is available on [JCenter](https://bintray.com/bintray/jcenter), or you can download manually from 
-the [releases page](https://github.com/constantcontact/java-sdk/releases).
+the [releases page](https://github.com/constantcontact/java-sdk/releases). Note, if you download manually,
+you will also need to download the Components JAR and include it in your build file.
 
 ### Gradle
 ```groovy
-compile 'com.constantcontact:java-sdk:5.0.3'
+compile 'com.constantcontact:java-sdk:5.0.4'
 ```
 
 ### Maven
@@ -53,7 +54,7 @@ compile 'com.constantcontact:java-sdk:5.0.3'
     <dependency>
         <groupId>com.constantcontact</groupId>
         <artifactId>java-sdk</artifactId>
-        <version>5.0.3</version>
+        <version>5.0.4</version>
     </dependency>
 </dependencies>
 ```
