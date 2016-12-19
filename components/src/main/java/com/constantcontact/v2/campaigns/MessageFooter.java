@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
 
@@ -168,5 +170,50 @@ public class MessageFooter implements Serializable {
 
     public void setSubscribeLinkText(String subscribeLinkText) {
         _subscribeLinkText = subscribeLinkText;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof MessageFooter)) {
+            return false;
+        } else {
+            MessageFooter rhs = (MessageFooter) obj;
+            return new EqualsBuilder()
+                    .append(_addressLine1, rhs.getAddressLine1())
+                    .append(_addressLine2, rhs.getAddressLine2())
+                    .append(_addressLine3, rhs.getAddressLine3())
+                    .append(_city, rhs.getCity())
+                    .append(_country, rhs.getCountry())
+                    .append(_postalCode, rhs.getPostalCode())
+                    .append(_forwardEmailLinkText, rhs.getForwardEmailLinkText())
+                    .append(_includeForwardEmail, rhs.getIsIncludeForwardEmail())
+                    .append(_includeSubscribeLink, rhs.getIsIncludeSubscribeLink())
+                    .append(_subscribeLinkText, rhs.getSubscribeLinkText())
+                    .append(_internationalState, rhs.getInternationalState())
+                    .append(_organizationName, rhs.getOrganizationName())
+                    .isEquals();
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(_addressLine1)
+                .append(_addressLine2)
+                .append(_addressLine3)
+                .append(_city)
+                .append(_country)
+                .append(_postalCode)
+                .append(_forwardEmailLinkText)
+                .append(_includeForwardEmail)
+                .append(_includeSubscribeLink)
+                .append(_subscribeLinkText)
+                .append(_internationalState)
+                .append(_organizationName)
+                .hashCode();
     }
 }

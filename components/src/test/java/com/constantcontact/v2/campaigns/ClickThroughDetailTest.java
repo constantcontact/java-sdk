@@ -47,6 +47,24 @@ public class ClickThroughDetailTest {
         runAssertions(out);
     }
 
+    @Test
+    public void testEqualsAndHash() {
+        ClickThroughDetail clickThroughDetail1 = new ClickThroughDetail();
+        clickThroughDetail1.setClickCount(COUNT);
+        clickThroughDetail1.setUrl(URL);
+        clickThroughDetail1.setUrlUid(URL_UUID);
+        ClickThroughDetail clickThroughDetail2 = new ClickThroughDetail();
+        clickThroughDetail2.setClickCount(COUNT);
+        clickThroughDetail2.setUrl(URL);
+        clickThroughDetail2.setUrlUid(URL_UUID);
+
+        int hash1 = clickThroughDetail1.hashCode();
+        int hash2 = clickThroughDetail2.hashCode();
+
+        assertThat(clickThroughDetail1.equals(clickThroughDetail2), is(true));
+        assertThat(hash1 == hash2, is(true));
+    }
+
     static void runAssertions(ClickThroughDetail clickThroughDetail) {
         assertThat(clickThroughDetail.getClickCount(), is(COUNT));
         assertThat(clickThroughDetail.getUrl(), is(URL));

@@ -70,6 +70,34 @@ public class FolderTest {
         runAssertions(out, out.getChildren()[0]);
     }
 
+    @Test
+    public void testEqualsAndHash() {
+        Folder folder1 = new Folder();
+        folder1.setId(ID);
+        folder1.setChildren(new Folder[]{createChildFolder()});
+        folder1.setCreatedDate(DATE);
+        folder1.setItemCount(COUNT);
+        folder1.setLevel(LEVEL);
+        folder1.setModifiedDate(DATE);
+        folder1.setName(NAME);
+        folder1.setParentId(PARENT_ID);
+        Folder folder2 = new Folder();
+        folder2.setId(ID);
+        folder2.setChildren(new Folder[]{createChildFolder()});
+        folder2.setCreatedDate(DATE);
+        folder2.setItemCount(COUNT);
+        folder2.setLevel(LEVEL);
+        folder2.setModifiedDate(DATE);
+        folder2.setName(NAME);
+        folder2.setParentId(PARENT_ID);
+
+        int hash1 = folder1.hashCode();
+        int hash2 = folder2.hashCode();
+
+        assertThat(folder1.equals(folder2), is(true));
+        assertThat(hash1 == hash2, is(true));
+    }
+
     static void runAssertions(Folder folder, Folder subfolder) {
         assertThat(folder.getId(), is(ID));
         assertThat(folder.getCreatedDate(), is(DATE));

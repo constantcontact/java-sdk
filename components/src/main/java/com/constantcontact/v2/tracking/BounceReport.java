@@ -3,6 +3,8 @@ package com.constantcontact.v2.tracking;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.Date;
 
@@ -59,5 +61,42 @@ public class BounceReport extends BaseTrackingReport {
 
     public void setBounceMessage(String bounceMessage) {
         _bounceMessage = bounceMessage;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof BounceReport)) {
+            return false;
+        } else {
+            BounceReport rhs = (BounceReport) obj;
+            return new EqualsBuilder()
+                    .append(getCampaignId(), rhs.getCampaignId())
+                    .append(getContactId(), rhs.getContactId())
+                    .append(getActivityType(), rhs.getActivityType())
+                    .append(getEmailAddress(), rhs.getEmailAddress())
+                    .append(_bounceCode, rhs.getBounceCode())
+                    .append(_bounceDate, rhs.getBounceDate())
+                    .append(_bounceDescription, rhs.getBounceDescription())
+                    .append(_bounceMessage, rhs.getBounceMessage())
+                    .isEquals();
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(getCampaignId())
+                .append(getContactId())
+                .append(getActivityType())
+                .append(getEmailAddress())
+                .append(_bounceCode)
+                .append(_bounceDate)
+                .append(_bounceDescription)
+                .append(_bounceMessage)
+                .hashCode();
     }
 }

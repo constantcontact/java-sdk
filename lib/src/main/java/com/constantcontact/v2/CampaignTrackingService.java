@@ -15,7 +15,7 @@ import retrofit2.http.Query;
  *
  * @author woogienoogie
  */
-public interface TrackingService {
+public interface CampaignTrackingService {
     /**
      * Get the {@link TrackingSummary} of a {@link Campaign}
      *
@@ -169,4 +169,27 @@ public interface TrackingService {
      */
     @GET("{path}")
     Call<Paged<OptOutReport>> getOptOutReports(@Path("path") String nextLink);
+
+    /**
+     * Get a {@link Paged} collection of {@link BaseTrackingReport} from a {@link Campaign}
+     *
+     * @param campaignId        The Campaign ID
+     * @param createdSinceDate Date to specify retrieval of reports that have been created since then, in ISO-8601 format
+     * @param limit            Page size to return (1 - 500)
+     * @return                 an Observable that emits Paged BaseTrackingReports
+     */
+    @GET("v2/emailmarketing/campaigns/{campaignId}/tracking")
+    Call<Paged<BaseTrackingReport>> getAllReports(@Path("campaignId") String campaignId, @Query("created_since") String createdSinceDate,
+                                                  @Query("limit") int limit);
+
+    /**
+     * Get a {@link Paged} collection of {@link BaseTrackingReport} from a {@link Campaign} from a previous call's
+     * next link.
+     *
+     * @param nextLink Value of the path found in the meta of the original call
+     * @return         an Observable that emits Paged SendReports
+     * @see            Paged
+     */
+    @GET("{path}")
+    Call<Paged<BaseTrackingReport>> getAllReports(@Path("path") String nextLink);
 }

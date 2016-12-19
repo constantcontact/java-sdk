@@ -57,6 +57,32 @@ public class OptOutReportTest {
         runAssertions(out);
     }
 
+    @Test
+    public void testEqualsAndHash() {
+        OptOutReport optOutReport1 = new OptOutReport();
+        optOutReport1.setEmailAddress(EMAIL);
+        optOutReport1.setActivityType(TYPE);
+        optOutReport1.setCampaignId(CAMPAIGN_ID);
+        optOutReport1.setContactId(CONTACT_ID);
+        optOutReport1.setUnsubscribeDate(DATE);
+        optOutReport1.setUnsubscribeReason(REASON);
+        optOutReport1.setUnsubscribeSource(SOURCE);
+        OptOutReport optOutReport2 = new OptOutReport();
+        optOutReport2.setEmailAddress(EMAIL);
+        optOutReport2.setActivityType(TYPE);
+        optOutReport2.setCampaignId(CAMPAIGN_ID);
+        optOutReport2.setContactId(CONTACT_ID);
+        optOutReport2.setUnsubscribeDate(DATE);
+        optOutReport2.setUnsubscribeReason(REASON);
+        optOutReport2.setUnsubscribeSource(SOURCE);
+
+        int hash1 = optOutReport1.hashCode();
+        int hash2 = optOutReport2.hashCode();
+
+        assertThat(optOutReport1.equals(optOutReport2), is(true));
+        assertThat(hash1 == hash2, is(true));
+    }
+
     static void runAssertions(OptOutReport optOutReport) {
         assertThat(optOutReport.getEmailAddress(), is(EMAIL));
         assertThat(optOutReport.getActivityType(), is(TYPE));

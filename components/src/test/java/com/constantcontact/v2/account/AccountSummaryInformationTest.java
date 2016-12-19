@@ -72,6 +72,40 @@ public class AccountSummaryInformationTest {
         runAssertions(out);
     }
 
+    @Test
+    public void testEqualsAndHash() {
+        AccountSummaryInformation accountSummaryInformation1 = new AccountSummaryInformation();
+        accountSummaryInformation1.setEmail(EMAIL);
+        accountSummaryInformation1.setFirstName(FIRST_NAME);
+        accountSummaryInformation1.setLastName(LAST_NAME);
+        accountSummaryInformation1.setStateCode(STATE_CODE);
+        accountSummaryInformation1.setCountryCode(COUNTRY_CODE);
+        accountSummaryInformation1.setCompanyLogo(COMPANY_LOGO);
+        accountSummaryInformation1.setOrganizationName(ORGANIZATION_NAME);
+        accountSummaryInformation1.setPhone(PHONE);
+        accountSummaryInformation1.setTimeZone(TIME_ZONE);
+        accountSummaryInformation1.setWebsite(WEBSITE);
+        accountSummaryInformation1.setOrganizationAddresses(ACCOUNT_ADDRESSES);
+        AccountSummaryInformation accountSummaryInformation2 = new AccountSummaryInformation();
+        accountSummaryInformation2.setEmail(EMAIL);
+        accountSummaryInformation2.setFirstName(FIRST_NAME);
+        accountSummaryInformation2.setLastName(LAST_NAME);
+        accountSummaryInformation2.setStateCode(STATE_CODE);
+        accountSummaryInformation2.setCountryCode(COUNTRY_CODE);
+        accountSummaryInformation2.setCompanyLogo(COMPANY_LOGO);
+        accountSummaryInformation2.setOrganizationName(ORGANIZATION_NAME);
+        accountSummaryInformation2.setPhone(PHONE);
+        accountSummaryInformation2.setTimeZone(TIME_ZONE);
+        accountSummaryInformation2.setWebsite(WEBSITE);
+        accountSummaryInformation2.setOrganizationAddresses(ACCOUNT_ADDRESSES);
+
+        int hash1 = accountSummaryInformation1.hashCode();
+        int hash2 = accountSummaryInformation2.hashCode();
+
+        assertThat(accountSummaryInformation1.equals(accountSummaryInformation2), is(true));
+        assertThat(hash1 == hash2, is(true));
+    }
+
     private void runAssertions(AccountSummaryInformation accountSummaryInformation) {
         assertThat(accountSummaryInformation.getEmail(), is(EMAIL));
         assertThat(accountSummaryInformation.getFirstName(), is(FIRST_NAME));

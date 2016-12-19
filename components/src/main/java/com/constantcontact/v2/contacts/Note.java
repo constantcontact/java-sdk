@@ -3,6 +3,8 @@ package com.constantcontact.v2.contacts;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -57,5 +59,34 @@ public class Note implements Serializable {
 
     public void setNote(String note) {
         _note = note;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof Note)) {
+            return false;
+        } else {
+            Note rhs = (Note) obj;
+            return new EqualsBuilder()
+                    .append(_createdDate, rhs.getCreatedDate())
+                    .append(_id, rhs.getId())
+                    .append(_modifiedDate, rhs.getModifiedDate())
+                    .append(_note, rhs.getNote())
+                    .isEquals();
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(_createdDate)
+                .append(_id)
+                .append(_modifiedDate)
+                .append(_note)
+                .hashCode();
     }
 }

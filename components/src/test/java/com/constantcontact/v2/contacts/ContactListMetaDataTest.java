@@ -32,20 +32,6 @@ public class ContactListMetaDataTest {
     }
 
     @Test
-    public void expectThatEquals_ActsCorrectly() {
-        ContactListMetaData contactListMetaData1 = new ContactListMetaData();
-        contactListMetaData1.setId(ID);
-        contactListMetaData1.setStatus(STATUS);
-        ContactListMetaData contactListMetaData2 = new ContactListMetaData();
-        contactListMetaData2.setId(ID);
-        contactListMetaData2.setStatus(STATUS);
-
-        boolean equals = contactListMetaData1.equals(contactListMetaData2);
-
-        assertThat(equals, is(true));
-    }
-
-    @Test
     public void expectThatSerializing_WillRetainValues() {
         ContactListMetaData contactListMetaData = new ContactListMetaData();
         contactListMetaData.setId(ID);
@@ -54,6 +40,22 @@ public class ContactListMetaDataTest {
         ContactListMetaData out = SerializationUtils.roundtrip(contactListMetaData);
 
         runAssertions(out);
+    }
+
+    @Test
+    public void testEqualsAndHash() {
+        ContactListMetaData contactListMetaData1 = new ContactListMetaData();
+        contactListMetaData1.setId(ID);
+        contactListMetaData1.setStatus(STATUS);
+        ContactListMetaData contactListMetaData2 = new ContactListMetaData();
+        contactListMetaData2.setId(ID);
+        contactListMetaData2.setStatus(STATUS);
+
+        int hash1 = contactListMetaData1.hashCode();
+        int hash2 = contactListMetaData2.hashCode();
+
+        assertThat(contactListMetaData1.equals(contactListMetaData2), is(true));
+        assertThat(hash1 == hash2, is(true));
     }
 
     static void runAssertions(ContactListMetaData contactListMetaData) {

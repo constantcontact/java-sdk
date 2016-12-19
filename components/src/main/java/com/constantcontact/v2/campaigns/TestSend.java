@@ -3,6 +3,8 @@ package com.constantcontact.v2.campaigns;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
 
@@ -45,5 +47,32 @@ public class TestSend implements Serializable {
 
     public void setPersonalMessage(String personalMessage) {
         _personalMessage = personalMessage;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof TestSend)) {
+            return false;
+        } else {
+            TestSend rhs = (TestSend) obj;
+            return new EqualsBuilder()
+                    .append(_emailAddresses, rhs.getEmailAddresses())
+                    .append(_format, rhs.getFormat())
+                    .append(_personalMessage, rhs.getPersonalMessage())
+                    .isEquals();
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(_emailAddresses)
+                .append(_format)
+                .append(_personalMessage)
+                .hashCode();
     }
 }

@@ -37,6 +37,20 @@ public class SentToContactListTest {
         runAssertions(out);
     }
 
+    @Test
+    public void testEqualsAndHash() {
+        SentToContactList sentToContactList1 = new SentToContactList();
+        sentToContactList1.setId(ID);
+        SentToContactList sentToContactList2 = new SentToContactList();
+        sentToContactList2.setId(ID);
+
+        int hash1 = sentToContactList1.hashCode();
+        int hash2 = sentToContactList2.hashCode();
+
+        assertThat(sentToContactList1.equals(sentToContactList2), is(true));
+        assertThat(hash1 == hash2, is(true));
+    }
+
     static void runAssertions(SentToContactList sentToContactList) {
         assertThat(sentToContactList.getId(), is(ID));
     }

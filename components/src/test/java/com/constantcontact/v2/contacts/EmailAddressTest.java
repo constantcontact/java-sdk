@@ -67,6 +67,32 @@ public class EmailAddressTest {
         runAssertions(out);
     }
 
+    @Test
+    public void testEqualsAndHash() {
+        EmailAddress emailAddress1 = new EmailAddress();
+        emailAddress1.setId(ID);
+        emailAddress1.setEmailAddress(EMAIL);
+        emailAddress1.setConfirmStatus(CONFIRM_STATUS);
+        emailAddress1.setOptInDate(DATE);
+        emailAddress1.setOptInSource(OPT_IN_SOURCE);
+        emailAddress1.setOptOutDate(DATE);
+        emailAddress1.setStatus(STATUS);
+        EmailAddress emailAddress2 = new EmailAddress();
+        emailAddress2.setId(ID);
+        emailAddress2.setEmailAddress(EMAIL);
+        emailAddress2.setConfirmStatus(CONFIRM_STATUS);
+        emailAddress2.setOptInDate(DATE);
+        emailAddress2.setOptInSource(OPT_IN_SOURCE);
+        emailAddress2.setOptOutDate(DATE);
+        emailAddress2.setStatus(STATUS);
+
+        int hash1 = emailAddress1.hashCode();
+        int hash2 = emailAddress2.hashCode();
+
+        assertThat(emailAddress1.equals(emailAddress2), is(true));
+        assertThat(hash1 == hash2, is(true));
+    }
+
     static void runAssertions(EmailAddress emailAddress) {
         assertThat(emailAddress.getId(), is(ID));
         assertThat(emailAddress.getEmailAddress(), is(EMAIL));

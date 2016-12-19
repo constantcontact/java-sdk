@@ -2,6 +2,8 @@ package com.constantcontact.v2.contacts;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
 
@@ -44,5 +46,32 @@ public class SignupFormRequest implements Serializable {
 
     public void setSource(String source) {
         _source = source;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof SignupFormRequest)) {
+            return false;
+        } else {
+            SignupFormRequest rhs = (SignupFormRequest) obj;
+            return new EqualsBuilder()
+                    .append(_contactLists, rhs.getContactLists())
+                    .append(_listName, rhs.getListName())
+                    .append(_source, rhs.getSource())
+                    .isEquals();
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(_contactLists)
+                .append(_listName)
+                .append(_source)
+                .hashCode();
     }
 }

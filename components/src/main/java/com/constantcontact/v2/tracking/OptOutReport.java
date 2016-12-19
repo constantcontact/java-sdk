@@ -3,6 +3,8 @@ package com.constantcontact.v2.tracking;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.Date;
 
@@ -46,5 +48,40 @@ public class OptOutReport extends BaseTrackingReport {
 
     public void setUnsubscribeSource(UnsubscribeSource unsubscribeSource) {
         _unsubscribeSource = unsubscribeSource;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof OptOutReport)) {
+            return false;
+        } else {
+            OptOutReport rhs = (OptOutReport) obj;
+            return new EqualsBuilder()
+                    .append(getCampaignId(), rhs.getCampaignId())
+                    .append(getContactId(), rhs.getContactId())
+                    .append(getActivityType(), rhs.getActivityType())
+                    .append(getEmailAddress(), rhs.getEmailAddress())
+                    .append(_unsubscribeDate, rhs.getUnsubscribeDate())
+                    .append(_unsubscribeReason, rhs.getUnsubscribeReason())
+                    .append(_unsubscribeSource, rhs.getUnsubscribeSource())
+                    .isEquals();
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(getCampaignId())
+                .append(getContactId())
+                .append(getActivityType())
+                .append(getEmailAddress())
+                .append(_unsubscribeDate)
+                .append(_unsubscribeReason)
+                .append(_unsubscribeSource)
+                .hashCode();
     }
 }

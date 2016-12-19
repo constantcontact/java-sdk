@@ -39,6 +39,24 @@ public class TestSendTest {
         runAssertions(out);
     }
 
+    @Test
+    public void testEqualsAndHash() {
+        TestSend testSend1 = new TestSend();
+        testSend1.setEmailAddresses(EMAILS);
+        testSend1.setFormat(FROMAT);
+        testSend1.setPersonalMessage(PERSONAL_MESSAGE);
+        TestSend testSend2 = new TestSend();
+        testSend2.setEmailAddresses(EMAILS);
+        testSend2.setFormat(FROMAT);
+        testSend2.setPersonalMessage(PERSONAL_MESSAGE);
+
+        int hash1 = testSend1.hashCode();
+        int hash2 = testSend2.hashCode();
+
+        assertThat(testSend1.equals(testSend2), is(true));
+        assertThat(hash1 == hash2, is(true));
+    }
+
     private void runAssertions(TestSend testSend) {
         assertThat(testSend.getEmailAddresses(), is(EMAILS));
         assertThat(testSend.getFormat(), is(FROMAT));

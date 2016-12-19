@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
 
@@ -47,5 +49,32 @@ public class FileUploadStatus implements Serializable {
 
     public void setId(long id) {
         _id = id;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof FileUploadStatus)) {
+            return false;
+        } else {
+            FileUploadStatus rhs = (FileUploadStatus) obj;
+            return new EqualsBuilder()
+                    .append(_status, rhs.getStatus())
+                    .append(_description, rhs.getDescription())
+                    .append(_id, rhs.getId())
+                    .isEquals();
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(_status)
+                .append(_description)
+                .append(_id)
+                .hashCode();
     }
 }

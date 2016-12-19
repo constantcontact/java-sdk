@@ -3,6 +3,8 @@ package com.constantcontact.v2.tracking;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.Date;
 
@@ -46,5 +48,40 @@ public class ClickReport extends BaseTrackingReport {
 
     public void setLinkUri(String linkUri) {
         _linkUri = linkUri;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof ClickReport)) {
+            return false;
+        } else {
+            ClickReport rhs = (ClickReport) obj;
+            return new EqualsBuilder()
+                    .append(getCampaignId(), rhs.getCampaignId())
+                    .append(getContactId(), rhs.getContactId())
+                    .append(getActivityType(), rhs.getActivityType())
+                    .append(getEmailAddress(), rhs.getEmailAddress())
+                    .append(_clickDate, rhs.getClickDate())
+                    .append(_linkId, rhs.getLinkId())
+                    .append(_linkUri, rhs.getLinkUri())
+                    .isEquals();
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(getCampaignId())
+                .append(getContactId())
+                .append(getActivityType())
+                .append(getEmailAddress())
+                .append(_clickDate)
+                .append(_linkId)
+                .append(_linkUri)
+                .hashCode();
     }
 }

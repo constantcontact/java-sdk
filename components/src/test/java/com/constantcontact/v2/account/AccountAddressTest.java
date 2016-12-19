@@ -67,6 +67,32 @@ public class AccountAddressTest {
         runAssertations(out);
     }
 
+    @Test
+    public void testEqualsAndHash() {
+        AccountAddress accountAddress1 = new AccountAddress();
+        accountAddress1.setLine1(LINE1);
+        accountAddress1.setLine2(LINE2);
+        accountAddress1.setLine3(LINE3);
+        accountAddress1.setCity(CITY);
+        accountAddress1.setState(STATE);
+        accountAddress1.setStateCode(STATE_CODE);
+        accountAddress1.setPostalCode(POSTAL_CODE);
+        AccountAddress accountAddress2 = new AccountAddress();
+        accountAddress2.setLine1(LINE1);
+        accountAddress2.setLine2(LINE2);
+        accountAddress2.setLine3(LINE3);
+        accountAddress2.setCity(CITY);
+        accountAddress2.setState(STATE);
+        accountAddress2.setStateCode(STATE_CODE);
+        accountAddress2.setPostalCode(POSTAL_CODE);
+
+        int hash1 = accountAddress1.hashCode();
+        int hash2 = accountAddress2.hashCode();
+
+        assertThat(accountAddress1.equals(accountAddress2), is(true));
+        assertThat(hash1 == hash2, is(true));
+    }
+
     static void runAssertations(AccountAddress accountAddress) {
         assertThat(accountAddress.getLine1(), is(LINE1));
         assertThat(accountAddress.getLine2(), is(LINE2));

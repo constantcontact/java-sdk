@@ -17,6 +17,8 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
 
@@ -206,5 +208,42 @@ public class AccountAddress implements Serializable {
      */
     public void setState(String state) {
         _state = state;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof AccountAddress)) {
+            return false;
+        } else {
+            AccountAddress rhs = (AccountAddress) obj;
+            return new EqualsBuilder()
+                    .append(_line1, rhs.getLine1())
+                    .append(_line2, rhs.getLine2())
+                    .append(_line3, rhs.getLine3())
+                    .append(_city, rhs.getCity())
+                    .append(_postalCode, rhs.getPostalCode())
+                    .append(_countryCode, rhs.getCountryCode())
+                    .append(_state, rhs.getState())
+                    .append(_stateCode, rhs.getStateCode())
+                    .isEquals();
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(_line1)
+                .append(_line2)
+                .append(_line3)
+                .append(_city)
+                .append(_postalCode)
+                .append(_countryCode)
+                .append(_state)
+                .append(_stateCode)
+                .hashCode();
     }
 }

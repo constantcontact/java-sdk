@@ -47,6 +47,24 @@ public class CustomFieldTest {
         runAssertions(out);
     }
 
+    @Test
+    public void testEqualsAndHash() {
+        CustomField customField1 = new CustomField();
+        customField1.setLabel(LABEL);
+        customField1.setName(NAME);
+        customField1.setValue(VALUE);
+        CustomField customField2 = new CustomField();
+        customField2.setLabel(LABEL);
+        customField2.setName(NAME);
+        customField2.setValue(VALUE);
+
+        int hash1 = customField1.hashCode();
+        int hash2 = customField2.hashCode();
+
+        assertThat(customField1.equals(customField2), is(true));
+        assertThat(hash1 == hash2, is(true));
+    }
+
     static void runAssertions(CustomField customField) {
         assertThat(customField.getLabel(), is(LABEL));
         assertThat(customField.getName(), is(NAME));

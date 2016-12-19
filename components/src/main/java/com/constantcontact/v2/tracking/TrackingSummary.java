@@ -2,6 +2,8 @@ package com.constantcontact.v2.tracking;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
 
@@ -88,5 +90,40 @@ public class TrackingSummary implements Serializable {
 
     public void setSpamCount(int spamCount) {
         _spamCount = spamCount;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof TrackingSummary)) {
+            return false;
+        } else {
+            TrackingSummary rhs = (TrackingSummary) obj;
+            return new EqualsBuilder()
+                    .append(_unsubscribes, rhs.getUnsubscribes())
+                    .append(_clicks, rhs.getClicks())
+                    .append(_opens, rhs.getOpens())
+                    .append(_bounces, rhs.getBounces())
+                    .append(_sends, rhs.getSends())
+                    .append(_forwards, rhs.getForwards())
+                    .append(_spamCount, rhs.getSpamCount())
+                    .isEquals();
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(_unsubscribes)
+                .append(_clicks)
+                .append(_opens)
+                .append(_bounces)
+                .append(_sends)
+                .append(_forwards)
+                .append(_spamCount)
+                .hashCode();
     }
 }

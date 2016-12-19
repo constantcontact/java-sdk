@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
 
@@ -69,5 +71,36 @@ public class LibraryInfo implements Serializable {
 
     public void setMaxUploadSizeLimit(int maxUploadSizeLimit) {
         _maxUploadSizeLimit = maxUploadSizeLimit;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof LibraryInfo)) {
+            return false;
+        } else {
+            LibraryInfo rhs = (LibraryInfo) obj;
+            return new EqualsBuilder()
+                    .append(_maxFreeFileNum, rhs.getMaxFreeFileNum())
+                    .append(_maxPremiumSpaceLimit, rhs.getMaxPremiumSpaceLimit())
+                    .append(_imageRoot, rhs.getImageRoot())
+                    .append(_usageSummary, rhs.getUsageSummary())
+                    .append(_maxUploadSizeLimit, rhs.getMaxUploadSizeLimit())
+                    .isEquals();
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(_maxFreeFileNum)
+                .append(_maxPremiumSpaceLimit)
+                .append(_imageRoot)
+                .append(_usageSummary)
+                .append(_maxUploadSizeLimit)
+                .hashCode();
     }
 }

@@ -137,6 +137,74 @@ public class CampaignTest {
         runAssertions(out);
     }
 
+    @Test
+    public void testEqualsAndHash() {
+        Campaign campaign1 = new Campaign();
+        campaign1.setId(ID);
+        campaign1.setCreatedDate(DATE);
+        campaign1.setModifiedDate(DATE);
+        campaign1.setLastRunDate(DATE);
+        campaign1.setNextRunDate(DATE);
+        campaign1.setClickThroughDetails(CLICK_THROUGH_DETAILS);
+        campaign1.setEmailContent(CONTENT);
+        campaign1.setEmailContentFormat(CONTENT_FORMAT);
+        campaign1.setFromEmail(FROM_EMAIL);
+        campaign1.setFromName(FROM_NAME);
+        campaign1.setName(NAME);
+        campaign1.setReplyToEmail(REPLY_EMAIL);
+        campaign1.setGreetingName(GREETING_NAME);
+        campaign1.setGreetingSalutations(GREETING_SALUTATIONS);
+        campaign1.setGreetingString(GREETING_STRING);
+        campaign1.setSentToContactLists(SENT_TO_CONTACT_LISTS);
+        campaign1.setViewAsWebPageText(VWP_TEXT);
+        campaign1.setViewAsWebpageEnabled(VWP_ENABLED);
+        campaign1.setViewAsWebPageLinkText(VWP_LINK);
+        campaign1.setTrackingSummary(TRACKING_SUMMARY);
+        campaign1.setTextContent(TEXT_CONTENT);
+        campaign1.setSubject(SUBJECT);
+        campaign1.setTemplateType(TEMPLATE_TYPE);
+        campaign1.setStyleSheet(STYLESHEET);
+        campaign1.setStatus(STATUS);
+        campaign1.setPermalinkUrl(URL);
+        campaign1.setPermissionReminderEnabled(PR_ENABLED);
+        campaign1.setPermissionReminderText(PR_TEXT);
+        Campaign campaign2 = new Campaign();
+        campaign2.setId(ID);
+        campaign2.setCreatedDate(DATE);
+        campaign2.setModifiedDate(DATE);
+        campaign2.setLastRunDate(DATE);
+        campaign2.setNextRunDate(DATE);
+        campaign2.setClickThroughDetails(CLICK_THROUGH_DETAILS);
+        campaign2.setEmailContent(CONTENT);
+        campaign2.setEmailContentFormat(CONTENT_FORMAT);
+        campaign2.setFromEmail(FROM_EMAIL);
+        campaign2.setFromName(FROM_NAME);
+        campaign2.setName(NAME);
+        campaign2.setReplyToEmail(REPLY_EMAIL);
+        campaign2.setGreetingName(GREETING_NAME);
+        campaign2.setGreetingSalutations(GREETING_SALUTATIONS);
+        campaign2.setGreetingString(GREETING_STRING);
+        campaign2.setSentToContactLists(SENT_TO_CONTACT_LISTS);
+        campaign2.setViewAsWebPageText(VWP_TEXT);
+        campaign2.setViewAsWebpageEnabled(VWP_ENABLED);
+        campaign2.setViewAsWebPageLinkText(VWP_LINK);
+        campaign2.setTrackingSummary(TRACKING_SUMMARY);
+        campaign2.setTextContent(TEXT_CONTENT);
+        campaign2.setSubject(SUBJECT);
+        campaign2.setTemplateType(TEMPLATE_TYPE);
+        campaign2.setStyleSheet(STYLESHEET);
+        campaign2.setStatus(STATUS);
+        campaign2.setPermalinkUrl(URL);
+        campaign2.setPermissionReminderEnabled(PR_ENABLED);
+        campaign2.setPermissionReminderText(PR_TEXT);
+
+        int hash1 = campaign1.hashCode();
+        int hash2 = campaign2.hashCode();
+
+        assertThat(campaign1.equals(campaign2), is(true));
+        assertThat(hash1 == hash2, is(true));
+    }
+
     private void runAssertions(Campaign campaign) {
         assertThat(campaign.getId(), is(ID));
         assertThat(campaign.getCreatedDate(), is(DATE));

@@ -3,6 +3,8 @@ package com.constantcontact.v2.contacts;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -90,5 +92,40 @@ public class EmailAddress implements Serializable {
 
     public void setStatus(ContactStatus status) {
         _status = status;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof EmailAddress)) {
+            return false;
+        } else {
+            EmailAddress rhs = (EmailAddress) obj;
+            return new EqualsBuilder()
+                    .append(_confirmStatus, rhs.getConfirmStatus())
+                    .append(_emailAddress, rhs.getEmailAddress())
+                    .append(_id, rhs.getId())
+                    .append(_optInDate, rhs.getOptInDate())
+                    .append(_optInSource, rhs.getOptInSource())
+                    .append(_optOutDate, rhs.getOptOutDate())
+                    .append(_status, rhs.getStatus())
+                    .isEquals();
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(_confirmStatus)
+                .append(_emailAddress)
+                .append(_id)
+                .append(_optInDate)
+                .append(_optInSource)
+                .append(_optOutDate)
+                .append(_status)
+                .hashCode();
     }
 }

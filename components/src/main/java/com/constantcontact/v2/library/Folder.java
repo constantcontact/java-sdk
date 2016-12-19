@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -103,5 +105,42 @@ public class Folder implements Serializable {
 
     public void setCreatedDate(Date createdDate) {
         _createdDate = createdDate;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof Folder)) {
+            return false;
+        } else {
+            Folder rhs = (Folder) obj;
+            return new EqualsBuilder()
+                    .append(_id, rhs.getId())
+                    .append(_parentId, rhs.getParentId())
+                    .append(_name, rhs.getName())
+                    .append(_level, rhs.getLevel())
+                    .append(_children, rhs.getChildren())
+                    .append(_itemCount, rhs.getItemCount())
+                    .append(_modifiedDate, rhs.getModifiedDate())
+                    .append(_createdDate, rhs.getCreatedDate())
+                    .isEquals();
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(_id)
+                .append(_parentId)
+                .append(_name)
+                .append(_level)
+                .append(_children)
+                .append(_itemCount)
+                .append(_modifiedDate)
+                .append(_createdDate)
+                .hashCode();
     }
 }

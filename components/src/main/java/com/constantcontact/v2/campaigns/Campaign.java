@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -341,5 +343,82 @@ public class Campaign implements Serializable {
 
     public void setViewAsWebPageText(String viewAsWebPageText) {
         _viewAsWebPageText = viewAsWebPageText;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof Campaign)) {
+            return false;
+        } else {
+            Campaign rhs = (Campaign) obj;
+            return new EqualsBuilder()
+                    .append(_id, rhs.getId())
+                    .append(_clickThroughDetails, rhs.getClickThroughDetails())
+                    .append(_createdDate, rhs.getCreatedDate())
+                    .append(_greetingName, rhs.getGreetingName())
+                    .append(_greetingSalutations, rhs.getGreetingSalutations())
+                    .append(_greetingString, rhs.getGreetingString())
+                    .append(_isPermissionReminderEnabled, rhs.isPermissionReminderEnabled())
+                    .append(_permissionReminderText, rhs.getPermissionReminderText())
+                    .append(_lastRunDate, rhs.getLastRunDate())
+                    .append(_isViewAsWebpageEnabled, rhs.isViewAsWebpageEnabled())
+                    .append(_viewAsWebPageText, rhs.getViewAsWebPageText())
+                    .append(_viewAsWebPageLinkText, rhs.getViewAsWebPageLinkText())
+                    .append(_textContent, rhs.getTextContent())
+                    .append(_styleSheet, rhs.getStyleSheet())
+                    .append(_templateType, rhs.getTemplateType())
+                    .append(_trackingSummary, rhs.getTrackingSummary())
+                    .append(_status, rhs.getStatus())
+                    .append(_replyToEmail, rhs.getReplyToEmail())
+                    .append(_fromEmail, rhs.getFromEmail())
+                    .append(_fromName, rhs.getFromName())
+                    .append(_modifiedDate, rhs.getModifiedDate())
+                    .append(_permalinkUrl, rhs.getPermalinkUrl())
+                    .append(_subject, rhs.getSubject())
+                    .append(_sentToContactLists, rhs.getSentToContactLists())
+                    .append(_emailContentFormat, rhs.getEmailContentFormat())
+                    .append(_emailContent, rhs.getEmailContent())
+                    .append(_messageFooter, rhs.getMessageFooter())
+                    .append(_nextRunDate, rhs.getNextRunDate())
+                    .isEquals();
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(_id)
+                .append(_clickThroughDetails)
+                .append(_createdDate)
+                .append(_greetingName)
+                .append(_greetingSalutations)
+                .append(_greetingString)
+                .append(_isPermissionReminderEnabled)
+                .append(_permissionReminderText)
+                .append(_lastRunDate)
+                .append(_isViewAsWebpageEnabled)
+                .append(_viewAsWebPageText)
+                .append(_viewAsWebPageLinkText)
+                .append(_textContent)
+                .append(_styleSheet)
+                .append(_templateType)
+                .append(_trackingSummary)
+                .append(_status)
+                .append(_replyToEmail)
+                .append(_fromEmail)
+                .append(_fromName)
+                .append(_modifiedDate)
+                .append(_permalinkUrl)
+                .append(_subject)
+                .append(_sentToContactLists)
+                .append(_emailContentFormat)
+                .append(_emailContent)
+                .append(_messageFooter)
+                .append(_nextRunDate)
+                .hashCode();
     }
 }

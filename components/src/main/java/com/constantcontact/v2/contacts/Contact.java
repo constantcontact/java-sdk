@@ -2,9 +2,11 @@ package com.constantcontact.v2.contacts;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -12,9 +14,9 @@ import java.util.Date;
 /**
  * @author woogienoogie
  */
-@JsonFilter("RequestFilter")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonAutoDetect(fieldVisibility = Visibility.ANY, getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Contact implements Serializable {
     @JsonProperty("addresses")
     protected Address[] _addresses;
@@ -66,9 +68,6 @@ public class Contact implements Serializable {
 
     @JsonProperty("lists")
     protected ContactListMetaData[] _contactLists;
-
-    @JsonProperty("middle_name")
-    protected String _middleName;
 
     @JsonProperty("modified_date")
     protected Date _modifiedDate;
@@ -230,14 +229,6 @@ public class Contact implements Serializable {
         _contactLists = contactLists;
     }
 
-    public String getMiddleName() {
-        return _middleName;
-    }
-
-    public void setMiddleName(String middleName) {
-        _middleName = middleName;
-    }
-
     public Date getModifiedDate() {
         return _modifiedDate;
     }
@@ -292,5 +283,74 @@ public class Contact implements Serializable {
 
     public void setWorkPhone(String workPhone) {
         _workPhone = workPhone;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof Contact)) {
+            return false;
+        } else {
+            Contact rhs = (Contact) obj;
+            return new EqualsBuilder()
+                    .append(_addresses, rhs.getAddresses())
+                    .append(_emailAddresses, rhs.getEmailAddresses())
+                    .append(_cellPhone, rhs.getCellPhone())
+                    .append(_fax, rhs.getFax())
+                    .append(_homePhone, rhs.getHomePhone())
+                    .append(_workPhone, rhs.getWorkPhone())
+                    .append(_companyName, rhs.getCompanyName())
+                    .append(_jobTitle, rhs.getJobTitle())
+                    .append(_confirmed, rhs.isConfirmed())
+                    .append(_contactLists, rhs.getContactLists())
+                    .append(_createdDate, rhs.getCreatedDate())
+                    .append(_insertDate, rhs.getInsertDate())
+                    .append(_modifiedDate, rhs.getModifiedDate())
+                    .append(_lastUpdateDate, rhs.getLastUpdateDate())
+                    .append(_id, rhs.getId())
+                    .append(_firstName, rhs.getFirstName())
+                    .append(_lastName, rhs.getLastName())
+                    .append(_departmentName, rhs.getDepartmentName())
+                    .append(_customFields, rhs.getCustomFields())
+                    .append(_prefixName, rhs.getPrefixName())
+                    .append(_notes, rhs.getNotes())
+                    .append(_source, rhs.getSource())
+                    .append(_sourceDetails, rhs.getSourceDetails())
+                    .append(_status, rhs.getStatus())
+                    .isEquals();
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(_addresses)
+                .append(_emailAddresses)
+                .append(_cellPhone)
+                .append(_fax)
+                .append(_homePhone)
+                .append(_workPhone)
+                .append(_companyName)
+                .append(_jobTitle)
+                .append(_confirmed)
+                .append(_contactLists)
+                .append(_createdDate)
+                .append(_insertDate)
+                .append(_modifiedDate)
+                .append(_lastUpdateDate)
+                .append(_id)
+                .append(_firstName)
+                .append(_lastName)
+                .append(_departmentName)
+                .append(_customFields)
+                .append(_prefixName)
+                .append(_notes)
+                .append(_source)
+                .append(_sourceDetails)
+                .append(_status)
+                .hashCode();
     }
 }

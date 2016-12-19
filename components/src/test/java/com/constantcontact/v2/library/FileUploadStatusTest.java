@@ -39,6 +39,24 @@ public class FileUploadStatusTest {
         runAssertions(out);
     }
 
+    @Test
+    public void testEqualsAndHash() {
+        FileUploadStatus fileUploadStatus1 = new FileUploadStatus();
+        fileUploadStatus1.setStatus(STATUS);
+        fileUploadStatus1.setDescription(DESCRIPTION);
+        fileUploadStatus1.setId(ID);
+        FileUploadStatus fileUploadStatus2 = new FileUploadStatus();
+        fileUploadStatus2.setStatus(STATUS);
+        fileUploadStatus2.setDescription(DESCRIPTION);
+        fileUploadStatus2.setId(ID);
+
+        int hash1 = fileUploadStatus1.hashCode();
+        int hash2 = fileUploadStatus2.hashCode();
+
+        assertThat(fileUploadStatus1.equals(fileUploadStatus2), is(true));
+        assertThat(hash1 == hash2, is(true));
+    }
+
     static void runAssertions(FileUploadStatus fileUploadStatus) {
         assertThat(fileUploadStatus.getStatus(), is(STATUS));
         assertThat(fileUploadStatus.getDescription(), is(DESCRIPTION));

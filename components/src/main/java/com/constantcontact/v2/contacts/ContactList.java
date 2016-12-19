@@ -3,6 +3,8 @@ package com.constantcontact.v2.contacts;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
 import java.util.Comparator;
@@ -89,5 +91,38 @@ public class ContactList implements Serializable {
 
     public void setStatus(ContactListStatus status) {
         _status = status;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof ContactList)) {
+            return false;
+        } else {
+            ContactList rhs = (ContactList) obj;
+            return new EqualsBuilder()
+                    .append(_contactCount, rhs.getContactCount())
+                    .append(_createdDate, rhs.getCreatedDate())
+                    .append(_id, rhs.getId())
+                    .append(_modifiedDate, rhs.getModifiedDate())
+                    .append(_name, rhs.getName())
+                    .append(_status, rhs.getStatus())
+                    .isEquals();
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(_contactCount)
+                .append(_createdDate)
+                .append(_id)
+                .append(_modifiedDate)
+                .append(_name)
+                .append(_status)
+                .hashCode();
     }
 }

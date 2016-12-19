@@ -63,7 +63,9 @@ public class CCApi2 {
 
     protected LibraryService _libraryService;
 
-    protected TrackingService _trackingService;
+    protected CampaignTrackingService _campaignTrackingService;
+
+    protected ContactTrackingService _contactTrackingService;
 
     public CCApi2(final String apiKey, final String token) {
         OkHttpClient client = createDefaultOkHttpClientBuilder(apiKey, token).build();
@@ -74,7 +76,8 @@ public class CCApi2 {
         _campaignService = _retrofit.create(CampaignService.class);
         _contactService = _retrofit.create(ContactService.class);
         _libraryService = _retrofit.create(LibraryService.class);
-        _trackingService = _retrofit.create(TrackingService.class);
+        _campaignTrackingService = _retrofit.create(CampaignTrackingService.class);
+        _contactTrackingService = _retrofit.create(ContactTrackingService.class);
     }
 
     public CCApi2(Retrofit retrofit) {
@@ -84,7 +87,8 @@ public class CCApi2 {
         _campaignService = _retrofit.create(CampaignService.class);
         _contactService = _retrofit.create(ContactService.class);
         _libraryService = _retrofit.create(LibraryService.class);
-        _trackingService = _retrofit.create(TrackingService.class);
+        _campaignTrackingService = _retrofit.create(CampaignTrackingService.class);
+        _contactTrackingService = _retrofit.create(ContactTrackingService.class);
     }
 
     public Retrofit getRestAdapter() {
@@ -107,8 +111,11 @@ public class CCApi2 {
         return _libraryService;
     }
 
-    public TrackingService getTrackingService() {
-        return _trackingService;
+    public CampaignTrackingService getCampaignTrackingService() {
+        return _campaignTrackingService;
     }
 
+    public ContactTrackingService getContactTrackingService() {
+        return _contactTrackingService;
+    }
 }

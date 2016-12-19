@@ -57,6 +57,32 @@ public class ClickReportTest {
         runAssertions(out);
     }
 
+    @Test
+    public void testEqualsAndHash() {
+        ClickReport clickReport1 = new ClickReport();
+        clickReport1.setEmailAddress(EMAIL);
+        clickReport1.setCampaignId(CAMPAIGN_ID);
+        clickReport1.setContactId(CONTACT_ID);
+        clickReport1.setActivityType(TYPE);
+        clickReport1.setClickDate(DATE);
+        clickReport1.setLinkId(LINK_ID);
+        clickReport1.setLinkUri(LINK_URI);
+        ClickReport clickReport2 = new ClickReport();
+        clickReport2.setEmailAddress(EMAIL);
+        clickReport2.setCampaignId(CAMPAIGN_ID);
+        clickReport2.setContactId(CONTACT_ID);
+        clickReport2.setActivityType(TYPE);
+        clickReport2.setClickDate(DATE);
+        clickReport2.setLinkId(LINK_ID);
+        clickReport2.setLinkUri(LINK_URI);
+
+        int hash1 = clickReport1.hashCode();
+        int hash2 = clickReport2.hashCode();
+
+        assertThat(clickReport1.equals(clickReport2), is(true));
+        assertThat(hash1 == hash2, is(true));
+    }
+
     static void runAssertions(ClickReport clickReport) {
         assertThat(clickReport.getEmailAddress(), is(EMAIL));
         assertThat(clickReport.getCampaignId(), is(CAMPAIGN_ID));

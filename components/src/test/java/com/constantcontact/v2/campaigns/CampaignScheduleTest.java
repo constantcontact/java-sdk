@@ -37,6 +37,22 @@ public class CampaignScheduleTest {
         runAssertions(out);
     }
 
+    @Test
+    public void testEqualsAndHash() {
+        CampaignSchedule campaignSchedule1 = new CampaignSchedule();
+        campaignSchedule1.setId(ID);
+        campaignSchedule1.setScheduledDate(DATE);
+        CampaignSchedule campaignSchedule2 = new CampaignSchedule();
+        campaignSchedule2.setId(ID);
+        campaignSchedule2.setScheduledDate(DATE);
+
+        int hash1 = campaignSchedule1.hashCode();
+        int hash2 = campaignSchedule2.hashCode();
+
+        assertThat(campaignSchedule1.equals(campaignSchedule2), is(true));
+        assertThat(hash1 == hash2, is(true));
+    }
+
     private void runAssertions(CampaignSchedule campaignSchedule) {
         assertThat(campaignSchedule.getId(), is(ID));
         assertThat(campaignSchedule.getScheduledDate(), is(DATE));

@@ -3,6 +3,8 @@ package com.constantcontact.v2.campaigns;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -35,5 +37,30 @@ public class CampaignSchedule implements Serializable {
 
     public void setScheduledDate(Date scheduledDate) {
         _scheduledDate = scheduledDate;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof CampaignSchedule)) {
+            return false;
+        } else {
+            CampaignSchedule rhs = (CampaignSchedule) obj;
+            return new EqualsBuilder()
+                    .append(_id, rhs.getId())
+                    .append(_scheduledDate, rhs.getScheduledDate())
+                    .isEquals();
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(_id)
+                .append(_scheduledDate)
+                .hashCode();
     }
 }

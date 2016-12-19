@@ -91,6 +91,50 @@ public class FileTest {
         runAssertions(out);
     }
 
+    @Test
+    public void testEqualsAndHash() {
+        File file1 = new File();
+        file1.setId(ID);
+        file1.setCreatedDate(DATE);
+        file1.setModifiedDate(DATE);
+        file1.setDescription(DESCRIPTION);
+        file1.setFileType(TYPE);
+        file1.setFolder(FOLDER);
+        file1.setFolderId(FOLDER_ID);
+        file1.setHeight(HEIGHT);
+        file1.setWidth(WIDTH);
+        file1.setImage(IS_IMAGE);
+        file1.setSize(SIZE);
+        file1.setName(NAME);
+        file1.setSource(SOURCE);
+        file1.setStatus(STATUS);
+        file1.setThumbnail(THUMBNAIL);
+        file1.setUrl(URL);
+        File file2 = new File();
+        file2.setId(ID);
+        file2.setCreatedDate(DATE);
+        file2.setModifiedDate(DATE);
+        file2.setDescription(DESCRIPTION);
+        file2.setFileType(TYPE);
+        file2.setFolder(FOLDER);
+        file2.setFolderId(FOLDER_ID);
+        file2.setHeight(HEIGHT);
+        file2.setWidth(WIDTH);
+        file2.setImage(IS_IMAGE);
+        file2.setSize(SIZE);
+        file2.setName(NAME);
+        file2.setSource(SOURCE);
+        file2.setStatus(STATUS);
+        file2.setThumbnail(THUMBNAIL);
+        file2.setUrl(URL);
+
+        int hash1 = file1.hashCode();
+        int hash2 = file2.hashCode();
+
+        assertThat(file1.equals(file2), is(true));
+        assertThat(hash1 == hash2, is(true));
+    }
+
     static void runAssertions(File file) {
         assertThat(file.getId(), is(ID));
         assertThat(file.getCreatedDate(), is(DATE));

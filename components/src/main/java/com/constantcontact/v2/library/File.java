@@ -3,6 +3,8 @@ package com.constantcontact.v2.library;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -189,5 +191,56 @@ public final class File implements Serializable {
 
     public void setCreatedDate(Date createdDate) {
         _createdDate = createdDate;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof File)) {
+            return false;
+        } else {
+            File rhs = (File) obj;
+            return new EqualsBuilder()
+                    .append(_name, rhs.getName())
+                    .append(_id, rhs.getId())
+                    .append(_description, rhs.getDescription())
+                    .append(_folder, rhs.getFolder())
+                    .append(_folderId, rhs.getFolderId())
+                    .append(_height, rhs.getHeight())
+                    .append(_width, rhs.getWidth())
+                    .append(_size, rhs.getSize())
+                    .append(_url, rhs.getUrl())
+                    .append(_source, rhs.getSource())
+                    .append(_status, rhs.getStatus())
+                    .append(_thumbnail, rhs.getThumbnail())
+                    .append(_isImage, rhs.isImage())
+                    .append(_modifiedDate, rhs.getModifiedDate())
+                    .append(_createdDate, rhs.getCreatedDate())
+                    .isEquals();
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(_name)
+                .append(_id)
+                .append(_description)
+                .append(_folder)
+                .append(_folderId)
+                .append(_height)
+                .append(_width)
+                .append(_size)
+                .append(_url)
+                .append(_source)
+                .append(_status)
+                .append(_thumbnail)
+                .append(_isImage)
+                .append(_modifiedDate)
+                .append(_createdDate)
+                .hashCode();
     }
 }

@@ -15,6 +15,8 @@ package com.constantcontact.v2.account;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
 
@@ -145,5 +147,48 @@ public class AccountSummaryInformation implements Serializable {
 
     public void setOrganizationAddresses(AccountAddress[] organizationAddresses) {
         _organizationAddresses = organizationAddresses;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof AccountSummaryInformation)) {
+            return  false;
+        } else {
+            AccountSummaryInformation rhs = (AccountSummaryInformation) obj;
+            return new EqualsBuilder()
+                    .append(_email, rhs.getEmail())
+                    .append(_firstName, rhs.getFirstName())
+                    .append(_lastName, rhs.getLastName())
+                    .append(_companyLogo, rhs.getCompanyLogo())
+                    .append(_countryCode, rhs.getCountryCode())
+                    .append(_organizationAddresses, rhs.getOrganizationAddresses())
+                    .append(_organizationName, rhs.getOrganizationName())
+                    .append(_website, rhs.getWebsite())
+                    .append(_timeZone, rhs.getTimeZone())
+                    .append(_phone, rhs.getPhone())
+                    .append(_stateCode, rhs.getStateCode())
+                    .isEquals();
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(_email)
+                .append(_firstName)
+                .append(_lastName)
+                .append(_companyLogo)
+                .append(_countryCode)
+                .append(_organizationAddresses)
+                .append(_organizationName)
+                .append(_website)
+                .append(_timeZone)
+                .append(_phone)
+                .append(_stateCode)
+                .hashCode();
     }
 }

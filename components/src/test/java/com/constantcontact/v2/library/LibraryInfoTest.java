@@ -47,6 +47,28 @@ public class LibraryInfoTest {
         runAssertions(out);
     }
 
+    @Test
+    public void testEqualsAndHash() {
+        LibraryInfo libraryInfo1 = new LibraryInfo();
+        libraryInfo1.setImageRoot(ROOT);
+        libraryInfo1.setMaxFreeFileNum(MAX_FREE_FILE);
+        libraryInfo1.setMaxPremiumSpaceLimit(MAX_PREMIUM_SPACE);
+        libraryInfo1.setMaxUploadSizeLimit(MAX_UPLOAD_SIZE);
+        libraryInfo1.setUsageSummary(SUMMARY);
+        LibraryInfo libraryInfo2 = new LibraryInfo();
+        libraryInfo2.setImageRoot(ROOT);
+        libraryInfo2.setMaxFreeFileNum(MAX_FREE_FILE);
+        libraryInfo2.setMaxPremiumSpaceLimit(MAX_PREMIUM_SPACE);
+        libraryInfo2.setMaxUploadSizeLimit(MAX_UPLOAD_SIZE);
+        libraryInfo2.setUsageSummary(SUMMARY);
+
+        int hash1 = libraryInfo1.hashCode();
+        int hash2 = libraryInfo2.hashCode();
+
+        assertThat(libraryInfo1.equals(libraryInfo2), is(true));
+        assertThat(hash1 == hash2, is(true));
+    }
+
     static void runAssertions(LibraryInfo libraryInfo) {
         assertThat(libraryInfo.getImageRoot(), is(ROOT));
         assertThat(libraryInfo.getMaxFreeFileNum(), is(MAX_FREE_FILE));

@@ -3,6 +3,8 @@ package com.constantcontact.v2.contacts;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
 
@@ -133,5 +135,48 @@ public class Address implements Serializable {
 
     public void setSubPostalCode(String subPostalCode) {
         _subPostalCode = subPostalCode;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof Address)) {
+            return false;
+        } else {
+            Address rhs = (Address) obj;
+            return new EqualsBuilder()
+                    .append(_addressType, rhs.getAddressType())
+                    .append(_city, rhs.getCity())
+                    .append(_countryCode, rhs.getCountryCode())
+                    .append(_id, rhs.getId())
+                    .append(_line1, rhs.getLine1())
+                    .append(_line2, rhs.getLine2())
+                    .append(_line3, rhs.getLine3())
+                    .append(_postalCode, rhs.getPostalCode())
+                    .append(_subPostalCode, rhs.getSubPostalCode())
+                    .append(_stateCode, rhs.getStateCode())
+                    .append(_state, rhs.getState())
+                    .isEquals();
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(_addressType)
+                .append(_city)
+                .append(_countryCode)
+                .append(_id)
+                .append(_line1)
+                .append(_line2)
+                .append(_line3)
+                .append(_postalCode)
+                .append(_subPostalCode)
+                .append(_stateCode)
+                .append(_state)
+                .hashCode();
     }
 }

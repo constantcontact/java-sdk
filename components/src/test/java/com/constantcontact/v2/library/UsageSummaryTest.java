@@ -77,6 +77,36 @@ public class UsageSummaryTest {
         runAssertions(out);
     }
 
+    @Test
+    public void testEqualsAndHash() {
+        UsageSummary usageSummary1 = new UsageSummary();
+        usageSummary1.setDocumentBytesUsed(DOCUMENTS_BYTES_USED);
+        usageSummary1.setDocumentCount(DOCUMENT_COUNT);
+        usageSummary1.setFileCount(FILE_COUNT);
+        usageSummary1.setFolderCount(FOLDER_COUNT);
+        usageSummary1.setFreeFilesRemaining(FREE_FILES_REMAINING);
+        usageSummary1.setImageBytesUsed(IMAGE_BYTES_USED);
+        usageSummary1.setImageCount(IMAGE_COUNT);
+        usageSummary1.setTotalBytesUsed(TOTAL_BYTES_USED);
+        usageSummary1.setTotalBytesRemaining(TOTAL_BYTES_REMAINING);
+        UsageSummary usageSummary2 = new UsageSummary();
+        usageSummary2.setDocumentBytesUsed(DOCUMENTS_BYTES_USED);
+        usageSummary2.setDocumentCount(DOCUMENT_COUNT);
+        usageSummary2.setFileCount(FILE_COUNT);
+        usageSummary2.setFolderCount(FOLDER_COUNT);
+        usageSummary2.setFreeFilesRemaining(FREE_FILES_REMAINING);
+        usageSummary2.setImageBytesUsed(IMAGE_BYTES_USED);
+        usageSummary2.setImageCount(IMAGE_COUNT);
+        usageSummary2.setTotalBytesUsed(TOTAL_BYTES_USED);
+        usageSummary2.setTotalBytesRemaining(TOTAL_BYTES_REMAINING);
+
+        int hash1 = usageSummary1.hashCode();
+        int hash2 = usageSummary2.hashCode();
+
+        assertThat(usageSummary1.equals(usageSummary2), is(true));
+        assertThat(hash1 == hash2, is(true));
+    }
+
     static void runAssertions(UsageSummary usageSummary) {
         assertThat(usageSummary.getDocumentBytesUsed(), is(DOCUMENTS_BYTES_USED));
         assertThat(usageSummary.getDocumentCount(), is(DOCUMENT_COUNT));

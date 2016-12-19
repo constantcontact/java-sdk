@@ -3,6 +3,8 @@ package com.constantcontact.v2.contacts;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
 
@@ -45,5 +47,32 @@ public class CustomField implements Serializable {
 
     public void setValue(String value) {
         _value = value;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof CustomField)) {
+            return false;
+        } else {
+            CustomField rhs = (CustomField) obj;
+            return new EqualsBuilder()
+                    .append(_name, rhs.getName())
+                    .append(_label, rhs.getLabel())
+                    .append(_value, rhs.getValue())
+                    .isEquals();
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(_name)
+                .append(_label)
+                .append(_value)
+                .hashCode();
     }
 }

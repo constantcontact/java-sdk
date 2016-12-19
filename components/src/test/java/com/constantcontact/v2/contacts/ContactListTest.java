@@ -51,6 +51,30 @@ public class ContactListTest {
         runAssertions(out);
     }
 
+    @Test
+    public void testEqualsAndHash() {
+        ContactList contactList1 = new ContactList();
+        contactList1.setId(ID);
+        contactList1.setContactCount(COUNT);
+        contactList1.setCreatedDate(DATE);
+        contactList1.setModifiedDate(DATE);
+        contactList1.setName(NAME);
+        contactList1.setStatus(STATUS);
+        ContactList contactList2 = new ContactList();
+        contactList2.setId(ID);
+        contactList2.setContactCount(COUNT);
+        contactList2.setCreatedDate(DATE);
+        contactList2.setModifiedDate(DATE);
+        contactList2.setName(NAME);
+        contactList2.setStatus(STATUS);
+
+        int hash1 = contactList1.hashCode();
+        int hash2 = contactList2.hashCode();
+
+        assertThat(contactList1.equals(contactList2), is(true));
+        assertThat(hash1 == hash2, is(true));
+    }
+
     static void runAssertions(ContactList contactList) {
         assertThat(contactList.getId(), is(ID));
         assertThat(contactList.getContactCount(), is(COUNT));

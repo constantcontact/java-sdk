@@ -47,6 +47,28 @@ public class CampaignPreviewTest {
         runAssertions(out);
     }
 
+    @Test
+    public void testEqualsAndHash() {
+        CampaignPreview campaignPreview1 = new CampaignPreview();
+        campaignPreview1.setSubject(SUBJECT);
+        campaignPreview1.setFromEmail(FROM_EMAIL);
+        campaignPreview1.setReplyTomail(REPLY_TO_EMAIL);
+        campaignPreview1.setPreviewHtml(PREVIEW_HTML);
+        campaignPreview1.setPreviewText(PREVIEW_TEXT);
+        CampaignPreview campaignPreview2 = new CampaignPreview();
+        campaignPreview2.setSubject(SUBJECT);
+        campaignPreview2.setFromEmail(FROM_EMAIL);
+        campaignPreview2.setReplyTomail(REPLY_TO_EMAIL);
+        campaignPreview2.setPreviewHtml(PREVIEW_HTML);
+        campaignPreview2.setPreviewText(PREVIEW_TEXT);
+
+        int hash1 = campaignPreview1.hashCode();
+        int hash2 = campaignPreview2.hashCode();
+
+        assertThat(campaignPreview1.equals(campaignPreview2), is(true));
+        assertThat(hash1 == hash2, is(true));
+    }
+
     private void runAssertions(CampaignPreview campaignPreview) {
         assertThat(campaignPreview.getSubject(), is(SUBJECT));
         assertThat(campaignPreview.getFromEmail(), is(FROM_EMAIL));

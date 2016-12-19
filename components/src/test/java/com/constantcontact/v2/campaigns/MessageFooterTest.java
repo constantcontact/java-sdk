@@ -79,6 +79,44 @@ public class MessageFooterTest {
         runAssertions(out);
     }
 
+    @Test
+    public void testEqualsAndHash() {
+        MessageFooter messageFooter1 = new MessageFooter();
+        messageFooter1.setAddressLine1(LINE1);
+        messageFooter1.setAddressLine2(LINE2);
+        messageFooter1.setAddressLine3(LINE3);
+        messageFooter1.setCity(CITY);
+        messageFooter1.setState(STATE);
+        messageFooter1.setPostalCode(POSTAL_CODE);
+        messageFooter1.setCountry(COUNTRY);
+        messageFooter1.setOrganizationName(ORGANIZATION);
+        messageFooter1.setIncludeForwardEmail(INCLUDE_FORWARD);
+        messageFooter1.setIncludeSubscribeLink(INCLUDE_SUBSCRIBE);
+        messageFooter1.setForwardEmailLinkText(FORWARD_TEXT);
+        messageFooter1.setSubscribeLinkText(SUBSCRIBE_TEXT);
+        messageFooter1.setInternationalState(INTERNATIONAL_STATE);
+        MessageFooter messageFooter2 = new MessageFooter();
+        messageFooter2.setAddressLine1(LINE1);
+        messageFooter2.setAddressLine2(LINE2);
+        messageFooter2.setAddressLine3(LINE3);
+        messageFooter2.setCity(CITY);
+        messageFooter2.setState(STATE);
+        messageFooter2.setPostalCode(POSTAL_CODE);
+        messageFooter2.setCountry(COUNTRY);
+        messageFooter2.setOrganizationName(ORGANIZATION);
+        messageFooter2.setIncludeForwardEmail(INCLUDE_FORWARD);
+        messageFooter2.setIncludeSubscribeLink(INCLUDE_SUBSCRIBE);
+        messageFooter2.setForwardEmailLinkText(FORWARD_TEXT);
+        messageFooter2.setSubscribeLinkText(SUBSCRIBE_TEXT);
+        messageFooter2.setInternationalState(INTERNATIONAL_STATE);
+
+        int hash1 = messageFooter1.hashCode();
+        int hash2 = messageFooter2.hashCode();
+
+        assertThat(messageFooter1.equals(messageFooter2), is(true));
+        assertThat(hash1 == hash2, is(true));
+    }
+
     private void runAssertions(MessageFooter messageFooter) {
         assertThat(messageFooter.getAddressLine1(), is(LINE1));
         assertThat(messageFooter.getAddressLine2(), is(LINE2));

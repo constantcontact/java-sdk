@@ -52,6 +52,26 @@ public class NoteTest {
         runAssertions(out);
     }
 
+    @Test
+    public void testEqualsAndHash() {
+        Note note1 = new Note();
+        note1.setId(ID);
+        note1.setModifiedDate(DATE);
+        note1.setCreatedDate(DATE);
+        note1.setNote(NOTE);
+        Note note2 = new Note();
+        note2.setId(ID);
+        note2.setModifiedDate(DATE);
+        note2.setCreatedDate(DATE);
+        note2.setNote(NOTE);
+
+        int hash1 = note1.hashCode();
+        int hash2 = note2.hashCode();
+
+        assertThat(note1.equals(note2), is(true));
+        assertThat(hash1 == hash2, is(true));
+    }
+
     static void runAssertions(Note note) {
         assertThat(note.getId(), is(ID));
         assertThat(note.getModifiedDate(), is(DATE));

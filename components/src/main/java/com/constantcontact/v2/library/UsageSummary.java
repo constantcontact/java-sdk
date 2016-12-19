@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
 
@@ -113,5 +115,44 @@ public class UsageSummary implements Serializable {
 
     public void setFreeFilesRemaining(int freeFilesRemaining) {
         _freeFilesRemaining = freeFilesRemaining;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof UsageSummary)) {
+            return false;
+        } else {
+            UsageSummary rhs = (UsageSummary) obj;
+            return new EqualsBuilder()
+                    .append(_folderCount, rhs.getFolderCount())
+                    .append(_fileCount, rhs.getFileCount())
+                    .append(_imageCount, rhs.getImageCount())
+                    .append(_documentCount, rhs.getDocumentCount())
+                    .append(_totalBytesUsed, rhs.getTotalBytesUsed())
+                    .append(_imageBytesUsed, rhs.getImageBytesUsed())
+                    .append(_documentBytesUsed, rhs.getDocumentBytesUsed())
+                    .append(_totalBytesRemaining, rhs.getTotalBytesRemaining())
+                    .append(_freeFilesRemaining, rhs.getFreeFilesRemaining())
+                    .isEquals();
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(_folderCount)
+                .append(_fileCount)
+                .append(_imageCount)
+                .append(_documentCount)
+                .append(_totalBytesUsed)
+                .append(_imageBytesUsed)
+                .append(_documentBytesUsed)
+                .append(_totalBytesRemaining)
+                .append(_freeFilesRemaining)
+                .hashCode();
     }
 }

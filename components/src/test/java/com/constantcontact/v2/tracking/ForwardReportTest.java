@@ -49,6 +49,28 @@ public class ForwardReportTest {
         runAssertions(out);
     }
 
+    @Test
+    public void testEqualsAndHash() {
+        ForwardReport forwardReport1 = new ForwardReport();
+        forwardReport1.setEmailAddress(EMAIL);
+        forwardReport1.setActivityType(TYPE);
+        forwardReport1.setContactId(CONTACT_ID);
+        forwardReport1.setCampaignId(CAMPAIGN_ID);
+        forwardReport1.setForwardDate(DATE);
+        ForwardReport forwardReport2 = new ForwardReport();
+        forwardReport2.setEmailAddress(EMAIL);
+        forwardReport2.setActivityType(TYPE);
+        forwardReport2.setContactId(CONTACT_ID);
+        forwardReport2.setCampaignId(CAMPAIGN_ID);
+        forwardReport2.setForwardDate(DATE);
+
+        int hash1 = forwardReport1.hashCode();
+        int hash2 = forwardReport2.hashCode();
+
+        assertThat(forwardReport1.equals(forwardReport2), is(true));
+        assertThat(hash1 == hash2, is(true));
+    }
+
     static void runAssertions(ForwardReport forwardReport) {
         assertThat(forwardReport.getEmailAddress(), is(EMAIL));
         assertThat(forwardReport.getActivityType(), is(TYPE));

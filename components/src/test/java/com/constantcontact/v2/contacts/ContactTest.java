@@ -116,6 +116,64 @@ public class ContactTest {
         runAssertions(out);
     }
 
+    @Test
+    public void testEqualsAndHash() {
+        Contact contact1 = new Contact();
+        contact1.setId(ID);
+        contact1.setCreatedDate(DATE);
+        contact1.setInsertDate(DATE);
+        contact1.setModifiedDate(DATE);
+        contact1.setLastUpdateDate(DATE);
+        contact1.setCellPhone(PHONE_CELL);
+        contact1.setWorkPhone(PHONE_WORK);
+        contact1.setFax(PHONE_FAX);
+        contact1.setHomePhone(PHONE_HOME);
+        contact1.setFirstName(FIRST_NAME);
+        contact1.setLastName(LAST_NAME);
+        contact1.setCompanyName(COMPANY);
+        contact1.setJobTitle(JOB_TITLE);
+        contact1.setDepartmentName(DEPARTMENT);
+        contact1.setSourceDetails(SOURCE_DETAILS);
+        contact1.setSource(SOURCE);
+        contact1.setPrefixName(PREFIX);
+        contact1.setStatus(STATUS);
+        contact1.setAddresses(ADDRESSES);
+        contact1.setContactLists(CONTACT_LISTS);
+        contact1.setEmailAddresses(EMAIL_ADDRESSES);
+        contact1.setNotes(NOTES);
+        contact1.setCustomFields(CUSTOM_FIELDS);
+        Contact contact2 = new Contact();
+        contact2.setId(ID);
+        contact2.setCreatedDate(DATE);
+        contact2.setInsertDate(DATE);
+        contact2.setModifiedDate(DATE);
+        contact2.setLastUpdateDate(DATE);
+        contact2.setCellPhone(PHONE_CELL);
+        contact2.setWorkPhone(PHONE_WORK);
+        contact2.setFax(PHONE_FAX);
+        contact2.setHomePhone(PHONE_HOME);
+        contact2.setFirstName(FIRST_NAME);
+        contact2.setLastName(LAST_NAME);
+        contact2.setCompanyName(COMPANY);
+        contact2.setJobTitle(JOB_TITLE);
+        contact2.setDepartmentName(DEPARTMENT);
+        contact2.setSourceDetails(SOURCE_DETAILS);
+        contact2.setSource(SOURCE);
+        contact2.setPrefixName(PREFIX);
+        contact2.setStatus(STATUS);
+        contact2.setAddresses(ADDRESSES);
+        contact2.setContactLists(CONTACT_LISTS);
+        contact2.setEmailAddresses(EMAIL_ADDRESSES);
+        contact2.setNotes(NOTES);
+        contact2.setCustomFields(CUSTOM_FIELDS);
+
+        int hash1 = contact1.hashCode();
+        int hash2 = contact2.hashCode();
+
+        assertThat(contact1.equals(contact2), is(true));
+        assertThat(hash1 == hash2, is(true));
+    }
+
     private void runAssertions(Contact contact) {
         assertThat(contact.getId(), is(ID));
         assertThat(contact.getCreatedDate(), is(DATE));

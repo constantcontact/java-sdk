@@ -87,6 +87,40 @@ public class AddressTest {
         runAssertions(out);
     }
 
+    @Test
+    public void testEqualsAndHash() {
+        Address address1 = new Address();
+        address1.setId(ID);
+        address1.setLine1(LINE1);
+        address1.setLine2(LINE2);
+        address1.setLine3(LINE3);
+        address1.setCity(CITY);
+        address1.setState(STATE);
+        address1.setStateCode(STATE_CODE);
+        address1.setCountryCode(COUNTRY_CODE);
+        address1.setAddressType(ADDRESS_TYPE);
+        address1.setPostalCode(POSTAL_CODE);
+        address1.setSubPostalCode(POSTAL_SUB_CODE);
+        Address address2 = new Address();
+        address2.setId(ID);
+        address2.setLine1(LINE1);
+        address2.setLine2(LINE2);
+        address2.setLine3(LINE3);
+        address2.setCity(CITY);
+        address2.setState(STATE);
+        address2.setStateCode(STATE_CODE);
+        address2.setCountryCode(COUNTRY_CODE);
+        address2.setAddressType(ADDRESS_TYPE);
+        address2.setPostalCode(POSTAL_CODE);
+        address2.setSubPostalCode(POSTAL_SUB_CODE);
+
+        int hash1 = address1.hashCode();
+        int hash2 = address2.hashCode();
+
+        assertThat(address1.equals(address2), is(true));
+        assertThat(hash1 == hash2, is(true));
+    }
+
     static void runAssertions(Address address) {
         assertThat(address.getId(), is(ID));
         assertThat(address.getLine1(), is(LINE1));

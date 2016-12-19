@@ -35,6 +35,22 @@ public class AccountEmailAddressTest {
         runAssertations(out);
     }
 
+    @Test
+    public void testEqualsAndHash() {
+        AccountEmailAddress accountEmailAddress1 = new AccountEmailAddress();
+        accountEmailAddress1.setEmailAddress(EMAIL);
+        accountEmailAddress1.setStatus(STATUS);
+        AccountEmailAddress accountEmailAddress2 = new AccountEmailAddress();
+        accountEmailAddress2.setEmailAddress(EMAIL);
+        accountEmailAddress2.setStatus(STATUS);
+
+        int hash1 = accountEmailAddress1.hashCode();
+        int hash2 = accountEmailAddress2.hashCode();
+
+        assertThat(accountEmailAddress1.equals(accountEmailAddress2), is(true));
+        assertThat(hash1 == hash2, is(true));
+    }
+
     private void runAssertations(AccountEmailAddress accountEmailAddress) {
         assertThat(accountEmailAddress.getEmailAddress(), is(EMAIL));
         assertThat(accountEmailAddress.getStatus(), is(STATUS));

@@ -49,6 +49,28 @@ public class SendReportTest {
         runAssertions(out);
     }
 
+    @Test
+    public void testEqualsAndHash() {
+        SendReport sendReport1 = new SendReport();
+        sendReport1.setEmailAddress(EMAIL);
+        sendReport1.setCampaignId(CAMPAIGN_ID);
+        sendReport1.setContactId(CONTACT_ID);
+        sendReport1.setActivityType(TYPE);
+        sendReport1.setSendDate(DATE);
+        SendReport sendReport2 = new SendReport();
+        sendReport2.setEmailAddress(EMAIL);
+        sendReport2.setCampaignId(CAMPAIGN_ID);
+        sendReport2.setContactId(CONTACT_ID);
+        sendReport2.setActivityType(TYPE);
+        sendReport2.setSendDate(DATE);
+
+        int hash1 = sendReport1.hashCode();
+        int hash2 = sendReport2.hashCode();
+
+        assertThat(sendReport1.equals(sendReport2), is(true));
+        assertThat(hash1 == hash2, is(true));
+    }
+
     static void runAssertions(SendReport sendReport) {
         assertThat(sendReport.getEmailAddress(), is(EMAIL));
         assertThat(sendReport.getCampaignId(), is(CAMPAIGN_ID));

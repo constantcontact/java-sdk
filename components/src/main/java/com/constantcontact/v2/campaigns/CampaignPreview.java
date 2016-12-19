@@ -3,6 +3,8 @@ package com.constantcontact.v2.campaigns;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
 
@@ -67,5 +69,36 @@ public class CampaignPreview implements Serializable {
 
     public void setPreviewText(String previewText) {
         _previewText = previewText;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof CampaignPreview)) {
+            return false;
+        } else {
+            CampaignPreview rhs = (CampaignPreview) obj;
+            return new EqualsBuilder()
+                    .append(_fromEmail, rhs.getFromEmail())
+                    .append(_replyTomail, rhs.getReplyTomail())
+                    .append(_subject, rhs.getSubject())
+                    .append(_previewHtml, rhs.getPreviewHtml())
+                    .append(_previewText, rhs.getPreviewText())
+                    .isEquals();
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(_fromEmail)
+                .append(_replyTomail)
+                .append(_subject)
+                .append(_previewHtml)
+                .append(_previewText)
+                .hashCode();
     }
 }

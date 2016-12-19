@@ -49,6 +49,28 @@ public class OpenReportTest {
         runAssertions(out);
     }
 
+    @Test
+    public void testEqualsAndHash() {
+        OpenReport openReport1 = new OpenReport();
+        openReport1.setEmailAddress(EMAIL);
+        openReport1.setCampaignId(CAMPAIGN_ID);
+        openReport1.setContactId(CONTACT_ID);
+        openReport1.setActivityType(TYPE);
+        openReport1.setOpenDate(DATE);
+        OpenReport openReport2 = new OpenReport();
+        openReport2.setEmailAddress(EMAIL);
+        openReport2.setCampaignId(CAMPAIGN_ID);
+        openReport2.setContactId(CONTACT_ID);
+        openReport2.setActivityType(TYPE);
+        openReport2.setOpenDate(DATE);
+
+        int hash1 = openReport1.hashCode();
+        int hash2 = openReport2.hashCode();
+
+        assertThat(openReport1.equals(openReport2), is(true));
+        assertThat(hash1 == hash2, is(true));
+    }
+
     static void runAssertions(OpenReport openReport) {
         assertThat(openReport.getEmailAddress(), is(EMAIL));
         assertThat(openReport.getCampaignId(), is(CAMPAIGN_ID));

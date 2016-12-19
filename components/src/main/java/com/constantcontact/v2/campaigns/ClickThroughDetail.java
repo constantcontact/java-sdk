@@ -3,6 +3,8 @@ package com.constantcontact.v2.campaigns;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
 import java.util.Comparator;
@@ -72,5 +74,32 @@ public class ClickThroughDetail implements Serializable {
 
     public void setUrlUid(String urlUid) {
         _urlUid = urlUid;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof ClickThroughDetail)) {
+            return false;
+        } else {
+            ClickThroughDetail rhs = (ClickThroughDetail) obj;
+            return new EqualsBuilder()
+                    .append(_clickCount, rhs.getClickCount())
+                    .append(_url, rhs.getUrl())
+                    .append(_urlUid, rhs.getUrlUid())
+                    .isEquals();
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(_clickCount)
+                .append(_url)
+                .append(_urlUid)
+                .hashCode();
     }
 }

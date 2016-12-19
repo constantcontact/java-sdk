@@ -67,6 +67,32 @@ public class TrackingSummaryTest {
         runAssertions(out);
     }
 
+    @Test
+    public void testEqualsAndHash() {
+        TrackingSummary trackingSummary1 = new TrackingSummary();
+        trackingSummary1.setBounces(BOUNCE_COUNT);
+        trackingSummary1.setClicks(CLICK_COUNT);
+        trackingSummary1.setForwards(FORWARD_COUNT);
+        trackingSummary1.setOpens(OPEN_COUNT);
+        trackingSummary1.setSends(SEND_COUNT);
+        trackingSummary1.setUnsubscribes(UNSUBSCRIBE_COUNT);
+        trackingSummary1.setSpamCount(SPAM_COUNT);
+        TrackingSummary trackingSummary2 = new TrackingSummary();
+        trackingSummary2.setBounces(BOUNCE_COUNT);
+        trackingSummary2.setClicks(CLICK_COUNT);
+        trackingSummary2.setForwards(FORWARD_COUNT);
+        trackingSummary2.setOpens(OPEN_COUNT);
+        trackingSummary2.setSends(SEND_COUNT);
+        trackingSummary2.setUnsubscribes(UNSUBSCRIBE_COUNT);
+        trackingSummary2.setSpamCount(SPAM_COUNT);
+
+        int hash1 = trackingSummary1.hashCode();
+        int hash2 = trackingSummary2.hashCode();
+
+        assertThat(trackingSummary1.equals(trackingSummary2), is(true));
+        assertThat(hash1 == hash2, is(true));
+    }
+
     public static void runAssertions(TrackingSummary trackingSummary) {
         assertThat(trackingSummary.getBounces(), is(BOUNCE_COUNT));
         assertThat(trackingSummary.getClicks(), is(CLICK_COUNT));

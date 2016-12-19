@@ -3,6 +3,8 @@ package com.constantcontact.v2.campaigns;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
 
@@ -26,11 +28,25 @@ public class SentToContactList implements Serializable {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (o instanceof SentToContactList) {
-            SentToContactList rhs = (SentToContactList) o;
-            return rhs.getId() != null && rhs.getId().equals("") && rhs.getId().equals(_id);
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
         }
-        return super.equals(o);
+
+        if (!(obj instanceof SentToContactList)) {
+            return false;
+        } else {
+            SentToContactList rhs = (SentToContactList) obj;
+            return new EqualsBuilder()
+                    .append(_id, rhs.getId())
+                    .isEquals();
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(_id)
+                .hashCode();
     }
 }

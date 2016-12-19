@@ -39,6 +39,24 @@ public class SignupFormRequestTest {
         runAssertions(out);
     }
 
+    @Test
+    public void testEqualsAndHash() {
+        SignupFormRequest signupFormRequest1 = new SignupFormRequest();
+        signupFormRequest1.setContactLists(LISTS);
+        signupFormRequest1.setListName(NAME);
+        signupFormRequest1.setSource(SOURCE);
+        SignupFormRequest signupFormRequest2 = new SignupFormRequest();
+        signupFormRequest2.setContactLists(LISTS);
+        signupFormRequest2.setListName(NAME);
+        signupFormRequest2.setSource(SOURCE);
+
+        int hash1 = signupFormRequest1.hashCode();
+        int hash2 = signupFormRequest2.hashCode();
+
+        assertThat(signupFormRequest1.equals(signupFormRequest2), is(true));
+        assertThat(hash1 == hash2, is(true));
+    }
+
     static void runAssertions(SignupFormRequest signupFormRequest) {
         assertThat(signupFormRequest.getContactLists(), is(LISTS));
         assertThat(signupFormRequest.getListName(), is(NAME));

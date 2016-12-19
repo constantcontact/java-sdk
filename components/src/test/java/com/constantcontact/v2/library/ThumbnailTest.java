@@ -47,6 +47,24 @@ public class ThumbnailTest {
         runAssertions(out);
     }
 
+    @Test
+    public void testEqualsAndHash() {
+        Thumbnail thumbnail1 = new Thumbnail();
+        thumbnail1.setUrl(URL);
+        thumbnail1.setHeight(HEIGHT);
+        thumbnail1.setWidth(WIDTH);
+        Thumbnail thumbnail2 = new Thumbnail();
+        thumbnail2.setUrl(URL);
+        thumbnail2.setHeight(HEIGHT);
+        thumbnail2.setWidth(WIDTH);
+
+        int hash1 = thumbnail1.hashCode();
+        int hash2 = thumbnail2.hashCode();
+
+        assertThat(thumbnail1.equals(thumbnail2), is(true));
+        assertThat(hash1 == hash2, is(true));
+    }
+
     static void runAssertions(Thumbnail thumbnail) {
         assertThat(thumbnail.getUrl(), is(URL));
         assertThat(thumbnail.getHeight(), is(HEIGHT));
