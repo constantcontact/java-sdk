@@ -1,11 +1,11 @@
 package com.constantcontact.v2;
 
-import java.io.IOException;
-
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
+
+import java.io.IOException;
 
 class CCApiInterceptor implements Interceptor {
         private final String _apiKey;
@@ -30,7 +30,7 @@ class CCApiInterceptor implements Interceptor {
                                    .addHeader("Authorization", "Bearer " + _token)
                                    .addHeader("Content-Type", "application/json")
                                    .addHeader("User-Agent",
-                                              "Constant Contact Java Library v5.0.1") // TODO: Add version # dynamically
+                                              "Constant Contact Java Library v5.1.1") // TODO: Add version # dynamically
                                    .build();
             return chain.proceed(newRequest);
         }
