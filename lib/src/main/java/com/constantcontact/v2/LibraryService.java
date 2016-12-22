@@ -159,7 +159,7 @@ public interface LibraryService {
      * @return       an Observable that emits a {@link retrofit2.Response}
      */
     @DELETE("v2/library/files/{fileId}")
-    Call<Response> deleteFile(@Path("fileId") String fileId);
+    Call<Response<Void>> deleteFile(@Path("fileId") String fileId);
 
     /**
      * Delete all {@link File} in the Trash {@link Folder}
@@ -167,7 +167,7 @@ public interface LibraryService {
      * @return an Observable that emits a {@link retrofit2.Response}
      */
     @DELETE("v2/library/folders/trash/files")
-    Call<Response> deleteFilesInTrash();
+    Call<Response<Void>> deleteFilesInTrash();
 
     /**
      * Get the {@link FileUploadStatus} of one or more {@link File}
@@ -193,7 +193,7 @@ public interface LibraryService {
     @Multipart
     @Headers("Content-Type: multipart/form-data")
     @POST("v2/library/files")
-    Call<Response> uploadFile(
+    Call<Response<Void>> uploadFile(
             @Part("data") RequestBody file,
             @Part("description") String description,
             @Part("file_name") String fileName,

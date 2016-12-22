@@ -45,7 +45,7 @@ you will also need to download the Components JAR and include it in your build f
 
 ### Gradle
 ```groovy
-compile 'com.constantcontact:java-sdk:5.1.1'
+compile 'com.constantcontact:java-sdk:5.1.2'
 ```
 
 ### Maven
@@ -54,7 +54,7 @@ compile 'com.constantcontact:java-sdk:5.1.1'
     <dependency>
         <groupId>com.constantcontact</groupId>
         <artifactId>java-sdk</artifactId>
-        <version>5.1.1</version>
+        <version>5.1.2</version>
     </dependency>
 </dependencies>
 ```

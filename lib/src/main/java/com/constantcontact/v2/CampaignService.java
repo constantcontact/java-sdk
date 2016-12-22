@@ -84,7 +84,7 @@ public interface CampaignService {
      * @return           an Observable that emits a {@link retrofit2.Response}
      */
     @DELETE("v2/emailmarketing/campaigns/{campaignId}")
-    Call<Response> deleteCampaign(@Path("campaignId") String campaignId);
+    Call<Response<Void>> deleteCampaign(@Path("campaignId") String campaignId);
 
     /**
      * Send a {@link TestSend} of a {@link Campaign}
@@ -154,5 +154,5 @@ public interface CampaignService {
      * @return           an Observable that emits a {@link retrofit2.Response}
      */
     @DELETE("v2/emailmarketing/campaigns/{campaignId}/schedules/{scheduleId}")
-    Call<Response> deleteCampaignSchedule(@Path("campaignId") String campaignId, @Path("scheduleId") String scheduleId);
+    Call<Response<Void>> deleteCampaignSchedule(@Path("campaignId") String campaignId, @Path("scheduleId") String scheduleId);
 }

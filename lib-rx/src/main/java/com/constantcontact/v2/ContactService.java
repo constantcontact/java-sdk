@@ -107,7 +107,7 @@ public interface ContactService {
      * @return          an Observable that emits a {@link retrofit2.Response}
      */
     @DELETE("v2/contacts/{contactId}")
-    Observable<Response> unsubscribeContact(@Path("contactId") String contactId);
+    Observable<Response<Void>> unsubscribeContact(@Path("contactId") String contactId);
 
     /**
      * Get all {@link ContactList} in the account
@@ -153,7 +153,7 @@ public interface ContactService {
      * @return       an Observable that emits a {@link retrofit2.Response}
      */
     @DELETE("v2/lists/{listId}")
-    Observable<Response> deleteContactList(@Path("listId") String listId);
+    Observable<Response<Void>> deleteContactList(@Path("listId") String listId);
 
     /**
      * Create a custom signup form
