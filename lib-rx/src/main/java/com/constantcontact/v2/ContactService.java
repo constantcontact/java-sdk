@@ -66,8 +66,8 @@ public interface ContactService {
      * @return         an Observable that emits Paged Contacts
      * @see            Paged
      */
-    @GET("v2/contacts?next={next}")
-    Observable<Paged<Contact>> getContacts(@Path("next") String nextLink);
+    @GET
+    Observable<Paged<Contact>> getContacts(@Url String nextLink);
 
     /**
      * Create an individual {@link Contact}
