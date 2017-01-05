@@ -33,7 +33,7 @@ public class CCApi2 {
 
         if (debug) {
             HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            interceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
             builder.addInterceptor(interceptor);
         }
 
