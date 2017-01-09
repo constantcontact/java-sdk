@@ -96,7 +96,7 @@ public interface ContactService {
      * @param optInSource Specify who is updating this contact with {@link OptInSource}
      * @return            an Observable that emits an updated Contact
      */
-    @PUT("v2/contacts/{contactId")
+    @PUT("v2/contacts/{contactId}")
     Observable<Contact> updateContact(@Body Contact contact, @Path("contactId") String contactId,
                                       @Query("action_by") OptInSource optInSource);
 
