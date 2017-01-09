@@ -15,22 +15,9 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
 /**
+ * The converter factory used for Jackson JSON conversion
  */
 public class JacksonConverterFactory extends Converter.Factory {
-    /**
-     * Create an instance using a default {@link ObjectMapper} instance for conversion.
-     */
-    public static JacksonConverterFactory create() {
-        return create(new ObjectMapper());
-    }
-
-    /**
-     * Create an instance using {@code mapper} for conversion.
-     */
-    public static JacksonConverterFactory create(ObjectMapper mapper) {
-        return new JacksonConverterFactory(mapper);
-    }
-
     private static String[] CAMPAIGN_CREATE_UPDATE_FIELDS = {
             "name",
             "subject",
@@ -46,9 +33,33 @@ public class JacksonConverterFactory extends Converter.Factory {
             "message_footer"
     };
 
+    /**
+     * Create an instance using a default {@link ObjectMapper} instance for conversion.
+     *
+     * @return A new instance of the converter factory with default {@link ObjectMapper}
+     */
+    public static JacksonConverterFactory create() {
+        return create(new ObjectMapper());
+    }
+
+    /**
+     * Create an instance using {@code mapper} for conversion.
+     *
+     * @param mapper the mapper that will be used by the factory when creating converters
+     * @return a new instance of the converter facotyr
+     */
+    public static JacksonConverterFactory create(ObjectMapper mapper) {
+        return new JacksonConverterFactory(mapper);
+    }
+
     private final ObjectMapper mapper;
     private final SimpleFilterProvider writerFilterProvider;
 
+    /**
+     * Creates a new instance.
+     *
+     * @param mapper the object mapper used when creating converter instances.
+     */
     private JacksonConverterFactory(ObjectMapper mapper) {
         if (mapper == null) {
             throw new NullPointerException("mapper == null");
@@ -59,6 +70,9 @@ public class JacksonConverterFactory extends Converter.Factory {
         this.writerFilterProvider = new SimpleFilterProvider().addFilter("CampaignCreateUpdateFilter", campaignCreateUpdateFilter);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Converter<ResponseBody, ?> responseBodyConverter(Type type,
                                                             Annotation[] annotations,
@@ -68,6 +82,9 @@ public class JacksonConverterFactory extends Converter.Factory {
         return new JacksonResponseBodyConverter<>(reader);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Converter<?, RequestBody> requestBodyConverter(Type type,
                                                           Annotation[] parameterAnnotations,
