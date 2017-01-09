@@ -25,24 +25,25 @@ public interface LibraryService {
      *
      * @param limit     Size of page to return (1-1000)
      * @param sortOrder {@link FolderSortOrder}
-     * @return          an Observable that emits Paged Folders
+     * @return an Observable that emits Paged Folders
      */
     @GET("v2/library/folders")
     Observable<Paged<Folder>> getFolders(@Query("limit") int limit, @Query("sort_by") FolderSortOrder sortOrder);
 
     /**
      * Get a {@link Paged} collection of {@link Folder}
+     *
      * @param nextLink Value of the link found in the meta of the original call
-     * @return         an Observable that emits Paged Folders
+     * @return an Observable that emits Paged Folders
      */
-    @GET("v2/library/folders?next={next}")
-    Observable<Paged<Folder>> getFolders(@Path("next") String nextLink);
+    @GET
+    Observable<Paged<Folder>> getFolders(@Url String nextLink);
 
     /**
      * Create a new {@link Folder}
      *
      * @param folder Folder with only the name and parentId values
-     * @return       an Observable that emits a Folder
+     * @return an Observable that emits a Folder
      */
     @POST("v2/library/folders")
     Observable<Folder> createFolder(@Body Folder folder);
@@ -51,7 +52,7 @@ public interface LibraryService {
      * Get a specific {@link Folder}
      *
      * @param folderId The Folder ID
-     * @return         an Observable that emits a Folder
+     * @return an Observable that emits a Folder
      */
     @GET("v2/library/folders/{folderId}")
     Observable<Folder> getFolder(@Path("folderId") String folderId);
@@ -61,7 +62,7 @@ public interface LibraryService {
      *
      * @param folderId The Folder ID
      * @param folder   Folder
-     * @return         an Observable that emits an updated Folder
+     * @return an Observable that emits an updated Folder
      */
     @PUT("v2/library/folders/{folderId}?include_payload=TRUE")
     Observable<Folder> updateFolder(@Path("folderId") String folderId, @Body Folder folder);
@@ -70,7 +71,7 @@ public interface LibraryService {
      * Delete a {@link Folder}
      *
      * @param folderId The Folder ID
-     * @return         an Observable that emits a {@link retrofit2.Response}
+     * @return an Observable that emits a {@link retrofit2.Response}
      */
     @DELETE("v2/library/folders/{folderId}")
     Observable<Response> deleteFolder(@Path("folderId") String folderId);
@@ -82,7 +83,7 @@ public interface LibraryService {
      * @param sortOrder {@link FileSortOrder}
      * @param source    {@link FileSource}
      * @param type      {@link FileTypeQuery}
-     * @return          an Observable that emits Paged Files
+     * @return an Observable that emits Paged Files
      */
     @GET("v2/library/files")
     Observable<Paged<File>> getFiles(@Query("limit") int limit, @Query("sort_by") FileSortOrder sortOrder,
@@ -92,7 +93,7 @@ public interface LibraryService {
      * Get a {@link Paged} collection of {@link File}
      *
      * @param nextLink Value of the link found in the meta of the original call
-     * @return         an Observable that emits Paged Files
+     * @return an Observable that emits Paged Files
      */
     @GET("v2/library/files?next={next}")
     Observable<Paged<File>> getFiles(@Path("next") String nextLink);
@@ -107,7 +108,7 @@ public interface LibraryService {
      * @param sortOrder {@link FileSortOrder}
      * @param source    {@link FileSource}
      * @param type      {@link FileTypeQuery}
-     * @return          an Observable that emits Paged Files
+     * @return an Observable that emits Paged Files
      */
     @GET("v2/library/folders/{folderId}/files")
     Observable<Paged<File>> getFilesByFolder(@Path("folderId") String folderId, @Query("limit") int limit,
@@ -119,7 +120,7 @@ public interface LibraryService {
      *
      * @param folderId The Folder ID
      * @param nextLink Value of the link found in the meta of the original call
-     * @return         an Observable that emits Paged Files
+     * @return an Observable that emits Paged Files
      */
     @GET("v2/library/folders/{folderId}/files?next={next}")
     Observable<Paged<File>> getFilesByFolder(@Path("folderId") String folderId, @Path("next") String nextLink);
@@ -128,7 +129,7 @@ public interface LibraryService {
      * Get a specific {@link File}
      *
      * @param fileId The File ID
-     * @return       an Observable that emits a File
+     * @return an Observable that emits a File
      */
     @GET("v2/library/files/{fileId}")
     Observable<File> getFile(@Path("fileId") String fileId);
@@ -138,7 +139,7 @@ public interface LibraryService {
      *
      * @param fileId The File ID
      * @param file   File
-     * @return       an Observable that emits an updated File
+     * @return an Observable that emits an updated File
      */
     @PUT("v2/library/files/{fileId}?include_payload=TRUE")
     Observable<File> updateFile(@Path("fileId") String fileId, @Body File file);
@@ -148,7 +149,7 @@ public interface LibraryService {
      *
      * @param folderId The Folder ID
      * @param fileIds  Array of File ID's that will be moved to the new folder
-     * @return         an Observable that emits an Array of updated Files
+     * @return an Observable that emits an Array of updated Files
      */
     @PUT("v2/library/folders/{folderId}/files")
     Observable<File> moveFiles(@Path("folderId") String folderId, @Body String[] fileIds);
@@ -157,7 +158,7 @@ public interface LibraryService {
      * Delete a {@link File}
      *
      * @param fileId The File ID
-     * @return       an Observable that emits a {@link retrofit2.Response}
+     * @return an Observable that emits a {@link retrofit2.Response}
      */
     @DELETE("v2/library/files/{fileId}")
     Observable<Response<Void>> deleteFile(@Path("fileId") String fileId);
@@ -174,13 +175,29 @@ public interface LibraryService {
      * Get the {@link FileUploadStatus} of one or more {@link File}
      *
      * @param fileIds Send one File ID, or multiples merged into one string separated by commas (no spaces)
-     * @return        an Observable that emits an array of FileUploadStatuses
+     * @return an Observable that emits an array of FileUploadStatuses
      */
     @GET("v2/library/files/uploadstatus/{fileId}")
     Observable<FileUploadStatus[]> getFileUploadStatus(@Path("fileId") String fileIds);
 
     /**
-     * Upload a new {@link File} to the Library
+     * Upload a new {@link File} to the Library. Each parameter requires the use of a {@link RequestBody} instance that
+     * have to be set up in the following way:
+     * <pre>{@code
+     * final MediaType plainTextMediaType = MediaType.parse("text/plain");
+     * RequestBody descriptionBody = RequestBody.create(plainTextMediaType, "");
+     * RequestBody filenameBody = RequestBody.create(plainTextMediaType, filename);
+     * RequestBody fileTypeBody = RequestBody.create(plainTextMediaType, FileType.createFromMimeType(mimeType).toString());
+     * RequestBody folderIdBody = RequestBody.create(plainTextMediaType, "0");
+     * RequestBody fileSourceBody = RequestBody.create(plainTextMediaType, FileSource.MOBILE.toString());
+     * RequestBody body;
+     * try {
+     *     body = RequestBody.create(MediaType.parse(mimeType), imageFile);
+     * } catch (IOException e) {
+     *     // Handle error
+     * }
+     * _libraryService.uploadFile(body, descriptionBody, filenameBody, fileTypeBody, folderIdBody, fileSourceBody);
+     * }</pre>
      *
      * @param file        File
      * @param description A description of the file
@@ -188,13 +205,17 @@ public interface LibraryService {
      * @param fileType    {@link FileType}
      * @param folderId    The ID of the {@link Folder} you wish to upload to
      * @param source      {@link FileSource}
-     * @return            an Observable that emits a {@link retrofit2.Response} - the File's new ID
-     *                    can be obtained from the headers of the Response
+     * @return an Observable that emits a {@link retrofit2.Response} - the File's new ID
+     * can be obtained from the headers of the Response
+     * @see <a href="https://developer.constantcontact.com/docs/mylibrary-files-api/file-add-multipart-post.html">API Docs</a>
      */
     @Multipart
     @Headers("Content-Type: multipart/form-data")
     @POST("v2/library/files")
-    Observable<Response<Void>> uploadFile(@Part("data") RequestBody file, @Part("description") String description,
-                                    @Part("file_name") String fileName, @Part("file_type") String fileType,
-                                    @Part("folder_id") String folderId, @Part("source") String source);
+    Observable<Response<Void>> uploadFile(@Part("data") RequestBody file,
+                                          @Part("description") RequestBody description,
+                                          @Part("file_name") RequestBody fileName,
+                                          @Part("file_type") RequestBody fileType,
+                                          @Part("folder_id") RequestBody folderId,
+                                          @Part("source") RequestBody source);
 }

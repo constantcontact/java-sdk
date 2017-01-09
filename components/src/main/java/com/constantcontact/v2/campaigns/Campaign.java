@@ -15,7 +15,7 @@ import java.util.Date;
 /**
  * @author woogienoogie
  */
-@JsonFilter("RequestFilter")
+@JsonFilter("CampaignCreateUpdateFilter")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonAutoDetect(fieldVisibility = Visibility.ANY, getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE)
 public class Campaign implements Serializable {

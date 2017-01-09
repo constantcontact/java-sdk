@@ -5,12 +5,7 @@ apply plugin: 'com.jfrog.bintray'
 def ARTIFACT_VERSION="$VERSION_MAJOR.$VERSION_MINOR.$VERSION_PATCH"
 
 dependencies {
-    compile 'com.constantcontact:java-components:' + ARTIFACT_VERSION
-
-    compile 'com.squareup.retrofit2:retrofit:2.1.0'
-    compile 'com.squareup.retrofit2:converter-jackson:2.1.0'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
-    compile 'org.apache.commons:commons-lang3:3.0'
+    compile project(':components')
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.hamcrest:hamcrest-core:1.3'

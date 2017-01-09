@@ -6,6 +6,7 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.Url;
 
 /**
  * Retrofit interface for Email Campaign tracking calls against the Constant Contact API.
@@ -44,8 +45,8 @@ public interface CampaignTrackingService {
      * @return         an Observable that emits Paged BounceReports
      * @see            Paged
      */
-    @GET("{path}")
-    Call<Paged<BounceReport>> getBounceReports(@Path("path") String nextLink);
+    @GET
+    Call<Paged<BounceReport>> getBounceReports(@Url String nextLink);
 
     /**
      * Get a {@link Paged} collection of {@link ClickReport} from a {@link Campaign}
@@ -79,8 +80,8 @@ public interface CampaignTrackingService {
      * @return         an Observable that emits Paged ClickReports
      * @see            Paged
      */
-    @GET("{path}")
-    Call<Paged<ClickReport>> getClickReports(@Path("path") String nextLink);
+    @GET
+    Call<Paged<ClickReport>> getClickReports(@Url String nextLink);
 
     /**
      * Get a {@link Paged} collection of {@link ForwardReport} from a {@link Campaign}
@@ -101,8 +102,8 @@ public interface CampaignTrackingService {
      * @return         an Observable that emits Paged ForwardReports
      * @see            Paged
      */
-    @GET("{path}")
-    Call<Paged<ForwardReport>> getForwardReports(@Path("path") String nextLink);
+    @GET
+    Call<Paged<ForwardReport>> getForwardReports(@Url String nextLink);
 
     /**
      * Get a {@link Paged} collection of {@link OpenReport} from a {@link Campaign}
@@ -123,8 +124,8 @@ public interface CampaignTrackingService {
      * @return         an Observable that emits Paged OpenReports
      * @see            Paged
      */
-    @GET("{path}")
-    Call<Paged<OpenReport>> getOpenReports(@Path("path") String nextLink);
+    @GET
+    Call<Paged<OpenReport>> getOpenReports(@Url String nextLink);
 
     /**
      * Get a {@link Paged} collection of {@link SendReport} from a {@link Campaign}
@@ -145,8 +146,8 @@ public interface CampaignTrackingService {
      * @return         an Observable that emits Paged SendReports
      * @see            Paged
      */
-    @GET("{path}")
-    Call<Paged<SendReport>> getSendReports(@Path("path") String nextLink);
+    @GET
+    Call<Paged<SendReport>> getSendReports(@Url String nextLink);
 
     /**
      * Get a {@link Paged} collection of {@link OptOutReport} from a {@link Campaign}
@@ -167,8 +168,8 @@ public interface CampaignTrackingService {
      * @return         an Observable that emits Paged OptOutReports
      * @see            Paged
      */
-    @GET("{path}")
-    Call<Paged<OptOutReport>> getOptOutReports(@Path("path") String nextLink);
+    @GET
+    Call<Paged<OptOutReport>> getOptOutReports(@Url String nextLink);
 
     /**
      * Get a {@link Paged} collection of {@link BaseTrackingReport} from a {@link Campaign}
@@ -190,6 +191,6 @@ public interface CampaignTrackingService {
      * @return         an Observable that emits Paged SendReports
      * @see            Paged
      */
-    @GET("{path}")
-    Call<Paged<BaseTrackingReport>> getAllReports(@Path("path") String nextLink);
+    @GET
+    Call<Paged<BaseTrackingReport>> getAllReports(@Url String nextLink);
 }

@@ -53,8 +53,8 @@ public interface CampaignService {
      * @param nextLink Next link that comes from a previous campaign collection call
      * @return         an Observable that emits Paged Campaigns
      */
-    @GET("v2/emailmarketing/campaigns?next={next}")
-    Call<Paged<Campaign>> getCampaigns(@Path("next") String nextLink);
+    @GET
+    Call<Paged<Campaign>> getCampaigns(@Url String nextLink);
 
     /**
      * Create a {@link Campaign}

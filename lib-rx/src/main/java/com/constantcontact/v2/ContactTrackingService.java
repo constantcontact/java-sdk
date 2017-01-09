@@ -5,6 +5,7 @@ import com.constantcontact.v2.tracking.*;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.Url;
 import rx.Observable;
 
 /**
@@ -44,8 +45,8 @@ public interface ContactTrackingService {
      * @return         an Observable that emits Paged BounceReports
      * @see            Paged
      */
-    @GET("{path}")
-    Observable<Paged<BounceReport>> getBounceReports(@Path("path") String nextLink);
+    @GET
+    Observable<Paged<BounceReport>> getBounceReports(@Url String nextLink);
 
     /**
      * Get a {@link Paged} collection of {@link ClickReport} from a {@link Contact}
@@ -79,8 +80,8 @@ public interface ContactTrackingService {
      * @return         an Observable that emits Paged ClickReports
      * @see            Paged
      */
-    @GET("{path}")
-    Observable<Paged<ClickReport>> getClickReports(@Path("path") String nextLink);
+    @GET
+    Observable<Paged<ClickReport>> getClickReports(@Url String nextLink);
 
     /**
      * Get a {@link Paged} collection of {@link ForwardReport} from a {@link Contact}
@@ -101,8 +102,8 @@ public interface ContactTrackingService {
      * @return         an Observable that emits Paged ForwardReports
      * @see            Paged
      */
-    @GET("{path}")
-    Observable<Paged<ForwardReport>> getForwardReports(@Path("path") String nextLink);
+    @GET
+    Observable<Paged<ForwardReport>> getForwardReports(@Url String nextLink);
 
     /**
      * Get a {@link Paged} collection of {@link OpenReport} from a {@link Contact}
@@ -123,8 +124,8 @@ public interface ContactTrackingService {
      * @return         an Observable that emits Paged OpenReports
      * @see            Paged
      */
-    @GET("{path}")
-    Observable<Paged<OpenReport>> getOpenReports(@Path("path") String nextLink);
+    @GET
+    Observable<Paged<OpenReport>> getOpenReports(@Url String nextLink);
 
     /**
      * Get a {@link Paged} collection of {@link SendReport} from a {@link Contact}
@@ -145,8 +146,8 @@ public interface ContactTrackingService {
      * @return         an Observable that emits Paged SendReports
      * @see            Paged
      */
-    @GET("{path}")
-    Observable<Paged<SendReport>> getSendReports(@Path("path") String nextLink);
+    @GET
+    Observable<Paged<SendReport>> getSendReports(@Url String nextLink);
 
     /**
      * Get a {@link Paged} collection of {@link OptOutReport} from a {@link Contact}
@@ -167,8 +168,8 @@ public interface ContactTrackingService {
      * @return         an Observable that emits Paged OptOutReports
      * @see            Paged
      */
-    @GET("{path}")
-    Observable<Paged<OptOutReport>> getOptOutReports(@Path("path") String nextLink);
+    @GET
+    Observable<Paged<OptOutReport>> getOptOutReports(@Url String nextLink);
 
     /**
      * Get a {@link Paged} collection of {@link BaseTrackingReport} from a {@link Contact}
@@ -189,6 +190,6 @@ public interface ContactTrackingService {
      * @return         an Observable that emits Paged SendReports
      * @see            Paged
      */
-    @GET("{path}")
-    Observable<Paged<BaseTrackingReport>> getAllReports(@Path("path") String nextLink);
+    @GET
+    Observable<Paged<BaseTrackingReport>> getAllReports(@Url String nextLink);
 }
