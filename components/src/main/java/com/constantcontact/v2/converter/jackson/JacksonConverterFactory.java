@@ -66,7 +66,6 @@ public class JacksonConverterFactory extends Converter.Factory {
         }
         this.mapper = mapper;
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS).disable(SerializationFeature.WRITE_DATE_KEYS_AS_TIMESTAMPS);
-//        mapper.setDateFormat(new SimpleDateFormat(DATE_FORMAT));
         mapper.getSerializationConfig().with(new SimpleDateFormat(DATE_FORMAT));
 
         final SimpleBeanPropertyFilter campaignCreateUpdateFilter = SimpleBeanPropertyFilter.filterOutAllExcept(CAMPAIGN_CREATE_UPDATE_FIELDS);
