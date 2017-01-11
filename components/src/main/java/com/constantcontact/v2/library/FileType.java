@@ -3,7 +3,6 @@ package com.constantcontact.v2.library;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 /**
- * @author woogienoogie
  */
 public enum FileType {
     JPG,

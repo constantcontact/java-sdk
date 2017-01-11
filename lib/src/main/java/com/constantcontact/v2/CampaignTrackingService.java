@@ -14,7 +14,6 @@ import retrofit2.http.Url;
  * See <a href="http://developer.constantcontact.com/docs/campaign-tracking/email-campaign-tracking-.html">Tracking Email Campaign Results</a>
  * on the Constant Contact Developer Website
  *
- * @author woogienoogie
  */
 public interface CampaignTrackingService {
     /**

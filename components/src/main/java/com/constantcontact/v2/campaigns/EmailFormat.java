@@ -1,7 +1,6 @@
 package com.constantcontact.v2.campaigns;
 
 /**
- * @author woogienoogie
  */
 public enum EmailFormat {
     HTML,

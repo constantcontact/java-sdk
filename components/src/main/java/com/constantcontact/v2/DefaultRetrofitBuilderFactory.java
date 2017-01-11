@@ -1,6 +1,7 @@
 package com.constantcontact.v2;
 
 import com.constantcontact.v2.converter.jackson.JacksonConverterFactory;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 
@@ -15,7 +16,7 @@ import javax.inject.Named;
  * then the annotations will not affect you.
  */
 public class DefaultRetrofitBuilderFactory {
-    private static final String BASE_URL = "https://api.constantcontact.com/";
+    public static final String BASE_URL = "https://api.constantcontact.com/";
 
     private final OkHttpClient _okHttpClient;
 
@@ -30,7 +31,7 @@ public class DefaultRetrofitBuilderFactory {
     }
 
     /**
-     * Creates a new builder instance with the default base url. Initialized with a Jackson JSON converter.
+     * Creates a new builder instance with the default base url. Initialized with a default Jackson JSON converter.
      *
      * @return a builder instance initialized for use with service classes
      */
@@ -39,15 +40,27 @@ public class DefaultRetrofitBuilderFactory {
     }
 
     /**
-     * Creates a new builder instance with the provided base url. Initialized with a Jackson JSON converter.
+     * Creates a new builder instance with the provided base url. Initialized with a default Jackson JSON converter.
      *
      * @param baseUrl the base url
      * @return a builder instance initialized for use with service classes
      */
     public Retrofit.Builder create(String baseUrl) {
+        return create(baseUrl, new ObjectMapper());
+    }
+
+    /**
+     * Creates a new builder instance with the provided base url. Initialized with a Jackson JSON converter using the
+     * provided object mapper.
+     *
+     * @param baseUrl      the base url
+     * @param objectMapper the object mapper
+     * @return a builder instance initialized for use with service classes
+     */
+    public Retrofit.Builder create(String baseUrl, ObjectMapper objectMapper) {
         return new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .client(_okHttpClient)
-                .addConverterFactory(JacksonConverterFactory.create());
+                .addConverterFactory(JacksonConverterFactory.create(objectMapper));
     }
 }

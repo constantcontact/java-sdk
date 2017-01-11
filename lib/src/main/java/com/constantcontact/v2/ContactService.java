@@ -13,7 +13,6 @@ import java.util.List;
  * See <a href="http://developer.constantcontact.com/docs/contacts-api/contacts-index.html">Working With Contacts</a>
  * on the Constant Contact Developer Website
  *
- * @author woogienoogie
  */
 public interface ContactService {
     /**

@@ -13,7 +13,6 @@ import java.util.List;
 /**
  * Retrofit interface for Account calls against the Constant Contact API.
  *
- * @author woogienoogie
  */
 public interface AccountService {
     /**

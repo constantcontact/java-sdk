@@ -13,7 +13,6 @@ import java.util.List;
  * See <a href="http://developer.constantcontact.com/docs/email-campaigns/email-campaign-api-index.html">Using Email Campaigns</a>
  * on the Constant Contact Developer Website
  *
- * @author woogienoogie
  */
 public interface CampaignService {
     /**

@@ -10,7 +10,6 @@ import java.io.Serializable;
 import java.util.Comparator;
 
 /**
- * @author woogienoogie
  */
 @JsonAutoDetect(fieldVisibility = Visibility.ANY, getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE)
 public class ClickThroughDetail implements Serializable {

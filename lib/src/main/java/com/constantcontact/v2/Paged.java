@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /**
- * @author woogienoogie
  */
 public class Paged<T> {
     @JsonProperty("meta")

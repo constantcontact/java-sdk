@@ -1,7 +1,6 @@
 package com.constantcontact.v2.tracking;
 
 /**
- * @author woogienoogie
  */
 public enum TrackingReportType {
     EMAIL_BOUNCE,

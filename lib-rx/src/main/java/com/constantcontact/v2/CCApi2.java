@@ -2,11 +2,11 @@ package com.constantcontact.v2;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 
 /**
- * @author woogienoogie
  */
 public class CCApi2 {
     /**
@@ -31,7 +31,7 @@ public class CCApi2 {
     public static OkHttpClient.Builder createDefaultOkHttpClientBuilder(final String apiKey, final String token,
                                                                         boolean debug) {
         DefaultOkHttpClientBuilderFactory factory = new DefaultOkHttpClientBuilderFactory();
-        return factory.create(apiKey, token, debug);
+        return factory.create(apiKey, token, debug ? HttpLoggingInterceptor.Level.BASIC : HttpLoggingInterceptor.Level.NONE);
     }
 
     @Deprecated

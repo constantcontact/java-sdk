@@ -15,10 +15,10 @@ public class DefaultOkHttpClientBuilderFactory {
     }
 
     public OkHttpClient.Builder create(String apiKey, String token) {
-        return create(apiKey, token, false);
+        return create(apiKey, token, HttpLoggingInterceptor.Level.NONE);
     }
 
-    public OkHttpClient.Builder create(String apiKey, String token, boolean debug) {
+    public OkHttpClient.Builder create(String apiKey, String token, HttpLoggingInterceptor.Level loggingLevel) {
         OkHttpClient.Builder
                 builder =
                 new OkHttpClient().newBuilder()
@@ -26,9 +26,9 @@ public class DefaultOkHttpClientBuilderFactory {
                         .connectTimeout(5, TimeUnit.SECONDS)
                         .addInterceptor(new CCApiInterceptor(apiKey, token));
 
-        if (debug) {
+        if (loggingLevel != HttpLoggingInterceptor.Level.NONE) {
             HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-            interceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
+            interceptor.setLevel(loggingLevel);
             builder.addInterceptor(interceptor);
         }
 

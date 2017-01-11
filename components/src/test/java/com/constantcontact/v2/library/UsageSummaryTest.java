@@ -7,7 +7,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
- * @author woogienoogie
  */
 public class UsageSummaryTest {
     private static final int DOCUMENTS_BYTES_USED = 5;

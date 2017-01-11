@@ -14,7 +14,6 @@ import rx.Observable;
  * See <a href="https://developer.constantcontact.com/docs/contact-tracking/contact-tracking-all-activities-api.html">Tracking Contact Results</a>
  * on the Constant Contact Developer Website
  *
- * @author woogienoogie
  */
 public interface ContactTrackingService {
     /**

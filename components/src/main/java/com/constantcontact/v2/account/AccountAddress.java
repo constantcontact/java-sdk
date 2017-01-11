@@ -25,7 +25,6 @@ import java.io.Serializable;
 /**
  * Account Address, which is part of the {@link AccountSummaryInformation}
  *
- * @author woogienoogie
  */
 @JsonAutoDetect(fieldVisibility = Visibility.ANY, getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE)
 public class AccountAddress implements Serializable {

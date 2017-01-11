@@ -7,7 +7,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
- * @author woogienoogie
  */
 public class LibraryInfoTest {
     private static final String ROOT = "rooted";

@@ -13,7 +13,6 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @author woogienoogie
  */
 @JsonFilter("CampaignCreateUpdateFilter")
 @JsonInclude(JsonInclude.Include.NON_NULL)

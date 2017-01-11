@@ -9,7 +9,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
- * @author woogienoogie
  */
 public class FolderTest {
     private static final String ID = "123ABC";

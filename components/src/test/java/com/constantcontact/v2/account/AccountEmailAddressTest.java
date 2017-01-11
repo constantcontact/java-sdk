@@ -7,7 +7,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
- * @author woogienoogie
  */
 public class AccountEmailAddressTest {
     private static final String EMAIL = "null@dev.net";

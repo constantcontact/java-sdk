@@ -10,11 +10,14 @@ import retrofit2.Retrofit;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 
 /**
  * The converter factory used for Jackson JSON conversion
  */
 public class JacksonConverterFactory extends Converter.Factory {
+    private final static String DATE_FORMAT = "yyyy-MM-dd'T'hh:mm:ss.ss'Z'";
+
     private static String[] CAMPAIGN_CREATE_UPDATE_FIELDS = {
             "name",
             "subject",
@@ -63,6 +66,7 @@ public class JacksonConverterFactory extends Converter.Factory {
         }
         this.mapper = mapper;
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS).disable(SerializationFeature.WRITE_DATE_KEYS_AS_TIMESTAMPS);
+        mapper.setDateFormat(new SimpleDateFormat(DATE_FORMAT));
 
         final SimpleBeanPropertyFilter campaignCreateUpdateFilter = SimpleBeanPropertyFilter.filterOutAllExcept(CAMPAIGN_CREATE_UPDATE_FIELDS);
         this.writerFilterProvider = new SimpleFilterProvider().addFilter("CampaignCreateUpdateFilter", campaignCreateUpdateFilter);
