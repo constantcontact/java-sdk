@@ -1,57 +1,48 @@
 package com.constantcontact.v2;
 
-import com.constantcontact.v2.converter.jackson.JacksonConverterFactory;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 
-import java.util.concurrent.TimeUnit;
-
 /**
- * @author woogienoogie
  */
 public class CCApi2 {
     /**
-     * The correct formatting of a Date using SimpleDateFormat
+     * Deprecated. Please use {@link DefaultOkHttpClientBuilderFactory} instead.
      */
-    public final static String DATE_FORMAT = "yyyy-MM-dd'T'hh:mm:ss.ss'Z'";
-
+    @Deprecated
     public static OkHttpClient.Builder createDefaultOkHttpClientBuilder(final String apiKey, final String token) {
-        return createDefaultOkHttpClientBuilder(apiKey, token, false);
+        DefaultOkHttpClientBuilderFactory factory = new DefaultOkHttpClientBuilderFactory();
+        return factory.create(apiKey, token);
     }
 
+    /**
+     * Deprecated. Please use {@link DefaultOkHttpClientBuilderFactory} instead.
+     */
+    @Deprecated
     public static OkHttpClient.Builder createDefaultOkHttpClientBuilder(final String apiKey, final String token,
                                                                         boolean debug) {
-        OkHttpClient.Builder
-                builder =
-                new OkHttpClient().newBuilder()
-                                  .readTimeout(10, TimeUnit.SECONDS)
-                                  .connectTimeout(5, TimeUnit.SECONDS)
-                                  .addInterceptor(createDefaultInterceptor(apiKey, token));
-
-        if (debug) {
-            HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-            interceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
-            builder.addInterceptor(interceptor);
-        }
-
-        return builder;
+        DefaultOkHttpClientBuilderFactory factory = new DefaultOkHttpClientBuilderFactory();
+        return factory.create(apiKey, token, debug ? HttpLoggingInterceptor.Level.BASIC : HttpLoggingInterceptor.Level.NONE);
     }
 
+    @Deprecated
     public static Interceptor createDefaultInterceptor(final String apiKey, final String token) {
         return new CCApiInterceptor(apiKey, token);
     }
 
+    /**
+     * Deprecated. Please use {@link DefaultRetrofitBuilderFactory} instead.
+     */
+    @Deprecated
     public static Retrofit.Builder createDefaultRetrofitBuilder(OkHttpClient client) {
-        return new Retrofit.Builder().baseUrl(BASE_URL)
-                                     .client(client)
-                                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                                     .addConverterFactory(JacksonConverterFactory.create());
+        DefaultRetrofitBuilderFactory factory = new DefaultRetrofitBuilderFactory(client);
+        Retrofit.Builder builder = factory.create();
+        builder.addCallAdapterFactory(RxJavaCallAdapterFactory.create());
+        return builder;
     }
-
-    private static final String BASE_URL = "https://api.constantcontact.com/";
 
     private final Retrofit _retrofit;
 
@@ -67,55 +58,139 @@ public class CCApi2 {
 
     protected ContactTrackingService _contactTrackingService;
 
+    /**
+     * A convenience constructor that handles all initialization of api wrappers.
+     *
+     * @param apiKey the api key
+     * @param token  the logged in user's oauth2 token
+     */
     public CCApi2(final String apiKey, final String token) {
-        OkHttpClient client = createDefaultOkHttpClientBuilder(apiKey, token).build();
+        DefaultOkHttpClientBuilderFactory okHttpClientBuilderFactory = new DefaultOkHttpClientBuilderFactory();
+        OkHttpClient client = okHttpClientBuilderFactory.create(apiKey, token).build();
 
-        _retrofit = createDefaultRetrofitBuilder(client).build();
-
-        _accountService = _retrofit.create(AccountService.class);
-        _campaignService = _retrofit.create(CampaignService.class);
-        _contactService = _retrofit.create(ContactService.class);
-        _libraryService = _retrofit.create(LibraryService.class);
-        _campaignTrackingService = _retrofit.create(CampaignTrackingService.class);
-        _contactTrackingService = _retrofit.create(ContactTrackingService.class);
+        DefaultRetrofitBuilderFactory retrofitBuilderFactory = new DefaultRetrofitBuilderFactory(client);
+        _retrofit = retrofitBuilderFactory.create().build();
     }
 
+    /**
+     * A simple constructor where all initialization is left up to the developer. Requires use of {@link DefaultOkHttpClientBuilderFactory}
+     * and {@link DefaultRetrofitBuilderFactory} in order to assure that the {@link Retrofit} instance is set up with
+     * the necessary minimal setup.
+     *
+     * @param retrofit an initialized instance
+     */
     public CCApi2(Retrofit retrofit) {
         _retrofit = retrofit;
-
-        _accountService = _retrofit.create(AccountService.class);
-        _campaignService = _retrofit.create(CampaignService.class);
-        _contactService = _retrofit.create(ContactService.class);
-        _libraryService = _retrofit.create(LibraryService.class);
-        _campaignTrackingService = _retrofit.create(CampaignTrackingService.class);
-        _contactTrackingService = _retrofit.create(ContactTrackingService.class);
     }
 
+    /**
+     * Gets the rest adapter.
+     *
+     * @return the rest adapter
+     */
     public Retrofit getRestAdapter() {
         return _retrofit;
     }
 
+    /**
+     * Gets the account service.
+     *
+     * @return the account service
+     */
     public AccountService getAccountService() {
+        if (_accountService == null) {
+            synchronized (CCApi2.class) {
+                if (_accountService == null) {
+                    _accountService = _retrofit.create(AccountService.class);
+                }
+            }
+        }
+
         return _accountService;
     }
 
+    /**
+     * Gets the campaign service.
+     *
+     * @return the campaign service
+     */
     public CampaignService getCampaignService() {
+        if (_campaignService == null) {
+            synchronized (CCApi2.class) {
+                if (_campaignService == null) {
+                    _campaignService = _retrofit.create(CampaignService.class);
+                }
+            }
+        }
+
         return _campaignService;
     }
 
+    /**
+     * Gets the contact service.
+     *
+     * @return the contact service
+     */
     public ContactService getContactService() {
+        if (_contactService == null) {
+            synchronized (CCApi2.class) {
+                if (_contactService == null) {
+                    _contactService = _retrofit.create(ContactService.class);
+                }
+            }
+        }
+
         return _contactService;
     }
 
+    /**
+     * Gets the library service.
+     *
+     * @return the library service
+     */
     public LibraryService getLibraryService() {
+        if (_libraryService == null) {
+            synchronized (CCApi2.class) {
+                if (_libraryService == null) {
+                    _libraryService = _retrofit.create(LibraryService.class);
+                }
+            }
+        }
+
         return _libraryService;
     }
 
+    /**
+     * Gets the campaign tracking service.
+     *
+     * @return the campaign tracking service
+     */
     public CampaignTrackingService getCampaignTrackingService() {
+        if (_campaignTrackingService == null) {
+            synchronized (CCApi2.class) {
+                if (_campaignTrackingService == null) {
+                    _campaignTrackingService = _retrofit.create(CampaignTrackingService.class);
+                }
+            }
+        }
+
         return _campaignTrackingService;
     }
 
+    /**
+     * Gets the contact tracking service.
+     *
+     * @return the contact tracking service
+     */
     public ContactTrackingService getContactTrackingService() {
+        if (_contactTrackingService == null) {
+            synchronized (CCApi2.class) {
+                if (_contactTrackingService == null) {
+                    _contactTrackingService = _retrofit.create(ContactTrackingService.class);
+                }
+            }
+        }
+
         return _contactTrackingService;
     }
 }

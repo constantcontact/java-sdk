@@ -12,16 +12,24 @@ import java.util.List;
  * <p>
  * See <a href="http://developer.constantcontact.com/docs/email-campaigns/email-campaign-api-index.html">Using Email Campaigns</a>
  * on the Constant Contact Developer Website
- *
- * @author woogienoogie
  */
 public interface CampaignService {
+    /**
+     * The maximum page size for tracking queries.
+     */
+    int MAX_PAGE_LIMIT = 50;
+
+    /**
+     * The default page size for tracking queries.
+     */
+    int DEFAULT_PAGE_LIMIT = 50;
+
     /**
      * Get a {@link Campaign}
      *
      * @param campaignId    ID of the campaign
      * @param updateSummary Set to true to ask the server to get the newest tracking info
-     * @return              an Observable that emits a Campaign
+     * @return an Observable that emits a Campaign
      */
     @GET("v2/emailmarketing/campaigns/{campaignId}")
     Call<Campaign> getCampaign(@Path("campaignId") String campaignId, @Query("updateSummary") boolean updateSummary);
@@ -31,7 +39,7 @@ public interface CampaignService {
      *
      * @param limit  Size of page to return (1-500)
      * @param status {@link CampaignStatus} to filter by
-     * @return       an Observable that emits Paged Campaigns
+     * @return an Observable that emits Paged Campaigns
      */
     @GET("v2/emailmarketing/campaigns")
     Call<Paged<Campaign>> getCampaigns(@Query("limit") int limit, @Query("status") CampaignStatus status);
@@ -42,16 +50,16 @@ public interface CampaignService {
      * @param limit  Size of page to return (1-500)
      * @param date   Date to specify retrieval of campaigns that have been modified since then, in ISO-8601 format
      * @param status {@link CampaignStatus} to filter by
-     * @return       an Observable that emits Paged Campaigns
+     * @return an Observable that emits Paged Campaigns
      */
     @GET("v2/emailmarketing/campaigns")
-    Call<Paged<Campaign>> getCampaigns(@Query("limit") int limit, @Query("modified_since") String date, @Query("status") CampaignStatus status);
+    Call<Paged<Campaign>> getCampaigns(@Query("limit") int limit, @Query("modified_since") QueryDate date, @Query("status") CampaignStatus status);
 
     /**
      * Get a {@link Paged} collection of {@link Campaign}
      *
      * @param nextLink Next link that comes from a previous campaign collection call
-     * @return         an Observable that emits Paged Campaigns
+     * @return an Observable that emits Paged Campaigns
      */
     @GET
     Call<Paged<Campaign>> getCampaigns(@Url String nextLink);
@@ -60,7 +68,7 @@ public interface CampaignService {
      * Create a {@link Campaign}
      *
      * @param campaign Campaign
-     * @return         an Observable that emits a Campaign
+     * @return an Observable that emits a Campaign
      */
     @POST("v2/emailmarketing/campaigns")
     Call<Campaign> createCampaign(@Body Campaign campaign);
@@ -70,7 +78,7 @@ public interface CampaignService {
      *
      * @param campaign   Campaign
      * @param campaignId ID of the Campaign
-     * @return           an Observable that emits a Campaign
+     * @return an Observable that emits a Campaign
      */
     @PUT("v2/emailmarketing/campaigns/{campaignId}")
     Call<Campaign> updateCampaign(@Body Campaign campaign, @Path("campaignId") String campaignId);
@@ -81,7 +89,7 @@ public interface CampaignService {
      * (Note: the campaign will still exist in the account, and can be restored from the website.)
      *
      * @param campaignId String - ID of the Campaign
-     * @return           an Observable that emits a {@link retrofit2.Response}
+     * @return an Observable that emits a {@link retrofit2.Response}
      */
     @DELETE("v2/emailmarketing/campaigns/{campaignId}")
     Call<Response<Void>> deleteCampaign(@Path("campaignId") String campaignId);
@@ -91,7 +99,7 @@ public interface CampaignService {
      *
      * @param testSend   TestSend
      * @param campaignId ID of the Campaign
-     * @return           an Observable that emits a TestSend
+     * @return an Observable that emits a TestSend
      */
     @POST("v2/emailmarketing/campaigns/{campaignId}/tests")
     Call<TestSend> sendTestCampaign(@Body TestSend testSend, @Path("campaignId") String campaignId);
@@ -100,7 +108,7 @@ public interface CampaignService {
      * Generate a {@link CampaignPreview} of a {@link Campaign}
      *
      * @param campaignId ID of the Campaign
-     * @return           an Observable that emits a CampaignPreview
+     * @return an Observable that emits a CampaignPreview
      */
     @GET("v2/emailmarketing/campaigns/{campaignId}/preview")
     Call<CampaignPreview> getCampaignPreview(@Path("campaignId") String campaignId);
@@ -110,7 +118,7 @@ public interface CampaignService {
      *
      * @param campaignSchedule CampaignSchedule
      * @param campaignId       ID of the campaign
-     * @return                 an Observable that emits a CampaignSchedule
+     * @return an Observable that emits a CampaignSchedule
      */
     @POST("v2/emailmarketing/campaigns/{campaignId}/schedules")
     Call<CampaignSchedule> scheduleCampaign(@Body CampaignSchedule campaignSchedule, @Path("campaignId") String campaignId);
@@ -121,7 +129,7 @@ public interface CampaignService {
      * (Note: Only scheduled campaigns will have schedules, no historical schedules currently exist)
      *
      * @param campaignId ID of the Campaign
-     * @return           an Observable that emits a List of CampaignSchedules
+     * @return an Observable that emits a List of CampaignSchedules
      */
     @GET("v2/emailmarketing/campaigns/{campaignId}/schedules")
     Call<List<CampaignSchedule>> getCampaignSchedules(@Path("campaignId") String campaignId);
@@ -131,7 +139,7 @@ public interface CampaignService {
      *
      * @param campaignId ID of the Campaign
      * @param scheduleId ID of the CampaignSchedule
-     * @return           an Observable that emits a CampaignSchedule
+     * @return an Observable that emits a CampaignSchedule
      */
     @GET("v2/emailmarketing/campaigns/{campaignId}/schedules/{scheduleId}")
     Call<CampaignSchedule> getCampaignSchedule(@Path("campaignId") String campaignId, @Path("scheduleId") String scheduleId);
@@ -141,7 +149,7 @@ public interface CampaignService {
      *
      * @param campaignId ID of the Campaign
      * @param scheduleId ID of the CampaignSchedule
-     * @return           an Observable that emits a CampaignSchedule
+     * @return an Observable that emits a CampaignSchedule
      */
     @PUT("v2/emailmarketing/campaigns/{campaignId}/schedules/{scheduleId}")
     Call<CampaignSchedule> updateCampaignSchedule(@Path("campaignId") String campaignId, @Path("scheduleId") String scheduleId);
@@ -151,7 +159,7 @@ public interface CampaignService {
      *
      * @param campaignId ID of the Campaign
      * @param scheduleId ID of the CampaignSchedule
-     * @return           an Observable that emits a {@link retrofit2.Response}
+     * @return an Observable that emits a {@link retrofit2.Response}
      */
     @DELETE("v2/emailmarketing/campaigns/{campaignId}/schedules/{scheduleId}")
     Call<Response<Void>> deleteCampaignSchedule(@Path("campaignId") String campaignId, @Path("scheduleId") String scheduleId);

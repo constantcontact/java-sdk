@@ -9,7 +9,6 @@ import rx.Observable;
 /**
  * Retrofit interface for Library Information, File, and Folder calls against the Constant Contact API
  *
- * @author woogienoogie
  */
 public interface LibraryService {
     /**

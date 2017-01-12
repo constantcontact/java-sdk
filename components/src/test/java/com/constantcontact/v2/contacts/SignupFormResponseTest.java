@@ -7,7 +7,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
- * @author woogienoogie
  */
 public class SignupFormResponseTest {
     private static final String[] LISTS = new String[]{"123ABC"};

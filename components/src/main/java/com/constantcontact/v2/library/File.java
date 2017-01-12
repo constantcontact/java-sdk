@@ -10,7 +10,6 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @author woogienoogie
  */
 @JsonAutoDetect(fieldVisibility = Visibility.ANY, getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE)
 public final class File implements Serializable {

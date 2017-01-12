@@ -14,9 +14,18 @@ import retrofit2.http.Url;
  * See <a href="https://developer.constantcontact.com/docs/contact-tracking/contact-tracking-all-activities-api.html">Tracking Contact Results</a>
  * on the Constant Contact Developer Website
  *
- * @author woogienoogie
  */
 public interface ContactTrackingService {
+    /**
+     * The maximum page size for tracking queries.
+     */
+    int MAX_PAGE_LIMIT = 500;
+
+    /**
+     * The default page size for tracking queries.
+     */
+    int DEFAULT_PAGE_LIMIT = 500;
+
     /**
      * Get the {@link TrackingSummary} of a {@link Contact}
      *
@@ -35,7 +44,7 @@ public interface ContactTrackingService {
      * @return                 an Observable that emits Paged BounceReports
      */
     @GET("v2/contacts/{contactId}/tracking/bounces")
-    Call<Paged<BounceReport>> getBounceReports(@Path("contactId") String contactId, @Query("created_since") String createdSinceDate, @Query("limit") int limit);
+    Call<Paged<BounceReport>> getBounceReports(@Path("contactId") String contactId, @Query("created_since") QueryDate createdSinceDate, @Query("limit") int limit);
 
     /**
      * Get a {@link Paged} collection of {@link BounceReport} from a {@link Contact} from a previous call's
@@ -57,7 +66,7 @@ public interface ContactTrackingService {
      * @return                 an Observable that emits Paged ClickReports
      */
     @GET("v2/contacts/{contactId}/tracking/clicks")
-    Call<Paged<ClickReport>> getClickReports(@Path("contactId") String contactId, @Query("created_since") String createdSinceDate, @Query("limit") int limit);
+    Call<Paged<ClickReport>> getClickReports(@Path("contactId") String contactId, @Query("created_since") QueryDate createdSinceDate, @Query("limit") int limit);
 
     /**
      * Get a {@link Paged} collection of {@link ClickReport} from a specific URL in a {@link Contact}
@@ -70,7 +79,7 @@ public interface ContactTrackingService {
      * @see                    Contact
      */
     @GET("v2/contacts/{contactId}/tracking/clicks/{linkId}")
-    Call<Paged<ClickReport>> getClickReports(@Path("contactId") String contactId, @Path("linkId") String linkId, @Query("created_since") String createdSinceDate, @Query("limit") int limit);
+    Call<Paged<ClickReport>> getClickReports(@Path("contactId") String contactId, @Path("linkId") String linkId, @Query("created_since") QueryDate createdSinceDate, @Query("limit") int limit);
 
     /**
      * Get a {@link Paged} collection of {@link ClickReport} from a {@link Contact} from a previous call's
@@ -92,7 +101,7 @@ public interface ContactTrackingService {
      * @return                 an Observable that emits Paged ForwardReports
      */
     @GET("v2/contacts/{contactId}/tracking/forwards")
-    Call<Paged<ForwardReport>> getForwardReports(@Path("contactId") String contactId, @Query("created_since") String createdSinceDate, @Query("limit") int limit);
+    Call<Paged<ForwardReport>> getForwardReports(@Path("contactId") String contactId, @Query("created_since") QueryDate createdSinceDate, @Query("limit") int limit);
 
     /**
      * Get a {@link Paged} collection of {@link ForwardReport} from a {@link Contact} from a previous call's
@@ -114,7 +123,7 @@ public interface ContactTrackingService {
      * @return                 an Observable that emits Paged OpenReports
      */
     @GET("v2/contacts/{contactId}/tracking/opens")
-    Call<Paged<OpenReport>> getOpenReports(@Path("contactId") String contactId, @Query("created_since") String createdSinceDate, @Query("limit") int limit);
+    Call<Paged<OpenReport>> getOpenReports(@Path("contactId") String contactId, @Query("created_since") QueryDate createdSinceDate, @Query("limit") int limit);
 
     /**
      * Get a {@link Paged} collection of {@link OpenReport} from a {@link Contact} from a previous call's
@@ -136,7 +145,7 @@ public interface ContactTrackingService {
      * @return                 an Observable that emits Paged SendReports
      */
     @GET("v2/contacts/{contactId}/tracking/sends")
-    Call<Paged<SendReport>> getSendReports(@Path("contactId") String contactId, @Query("created_since") String createdSinceDate, @Query("limit") int limit);
+    Call<Paged<SendReport>> getSendReports(@Path("contactId") String contactId, @Query("created_since") QueryDate createdSinceDate, @Query("limit") int limit);
 
     /**
      * Get a {@link Paged} collection of {@link SendReport} from a {@link Contact} from a previous call's
@@ -158,7 +167,7 @@ public interface ContactTrackingService {
      * @return                 an Observable that emits Paged OptOutReports
      */
     @GET("v2/contacts/{contactId}/tracking/unsubscribes")
-    Call<Paged<OptOutReport>> getOptOutReports(@Path("contactId") String contactId, @Query("created_since") String createdSinceDate, @Query("limit") int limit);
+    Call<Paged<OptOutReport>> getOptOutReports(@Path("contactId") String contactId, @Query("created_since") QueryDate createdSinceDate, @Query("limit") int limit);
 
     /**
      * Get a {@link Paged} collection of {@link OptOutReport} from a {@link Contact} from a previous call's
@@ -180,7 +189,7 @@ public interface ContactTrackingService {
      * @return                 an Observable that emits Paged BaseTrackingReports
      */
     @GET("v2/contacts/{contactId}/tracking")
-    Call<Paged<BaseTrackingReport>> getAllReports(@Path("contactId") String contactId, @Query("created_since") String createdSinceDate, @Query("limit") int limit);
+    Call<Paged<BaseTrackingReport>> getAllReports(@Path("contactId") String contactId, @Query("created_since") QueryDate createdSinceDate, @Query("limit") int limit);
 
     /**
      * Get a {@link Paged} collection of {@link BaseTrackingReport} from a {@link Contact} from a previous call's

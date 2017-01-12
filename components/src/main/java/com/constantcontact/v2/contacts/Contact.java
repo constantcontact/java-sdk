@@ -12,7 +12,6 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @author woogienoogie
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonAutoDetect(fieldVisibility = Visibility.ANY, getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE)

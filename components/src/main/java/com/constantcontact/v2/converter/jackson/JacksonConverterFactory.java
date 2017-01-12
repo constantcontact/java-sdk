@@ -1,9 +1,6 @@
 package com.constantcontact.v2.converter.jackson;
 
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
-import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import okhttp3.RequestBody;
@@ -13,11 +10,16 @@ import retrofit2.Retrofit;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 
 /**
  * The converter factory used for Jackson JSON conversion
  */
 public class JacksonConverterFactory extends Converter.Factory {
+    public final static String ISO_8601_DATE_PATTERN = "yyyy-MM-dd'T'hh:mm:ss.ss'Z'";
+
+    public final static SimpleDateFormat ISO_8601_DATE_FORMAT = new SimpleDateFormat(ISO_8601_DATE_PATTERN);
+
     private static String[] CAMPAIGN_CREATE_UPDATE_FIELDS = {
             "name",
             "subject",
@@ -65,6 +67,8 @@ public class JacksonConverterFactory extends Converter.Factory {
             throw new NullPointerException("mapper == null");
         }
         this.mapper = mapper;
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS).disable(SerializationFeature.WRITE_DATE_KEYS_AS_TIMESTAMPS);
+        mapper.getSerializationConfig().with(ISO_8601_DATE_FORMAT);
 
         final SimpleBeanPropertyFilter campaignCreateUpdateFilter = SimpleBeanPropertyFilter.filterOutAllExcept(CAMPAIGN_CREATE_UPDATE_FIELDS);
         this.writerFilterProvider = new SimpleFilterProvider().addFilter("CampaignCreateUpdateFilter", campaignCreateUpdateFilter);

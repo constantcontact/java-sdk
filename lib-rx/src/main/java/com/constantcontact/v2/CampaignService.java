@@ -13,9 +13,18 @@ import java.util.List;
  * See <a href="http://developer.constantcontact.com/docs/email-campaigns/email-campaign-api-index.html">Using Email Campaigns</a>
  * on the Constant Contact Developer Website
  *
- * @author woogienoogie
  */
 public interface CampaignService {
+    /**
+     * The maximum page size for tracking queries.
+     */
+    int MAX_PAGE_LIMIT = 50;
+
+    /**
+     * The default page size for tracking queries.
+     */
+    int DEFAULT_PAGE_LIMIT = 50;
+
     /**
      * Get a {@link Campaign}
      *
@@ -45,7 +54,7 @@ public interface CampaignService {
      * @return       an Observable that emits Paged Campaigns
      */
     @GET("v2/emailmarketing/campaigns")
-    Observable<Paged<Campaign>> getCampaigns(@Query("limit") int limit, @Query("modified_since") String date,
+    Observable<Paged<Campaign>> getCampaigns(@Query("limit") int limit, @Query("modified_since") QueryDate date,
                                              @Query("status") CampaignStatus status);
 
     /**

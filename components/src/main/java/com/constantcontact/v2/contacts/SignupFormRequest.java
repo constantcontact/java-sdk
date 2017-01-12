@@ -11,7 +11,6 @@ import java.io.Serializable;
  * Payload to give the server when requesting a signup form
  * @see <a href="http://developer.constantcontact.com/docs/signup-forms-tools/signup-form-creation.html">Signup Form Creation</a>
  *
- * @author woogienoogie
  */
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE)
 public class SignupFormRequest implements Serializable {
