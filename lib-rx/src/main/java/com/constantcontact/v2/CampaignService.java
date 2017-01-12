@@ -16,6 +16,16 @@ import java.util.List;
  */
 public interface CampaignService {
     /**
+     * The maximum page size for tracking queries.
+     */
+    int MAX_PAGE_LIMIT = 50;
+
+    /**
+     * The default page size for tracking queries.
+     */
+    int DEFAULT_PAGE_LIMIT = 50;
+
+    /**
      * Get a {@link Campaign}
      *
      * @param campaignId    ID of the campaign
@@ -44,7 +54,7 @@ public interface CampaignService {
      * @return       an Observable that emits Paged Campaigns
      */
     @GET("v2/emailmarketing/campaigns")
-    Observable<Paged<Campaign>> getCampaigns(@Query("limit") int limit, @Query("modified_since") String date,
+    Observable<Paged<Campaign>> getCampaigns(@Query("limit") int limit, @Query("modified_since") QueryDate date,
                                              @Query("status") CampaignStatus status);
 
     /**

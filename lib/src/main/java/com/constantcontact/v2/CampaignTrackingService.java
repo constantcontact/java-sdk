@@ -17,6 +17,16 @@ import retrofit2.http.Url;
  */
 public interface CampaignTrackingService {
     /**
+     * The maximum page size for tracking queries.
+     */
+    int MAX_PAGE_LIMIT = 500;
+
+    /**
+     * The default page size for tracking queries.
+     */
+    int DEFAULT_PAGE_LIMIT = 500;
+
+    /**
      * Get the {@link TrackingSummary} of a {@link Campaign}
      *
      * @param campaignId The Campaign ID
@@ -34,7 +44,7 @@ public interface CampaignTrackingService {
      * @return                 an Observable that emits Paged BounceReports
      */
     @GET("v2/emailmarketing/campaigns/{campaignId}/tracking/bounces")
-    Call<Paged<BounceReport>> getBounceReports(@Path("campaignId") String campaignId, @Query("created_since") String createdSinceDate, @Query("limit") int limit);
+    Call<Paged<BounceReport>> getBounceReports(@Path("campaignId") String campaignId, @Query("created_since") QueryDate createdSinceDate, @Query("limit") int limit);
 
     /**
      * Get a {@link Paged} collection of {@link BounceReport} from a {@link Campaign} from a previous call's
@@ -56,7 +66,7 @@ public interface CampaignTrackingService {
      * @return                 an Observable that emits Paged ClickReports
      */
     @GET("v2/emailmarketing/campaigns/{campaignId}/tracking/clicks")
-    Call<Paged<ClickReport>> getClickReports(@Path("campaignId") String campaignId, @Query("created_since") String createdSinceDate, @Query("limit") int limit);
+    Call<Paged<ClickReport>> getClickReports(@Path("campaignId") String campaignId, @Query("created_since") QueryDate createdSinceDate, @Query("limit") int limit);
 
     /**
      * Get a {@link Paged} collection of {@link ClickReport} from a specific URL in a {@link Campaign}
@@ -69,7 +79,7 @@ public interface CampaignTrackingService {
      * @see                    Campaign
      */
     @GET("v2/emailmarketing/campaigns/{campaignId}/tracking/clicks/{linkId}")
-    Call<Paged<ClickReport>> getClickReports(@Path("campaignId") String campaignId, @Path("linkId") String linkId, @Query("created_since") String createdSinceDate, @Query("limit") int limit);
+    Call<Paged<ClickReport>> getClickReports(@Path("campaignId") String campaignId, @Path("linkId") String linkId, @Query("created_since") QueryDate createdSinceDate, @Query("limit") int limit);
 
     /**
      * Get a {@link Paged} collection of {@link ClickReport} from a {@link Campaign} from a previous call's
@@ -91,7 +101,7 @@ public interface CampaignTrackingService {
      * @return                 an Observable that emits Paged ForwardReports
      */
     @GET("v2/emailmarketing/campaigns/{campaignId}/tracking/forwards")
-    Call<Paged<ForwardReport>> getForwardReports(@Path("campaignId") String campaignId, @Query("created_since") String createdSinceDate, @Query("limit") int limit);
+    Call<Paged<ForwardReport>> getForwardReports(@Path("campaignId") String campaignId, @Query("created_since") QueryDate createdSinceDate, @Query("limit") int limit);
 
     /**
      * Get a {@link Paged} collection of {@link ForwardReport} from a {@link Campaign} from a previous call's
@@ -113,7 +123,7 @@ public interface CampaignTrackingService {
      * @return                 an Observable that emits Paged OpenReports
      */
     @GET("v2/emailmarketing/campaigns/{campaignId}/tracking/opens")
-    Call<Paged<OpenReport>> getOpenReports(@Path("campaignId") String campaignId, @Query("created_since") String createdSinceDate, @Query("limit") int limit);
+    Call<Paged<OpenReport>> getOpenReports(@Path("campaignId") String campaignId, @Query("created_since") QueryDate createdSinceDate, @Query("limit") int limit);
 
     /**
      * Get a {@link Paged} collection of {@link OpenReport} from a {@link Campaign} from a previous call's
@@ -135,7 +145,7 @@ public interface CampaignTrackingService {
      * @return                 an Observable that emits Paged SendReports
      */
     @GET("v2/emailmarketing/campaigns/{campaignId}/tracking/sends")
-    Call<Paged<SendReport>> getSendReports(@Path("campaignId") String campaignId, @Query("created_since") String createdSinceDate, @Query("limit") int limit);
+    Call<Paged<SendReport>> getSendReports(@Path("campaignId") String campaignId, @Query("created_since") QueryDate createdSinceDate, @Query("limit") int limit);
 
     /**
      * Get a {@link Paged} collection of {@link SendReport} from a {@link Campaign} from a previous call's
@@ -157,7 +167,7 @@ public interface CampaignTrackingService {
      * @return                 an Observable that emits Paged OptOutReports
      */
     @GET("v2/emailmarketing/campaigns/{campaignId}/tracking/unsubscribes")
-    Call<Paged<OptOutReport>> getOptOutReports(@Path("campaignId") String campaignId, @Query("created_since") String createdSinceDate, @Query("limit") int limit);
+    Call<Paged<OptOutReport>> getOptOutReports(@Path("campaignId") String campaignId, @Query("created_since") QueryDate createdSinceDate, @Query("limit") int limit);
 
     /**
      * Get a {@link Paged} collection of {@link OptOutReport} from a {@link Campaign} from a previous call's
@@ -179,7 +189,7 @@ public interface CampaignTrackingService {
      * @return                 an Observable that emits Paged BaseTrackingReports
      */
     @GET("v2/emailmarketing/campaigns/{campaignId}/tracking")
-    Call<Paged<BaseTrackingReport>> getAllReports(@Path("campaignId") String campaignId, @Query("created_since") String createdSinceDate,
+    Call<Paged<BaseTrackingReport>> getAllReports(@Path("campaignId") String campaignId, @Query("created_since") QueryDate createdSinceDate,
                                                   @Query("limit") int limit);
 
     /**

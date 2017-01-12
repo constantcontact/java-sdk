@@ -10,12 +10,6 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
  */
 public class CCApi2 {
     /**
-     * Deprecated. The correct formatting of a Date using SimpleDateFormat
-     */
-    @Deprecated
-    public final static String DATE_FORMAT = "yyyy-MM-dd'T'hh:mm:ss.ss'Z'";
-
-    /**
      * Deprecated. Please use {@link DefaultOkHttpClientBuilderFactory} instead.
      */
     @Deprecated

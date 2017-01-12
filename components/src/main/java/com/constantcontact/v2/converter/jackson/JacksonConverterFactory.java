@@ -16,7 +16,9 @@ import java.text.SimpleDateFormat;
  * The converter factory used for Jackson JSON conversion
  */
 public class JacksonConverterFactory extends Converter.Factory {
-    private final static String DATE_FORMAT = "yyyy-MM-dd'T'hh:mm:ss.ss'Z'";
+    public final static String ISO_8601_DATE_PATTERN = "yyyy-MM-dd'T'hh:mm:ss.ss'Z'";
+
+    public final static SimpleDateFormat ISO_8601_DATE_FORMAT = new SimpleDateFormat(ISO_8601_DATE_PATTERN);
 
     private static String[] CAMPAIGN_CREATE_UPDATE_FIELDS = {
             "name",
@@ -66,7 +68,7 @@ public class JacksonConverterFactory extends Converter.Factory {
         }
         this.mapper = mapper;
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS).disable(SerializationFeature.WRITE_DATE_KEYS_AS_TIMESTAMPS);
-        mapper.getSerializationConfig().with(new SimpleDateFormat(DATE_FORMAT));
+        mapper.getSerializationConfig().with(ISO_8601_DATE_FORMAT);
 
         final SimpleBeanPropertyFilter campaignCreateUpdateFilter = SimpleBeanPropertyFilter.filterOutAllExcept(CAMPAIGN_CREATE_UPDATE_FIELDS);
         this.writerFilterProvider = new SimpleFilterProvider().addFilter("CampaignCreateUpdateFilter", campaignCreateUpdateFilter);
