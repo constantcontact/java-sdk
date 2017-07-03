@@ -94,8 +94,8 @@ public interface LibraryService {
      * @param nextLink Value of the link found in the meta of the original call
      * @return an Observable that emits Paged Files
      */
-    @GET("v2/library/files?next={next}")
-    Observable<Paged<File>> getFiles(@Path("next") String nextLink);
+    @GET
+    Observable<Paged<File>> getFiles(@Url String nextLink);
 
     /**
      * Get a {@link Paged} collection of {@link File} from a specific {@link Folder}.
@@ -121,7 +121,7 @@ public interface LibraryService {
      * @param nextLink Value of the link found in the meta of the original call
      * @return an Observable that emits Paged Files
      */
-    @GET("v2/library/folders/{folderId}/files?next={next}")
+    @GET("v2/library/folders/{folderId}/files?{next}")
     Observable<Paged<File>> getFilesByFolder(@Path("folderId") String folderId, @Path("next") String nextLink);
 
     /**
