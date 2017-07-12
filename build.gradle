@@ -12,14 +12,38 @@ allprojects {
         mavenLocal()
         jcenter()
     }
+}
 
+subprojects {
     apply plugin: 'java'
+    apply plugin: 'maven-publish'
+    apply plugin: 'com.jfrog.bintray'
+
+    targetCompatibility = '1.7'
+    sourceCompatibility = '1.7'
+
+    group = 'com.constantcontact'
+    version = '5.1.7'
 
     dependencies {
         compile 'javax.inject:javax.inject:1'
         compile 'com.squareup.retrofit2:retrofit:2.1.0'
         compile 'com.squareup.retrofit2:converter-jackson:2.1.0'
         compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
-        compile 'org.apache.commons:commons-lang3:3.0'
+        compile 'org.apache.commons:commons-lang3:3.5'
+    }
+
+    ext {
+        bintray = [
+                user           : project.hasProperty("bintray_user") ? project.property('bintray_user') : System.getenv('BINTRAY_USER'),
+                key            : project.hasProperty("bintray_key") ? project.property('bintray_key') : System.getenv('BINTRAY_API_KEY'),
+                repo           : 'maven',
+                userOrg        : 'constantcontact',
+                licenses       : ['BSD 3-Clause'],
+                websiteUrl     : 'https://github.com/constantcontact/java-sdk',
+                issueTrackerUrl: 'https://github.com/constantcontact/java-sdk/issues',
+                vcsUrl         : 'https://github.com/constantcontact/java-sdk.git',
+                labels         : ['constant contact', 'constant', 'contact']
+        ]
     }
 }
