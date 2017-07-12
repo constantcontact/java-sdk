@@ -16,7 +16,7 @@ Each service is fully documented in the [Javadoc](http://constantcontact.github.
 ```java
 CCApi2 api = new CCApi2("your_api_key", "your_access_token");
 try {
-    AccountSummaryInformation accountSummary = api.getAccountService().getAccountSummaryInformation().execute();
+    AccountSummaryInformation accountSummary = api.getAccountService().getAccountSummaryInformation().execute().body();
 } catch (IOException e) {
     // Handle exception
 }
@@ -45,7 +45,7 @@ you will also need to download the Components JAR and include it in your build f
 
 ### Gradle
 ```groovy
-compile 'com.constantcontact:java-sdk:5.1.5'
+compile 'com.constantcontact:java-sdk:5.1.7'
 ```
 
 ### Maven
@@ -54,7 +54,7 @@ compile 'com.constantcontact:java-sdk:5.1.5'
     <dependency>
         <groupId>com.constantcontact</groupId>
         <artifactId>java-sdk</artifactId>
-        <version>5.1.5</version>
+        <version>5.1.7</version>
     </dependency>
 </dependencies>
 ```
