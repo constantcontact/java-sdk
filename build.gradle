@@ -30,10 +30,10 @@ subprojects {
 
     dependencies {
         compile 'javax.inject:javax.inject:1'
-        compile 'com.squareup.retrofit2:retrofit:2.1.0'
-        compile 'com.squareup.retrofit2:converter-jackson:2.1.0'
-        compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
-        compile 'org.apache.commons:commons-lang3:3.5'
+        compile 'com.squareup.retrofit2:retrofit:2.3.0'
+        compile 'com.squareup.retrofit2:converter-jackson:2.3.0'
+        compile 'com.squareup.okhttp3:logging-interceptor:3.9.0'
+        compile 'org.apache.commons:commons-lang3:3.7'
 
         testCompile 'junit:junit:4.12'
         testCompile 'org.hamcrest:hamcrest-core:1.3'
