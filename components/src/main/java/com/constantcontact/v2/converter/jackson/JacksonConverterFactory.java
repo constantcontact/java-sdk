@@ -11,14 +11,15 @@ import retrofit2.Retrofit;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
+import java.util.SimpleTimeZone;
 
 /**
  * The converter factory used for Jackson JSON conversion
  */
 public class JacksonConverterFactory extends Converter.Factory {
-    public final static String ISO_8601_DATE_PATTERN = "yyyy-MM-dd'T'hh:mm:ss.ss'Z'";
+    public final static String ISO_8601_DATE_PATTERN = "yyyy-MM-dd'T'hh:mm:ss.SS'Z'";
 
-    public final static SimpleDateFormat ISO_8601_DATE_FORMAT = new SimpleDateFormat(ISO_8601_DATE_PATTERN);
+    public final static SimpleDateFormat ISO_8601_DATE_FORMAT;
 
     private static String[] CAMPAIGN_CREATE_UPDATE_FIELDS = {
             "name",
@@ -52,6 +53,12 @@ public class JacksonConverterFactory extends Converter.Factory {
      */
     public static JacksonConverterFactory create(ObjectMapper mapper) {
         return new JacksonConverterFactory(mapper);
+    }
+
+    static {
+        SimpleDateFormat sdf = new SimpleDateFormat(ISO_8601_DATE_PATTERN);
+        sdf.setTimeZone(new SimpleTimeZone(0, "GMT"));
+        ISO_8601_DATE_FORMAT = sdf;
     }
 
     private final ObjectMapper mapper;

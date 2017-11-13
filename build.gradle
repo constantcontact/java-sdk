@@ -23,7 +23,7 @@ subprojects {
     sourceCompatibility = '1.7'
 
     group = 'com.constantcontact'
-    version = '5.1.7'
+    version = '5.1.8'
 
     dependencies {
         compile 'javax.inject:javax.inject:1'
