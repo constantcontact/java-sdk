@@ -1,7 +1,7 @@
 package com.constantcontact.v2;
 
 import com.constantcontact.v2.bulkactivities.*;
-import com.sun.istack.internal.NotNull;
+//import com.sun.istack.internal.NotNull;
 import retrofit2.Call;
 import retrofit2.http.*;
 
@@ -26,6 +26,7 @@ public interface BulkActivitiesService {
      * @param activityId ID of bulk activity
      * @return            a Call that returns ActivityStatus
      */
+    //can't be null. @NotNull is making Travis CI fail
     @GET("v2/activities/{activityId}")
-    Call<ActivityStatus> getActivityStatus(@NotNull @Path("activityId") String activityId);
+    Call<ActivityStatus> getActivityStatus(/*@NotNull*/ @Path("activityId") String activityId);
 }
