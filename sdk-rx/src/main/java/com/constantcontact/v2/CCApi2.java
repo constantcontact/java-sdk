@@ -58,6 +58,8 @@ public class CCApi2 {
 
     protected ContactTrackingService _contactTrackingService;
 
+    protected BulkActivitiesService _bulkActivitiesService;
+
     /**
      * A convenience constructor that handles all initialization of api wrappers.
      *
@@ -192,5 +194,22 @@ public class CCApi2 {
         }
 
         return _contactTrackingService;
+    }
+
+    /**
+     * Gets the bulk activities service.
+     *
+     * @return the bulk activities service
+     */
+    public BulkActivitiesService getBulkActivitiesService() {
+        if (_bulkActivitiesService == null) {
+            synchronized (CCApi2.class) {
+                if (_bulkActivitiesService == null) {
+                    _bulkActivitiesService = _retrofit.create(BulkActivitiesService.class);
+                }
+            }
+        }
+
+        return _bulkActivitiesService;
     }
 }
