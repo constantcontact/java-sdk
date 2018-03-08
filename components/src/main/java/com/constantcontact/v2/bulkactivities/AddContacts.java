@@ -1,13 +1,7 @@
 package com.constantcontact.v2.bulkactivities;
 
-import com.constantcontact.v2.campaigns.CampaignStatus;
-import com.constantcontact.v2.campaigns.ClickThroughDetail;
-import com.constantcontact.v2.campaigns.MessageFooter;
-import com.constantcontact.v2.campaigns.SentToContactList;
-import com.constantcontact.v2.tracking.TrackingSummary;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.builder.EqualsBuilder;

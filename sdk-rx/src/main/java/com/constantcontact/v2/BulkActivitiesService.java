@@ -2,8 +2,10 @@ package com.constantcontact.v2;
 
 import com.constantcontact.v2.bulkactivities.ActivityStatus;
 import com.constantcontact.v2.bulkactivities.AddContacts;
-//import com.sun.istack.internal.NotNull;
-import retrofit2.http.*;
+import retrofit2.http.POST;
+import retrofit2.http.GET;
+import retrofit2.http.Body;
+import retrofit2.http.Path;
 
 import rx.Observable;
 
@@ -28,7 +30,6 @@ public interface BulkActivitiesService {
      * @param activityId ID of bulk activity
      * @return            an Observable that emits ActivityStatus
      */
-    //Can't be null, @NotNull is making Travis CI fail
     @GET("v2/activities/{activityId}")
-    Observable<ActivityStatus> getActivityStatus(/*@NotNull*/ @Path("activityId") String activityId);
+    Observable<ActivityStatus> getActivityStatus(@Path("activityId") String activityId);
 }
