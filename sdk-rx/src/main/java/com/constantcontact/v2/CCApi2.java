@@ -71,7 +71,9 @@ public class CCApi2 {
         OkHttpClient client = okHttpClientBuilderFactory.create(apiKey, token).build();
 
         DefaultRetrofitBuilderFactory retrofitBuilderFactory = new DefaultRetrofitBuilderFactory(client);
-        _retrofit = retrofitBuilderFactory.create().build();
+        Retrofit.Builder builder = retrofitBuilderFactory.create();
+        builder.addCallAdapterFactory(RxJavaCallAdapterFactory.create());
+        _retrofit = builder.build();
     }
 
     /**
@@ -85,7 +87,7 @@ public class CCApi2 {
         _retrofit = retrofit;
     }
 
-    /**
+     /**
      * Gets the rest adapter.
      *
      * @return the rest adapter
