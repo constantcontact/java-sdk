@@ -58,6 +58,8 @@ public class CCApi2 {
 
     protected ContactTrackingService _contactTrackingService;
 
+    protected BulkActivitiesService _bulkActivitiesService;
+
     /**
      * A convenience constructor that handles all initialization of api wrappers.
      *
@@ -69,7 +71,9 @@ public class CCApi2 {
         OkHttpClient client = okHttpClientBuilderFactory.create(apiKey, token).build();
 
         DefaultRetrofitBuilderFactory retrofitBuilderFactory = new DefaultRetrofitBuilderFactory(client);
-        _retrofit = retrofitBuilderFactory.create().build();
+        Retrofit.Builder builder = retrofitBuilderFactory.create();
+        builder.addCallAdapterFactory(RxJavaCallAdapterFactory.create());
+        _retrofit = builder.build();
     }
 
     /**
@@ -83,7 +87,7 @@ public class CCApi2 {
         _retrofit = retrofit;
     }
 
-    /**
+     /**
      * Gets the rest adapter.
      *
      * @return the rest adapter
@@ -192,5 +196,22 @@ public class CCApi2 {
         }
 
         return _contactTrackingService;
+    }
+
+    /**
+     * Gets the bulk activities service.
+     *
+     * @return the bulk activities service
+     */
+    public BulkActivitiesService getBulkActivitiesService() {
+        if (_bulkActivitiesService == null) {
+            synchronized (CCApi2.class) {
+                if (_bulkActivitiesService == null) {
+                    _bulkActivitiesService = _retrofit.create(BulkActivitiesService.class);
+                }
+            }
+        }
+
+        return _bulkActivitiesService;
     }
 }
