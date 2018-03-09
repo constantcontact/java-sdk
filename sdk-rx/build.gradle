@@ -50,7 +50,7 @@ bintray {
         name = archivesBaseName
 
         version {
-            desc = 'Java SDK for Constant Contact API with RxJava'
+            desc = 'Java SDK for Constant Contact API with RxJava 1.x'
             released  = new Date()
             vcsTag = version
         }
