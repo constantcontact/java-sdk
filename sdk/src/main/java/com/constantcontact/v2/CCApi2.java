@@ -58,14 +58,24 @@ public class CCApi2 {
     protected BulkActivitiesService _bulkActivitiesService;
 
     /**
-     * A convenience constructor that handles all initialization of api wrappers.
+     * A convenience constructor that handles all initialization of api wrappers. Defaults to no logging.
      *
      * @param apiKey the api key
      * @param token  the logged in user's oauth2 token
      */
     public CCApi2(final String apiKey, final String token) {
+        this(apiKey, token, HttpLoggingInterceptor.Level.NONE);
+    }
+
+    /**
+     * A convenience constructor that handles all initialization of api wrappers.
+     *
+     * @param apiKey the api key
+     * @param token  the logged in user's oauth2 token
+     */
+    public CCApi2(final String apiKey, final String token, HttpLoggingInterceptor.Level loggingLevel) {
         DefaultOkHttpClientBuilderFactory okHttpClientBuilderFactory = new DefaultOkHttpClientBuilderFactory();
-        OkHttpClient client = okHttpClientBuilderFactory.create(apiKey, token).build();
+        OkHttpClient client = okHttpClientBuilderFactory.create(apiKey, token, loggingLevel).build();
 
         DefaultRetrofitBuilderFactory retrofitBuilderFactory = new DefaultRetrofitBuilderFactory(client);
         _retrofit = retrofitBuilderFactory.create().build();
