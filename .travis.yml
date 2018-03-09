@@ -18,7 +18,7 @@ script:
   - ./gradlew clean check
 
 after_success:
-  - .buildscripts/upload_build.sh
+  - .buildscripts/upload_to_bintray.sh
 
 branches:
   only:
