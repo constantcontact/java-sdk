@@ -2,12 +2,11 @@ package com.constantcontact.v2;
 
 import com.constantcontact.v2.bulkactivities.ActivityStatus;
 import com.constantcontact.v2.bulkactivities.AddContacts;
-import retrofit2.http.POST;
-import retrofit2.http.GET;
+import io.reactivex.Observable;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
-
-import rx.Observable;
 
 /**
  * Retrofit interface for Bulk Activity calls against the Constant Contact API.

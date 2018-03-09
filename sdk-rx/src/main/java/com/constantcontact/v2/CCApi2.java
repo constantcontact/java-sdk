@@ -61,12 +61,23 @@ public class CCApi2 {
     protected BulkActivitiesService _bulkActivitiesService;
 
     /**
-     * A convenience constructor that handles all initialization of api wrappers.
+     * A convenience constructor that handles all initialization of api wrappers. Defaults to no logging.
      *
      * @param apiKey the api key
      * @param token  the logged in user's oauth2 token
      */
     public CCApi2(final String apiKey, final String token) {
+        this(apiKey, token, HttpLoggingInterceptor.Level.NONE);
+    }
+
+    /**
+     * A convenience constructor that handles all initialization of api wrappers.
+     *
+     * @param apiKey       the api key
+     * @param token        the logged in user's oauth2 token
+     * @param loggingLevel the logging level of the http layer
+     */
+    public CCApi2(final String apiKey, final String token, HttpLoggingInterceptor.Level loggingLevel) {
         DefaultOkHttpClientBuilderFactory okHttpClientBuilderFactory = new DefaultOkHttpClientBuilderFactory();
         OkHttpClient client = okHttpClientBuilderFactory.create(apiKey, token).build();
 
@@ -87,7 +98,7 @@ public class CCApi2 {
         _retrofit = retrofit;
     }
 
-     /**
+    /**
      * Gets the rest adapter.
      *
      * @return the rest adapter

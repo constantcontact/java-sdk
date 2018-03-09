@@ -18,6 +18,7 @@ public interface BulkActivitiesService {
     /**
      * {@link AddContacts} to the account
      *
+     * @param contacts the set of contacts to import and the contact lists to add them to
      * @return the result of adding the contacts
      */
     @POST("v2/activities/addcontacts")
@@ -27,7 +28,7 @@ public interface BulkActivitiesService {
      * Get the {@link ActivityStatus}
      *
      * @param activityId ID of bulk activity
-     * @return            a Call that returns ActivityStatus
+     * @return a Call that returns ActivityStatus
      */
     @GET("v2/activities/{activityId}")
     Call<ActivityStatus> getActivityStatus(@Path("activityId") String activityId);
