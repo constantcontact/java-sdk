@@ -18,7 +18,7 @@ script:
   - ./gradlew clean check
 
 after_success:
-  - .buildscript/upload_build.sh
+  - .buildscripts/upload_build.sh
 
 branches:
   only:
