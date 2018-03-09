@@ -3,7 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.0'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
     }
 }
@@ -16,7 +16,7 @@ allprojects {
 }
 
 subprojects {
-    apply plugin: 'java'
+    apply plugin: 'java-library'
     apply plugin: 'maven-publish'
     apply plugin: 'com.jfrog.bintray'
     apply plugin: 'project-report'
@@ -26,7 +26,8 @@ subprojects {
     sourceCompatibility = '1.7'
 
     group = 'com.constantcontact'
-    version = '5.2.0-SNAPSHOT'
+    Boolean isRelease = project.hasProperty("release") ? project.property('release') : "false"
+    version = '5.2.0' + (Boolean.valueOf(isRelease) ? "" : "-SNAPSHOT")
 
     dependencies {
         compile 'javax.inject:javax.inject:1'

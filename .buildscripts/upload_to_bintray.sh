@@ -19,6 +19,6 @@ elif [ -z "$BINTRAY_KEY" ]; then
   echo "Skipping upload: Expected BINTRAY_KEY to be set."
 else
   echo "Uploading build to Bintray..."
-  ./gradlew clean bintrayUpload
+  ./gradlew clean bintrayUpload -Prelease=true
   echo "Build uploaded!"
 fi

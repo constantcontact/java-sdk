@@ -49,7 +49,7 @@ bintray {
         version {
             desc = 'Java SDK for Constant Contact API'
             released  = new Date()
-            vcsTag = version
+            vcsTag = project.version
         }
     }
 }

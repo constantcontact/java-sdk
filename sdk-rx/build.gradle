@@ -52,7 +52,7 @@ bintray {
         version {
             desc = 'Java SDK for Constant Contact API with RxJava 1.x'
             released  = new Date()
-            vcsTag = version
+            vcsTag = project.version
         }
     }
 }
