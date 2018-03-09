@@ -4,6 +4,8 @@ SLUG="constantcontact/java-sdk"
 JDK="oraclejdk8"
 BRANCH="master"
 
+set
+
 set -e
 if [ "$TRAVIS_REPO_SLUG" != "$SLUG" ]; then
   echo "Skipping upload: wrong repository. Expected '$SLUG' but was '$TRAVIS_REPO_SLUG'."
