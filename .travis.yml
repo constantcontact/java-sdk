@@ -15,13 +15,11 @@ cache:
     - $HOME/.gradle/wrapper/
 
 script:
-  - ./gradlew clean assemble test
+  - ./gradlew clean check
+
+after_success:
+  - .buildscript/upload_build.sh
 
 branches:
   only:
   - master
-
-deploy:
-  provider: script
-  script: ./gradlew clean bintrayUpload
-  on: master
