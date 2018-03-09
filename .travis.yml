@@ -8,3 +8,12 @@ os:
 
 script:
   - ./gradlew clean assemble test
+
+branches:
+  only:
+  - master
+
+deploy:
+  provider: script
+  script: ./gradlew bintrayUpload
+  on: master

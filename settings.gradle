@@ -1,1 +1,1 @@
-include 'components', 'sdk', 'sdk-rx'
+include 'components', 'sdk', 'sdk-rx', 'sdk-rx2'
