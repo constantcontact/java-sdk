@@ -12,3 +12,8 @@ script:
 branches:
   only:
   - master
+
+deploy:
+  provider: script
+  script: ./gradlew bintrayUpload
+  on: master
