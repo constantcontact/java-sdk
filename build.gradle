@@ -26,7 +26,7 @@ subprojects {
     sourceCompatibility = '1.7'
 
     group = 'com.constantcontact'
-    Boolean isRelease = project.hasProperty("release") ? project.property('release') : "false"
+    String isRelease = project.hasProperty("release") ? project.property("release") : "false"
     version = '5.2.0' + (Boolean.valueOf(isRelease) ? "" : "-SNAPSHOT")
 
     dependencies {
@@ -54,5 +54,18 @@ subprojects {
                 vcsUrl         : 'https://github.com/constantcontact/java-sdk.git',
                 labels         : ['constant contact', 'constant', 'contact', 'sdk', 'email marketing']
         ]
+    }
+
+    publishing {
+        repositories {
+            maven {
+                name "JFrog"
+                url "https://oss.jfrog.org/artifactory/oss-snapshot-local/"
+                credentials(PasswordCredentials) {
+                    username = bintray.user
+                    password = bintray.key
+                }
+            }
+        }
     }
 }
