@@ -18,8 +18,9 @@ script:
   - ./gradlew clean check
 
 after_success:
-  - .buildscripts/upload_to_ojo.sh
+  - .buildscripts/upload_artifacts.sh
 
 branches:
   only:
   - master
+  - /^[0-9]+\.[0-9]+\.[0-9]+$/

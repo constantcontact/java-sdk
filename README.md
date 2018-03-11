@@ -43,33 +43,45 @@ The JAR is available on [JCenter](https://bintray.com/bintray/jcenter), or you c
 the [releases page](https://github.com/constantcontact/java-sdk/releases). Note, if you download manually,
 you will also need to download the Components JAR and include it in your build file.
 
-### Gradle
+### Artifacts
+The base library is the `java-sdk` artifact. If you use RxJava there are two artifacts available depending on the version:
+`java-sdk-rx` for RxJava 1 users and `java-sdk-rx2` for RxJava 2 users (all calls return `Observable`).
+
+#### Gradle - Release
 ```groovy
-compile 'com.constantcontact:java-sdk:5.1.7'
+compile 'com.constantcontact:java-sdk:5.1.8'
+```
+#### Gradle - Snapshot
+```groovy
+allprojects {
+    repositories {
+        maven("https://oss.jfrog.org/artifactory/oss-snapshot-local/")
+    }
+}
+compile 'com.constantcontact:java-sdk:X.X.X-SNAPSHOT'
 ```
 
-### Maven
+#### Maven
 ```xml
 <dependencies>
     <dependency>
         <groupId>com.constantcontact</groupId>
         <artifactId>java-sdk</artifactId>
-        <version>5.1.7</version>
+        <version>5.1.8</version>
     </dependency>
 </dependencies>
 ```
 
-### Artifacts
-
-In addition to the standard `java-sdk` artifact, there is a `java-sdk-rx` artifact for RxJava users (all calls return `Observable`).
 
 ## License
-    Copyright (c) 2016, Constant Contact, Inc.
-    All rights reserved.
-    
-    Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
-    1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+```
+Copyright (c) 2016, Constant Contact, Inc.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+```
     
