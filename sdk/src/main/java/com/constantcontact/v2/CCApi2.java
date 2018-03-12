@@ -48,8 +48,9 @@ public class CCApi2 {
     /**
      * A convenience constructor that handles all initialization of api wrappers.
      *
-     * @param apiKey the api key
-     * @param token  the logged in user's oauth2 token
+     * @param apiKey       the api key
+     * @param token        the logged in user's oauth2 token
+     * @param loggingLevel specify the amount of logging for api calls
      */
     public CCApi2(final String apiKey, final String token, HttpLoggingInterceptor.Level loggingLevel) {
         DefaultOkHttpClientBuilderFactory okHttpClientBuilderFactory = new DefaultOkHttpClientBuilderFactory();
