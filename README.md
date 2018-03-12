@@ -75,6 +75,23 @@ compile 'com.constantcontact:java-sdk:X.X.X-SNAPSHOT'
 </dependencies>
 ```
 
+### Release Process
+There's an automated build process set up for the various build types that can occur, based on where code is pushed or merged.
+
+1. When a PR is opened, or pushed to, [Travis CI](https://travis-ci.org/constantcontact/java-sdk) will run a PR build which then reports the status back to the 
+GitHub PR. If any unit tests fail, the PR will not be mergable until they are fixed.
+2. When a PR is merged to master, or if there's a push to master, [Travis CI](https://travis-ci.org/constantcontact/java-sdk) will run a regular build with test,
+and then automatically deploy a SNAPSHOT build to https://oss.jfrog.org (a.k.a. OJO). These builds can be found
+[here](https://oss.jfrog.org/artifactory/oss-snapshot-local/com/constantcontact/).
+3. When a tag is applied to a commit that follows the format '#.#.#', 
+[Travis CI](https://travis-ci.org/constantcontact/java-sdk) will run a release build, and then upload to the 
+[Bintray](https://bintray.com/constantcontact/maven) maven repo (which also automatically deploys to JCenter),
+as well as creates a draft release [here](https://github.com/constantcontact/java-sdk/releases). 
+    1. In order for the Bintray release to become visible, the uploads must be made public. The Bintray maven
+    dashboard page will have a node that there are 16 or so unreleased files with a publish link. Click publish
+    to release it.
+    2. Likewise, the GitHub release is generated as a draft. Edit the draft, add notes about the changes and
+    click publish to make it visible to developers.
 
 ## License
 ```
