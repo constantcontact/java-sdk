@@ -1,10 +1,14 @@
 buildscript {
     repositories {
         jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
     }
     dependencies {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.0'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
+        classpath "gradle.plugin.net.wooga.gradle:atlas-github:0.6.1"
     }
 }
 
@@ -13,6 +17,25 @@ allprojects {
         mavenLocal()
         jcenter()
     }
+}
+
+group = 'com.constantcontact'
+def isRelease = Boolean.valueOf(project.hasProperty("release") ? project.property("release") as String : "false")
+version = '5.2.0' + (isRelease ? "" : "-SNAPSHOT")
+
+apply plugin: "net.wooga.github"
+
+github {
+    repositoryName = "constantcontact/java-sdk"
+}
+
+githubPublish {
+    description "publish all files in a directory"
+    from "components/build/libs", "sdk/build/libs", "sdk-rx/build/libs", "sdk-rx2/build/libs"
+    tagName = project.version
+    releaseName = project.version
+    prerelease = false
+    draft = true
 }
 
 subprojects {
@@ -24,10 +47,6 @@ subprojects {
 
     targetCompatibility = '1.7'
     sourceCompatibility = '1.7'
-
-    group = 'com.constantcontact'
-    String isRelease = project.hasProperty("release") ? project.property("release") : "false"
-    version = '5.2.0' + (Boolean.valueOf(isRelease) ? "" : "-SNAPSHOT")
 
     dependencies {
         compile 'javax.inject:javax.inject:1'
@@ -59,7 +78,7 @@ subprojects {
     publishing {
         repositories {
             maven {
-                name "JFrog"
+                name = "JFrog"
                 url "https://oss.jfrog.org/artifactory/oss-snapshot-local/"
                 credentials(PasswordCredentials) {
                     username = bintray.user

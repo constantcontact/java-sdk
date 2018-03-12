@@ -1,3 +1,4 @@
+
 archivesBaseName = 'java-components'
 
 task sourceJar(type: Jar, dependsOn: classes) {

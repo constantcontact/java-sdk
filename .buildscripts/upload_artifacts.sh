@@ -20,7 +20,7 @@ elif [ "$TRAVIS_BRANCH" = "master" ]; then
   echo "Build uploaded!"
 elif [[ $TRAVIS_BRANCH =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
   echo "Uploading RELEASE build to Bintray..."
-  #./gradlew clean bintrayUpload -Prelease=true
+  #./gradlew clean assemble githubPublish bintrayUpload -Prelease=true
   echo "Build uploaded!"
 else
   echo "Nothing to do"
