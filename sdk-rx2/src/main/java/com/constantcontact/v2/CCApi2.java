@@ -19,7 +19,6 @@ import retrofit2.Retrofit;
 /**
  */
 public class CCApi2 {
-
     private final Retrofit _retrofit;
 
     protected AccountService _accountService;

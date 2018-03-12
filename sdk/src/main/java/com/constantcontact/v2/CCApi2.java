@@ -12,7 +12,6 @@
 
 package com.constantcontact.v2;
 
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -20,39 +19,6 @@ import retrofit2.Retrofit;
 /**
  */
 public class CCApi2 {
-    /**
-     * Deprecated. Please use {@link DefaultOkHttpClientBuilderFactory} instead.
-     */
-    @Deprecated
-    public static OkHttpClient.Builder createDefaultOkHttpClientBuilder(final String apiKey, final String token) {
-        DefaultOkHttpClientBuilderFactory factory = new DefaultOkHttpClientBuilderFactory();
-        return factory.create(apiKey, token);
-    }
-
-    /**
-     * Deprecated. Please use {@link DefaultOkHttpClientBuilderFactory} instead.
-     */
-    @Deprecated
-    public static OkHttpClient.Builder createDefaultOkHttpClientBuilder(final String apiKey, final String token,
-                                                                        boolean debug) {
-        DefaultOkHttpClientBuilderFactory factory = new DefaultOkHttpClientBuilderFactory();
-        return factory.create(apiKey, token, debug ? HttpLoggingInterceptor.Level.BASIC : HttpLoggingInterceptor.Level.NONE);
-    }
-
-    @Deprecated
-    public static Interceptor createDefaultInterceptor(final String apiKey, final String token) {
-        return new CCApiInterceptor(apiKey, token);
-    }
-
-    /**
-     * Deprecated. Please use {@link DefaultRetrofitBuilderFactory} instead.
-     */
-    @Deprecated
-    public static Retrofit.Builder createDefaultRetrofitBuilder(OkHttpClient client) {
-        DefaultRetrofitBuilderFactory factory = new DefaultRetrofitBuilderFactory(client);
-        return factory.create();
-    }
-
     private final Retrofit _retrofit;
 
     protected AccountService _accountService;
