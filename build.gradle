@@ -29,11 +29,11 @@ allprojects {
         mavenLocal()
         jcenter()
     }
-}
 
-group = 'com.constantcontact'
-def isRelease = Boolean.valueOf(project.hasProperty("release") ? project.property("release") as String : "false")
-version = '5.2.0' + (isRelease ? "" : "-SNAPSHOT")
+    group = 'com.constantcontact'
+    def isRelease = Boolean.valueOf(project.hasProperty("release") ? project.property("release") as String : "false")
+    version = '5.2.0' + (isRelease ? "" : "-SNAPSHOT")
+}
 
 apply plugin: "net.wooga.github"
 
@@ -90,8 +90,8 @@ subprojects {
     publishing {
         repositories {
             maven {
-                name = "JFrog"
-                url "https://oss.jfrog.org/artifactory/oss-snapshot-local/"
+                name = "Snapshot"
+                url "https://oss.jfrog.org/artifactory/oss-snapshot-local"
                 credentials(PasswordCredentials) {
                     username = bintray.user
                     password = bintray.key

@@ -16,7 +16,7 @@ elif [ -z "$BINTRAY_KEY" ]; then
   echo "Skipping upload: Expected BINTRAY_KEY to be set."
 elif [ "$TRAVIS_BRANCH" = "master" ]; then
   echo "Uploading SNAPSHOT build to oss.jfrog.org..."
-  ./gradlew clean publishSdkPublicationToJFrogRepository
+  ./gradlew clean assemble publishSdkPublicationToSnapshotRepository
   echo "Build uploaded!"
 elif [[ $TRAVIS_BRANCH =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
   echo "Uploading RELEASE build to Bintray..."
