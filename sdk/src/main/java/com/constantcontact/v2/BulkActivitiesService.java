@@ -12,6 +12,7 @@
 
 package com.constantcontact.v2;
 
+import com.constantcontact.v2.bulkactivities.Activity;
 import com.constantcontact.v2.bulkactivities.ActivityStatus;
 import com.constantcontact.v2.bulkactivities.AddContacts;
 import retrofit2.Call;
@@ -34,14 +35,14 @@ public interface BulkActivitiesService {
      * @return the result of adding the contacts
      */
     @POST("v2/activities/addcontacts")
-    Call<ActivityStatus> addContacts(@Body AddContacts contacts);
+    Call<Activity> addContacts(@Body AddContacts contacts);
 
     /**
-     * Get the {@link ActivityStatus}
+     * Get the {@link Activity}
      *
      * @param activityId ID of bulk activity
-     * @return a Call that returns ActivityStatus
+     * @return a Call that returns Activity
      */
     @GET("v2/activities/{activityId}")
-    Call<ActivityStatus> getActivityStatus(@Path("activityId") String activityId);
+    Call<Activity> getActivityStatus(@Path("activityId") String activityId);
 }
