@@ -76,7 +76,7 @@ public class Activity implements Serializable {
     /// * CLEAR_CONTACTS_FROM_LISTS - removes all contacts from the contactlist(s) specified in the import file
     /// * EXPORT_CONTACTS - export contacts to a supported file type
     /// * REMOVE_CONTACTS_FROM_LISTS - remove the contacts from the list(s), all specified in the import file
-    @JsonProperty("activity_type")
+    @JsonProperty("type")
     protected ActivityType _activityType;
 
 
