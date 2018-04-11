@@ -28,6 +28,6 @@ public class RemoveNonAsciiStringSerializer extends JsonSerializer<String> {
             }
         }
         return buff.toString();
-
     }
+
 }
