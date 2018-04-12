@@ -40,7 +40,6 @@ public class Campaign implements Serializable {
     protected Date _createdDate;
 
     @JsonProperty("email_content")
-    @JsonSerialize(using = RemoveNonAsciiStringSerializer.class, as=String.class)
     protected String _emailContent;
 
     @JsonProperty("email_content_format")
@@ -51,23 +50,18 @@ public class Campaign implements Serializable {
     protected String _fromEmail;
 
     @JsonProperty("from_name")
-    @JsonSerialize(using = RemoveNonAsciiStringSerializer.class, as=String.class)
     protected String _fromName;
 
     @JsonProperty("greeting_name")
-    @JsonSerialize(using = RemoveNonAsciiStringSerializer.class, as=String.class)
     protected String _greetingName;
 
     @JsonProperty("greeting_salutations")
-    @JsonSerialize(using = RemoveNonAsciiStringSerializer.class, as=String.class)
     protected String _greetingSalutations;
 
     @JsonProperty("greeting_string")
-    @JsonSerialize(using = RemoveNonAsciiStringSerializer.class, as=String.class)
     protected String _greetingString;
 
     @JsonProperty("id")
-    @JsonSerialize(using = RemoveNonAsciiStringSerializer.class, as=String.class)
     protected String _id;
 
     @JsonProperty("is_permission_reminder_enabled")
@@ -94,11 +88,9 @@ public class Campaign implements Serializable {
     protected Date _nextRunDate;
 
     @JsonProperty("permalink_url")
-    @JsonSerialize(using = RemoveNonAsciiStringSerializer.class, as=String.class)
     protected String _permalinkUrl;
 
     @JsonProperty("permission_reminder_text")
-    @JsonSerialize(using = RemoveNonAsciiStringSerializer.class, as=String.class)
     protected String _permissionReminderText;
 
     @JsonProperty("reply_to_email")
@@ -112,7 +104,6 @@ public class Campaign implements Serializable {
     protected CampaignStatus _status;
 
     @JsonProperty("style_sheet")
-    @JsonSerialize(using = RemoveNonAsciiStringSerializer.class, as=String.class)
     protected String _styleSheet;
 
     @JsonProperty("subject")
@@ -123,18 +114,15 @@ public class Campaign implements Serializable {
     protected String _templateType;
 
     @JsonProperty("text_content")
-    @JsonSerialize(using = RemoveNonAsciiStringSerializer.class, as=String.class)
     protected String _textContent;
 
     @JsonProperty("tracking_summary")
     protected TrackingSummary _trackingSummary;
 
     @JsonProperty("view_as_web_page_link_text")
-    @JsonSerialize(using = RemoveNonAsciiStringSerializer.class, as=String.class)
     protected String _viewAsWebPageLinkText;
 
     @JsonProperty("view_as_web_page_text")
-    @JsonSerialize(using = RemoveNonAsciiStringSerializer.class, as=String.class)
     protected String _viewAsWebPageText;
 
     /**
