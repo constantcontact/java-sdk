@@ -13,7 +13,6 @@
 package com.constantcontact.v2;
 
 import com.constantcontact.v2.bulkactivities.Activity;
-import com.constantcontact.v2.bulkactivities.ActivityStatus;
 import com.constantcontact.v2.bulkactivities.AddContacts;
 import io.reactivex.Observable;
 import retrofit2.http.Body;

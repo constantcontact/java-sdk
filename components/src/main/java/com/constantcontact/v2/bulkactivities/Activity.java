@@ -68,7 +68,7 @@ public class Activity implements Serializable {
     /// * CANCELLED - the activity was cancelled; activities can be cancelled using the product UI only.
     /// * ERROR - errors occurred when the job was run
     @JsonProperty("activity_status")
-    protected ActivityStatus _activityStatus;
+    protected Status _status;
 
     /// Type of activity, valid values are:
     ///
@@ -77,9 +77,7 @@ public class Activity implements Serializable {
     /// * EXPORT_CONTACTS - export contacts to a supported file type
     /// * REMOVE_CONTACTS_FROM_LISTS - remove the contacts from the list(s), all specified in the import file
     @JsonProperty("type")
-    protected ActivityType _activityType;
-
-
+    protected Type _type;
 
     /**
      * Class Creator
@@ -87,11 +85,11 @@ public class Activity implements Serializable {
     public Activity() {
     }
 
-    public String getID() {
+    public String getId() {
         return _id;
     }
 
-    public void setID(String id) {
+    public void setId(String id) {
         _id = id;
     }
 
@@ -143,20 +141,20 @@ public class Activity implements Serializable {
         _finishDate = finishDate;
     }
 
-    public ActivityStatus getActivityStatus() {
-        return _activityStatus;
+    public Status getStatus() {
+        return _status;
     }
 
-    public void setActivityStatus(ActivityStatus activityStatus) {
-        _activityStatus = activityStatus;
+    public void setStatus(Status activityStatus) {
+        _status = activityStatus;
     }
 
-    public ActivityType getActivityType() {
-        return _activityType;
+    public Type getType() {
+        return _type;
     }
 
-    public void setActivityType(ActivityType activityType) {
-        _activityType = activityType;
+    public void setType(Type activityType) {
+        _type = activityType;
     }
 
     @Override
@@ -170,7 +168,7 @@ public class Activity implements Serializable {
         } else {
             Activity rhs = (Activity) obj;
             return new EqualsBuilder()
-                    .append(_id, rhs.getID())
+                    .append(_id, rhs.getId())
                     .append(_contactCount, rhs.getContactCount())
                     .append(_errorCount, rhs.getErrorCount())
                     .append(_fileName, rhs.getFileName())
@@ -194,4 +192,31 @@ public class Activity implements Serializable {
                 .hashCode();
     }
 
+    public enum Status {
+        // the activity has been picked up from the queue and is running
+        RUNNING,
+        // the activity has completed without errors
+        COMPLETE,
+        // the activity was cancelled; activities can be cancelled using the product UI only
+        CANCELLED,
+        // errors occurred when the job was run
+        ERROR,
+        // initial state for an activity after it is created
+        PENDING,
+        // the activity has been retrieved and is in the queue to be run
+        QUEUED,
+        // the activity has not been created yet
+        UNCONFIRMED
+    }
+
+    public enum Type {
+        // add the contacts to contact list(s) specified in the import file
+        ADD_CONTACTS,
+        // export contacts to a supported file type
+        EXPORT_CONTACTS,
+        // removes all contacts from the contactlist(s) specified in the import file
+        CLEAR_CONTACTS_FROM_LISTS,
+        // remove the contacts from the list(s), all specified in the import file
+        REMOVE_CONTACT_FROM_LISTS
+    }
 }
