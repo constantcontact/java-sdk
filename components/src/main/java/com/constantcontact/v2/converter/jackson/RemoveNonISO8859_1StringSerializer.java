@@ -7,12 +7,13 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 
 import java.io.IOException;
 
-public class RemoveNonAsciiStringSerializer extends JsonSerializer<String> {
+public class RemoveNonISO8859_1StringSerializer extends JsonSerializer<String> {
     @Override
     public void serialize(String value, JsonGenerator jsonGenerator,
                           SerializerProvider serializerProvider)
         throws IOException, JsonProcessingException {
         String allAscii = removeNonASCIIChar(value);
+        System.out.println("serialized string: " + allAscii);
         jsonGenerator.writeString(allAscii);
     }
 
@@ -22,11 +23,13 @@ public class RemoveNonAsciiStringSerializer extends JsonSerializer<String> {
         char chars[] = str.toCharArray();
 
         for (int i = 0; i < chars.length; i++) {
-            if (0 < chars[i] && chars[i] < 127) {
+            if (0 < chars[i] && chars[i] < 256) {
 
                 buff.append(chars[i]);
             }
         }
+        if (buff.length() == 0)
+            return "X";
         return buff.toString();
     }
 

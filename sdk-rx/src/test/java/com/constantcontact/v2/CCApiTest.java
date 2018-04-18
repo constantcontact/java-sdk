@@ -3,6 +3,7 @@ package com.constantcontact.v2;
 import com.constantcontact.v2.campaigns.Campaign;
 import com.constantcontact.v2.campaigns.SentToContactList;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
@@ -16,9 +17,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+@Ignore
 public class CCApiTest {
 
-    private static final String EMOTICONS_STRING = "😉😉 Some Ascii";
+    private static final String EMOTICONS_STRING = "😉😉 \\u0200 Hello";
     private static final String CONTENT_WITH_EMOTICONS = "<!DOCTYPE HTML><html><body>nothing😉😉</body></html>";
     // some default values to use when creating the campaign
     private static final String ALL_ASCII = "All Ascii";
@@ -37,6 +39,7 @@ public class CCApiTest {
         // these two would have resulted in error before MOB-5549
         testPropertiesAndValues.put("subject", EMOTICONS_STRING);
         testPropertiesAndValues.put("name", EMOTICONS_STRING + UUID.randomUUID().toString());
+
         // these were ok with emoticons before MOB-5549 and should still be ok
         testPropertiesAndValues.put("emailContent", CONTENT_WITH_EMOTICONS);
         testPropertiesAndValues.put("fromName", EMOTICONS_STRING);

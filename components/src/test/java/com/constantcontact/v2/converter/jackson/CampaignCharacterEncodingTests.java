@@ -29,7 +29,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  */
-public class JacksonTest {
+public class CampaignCharacterEncodingTests {
     private static final String ID = "123ABC";
 
     private static final Date DATE = new Date(0);
@@ -70,7 +70,7 @@ public class JacksonTest {
     public void test_JacksonSerialization() throws IOException {
         testTrimmedRequest(SUBJECT, SUBJECT);
         // should weed out emoticons
-        testTrimmedRequest(ALL_EMOTICONS, "");
+        testTrimmedRequest(ALL_EMOTICONS, "X");
         // should keep double quotes
         testTrimmedRequest(DOUBLE_QUOTES, DOUBLE_QUOTES);
         // should keep single quotes
