@@ -12,12 +12,15 @@
 
 package com.constantcontact.v2.campaigns;
 
+import com.constantcontact.v2.converter.jackson.RemoveNonAsciiStringSerializer;
 import com.constantcontact.v2.tracking.TrackingSummary;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -43,6 +46,7 @@ public class Campaign implements Serializable {
     protected String _emailContentFormat;
 
     @JsonProperty("from_email")
+    @JsonSerialize(using = RemoveNonAsciiStringSerializer.class, as=String.class)
     protected String _fromEmail;
 
     @JsonProperty("from_name")
@@ -77,6 +81,7 @@ public class Campaign implements Serializable {
     protected Date _modifiedDate;
 
     @JsonProperty("name")
+    @JsonSerialize(using = RemoveNonAsciiStringSerializer.class, as=String.class)
     protected String _name;
 
     @JsonProperty("next_run_date")
@@ -89,6 +94,7 @@ public class Campaign implements Serializable {
     protected String _permissionReminderText;
 
     @JsonProperty("reply_to_email")
+    @JsonSerialize(using = RemoveNonAsciiStringSerializer.class, as=String.class)
     protected String _replyToEmail;
 
     @JsonProperty("sent_to_contact_lists")
@@ -101,6 +107,7 @@ public class Campaign implements Serializable {
     protected String _styleSheet;
 
     @JsonProperty("subject")
+    @JsonSerialize(using = RemoveNonAsciiStringSerializer.class, as=String.class)
     protected String _subject;
 
     @JsonProperty("template_type")
