@@ -14,6 +14,7 @@ package com.constantcontact.v2.bulkactivities;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -25,6 +26,7 @@ import java.util.Date;
 /**
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonAutoDetect(fieldVisibility = Visibility.ANY, getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE)
 public class Activity implements Serializable {
 
@@ -67,7 +69,7 @@ public class Activity implements Serializable {
     /// * COMPLETE - the activity has completed without errors
     /// * CANCELLED - the activity was cancelled; activities can be cancelled using the product UI only.
     /// * ERROR - errors occurred when the job was run
-    @JsonProperty("activity_status")
+    @JsonProperty("status")
     protected Status _status;
 
     /// Type of activity, valid values are:
