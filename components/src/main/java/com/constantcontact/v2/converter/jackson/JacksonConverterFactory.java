@@ -29,7 +29,7 @@ import java.util.SimpleTimeZone;
  * The converter factory used for Jackson JSON conversion
  */
 public class JacksonConverterFactory extends Converter.Factory {
-    public final static String ISO_8601_DATE_PATTERN = "yyyy-MM-dd'T'hh:mm:ss.SS'Z'";
+    public final static String ISO_8601_DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SS'Z'";
 
     public final static SimpleDateFormat ISO_8601_DATE_FORMAT;
 
