@@ -52,7 +52,7 @@ The base library is the `java-sdk` artifact. If you use RxJava there are two art
 
 #### Gradle - Release
 ```groovy
-compile 'com.constantcontact:java-sdk:5.1.8'
+compile 'com.constantcontact:java-sdk:5.2.2'
 ```
 #### Gradle - Snapshot
 ```groovy
@@ -70,7 +70,7 @@ compile 'com.constantcontact:java-sdk:X.X.X-SNAPSHOT'
     <dependency>
         <groupId>com.constantcontact</groupId>
         <artifactId>java-sdk</artifactId>
-        <version>5.1.8</version>
+        <version>5.2.2</version>
     </dependency>
 </dependencies>
 ```
