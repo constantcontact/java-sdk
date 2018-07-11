@@ -44,4 +44,12 @@ public interface BulkActivitiesService {
      */
     @GET("v2/activities/{activityId}")
     Call<Activity> getActivityStatus(@Path("activityId") String activityId);
+
+    /**
+     * Get list of {@link Activity}
+     *
+     * @return a Call that returns List<Activity>
+     */
+    @GET("v2/activities")
+    Call<List<Activity>> getActivityStatuses();
 }
