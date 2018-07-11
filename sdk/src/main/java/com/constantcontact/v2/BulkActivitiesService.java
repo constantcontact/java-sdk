@@ -19,6 +19,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import java.util.List;
 
 /**
  * Retrofit interface for Bulk Activity calls against the Constant Contact API.
@@ -48,7 +49,7 @@ public interface BulkActivitiesService {
     /**
      * Get list of {@link Activity}
      *
-     * @return a Call that returns List<Activity>
+     * @return a Call that returns Activity List
      */
     @GET("v2/activities")
     Call<List<Activity>> getActivityStatuses();
