@@ -16,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -40,16 +41,16 @@ public class UsageSummary implements Serializable {
     protected int _documentCount;
 
     @JsonProperty("total_bytes_used")
-    protected int _totalBytesUsed;
+    protected long _totalBytesUsed;
 
     @JsonProperty("image_bytes_used")
-    protected int _imageBytesUsed;
+    protected long _imageBytesUsed;
 
     @JsonProperty("document_bytes_used")
-    protected int _documentBytesUsed;
+    protected long _documentBytesUsed;
 
     @JsonProperty("total_bytes_remaining")
-    protected int _totalBytesRemaining;
+    protected long _totalBytesRemaining;
 
     @JsonProperty("free_files_remaining")
     protected int _freeFilesRemaining;
@@ -89,35 +90,35 @@ public class UsageSummary implements Serializable {
         _documentCount = documentCount;
     }
 
-    public int getTotalBytesUsed() {
+    public long getTotalBytesUsed() {
         return _totalBytesUsed;
     }
 
-    public void setTotalBytesUsed(int totalBytesUsed) {
+    public void setTotalBytesUsed(long totalBytesUsed) {
         _totalBytesUsed = totalBytesUsed;
     }
 
-    public int getImageBytesUsed() {
+    public long getImageBytesUsed() {
         return _imageBytesUsed;
     }
 
-    public void setImageBytesUsed(int imageBytesUsed) {
+    public void setImageBytesUsed(long imageBytesUsed) {
         _imageBytesUsed = imageBytesUsed;
     }
 
-    public int getDocumentBytesUsed() {
+    public long getDocumentBytesUsed() {
         return _documentBytesUsed;
     }
 
-    public void setDocumentBytesUsed(int documentBytesUsed) {
+    public void setDocumentBytesUsed(long documentBytesUsed) {
         _documentBytesUsed = documentBytesUsed;
     }
 
-    public int getTotalBytesRemaining() {
+    public long getTotalBytesRemaining() {
         return _totalBytesRemaining;
     }
 
-    public void setTotalBytesRemaining(int totalBytesRemaining) {
+    public void setTotalBytesRemaining(long totalBytesRemaining) {
         _totalBytesRemaining = totalBytesRemaining;
     }
 

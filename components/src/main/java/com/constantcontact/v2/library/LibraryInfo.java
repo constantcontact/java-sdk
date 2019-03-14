@@ -16,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -31,7 +32,7 @@ public class LibraryInfo implements Serializable {
     protected int _maxFreeFileNum;
 
     @JsonProperty("max_premium_space_limit")
-    protected int _maxPremiumSpaceLimit;
+    protected long _maxPremiumSpaceLimit;
 
     @JsonProperty("image_root")
     protected String _imageRoot;
@@ -53,11 +54,11 @@ public class LibraryInfo implements Serializable {
         _maxFreeFileNum = maxFreeFileNum;
     }
 
-    public int getMaxPremiumSpaceLimit() {
+    public long getMaxPremiumSpaceLimit() {
         return _maxPremiumSpaceLimit;
     }
 
-    public void setMaxPremiumSpaceLimit(int maxPremiumSpaceLimit) {
+    public void setMaxPremiumSpaceLimit(long maxPremiumSpaceLimit) {
         _maxPremiumSpaceLimit = maxPremiumSpaceLimit;
     }
 
