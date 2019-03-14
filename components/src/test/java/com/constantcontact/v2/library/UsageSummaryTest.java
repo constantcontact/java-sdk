@@ -21,7 +21,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 /**
  */
 public class UsageSummaryTest {
-    private static final int DOCUMENTS_BYTES_USED = 5;
+    private static final long DOCUMENTS_BYTES_USED = 5;
 
     private static final int DOCUMENT_COUNT = 6;
 
@@ -31,13 +31,13 @@ public class UsageSummaryTest {
 
     private static final int FREE_FILES_REMAINING = 9;
 
-    private static final int IMAGE_BYTES_USED = 10;
+    private static final long IMAGE_BYTES_USED = 10;
 
     private static final int IMAGE_COUNT = 11;
 
-    private static final int TOTAL_BYTES_USED = 12;
+    private static final long TOTAL_BYTES_USED = 12;
 
-    private static final int TOTAL_BYTES_REMAINING = 13;
+    private static final long TOTAL_BYTES_REMAINING = 13;
 
     static UsageSummary createUsageSummary() {
         UsageSummary usageSummary = new UsageSummary();

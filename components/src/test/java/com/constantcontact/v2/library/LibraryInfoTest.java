@@ -25,7 +25,7 @@ public class LibraryInfoTest {
 
     private static final int MAX_FREE_FILE = 5;
 
-    private static final int MAX_PREMIUM_SPACE = 100;
+    private static final long MAX_PREMIUM_SPACE = 100;
 
     private static final int MAX_UPLOAD_SIZE = 1;
 
